@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1uswgcv" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="17.2.1">
+  <bpmn:collaboration id="Collaboration_1q0r1lv">
+    <bpmn:participant id="Participant_0keoir8" name="Usuario" processRef="Process_1b947vg" />
+    <bpmn:participant id="Participant_0f800n2" name="sistema" processRef="Process_1h6ghl0" />
+    <bpmn:messageFlow id="Flow_0tdrcvn" sourceRef="Activity_1j4hla7" targetRef="Activity_0f43fet" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1b947vg" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_0y2i1jl">
+      <bpmn:outgoing>Flow_0c9jqen</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_0alwdh3" name="Seleccionar opcion &#34;Denunciar Cuenta&#34; dentro del perfil de un usuario">
+      <bpmn:incoming>Flow_0c9jqen</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wott0i</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_046eyd4" name="Seleccionar la razon de la denuncia">
+      <bpmn:incoming>Flow_0wott0i</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hp2tj3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_1j4hla7" name="Seleccionar &#34;enviar denuncia&#34;">
+      <bpmn:incoming>Flow_1hp2tj3</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0c9jqen" sourceRef="StartEvent_0y2i1jl" targetRef="Activity_0alwdh3" />
+    <bpmn:sequenceFlow id="Flow_0wott0i" sourceRef="Activity_0alwdh3" targetRef="Activity_046eyd4" />
+    <bpmn:sequenceFlow id="Flow_1hp2tj3" sourceRef="Activity_046eyd4" targetRef="Activity_1j4hla7" />
+  </bpmn:process>
+  <bpmn:process id="Process_1h6ghl0" isExecutable="false">
+    <bpmn:task id="Activity_0f43fet" name="Guardar denuncia en BD">
+      <bpmn:outgoing>Flow_1szmlip</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DataOutputAssociation_0fn0hfn">
+        <bpmn:targetRef>DataStoreReference_0ctzzmm</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:dataStoreReference id="DataStoreReference_0ctzzmm" name="BD Denuncias" />
+    <bpmn:endEvent id="Event_02lfkt2">
+      <bpmn:incoming>Flow_1szmlip</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1szmlip" sourceRef="Activity_0f43fet" targetRef="Event_02lfkt2" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1q0r1lv">
+      <bpmndi:BPMNShape id="Participant_0keoir8_di" bpmnElement="Participant_0keoir8" isHorizontal="true">
+        <dc:Bounds x="156" y="62" width="704" height="250" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_0y2i1jl">
+        <dc:Bounds x="206" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0alwdh3_di" bpmnElement="Activity_0alwdh3">
+        <dc:Bounds x="300" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_046eyd4_di" bpmnElement="Activity_046eyd4">
+        <dc:Bounds x="460" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1j4hla7_di" bpmnElement="Activity_1j4hla7">
+        <dc:Bounds x="620" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0c9jqen_di" bpmnElement="Flow_0c9jqen">
+        <di:waypoint x="242" y="190" />
+        <di:waypoint x="300" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wott0i_di" bpmnElement="Flow_0wott0i">
+        <di:waypoint x="400" y="190" />
+        <di:waypoint x="460" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hp2tj3_di" bpmnElement="Flow_1hp2tj3">
+        <di:waypoint x="560" y="190" />
+        <di:waypoint x="620" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_0i1scan" bpmnElement="Participant_0f800n2" isHorizontal="true">
+        <dc:Bounds x="156" y="310" width="704" height="250" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0f43fet_di" bpmnElement="Activity_0f43fet">
+        <dc:Bounds x="620" y="370" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_0ctzzmm_di" bpmnElement="DataStoreReference_0ctzzmm">
+        <dc:Bounds x="645" y="475" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="635" y="532" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_02lfkt2_di" bpmnElement="Event_02lfkt2">
+        <dc:Bounds x="772" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1szmlip_di" bpmnElement="Flow_1szmlip">
+        <di:waypoint x="720" y="410" />
+        <di:waypoint x="772" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tdrcvn_di" bpmnElement="Flow_0tdrcvn">
+        <di:waypoint x="670" y="230" />
+        <di:waypoint x="670" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataOutputAssociation_0fn0hfn_di" bpmnElement="DataOutputAssociation_0fn0hfn">
+        <di:waypoint x="670" y="450" />
+        <di:waypoint x="670" y="475" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
