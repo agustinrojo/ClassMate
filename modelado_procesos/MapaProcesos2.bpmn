@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1ql5cie" targetNamespace="http://bpmn.io/schema/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="17.3.0">
+  <bpmn:collaboration id="Collaboration_0v1ysah">
+    <bpmn:participant id="Participant_1qrgkju" name="Estrategicos" processRef="Process_09rjcz3" />
+    <bpmn:participant id="Participant_0gxrdjg" name="Operacionales" processRef="Process_1sd23gm" />
+    <bpmn:participant id="Participant_1tk62dm" name="Soporte" processRef="Process_188hcr7" />
+    <bpmn:messageFlow id="Flow_10p4r0s" sourceRef="Participant_1tk62dm" targetRef="Participant_0gxrdjg" />
+    <bpmn:messageFlow id="Flow_0rjw6rf" sourceRef="Participant_1qrgkju" targetRef="Participant_0gxrdjg" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_09rjcz3" isExecutable="false">
+    <bpmn:task id="Activity_0byv1av" name="Proceso de toma de estadisticas y metricas" />
+  </bpmn:process>
+  <bpmn:process id="Process_1sd23gm">
+    <bpmn:task id="Activity_0xf8rok" name="Proceso de creación de eventos" />
+    <bpmn:task id="Activity_180mrpp" name="Proceso de Creacion de Foro" />
+    <bpmn:task id="Activity_0tnbuk6" name="Proceso de Creacion de Post" />
+  </bpmn:process>
+  <bpmn:process id="Process_188hcr7">
+    <bpmn:task id="Activity_008rd88" name="Proceso de registro de usuario" />
+    <bpmn:task id="Activity_12fwglc" name="Proceso de denuncia hacia usuarios" />
+    <bpmn:task id="Activity_0p974uc" name="Proceso de Moderacion del contenido" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0v1ysah">
+      <bpmndi:BPMNShape id="Participant_1qrgkju_di" bpmnElement="Participant_1qrgkju" isHorizontal="true">
+        <dc:Bounds x="182" y="100" width="818" height="180" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0byv1av_di" bpmnElement="Activity_0byv1av">
+        <dc:Bounds x="550" y="140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0gxrdjg_di" bpmnElement="Participant_0gxrdjg" isHorizontal="true">
+        <dc:Bounds x="182" y="340" width="818" height="190" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0xf8rok_di" bpmnElement="Activity_0xf8rok">
+        <dc:Bounds x="820" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_180mrpp_di" bpmnElement="Activity_180mrpp">
+        <dc:Bounds x="300" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1b78sg5" bpmnElement="Activity_0tnbuk6">
+        <dc:Bounds x="550" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1tk62dm_di" bpmnElement="Participant_1tk62dm" isHorizontal="true">
+        <dc:Bounds x="182" y="600" width="818" height="180" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1l4i0do" bpmnElement="Activity_008rd88">
+        <dc:Bounds x="820" y="650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0nqjy2a" bpmnElement="Activity_12fwglc">
+        <dc:Bounds x="560" y="650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p974uc_di" bpmnElement="Activity_0p974uc">
+        <dc:Bounds x="300" y="650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_10p4r0s_di" bpmnElement="Flow_10p4r0s">
+        <di:waypoint x="591" y="600" />
+        <di:waypoint x="591" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rjw6rf_di" bpmnElement="Flow_0rjw6rf">
+        <di:waypoint x="599" y="282" />
+        <di:waypoint x="599" y="340" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
