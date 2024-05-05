@@ -10,9 +10,9 @@ La estructura física definida para el repositorio es la siguiente:
 ├── Documentacion
 |  ├── Templates
 |  ├── SprintX
+|  |  ├── DiagramasDeArquitectura
 |  |  ├── DiagramasDeClase
 |  |  ├── DiagramasDeSecuencia
-|  |  ├── DiagramasDeArquitectura
 |  |  ├── ModeladoDeProcesos
 ├── LICENSE
 ├── Readme
@@ -23,7 +23,7 @@ La estructura física definida para el repositorio es la siguiente:
 
 | Nombre del Ítem de Configuración | Reglas de Nombrado | Ubicación |
 |----------------------------------|--------------------|-----------|
+| Diagrama de Arquitectura        | DARQ-*.xml          | /Documentacion/SprintX/DiagramasDeArquitectura 
 | Diagrama de Clase               | DC-*.eap            | /Documentacion/SprintX/DiagramasDeClase              
 | Diagrama de Secuencia           | DSEC-*.eap          | /Documentacion/SprintX/DiagramasDeSecuencia                     
-| Diagrama de Arquitectura        | DARQ-*.xml          | /Documentacion/SprintX/DiagramasDeArquitectura                  
 | Modelo de Proceso de Negocio    | proceso_*.bpmn      | /Documentacion/SprintX/ModeladoDeProcesos
