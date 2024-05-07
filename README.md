@@ -9,6 +9,9 @@ La estructura física definida para el repositorio es la siguiente:
 ├── ClassMate
 ├── Documentacion
 |  ├── Templates
+|  ├── Entregas
+|  |  ├── Editables
+|  |  ├── Definitivas
 |  ├── SprintX
 |  |  ├── DiagramasDeArquitectura
 |  |  ├── DiagramasDeClase
@@ -27,3 +30,5 @@ La estructura física definida para el repositorio es la siguiente:
 | Diagrama de Clase               | DC-*.eap            | /Documentacion/SprintX/DiagramasDeClase              
 | Diagrama de Secuencia           | DSEC-*.eap          | /Documentacion/SprintX/DiagramasDeSecuencia                     
 | Modelo de Proceso de Negocio    | proceso_*.bpmn      | /Documentacion/SprintX/ModeladoDeProcesos
+| Entrega editable                | ENTREGA-X_*.docx    | /Documentacion/Entregas/Editables
+| Entrega definitiva              | ENTREGA-X_*.docx    | /Documentacion/Entregas/Definitivas
