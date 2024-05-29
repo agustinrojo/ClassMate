@@ -29,6 +29,10 @@ public class CommentController {
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
+    // AYUDA PARA EL FRONT END, PARA IR RECIBIEN MAS COMENTARIOS CAMBIAN EL PARAMETRO PAGE
+    // http://localhost:8080/api/comments/post/1?page=0&size=10
+    // http://localhost:8080/api/comments/post/1?page=1&size=10
+    
     @GetMapping("/post/{postId}")
     public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable("postId") Long postId,
                                                                 @RequestParam(defaultValue = "0") int page,
