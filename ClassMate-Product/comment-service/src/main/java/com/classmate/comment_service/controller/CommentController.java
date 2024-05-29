@@ -30,8 +30,10 @@ public class CommentController {
     }
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable("postId") Long postId) {
-        List<CommentDTO> comments = commentService.getCommentsByPostId(postId);
+    public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable("postId") Long postId,
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size) {
+        List<CommentDTO> comments = commentService.getCommentsByPostId(postId, page, size);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
@@ -42,8 +44,8 @@ public class CommentController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
-        commentService.deleteComment(id);
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id, @RequestParam Long userId) {
+        commentService.deleteComment(id, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
