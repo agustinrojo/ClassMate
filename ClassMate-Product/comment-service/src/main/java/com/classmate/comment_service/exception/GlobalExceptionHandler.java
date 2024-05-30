@@ -16,8 +16,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Global exception handler for handling all exceptions in the application.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    /**
+     * Handles InvalidCommentException and returns a BAD_REQUEST response.
+     *
+     * @param exception the exception
+     * @param webRequest the web request
+     * @return the response entity containing error details
+     */
     @ExceptionHandler(InvalidCommentException.class)
     public ResponseEntity<ErrorDetails> handleInvalidCommentException(InvalidCommentException exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
@@ -29,6 +40,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles CommentNotFoundException and returns a NOT_FOUND response.
+     *
+     * @param exception the exception
+     * @param webRequest the web request
+     * @return the response entity containing error details
+     */
     @ExceptionHandler(CommentNotFoundException.class)
     public ResponseEntity<ErrorDetails> handleCommentNotFoundException(CommentNotFoundException exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
@@ -40,8 +58,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handles UnauthorizedActionException and returns an UNAUTHORIZED response.
+     *
+     * @param exception the exception
+     * @param webRequest the web request
+     * @return the response entity containing error details
+     */
     @ExceptionHandler(UnauthorizedActionException.class)
-    public ResponseEntity<ErrorDetails> handleUnauthorizedActionException(CommentNotFoundException exception, WebRequest webRequest) {
+    public ResponseEntity<ErrorDetails> handleUnauthorizedActionException(UnauthorizedActionException exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
@@ -51,6 +76,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
+    /**
+     * Handles all other exceptions and returns an INTERNAL_SERVER_ERROR response.
+     *
+     * @param exception the exception
+     * @param webRequest the web request
+     * @return the response entity containing error details
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
@@ -61,6 +93,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * Handles validation errors and returns a BAD_REQUEST response.
+     *
+     * @param exception the exception
+     * @param headers the HTTP headers
+     * @param status the HTTP status
+     * @param webRequest the web request
+     * @return the response entity containing validation error details
+     */
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
                                                                   HttpHeaders headers,
