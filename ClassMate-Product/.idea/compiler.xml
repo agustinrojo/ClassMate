@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="forum-service" />
         <module name="post-service" />
+        <module name="authentication-service" />
       </profile>
       <profile name="Annotation profile for comment-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -26,6 +27,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="authentication-service" options="-parameters" />
       <module name="comment-service" options="-parameters" />
       <module name="forum-service" options="-parameters" />
       <module name="post-service" options="-parameters" />
