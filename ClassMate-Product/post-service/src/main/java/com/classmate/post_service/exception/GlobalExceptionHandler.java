@@ -1,4 +1,4 @@
-package com.classmate.comment_service.exception;
+package com.classmate.post_service.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,14 +23,14 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
-     * Handles InvalidCommentException and returns a BAD_REQUEST response.
+     * Handles InvalidPostException and returns a BAD_REQUEST response.
      *
      * @param exception the exception
      * @param webRequest the web request
      * @return the response entity containing error details
      */
-    @ExceptionHandler(InvalidCommentException.class)
-    public ResponseEntity<ErrorDetails> handleInvalidCommentException(InvalidCommentException exception, WebRequest webRequest) {
+    @ExceptionHandler(InvalidPostException.class)
+    public ResponseEntity<ErrorDetails> handleInvalidPostException(InvalidPostException exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
@@ -41,14 +41,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handles CommentNotFoundException and returns a NOT_FOUND response.
+     * Handles PostNotFoundException and returns a NOT_FOUND response.
      *
      * @param exception the exception
      * @param webRequest the web request
      * @return the response entity containing error details
      */
-    @ExceptionHandler(CommentNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleCommentNotFoundException(CommentNotFoundException exception, WebRequest webRequest) {
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handlePostNotFoundException(PostNotFoundException exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),

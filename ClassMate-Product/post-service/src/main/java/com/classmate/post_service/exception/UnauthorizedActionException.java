@@ -1,4 +1,4 @@
-package com.classmate.comment_service.exception;
+package com.classmate.post_service.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

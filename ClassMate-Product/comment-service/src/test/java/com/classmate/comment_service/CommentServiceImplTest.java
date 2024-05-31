@@ -48,7 +48,6 @@ public class CommentServiceImplTest {
 
 
     /**
-     * Test adding a comment with a body less than 2000 characters.
      * User Story CM-10: Agregar comentario a Post
      * Probar agregar comentario con una cantidad de caracteres menor a 2000 (PASA).
      */
@@ -68,7 +67,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test adding a comment with a body more than 2000 characters.
      * User Story CM-10: Agregar comentario a Post
      * Probar agregar comentario con una cantidad de caracteres mayor a 2000 (FALLA).
      */
@@ -82,7 +80,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test adding an empty comment.
      * User Story CM-10: Agregar comentario a Post
      * Probar agregar un comentario vacío (FALLA).
      */
@@ -96,7 +93,6 @@ public class CommentServiceImplTest {
 
 
     /**
-     * Test selecting trash icon and confirming deletion of a comment.
      * User Story CM-11: Eliminar Comentario a Post
      * Probar seleccionar icono “basura” y confirmar el borrado del comentario (PASA).
      */
@@ -115,7 +111,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test deleting a comment made by another user.
      * User Story CM-11: Eliminar Comentario a Post
      * Probar eliminar comentario realizado por otro usuario (FALLA).
      */
@@ -136,7 +131,6 @@ public class CommentServiceImplTest {
 
 
     /**
-     * Test selecting "edit" to edit a comment with a body less than 2000 characters.
      * User Story CM-12: Modificar Comentario a Post
      * Probar seleccionar “editar” para editar un comentario y este no posee más de 2000 caracteres (PASA).
      */
@@ -157,7 +151,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test selecting "edit" to edit a comment with a body more than 2000 characters.
      * User Story CM-12: Modificar Comentario a Post
      * Probar seleccionar “editar” para editar un comentario y este posee más de 2000 caracteres (FALLA).
      */
@@ -172,7 +165,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test selecting "edit" to edit a comment with an empty body.
      * User Story CM-12: Modificar Comentario a Post
      * Probar seleccionar “editar” para editar un comentario y este no posee cuerpo (FALLA).
      */
@@ -187,7 +179,6 @@ public class CommentServiceImplTest {
 
 
     /**
-     * Test clicking "view comments" with less than or equal to 10 comments on the post and displaying that number of comments.
      * User Story CM-13: Ver comentario a Post
      * Probar hacer click en “ver comentarios”, habiendo menos de 10 comentarios en el post y se despliega esa cantidad de comentarios (PASA).
      */
@@ -215,7 +206,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test clicking "view comments" with more than 10 comments on the post and only 10 comments are displayed.
      * User Story CM-13: Ver comentario a Post
      * Probar hacer click en “ver comentarios”, habiendo más de 10 comentarios en el post y solo se despliegan 10 comentarios (Pasa).
      */
@@ -243,7 +233,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test clicking "view comments" and nothing is displayed.
      * User Story CM-13: Ver comentario a Post
      * Probar hacer click en “ver comentarios” y no se despliega nada (PASA).
      */

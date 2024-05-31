@@ -1,4 +1,4 @@
-package com.classmate.comment_service.exception;
+package com.classmate.post_service.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
