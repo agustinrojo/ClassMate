@@ -52,7 +52,7 @@ constructor(private _fb: FormBuilder, private _authService: AuthServiceService, 
 
   private loginSuccess(resp: LoginResponse){
     this._authService.setAuthData(resp);
-    this._router.navigate(["main"]);
+    this._router.navigate(["home"]);
     this.loading = false;
     this.credencialesIncorrectas = false;
   }

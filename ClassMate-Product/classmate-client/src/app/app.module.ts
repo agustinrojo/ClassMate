@@ -8,14 +8,15 @@ import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { AuthServiceService } from './auth/auth-service.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
-import { MainComponent } from './main/main.component';
+
 import { HttpRequestInterceptor } from './interceptor/http.interceptor';
+import { HomeModule } from './home/home.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent,
+
 
 
 
@@ -24,7 +25,8 @@ import { HttpRequestInterceptor } from './interceptor/http.interceptor';
     BrowserModule,
     AppRoutingModule,
     AuthModule,
-    RouterModule
+    RouterModule,
+    HomeModule
   ],
   providers: [
     AuthServiceService,
