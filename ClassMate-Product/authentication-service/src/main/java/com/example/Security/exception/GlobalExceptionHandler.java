@@ -1,6 +1,6 @@
 package com.example.Security.exception;
 
-import com.example.Security.service.TokenNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,6 +34,39 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .errorCode("USER_NOT_FOUND")
                 .build();
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceWithNumericValueDoesNotExistException.class)
+    public ResponseEntity<ErrorDetails> handleResourceWithNumeriValueDoesNotExistException(ResourceWithNumericValueDoesNotExistException exception, WebRequest request){
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .path(request.getDescription(false))
+                .errorCode("RESOURCE_DOES_NOT_EXIST")
+                .build();
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorDetails> handleRExpiredJwtException(ExpiredJwtException exception, WebRequest request){
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .path(request.getDescription(false))
+                .errorCode("TOKEN_EXPIRED")
+                .build();
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorDetails> handleResourceWithNumeriValueDoesNotExistException(InvalidTokenException exception, WebRequest request){
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .path(request.getDescription(false))
+                .errorCode("INVALID_TOKEN_EXCEPTION")
+                .build();
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(EmailAlreadyTakenException.class)

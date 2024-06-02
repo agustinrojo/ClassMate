@@ -1,0 +1,42 @@
+body {
+  background-color: #121212; /* Fondo oscuro (negro) */
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #f5f5f5; /* Color de texto claro */
+  background-image: url('../../../assets/Sprinkle.svg');
+  /* Otros estilos opcionales */
+  background-size: cover; /* Ajusta el tamaño del fondo */
+  background-position: center; /* Centra la imagen de fondo */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+}
+.login-container {
+  background-color: #1e1e1e; /* Fondo de contenedor oscuro */
+  padding: 1.7vh;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+  text-align: center;
+  max-width: 70vh;
+  width: 90%;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px;
+  background-color: #8c6e48; /* Fondo del botón */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button:hover {
+  background-color: #725a3d; /* Color del botón al pasar el cursor */
+}

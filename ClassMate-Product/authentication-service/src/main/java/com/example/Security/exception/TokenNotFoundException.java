@@ -1,4 +1,4 @@
-package com.example.Security.service;
+package com.example.Security.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

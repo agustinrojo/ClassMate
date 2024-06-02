@@ -1,0 +1,100 @@
+<body>
+  <div class="login-container">
+      <h1>UTN ClassMate</h1>
+      <h2>Registrarse</h2>
+      <form [formGroup]="registerForm" action="/register" method="POST" (ngSubmit)="onSubmit()">
+
+          <div class="mb-3">
+
+            <div class="row mx-1 mb-2">
+
+              <div class="col-6">
+                <input type="text" class="form-control bg-dark" id="firstName" aria-describedby="Nombre" placeholder="Nombre" formControlName="firstName" autocomplete="off">
+                <div class="row" *ngIf="registerForm.controls['firstName'].errors?.['required'] && registerForm.controls['firstName'].touched">
+                  <div class=" text-danger fs-55">Este campo es obligatorio</div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <input type="text" class="form-control bg-dark" id="lastName" aria-describedby="Apellido" placeholder="Apellido" formControlName="lastName" autocomplete="off">
+                <div class="row" *ngIf="registerForm.controls['lastName'].errors?.['required'] && registerForm.controls['lastName'].touched">
+                  <div class=" text-danger fs-55">Este campo es obligatorio</div>
+                </div>
+              </div>
+
+              <!-- <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Correo Institucional"> -->
+            </div>
+
+            <div class="row mx-1 mb-2">
+              <div class="col-6">
+                <select class="form-select bg-dark" id="carrera" name="carrera" formControlName="carrera"  required>
+                  <option *ngFor="let carrera of carreras" [value]="carrera">{{ carrera | capitalize }}</option>
+                </select>
+                <div class="row" *ngIf="registerForm.controls['carrera'].errors?.['required'] && registerForm.controls['carrera'].touched">
+                  <div class=" text-danger fs-55">Este campo es obligatorio</div>
+                </div>
+              </div>
+
+              <div class="col-6">
+                <input type="number" class="form-control bg-dark" id="legajo" aria-describedby="Legajo" placeholder="Legajo" formControlName="legajo" autocomplete="off">
+              </div>
+              <div class="row" *ngIf="registerForm.controls['legajo'].errors?.['required'] && registerForm.controls['legajo'].touched">
+                <div class=" text-danger fs-55">Este campo es obligatorio</div>
+              </div>
+            </div>
+
+            <div class="row mx-1 mb-2">
+              <div class="col-12">
+                <input type="email" class="form-control bg-dark" id="email" aria-describedby="Email" placeholder="Correo Institucional" formControlName="email" autocomplete="off">
+              </div>
+              <div class="row" *ngIf="registerForm.controls['email'].errors?.['required'] && registerForm.controls['email'].touched">
+                <div class=" text-danger fs-55">Este campo es obligatorio</div>
+              </div>
+              <div class="row" *ngIf="registerForm.controls['email'].errors?.['invalidEmailFormat'] && registerForm.controls['email'].touched">
+                <div class=" text-danger fs-55">Formato de correo institucional invalido</div>
+
+              </div>
+            </div>
+
+            <div class="row mx-1 mb-2">
+              <div class="col-6">
+                <input type="password" class="form-control bg-dark" id="password" aria-describedby="Password" placeholder="Contraseña" formControlName="password" autocomplete="off">
+                <div class="row" *ngIf="registerForm.controls['password'].errors?.['required'] && registerForm.controls['password'].touched">
+                  <div class=" text-danger fs-55">Este campo es obligatorio</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <input type="password" class="form-control bg-dark" id="rePassword" aria-describedby="RePassword" placeholder="Confirme contraseña" formControlName="rePassword" autocomplete="off">
+                <div class="row" *ngIf="registerForm.controls['rePassword'].errors?.['required'] && registerForm.controls['rePassword'].touched">
+                  <div class=" text-danger fs-55">Este campo es obligatorio</div>
+                </div>
+
+              </div>
+              <div class="row" *ngIf="registerForm.errors?.['passwordDoesntMatch'] && registerForm.controls['rePassword'].touched && registerForm.controls['password'].touched">
+                <div class=" text-danger fs-55">Las contraseñas no coinciden</div>
+              </div>
+
+                <div *ngIf="loading" class="row mt-5 mb-2 justify-content-center">
+                  <span class="loader mr-1"></span>
+                </div>
+
+            </div>
+
+
+
+            </div>
+
+          <div class="row mx-1 mb-2">
+            <div class="col-12">
+              <button type="submit" class="btn mb-3" [disabled]="!registerForm.valid">Registrarse</button>
+
+              <div class="col-12">
+                ¿Ya tenés cuenta? <a class="link-underline-secondary" [routerLink]="['/login']" routerLinkActive="router-link-active"    >Log In</a>
+              </div>
+            </div>
+
+          </div>
+
+      </form>
+  </div>
+</body>

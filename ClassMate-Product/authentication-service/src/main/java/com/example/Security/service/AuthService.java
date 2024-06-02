@@ -1,18 +1,23 @@
 package com.example.Security.service;
 
 import com.example.Security.Email.EmailSender;
-import com.example.Security.dto.AuthReq;
-import com.example.Security.dto.AuthenticationResp;
-import com.example.Security.dto.RegisterReq;
+import com.example.Security.dto.*;
 import com.example.Security.entities.ConfirmationToken;
 import com.example.Security.entities.JWTToken;
 import com.example.Security.entities.Role;
 import com.example.Security.entities.User;
 import com.example.Security.exception.EmailAlreadyTakenException;
 import com.example.Security.exception.EmailNotValidException;
+import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.repositories.JWTTokenrepository;
 import com.example.Security.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.control.MappingControl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.parameters.P;
@@ -40,6 +45,7 @@ public class AuthService {
     private final JWTTokenrepository jwtTokenRepository;
 
 
+
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        JwtService jwtService,
@@ -47,7 +53,8 @@ public class AuthService {
                        EmailValidator emailValidator,
                        ConfirmationTokenService confirmationTokenService,
                        EmailSender emailSender,
-                       JWTTokenrepository jwtTokenrepository ) {
+                       JWTTokenrepository jwtTokenrepository
+                       ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -56,9 +63,10 @@ public class AuthService {
         this.confirmationTokenService = confirmationTokenService;
         this.emailSender = emailSender;
         this.jwtTokenRepository = jwtTokenrepository;
+
     }
 
-    public String register(RegisterReq req){
+    public RegisterRespDTO register(RegisterReq req){
         //check email
         boolean isValidEmail = emailValidator.test(req.getEmail());
         if(!isValidEmail){
@@ -71,7 +79,9 @@ public class AuthService {
         String token = signUpUser(user);
         String link = "http://localhost:8080/api/auth/confirm?token=" + token;
         emailSender.send(req.getEmail(), buildConfirmationEmail(link, "UTN Classmate", user.getFirstName()));
-        return token;
+        return RegisterRespDTO.builder()
+                .success(true)
+                .build();
     }
 
     public AuthenticationResp authenticate(AuthReq req){
@@ -84,7 +94,10 @@ public class AuthService {
         User user = userRepository.findByEmail(req.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User with email '%s' not found.", req.getEmail())));
 
-        String jwtToken = jwtService.generateToken(user);
+        UserDTO userDTO = mapToUserDTO(user);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
 
         //chequear que no exista ningun token activo para el usuario dado.
         //si llegase a existir alguno, se lo debe invalidar o borrar
@@ -93,13 +106,20 @@ public class AuthService {
 
         //guardar token generado
         JWTToken token = JWTToken.builder()
-                .token(jwtToken)
+                .token(accessToken)
                 .loggedOut(false)
                 .user(user)
                 .build();
         jwtTokenRepository.save(token);
 
-        return mapToAuthenticationResponse(jwtToken);
+        return mapToAuthenticationResponse(accessToken, refreshToken, userDTO);
+    }
+
+    public IsTokenValidResponse isTokenValid(IsTokenValidRequest req){
+        User user = userRepository.findById(req.getUserId())
+                .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", req.getUserId()));
+        boolean valid = jwtService.isTokenValid(req.getToken(), user);
+        return mapToTokenValidationResponse(valid);
     }
 
     private void revokeAllTokensByUser(User user) {
@@ -113,26 +133,30 @@ public class AuthService {
         }
     }
 
-    public User mapToUser(RegisterReq req){
-        return User.builder()
-                .firstName(req.getFirstName())
-                .lastName(req.getLastName())
-                .email(req.getEmail())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .role(Role.USER)
-                .build();
-    }
 
-    public AuthenticationResp mapToAuthenticationResponse(String token){
+
+    public AuthenticationResp mapToAuthenticationResponse(String accessToken,String refreshToken,UserDTO userDTO){
         return AuthenticationResp.builder()
-                .token(token)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .user(userDTO)
                 .build();
     }
 
     public String signUpUser(User user){
-        boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        boolean userExists = existingUser.isPresent();
+
+        //Si el user existe y esta confirmado por mail, tirar una excepcion.
+        //Si existe y nunca fue confirmado, borrar el existente
         if(userExists){
-            throw new EmailAlreadyTakenException(user.getEmail());
+            if(existingUser.get().isEnabled()){
+                throw new EmailAlreadyTakenException(user.getEmail());
+            }else {
+                confirmationTokenService.deleteTokenByUser(existingUser.get());
+                userRepository.delete(existingUser.get());
+            }
+
         }
 
         userRepository.save(user);
@@ -149,7 +173,44 @@ public class AuthService {
     }
 
 
+    public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        //extract the token form auth header
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
 
+        //extract email from token
+        String token = authHeader.substring(7);
+        String email = jwtService.extractUsername(token);
+
+        //check if user exist en db
+        User user =  userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("No user found with email %s", email)));
+
+        //check if refreshtoken is valid
+        if(jwtService.isRefreshTokenValid(token, user)){
+            //generate new access token
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
+
+            revokeAllTokensByUser(user);
+
+
+            //guardar token generado
+            JWTToken jwtToken = JWTToken.builder()
+                    .token(accessToken)
+                    .loggedOut(false)
+                    .user(user)
+                    .build();
+            jwtTokenRepository.save(jwtToken);
+
+
+            return new ResponseEntity(new AuthenticationResp(accessToken, refreshToken, mapToUserDTO(user)), HttpStatus.OK );
+        }
+
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    }
 
 
     public static String buildConfirmationEmail(String confirmationUrl, String siteName, String firstName) {
@@ -186,5 +247,36 @@ public class AuthService {
                 + "</body>"
                 + "</html>";
     }
+
+    public User mapToUser(RegisterReq req){
+        return User.builder()
+                .firstName(req.getFirstName())
+                .lastName(req.getLastName())
+                .carrera(req.getCarrera())
+                .legajo(req.getLegajo())
+                .email(req.getEmail())
+                .password(passwordEncoder.encode(req.getPassword()))
+                .role(Role.USER)
+                .build();
+    }
+
+    public UserDTO mapToUserDTO(User user){
+        return UserDTO.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .legajo(user.getLegajo())
+                .carrera(user.getCarrera())
+                .build();
+    }
+
+    public IsTokenValidResponse mapToTokenValidationResponse(boolean valid){
+        return IsTokenValidResponse.builder()
+                .valid(valid)
+                .build();
+    }
+
+
 
 }

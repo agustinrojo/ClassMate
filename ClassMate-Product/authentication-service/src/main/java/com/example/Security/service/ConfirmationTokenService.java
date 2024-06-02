@@ -4,6 +4,7 @@ import com.example.Security.entities.ConfirmationToken;
 import com.example.Security.entities.User;
 import com.example.Security.exception.TokenAlreadyConfirmedException;
 import com.example.Security.exception.TokenExpiredException;
+import com.example.Security.exception.TokenNotFoundException;
 import com.example.Security.repositories.ConfirmationTokenRepository;
 import com.example.Security.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,9 @@ public class ConfirmationTokenService {
                 .orElseThrow(() -> new IllegalStateException(String.format("confirmed user with email %s does not exist.", email)));
         existingUser.setEnabled(true);
         userRepository.save(existingUser);
+    }
+
+    public void deleteTokenByUser(User user){
+        this.confirmationTokenRepository.deleteByUser(user);
     }
 }

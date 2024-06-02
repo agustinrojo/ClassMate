@@ -25,13 +25,15 @@ public class User implements UserDetails {
     private Long id;
     private String firstName;
     private String lastName;
+    private String legajo;
+    private String carrera;
     private String email;
     private String password;
     private boolean locked = false;
     private boolean enabled = false;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<JWTToken> tokens;
 
     @Override

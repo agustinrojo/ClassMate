@@ -1,6 +1,7 @@
 package com.example.Security.repositories;
 
 import com.example.Security.entities.ConfirmationToken;
+import com.example.Security.entities.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,4 +22,11 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
             "WHERE c.token = ?1")
     int updateConfirmedAt(String token,
                           LocalDateTime confirmedAt);
+
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM ConfirmationToken c WHERE c.user = ?1")
+    void deleteByUser(User user);
+
+
 }

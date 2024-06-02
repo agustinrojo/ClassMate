@@ -1,0 +1,28 @@
+<body>
+  <div class="login-container">
+      <h1>UTN ClassMate</h1>
+      <h2>Iniciar Sesión</h2>
+      <h5 *ngIf="credencialesIncorrectas && !loginForm.touched"><span class="badge badge-primary text-danger">Mail y/o contraseña incorrectos</span></h5>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+          <input type="email" class="form-control bg-dark mb-4" id="email" name="email" formControlName="email" placeholder="Correo Institucional" autocomplete="off" required>
+
+          <input type="password" class="form-control bg-dark mb-4" id="password" name="password" formControlName="password" placeholder="Contraseña" autocomplete="off" required>
+
+          <button type="submit" [disabled]="!loginForm.valid || btnDisabled">Iniciar Sesión</button>
+
+
+
+          <div class="col-12 mt-3">
+            ¿No tenés cuenta? <a class="link-underline-secondary" [routerLink]="['/register']" routerLinkActive="router-link-active"  >Registrate</a>
+          </div>
+
+          <div *ngIf="loading" class="row mt-5 mb-2 justify-content-center">
+            <span class="loader mr-1"></span>
+          </div>
+
+
+
+      </form>
+  </div>
+</body>
