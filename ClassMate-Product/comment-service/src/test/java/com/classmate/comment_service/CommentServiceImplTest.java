@@ -5,7 +5,7 @@ import com.classmate.comment_service.entity.Comment;
 import com.classmate.comment_service.exception.InvalidCommentException;
 import com.classmate.comment_service.exception.UnauthorizedActionException;
 import com.classmate.comment_service.mapper.CommentMapper;
-import com.classmate.comment_service.repository.CommentRepository;
+import com.classmate.comment_service.repository.ICommentRepository;
 import com.classmate.comment_service.service.impl.CommentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 public class CommentServiceImplTest {
 
     @Mock
-    private CommentRepository commentRepository;
+    private ICommentRepository ICommentRepository;
 
     @Mock
     private CommentMapper commentMapper;
@@ -48,7 +48,6 @@ public class CommentServiceImplTest {
 
 
     /**
-     * Test adding a comment with a body less than 2000 characters.
      * User Story CM-10: Agregar comentario a Post
      * Probar agregar comentario con una cantidad de caracteres menor a 2000 (PASA).
      */
@@ -58,7 +57,7 @@ public class CommentServiceImplTest {
         Comment comment = new Comment(null, 1L, 1L, "Valid comment body", null);
 
         when(commentMapper.mapToComment(commentDTO)).thenReturn(comment);
-        when(commentRepository.save(comment)).thenReturn(comment);
+        when(ICommentRepository.save(comment)).thenReturn(comment);
         when(commentMapper.mapToCommentDTO(comment)).thenReturn(commentDTO);
 
         CommentDTO savedComment = commentService.saveComment(commentDTO);
@@ -68,7 +67,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test adding a comment with a body more than 2000 characters.
      * User Story CM-10: Agregar comentario a Post
      * Probar agregar comentario con una cantidad de caracteres mayor a 2000 (FALLA).
      */
@@ -82,7 +80,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test adding an empty comment.
      * User Story CM-10: Agregar comentario a Post
      * Probar agregar un comentario vacío (FALLA).
      */
@@ -96,7 +93,6 @@ public class CommentServiceImplTest {
 
 
     /**
-     * Test selecting trash icon and confirming deletion of a comment.
      * User Story CM-11: Eliminar Comentario a Post
      * Probar seleccionar icono “basura” y confirmar el borrado del comentario (PASA).
      */
@@ -106,16 +102,15 @@ public class CommentServiceImplTest {
         Long userId = 1L; // The user attempting to delete the comment
         Comment comment = new Comment(commentId, 1L, userId, "Valid comment body", null);
 
-        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
-        doNothing().when(commentRepository).delete(comment);
+        when(ICommentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        doNothing().when(ICommentRepository).delete(comment);
 
         commentService.deleteComment(commentId, userId);
 
-        verify(commentRepository, times(1)).delete(comment);
+        verify(ICommentRepository, times(1)).delete(comment);
     }
 
     /**
-     * Test deleting a comment made by another user.
      * User Story CM-11: Eliminar Comentario a Post
      * Probar eliminar comentario realizado por otro usuario (FALLA).
      */
@@ -126,17 +121,16 @@ public class CommentServiceImplTest {
         Long authorId = 1L; // Actual author ID of the comment
         Comment comment = new Comment(commentId, 1L, authorId, "This is a comment by another user", null);
 
-        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(ICommentRepository.findById(commentId)).thenReturn(Optional.of(comment));
 
         UnauthorizedActionException exception = assertThrows(UnauthorizedActionException.class, () -> commentService.deleteComment(commentId, anotherUserId));
         assertEquals("User not authorized to delete this comment", exception.getMessage());
 
-        verify(commentRepository, times(0)).delete(comment);
+        verify(ICommentRepository, times(0)).delete(comment);
     }
 
 
     /**
-     * Test selecting "edit" to edit a comment with a body less than 2000 characters.
      * User Story CM-12: Modificar Comentario a Post
      * Probar seleccionar “editar” para editar un comentario y este no posee más de 2000 caracteres (PASA).
      */
@@ -146,18 +140,17 @@ public class CommentServiceImplTest {
         CommentDTO commentDTO = new CommentDTO(commentId, 1L, 1L, "Updated comment body", null);
         Comment comment = new Comment(commentId, 1L, 1L, "Valid comment body", null);
 
-        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
-        when(commentRepository.save(comment)).thenReturn(comment);
+        when(ICommentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(ICommentRepository.save(comment)).thenReturn(comment);
         when(commentMapper.mapToCommentDTO(comment)).thenReturn(commentDTO);
 
         commentService.updateComment(commentId, commentDTO);
 
-        verify(commentRepository, times(1)).save(comment);
+        verify(ICommentRepository, times(1)).save(comment);
         assertEquals("Updated comment body", comment.getBody());
     }
 
     /**
-     * Test selecting "edit" to edit a comment with a body more than 2000 characters.
      * User Story CM-12: Modificar Comentario a Post
      * Probar seleccionar “editar” para editar un comentario y este posee más de 2000 caracteres (FALLA).
      */
@@ -172,7 +165,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test selecting "edit" to edit a comment with an empty body.
      * User Story CM-12: Modificar Comentario a Post
      * Probar seleccionar “editar” para editar un comentario y este no posee cuerpo (FALLA).
      */
@@ -187,7 +179,6 @@ public class CommentServiceImplTest {
 
 
     /**
-     * Test clicking "view comments" with less than or equal to 10 comments on the post and displaying that number of comments.
      * User Story CM-13: Ver comentario a Post
      * Probar hacer click en “ver comentarios”, habiendo menos de 10 comentarios en el post y se despliega esa cantidad de comentarios (PASA).
      */
@@ -202,7 +193,7 @@ public class CommentServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Comment> commentsPage = new PageImpl<>(comments, pageable, comments.size());
 
-        when(commentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
+        when(ICommentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
         when(commentMapper.mapToCommentDTO(any(Comment.class))).thenAnswer(invocation -> {
             Comment comment = invocation.getArgument(0);
             return new CommentDTO(comment.getId(), comment.getPostId(), comment.getAuthorId(), comment.getBody(), comment.getCreationDate());
@@ -215,7 +206,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test clicking "view comments" with more than 10 comments on the post and only 10 comments are displayed.
      * User Story CM-13: Ver comentario a Post
      * Probar hacer click en “ver comentarios”, habiendo más de 10 comentarios en el post y solo se despliegan 10 comentarios (Pasa).
      */
@@ -230,7 +220,7 @@ public class CommentServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Comment> commentsPage = new PageImpl<>(comments.subList(0, 10), pageable, comments.size());
 
-        when(commentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
+        when(ICommentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
         when(commentMapper.mapToCommentDTO(any(Comment.class))).thenAnswer(invocation -> {
             Comment comment = invocation.getArgument(0);
             return new CommentDTO(comment.getId(), comment.getPostId(), comment.getAuthorId(), comment.getBody(), comment.getCreationDate());
@@ -243,7 +233,6 @@ public class CommentServiceImplTest {
     }
 
     /**
-     * Test clicking "view comments" and nothing is displayed.
      * User Story CM-13: Ver comentario a Post
      * Probar hacer click en “ver comentarios” y no se despliega nada (PASA).
      */
@@ -253,7 +242,7 @@ public class CommentServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Comment> emptyPage = new PageImpl<>(new ArrayList<>(), pageable, 0);
 
-        when(commentRepository.findByPostId(postId, pageable)).thenReturn(emptyPage);
+        when(ICommentRepository.findByPostId(postId, pageable)).thenReturn(emptyPage);
 
         List<CommentDTO> returnedComments = commentService.getCommentsByPostId(postId, 0, 10);
 

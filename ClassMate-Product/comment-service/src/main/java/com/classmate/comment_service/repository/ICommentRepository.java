@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * Repository interface for managing Comment entities.
  */
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface ICommentRepository extends JpaRepository<Comment, Long> {
 
     /**
      * Finds a page of comments by post ID.
