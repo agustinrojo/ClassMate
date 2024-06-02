@@ -1,4 +1,4 @@
-package com.classmate.post_service.exception;
+package com.classmate.forum_service.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,37 +24,37 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
-     * Handles InvalidPostException and returns a BAD_REQUEST response.
+     * Handles InvalidForumException and returns a BAD_REQUEST response.
      *
      * @param exception the exception
      * @param webRequest the web request
      * @return the response entity containing error details
      */
-    @ExceptionHandler(InvalidPostException.class)
-    public ResponseEntity<ErrorDetails> handleInvalidPostException(InvalidPostException exception, WebRequest webRequest) {
+    @ExceptionHandler(InvalidForumException.class)
+    public ResponseEntity<ErrorDetails> handleInvalidForumException(InvalidForumException exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
                 webRequest.getDescription(false),
-                "INVALID_POST"
+                "INVALID_FORUM"
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     /**
-     * Handles PostNotFoundException and returns a NOT_FOUND response.
+     * Handles ForumNotFoundException and returns a NOT_FOUND response.
      *
      * @param exception the exception
      * @param webRequest the web request
      * @return the response entity containing error details
      */
-    @ExceptionHandler(PostNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handlePostNotFoundException(PostNotFoundException exception, WebRequest webRequest) {
+    @ExceptionHandler(ForumNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleForumNotFoundException(ForumNotFoundException exception, WebRequest webRequest) {
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
                 exception.getMessage(),
                 webRequest.getDescription(false),
-                "POST_NOT_FOUND"
+                "FORUM_NOT_FOUND"
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }

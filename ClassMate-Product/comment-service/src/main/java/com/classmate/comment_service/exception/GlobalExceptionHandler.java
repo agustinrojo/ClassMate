@@ -2,6 +2,7 @@ package com.classmate.comment_service.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -96,6 +97,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     /**
      * Handles validation errors and returns a BAD_REQUEST response.
+     * This method is useful for using @Valid annotations in request DTOs.
      *
      * @param exception the exception
      * @param headers the HTTP headers
@@ -103,10 +105,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @param webRequest the web request
      * @return the response entity containing validation error details
      */
-
+    @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
                                                                   HttpHeaders headers,
-                                                                  HttpStatus status,
+                                                                  HttpStatusCode status,
                                                                   WebRequest webRequest) {
         Map<String, String> errors = new HashMap<>();
         List<ObjectError> errorList = exception.getBindingResult().getAllErrors();
