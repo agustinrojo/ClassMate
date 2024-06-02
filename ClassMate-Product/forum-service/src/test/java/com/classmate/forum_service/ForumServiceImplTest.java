@@ -17,10 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -310,5 +307,26 @@ public class ForumServiceImplTest {
         assertNotNull(response);
         assertNotNull(response.getForum());
         assertEquals(2, response.getPosts().size());
+    }
+
+    /**
+     * User Story CM-53: Ver foros
+     * Probar ver foros (PASA)
+     */
+    @Test
+    public void testGetAllForums() {
+        Forum forum1 = new Forum(1L, "Forum 1", 1L, "Description 1", new ArrayList<>(), new ArrayList<>(), null);
+        Forum forum2 = new Forum(2L, "Forum 2", 2L, "Description 2", new ArrayList<>(), new ArrayList<>(), null);
+
+        when(forumRepository.findAll()).thenReturn(Arrays.asList(forum1, forum2));
+        when(forumMapper.convertToForumResponseDTO(forum1)).thenReturn(new ForumResponseDTO(1L, "Forum 1", "Description 1", 1L, new ArrayList<>(), new ArrayList<>(), null));
+        when(forumMapper.convertToForumResponseDTO(forum2)).thenReturn(new ForumResponseDTO(2L, "Forum 2", "Description 2", 2L, new ArrayList<>(), new ArrayList<>(), null));
+
+        List<ForumResponseDTO> forums = forumService.getAllForums();
+
+        assertNotNull(forums);
+        assertEquals(2, forums.size());
+        assertEquals("Forum 1", forums.get(0).getTitle());
+        assertEquals("Forum 2", forums.get(1).getTitle());
     }
 }
