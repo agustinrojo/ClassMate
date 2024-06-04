@@ -5,6 +5,13 @@
   color: #e0e0e0;
   margin-bottom: 20px;
   background-color: #212529;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+.post:hover {
+  background-color: #343a40; /* Un tono más claro */
+  color: #ffffff; /* Asegurarse de que el texto sea legible */
 }
 
 .post-link {

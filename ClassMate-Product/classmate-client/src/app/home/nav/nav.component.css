@@ -5,6 +5,8 @@
   --img2: scale(0);
 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
 }
 
 .nav:has( .dropdown:target ){
