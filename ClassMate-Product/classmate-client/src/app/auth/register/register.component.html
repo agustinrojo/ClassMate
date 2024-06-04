@@ -9,14 +9,14 @@
             <div class="row mx-1 mb-2">
 
               <div class="col-6">
-                <input type="text" class="form-control bg-dark" id="firstName" aria-describedby="Nombre" placeholder="Nombre" formControlName="firstName" autocomplete="off">
+                <input type="text" class="form-control bg-dark" id="firstName" aria-describedby="Nombre" placeholder="Nombre" formControlName="firstName" autocomplete="off" maxlength="24">
                 <div class="row" *ngIf="registerForm.controls['firstName'].errors?.['required'] && registerForm.controls['firstName'].touched">
                   <div class=" text-danger fs-55">Este campo es obligatorio</div>
                 </div>
               </div>
 
               <div class="col-6">
-                <input type="text" class="form-control bg-dark" id="lastName" aria-describedby="Apellido" placeholder="Apellido" formControlName="lastName" autocomplete="off">
+                <input type="text" class="form-control bg-dark" id="lastName" aria-describedby="Apellido" placeholder="Apellido" formControlName="lastName" autocomplete="off" maxlength="24">
                 <div class="row" *ngIf="registerForm.controls['lastName'].errors?.['required'] && registerForm.controls['lastName'].touched">
                   <div class=" text-danger fs-55">Este campo es obligatorio</div>
                 </div>
@@ -36,7 +36,7 @@
               </div>
 
               <div class="col-6">
-                <input type="number" class="form-control bg-dark" id="legajo" aria-describedby="Legajo" placeholder="Legajo" formControlName="legajo" autocomplete="off">
+                <input type="number" class="form-control bg-dark" id="legajo" aria-describedby="Legajo" placeholder="Legajo" formControlName="legajo" autocomplete="off" maxlength="6">
               </div>
               <div class="row" *ngIf="registerForm.controls['legajo'].errors?.['required'] && registerForm.controls['legajo'].touched">
                 <div class=" text-danger fs-55">Este campo es obligatorio</div>
@@ -45,7 +45,7 @@
 
             <div class="row mx-1 mb-2">
               <div class="col-12">
-                <input type="email" class="form-control bg-dark" id="email" aria-describedby="Email" placeholder="Correo Institucional" formControlName="email" autocomplete="off">
+                <input type="email" class="form-control bg-dark" id="email" aria-describedby="Email" placeholder="Correo Institucional" formControlName="email" autocomplete="off" maxlength="32">
               </div>
               <div class="row" *ngIf="registerForm.controls['email'].errors?.['required'] && registerForm.controls['email'].touched">
                 <div class=" text-danger fs-55">Este campo es obligatorio</div>
@@ -58,7 +58,7 @@
 
             <div class="row mx-1 mb-2">
               <div class="col-6">
-                <input type="password" class="form-control bg-dark" id="password" aria-describedby="Password" placeholder="Contraseña" formControlName="password" autocomplete="off">
+                <input type="password" class="form-control bg-dark" id="password" aria-describedby="Password" placeholder="Contraseña" formControlName="password" autocomplete="off" maxlength="12">
                 <div class="row" *ngIf="registerForm.controls['password'].errors?.['required'] && registerForm.controls['password'].touched">
                   <div class=" text-danger fs-55">Este campo es obligatorio</div>
                 </div>

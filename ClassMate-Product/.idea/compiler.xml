@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="authentication-service" />
+        <module name="forum-service" />
         <module name="service-registry" />
       </profile>
       <profile name="Annotation profile for comment-service" enabled="true">
@@ -22,7 +23,14 @@
         </processorPath>
         <module name="comment-service" />
         <module name="post-service" />
+<<<<<<< HEAD
+=======
         <module name="forum-service" />
+<<<<<<< HEAD
+=======
+>>>>>>> ffddb292de78a0f48c46c7e26c8401920be15ddb
+        <module name="comment-service" />
+>>>>>>> 93d5b307ccb867361519114ac82f1ac03793a540
       </profile>
     </annotationProcessing>
   </component>

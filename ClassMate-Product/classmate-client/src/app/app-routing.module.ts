@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { EmailSentComponent } from './auth/email-sent/email-sent.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { LoginComponent } from './auth/login/login.component';
-import { MainComponent } from './main/main.component';
 import { canActivateGuard, canMatchGuard } from './auth/guards/auth.guard';
+import { HomeComponent } from './home/home/home.component';
 
 const routes: Routes = [
   {
@@ -24,10 +24,10 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path        : "main",
-    component   :  MainComponent,
-    canActivate : [canActivateGuard],
-    canMatch    : [canMatchGuard]
+    path       : "home",
+    component  : HomeComponent,
+    canMatch   : [canMatchGuard],
+    canActivate: [canActivateGuard]
   }
 ];
 
