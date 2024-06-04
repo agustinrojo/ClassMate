@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IsTokenValidRequest {
+public class TokenValidationRequest {
     private String token;
     private Long userId;
 }
