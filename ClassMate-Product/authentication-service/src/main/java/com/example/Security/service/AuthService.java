@@ -8,23 +8,20 @@ import com.example.Security.entities.Role;
 import com.example.Security.entities.User;
 import com.example.Security.exception.EmailAlreadyTakenException;
 import com.example.Security.exception.EmailNotValidException;
+import com.example.Security.exception.InvalidTokenException;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.repositories.JWTTokenrepository;
 import com.example.Security.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -115,10 +112,21 @@ public class AuthService {
         return mapToAuthenticationResponse(accessToken, refreshToken, userDTO);
     }
 
-    public IsTokenValidResponse isTokenValid(IsTokenValidRequest req){
+    public TokenValidationResponse isUserTokenValid(UserTokenValidationRequest req){
         User user = userRepository.findById(req.getUserId())
                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", req.getUserId()));
-        boolean valid = jwtService.isTokenValid(req.getToken(), user);
+        boolean valid = jwtService.isUserTokenValid(req.getToken(), user);
+        if(!valid){
+            throw new InvalidTokenException();
+        }
+        return mapToTokenValidationResponse(valid);
+    }
+
+    public TokenValidationResponse validateToken(TokenValidationRequest req){
+        boolean valid = jwtService.validateToken(req.getToken());
+        if(!valid){
+            throw new InvalidTokenException();
+        }
         return mapToTokenValidationResponse(valid);
     }
 
@@ -271,8 +279,8 @@ public class AuthService {
                 .build();
     }
 
-    public IsTokenValidResponse mapToTokenValidationResponse(boolean valid){
-        return IsTokenValidResponse.builder()
+    public TokenValidationResponse mapToTokenValidationResponse(boolean valid){
+        return TokenValidationResponse.builder()
                 .valid(valid)
                 .build();
     }

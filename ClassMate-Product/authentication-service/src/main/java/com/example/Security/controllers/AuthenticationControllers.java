@@ -35,9 +35,14 @@ public class AuthenticationControllers {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
-    @PostMapping("/validate")
-    public ResponseEntity<IsTokenValidResponse> validate(@RequestBody IsTokenValidRequest request){
-        return new ResponseEntity<IsTokenValidResponse>(authService.isTokenValid(request), HttpStatus.OK);
+    @PostMapping("/validate-user-token")
+    public ResponseEntity<TokenValidationResponse> validate(@RequestBody UserTokenValidationRequest request){
+        return new ResponseEntity<TokenValidationResponse>(authService.isUserTokenValid(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/validate-token")
+    public ResponseEntity<TokenValidationResponse> validate(@RequestBody TokenValidationRequest request){
+        return new ResponseEntity<TokenValidationResponse>(authService.validateToken(request), HttpStatus.OK);
     }
 
     @PostMapping("/refresh_token")

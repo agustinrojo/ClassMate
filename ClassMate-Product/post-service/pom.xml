@@ -64,10 +64,7 @@
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<scope>test</scope>
 		</dependency>
-<<<<<<< HEAD
 
-=======
->>>>>>> ffddb292de78a0f48c46c7e26c8401920be15ddb
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>

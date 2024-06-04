@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class IsTokenValidResponse {
+public class TokenValidationResponse {
     private boolean valid;
 }
