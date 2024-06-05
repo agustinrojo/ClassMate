@@ -31,8 +31,17 @@ public class User implements UserDetails {
     private String password;
     private boolean locked = false;
     private boolean enabled = false;
+
+    @ElementCollection
+    @CollectionTable(name = "forums_created", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "forum_id")
     private List<Long> forumsCreated;
+
+    @ElementCollection
+    @CollectionTable(name = "forums_subscribed", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "forum_id")
     private List<Long> forumsSubscribed;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ForumSubscriptionDTO {
-    @JsonProperty("userId")
     Long userId;
-    @JsonProperty("forumId")
     Long forumId;
 }
