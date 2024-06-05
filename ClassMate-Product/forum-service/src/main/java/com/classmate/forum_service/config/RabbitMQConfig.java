@@ -10,21 +10,24 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class RabbitMQConfig {
 
     @Value("${rabbitmq.queue.subscription-queue}")
     private String subscriptionQueue;
 
-    @Value("${rabbitmq.forum-exchange.name")
+    @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
 
     @Value("${rabbitmq.exchange.routing-key}")
     private String subscriptionRoutingKey;
 
     @Bean
-    public Queue subscriptionQueue() { return new Queue(subscriptionQueue); }
-
+    public Queue subscriptionQueue() {
+        return new Queue(subscriptionQueue, true); // durable queue
+    }
     @Bean
     public TopicExchange forumExchange() { return new TopicExchange(exchange); }
 

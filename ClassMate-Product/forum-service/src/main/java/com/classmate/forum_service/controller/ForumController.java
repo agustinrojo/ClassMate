@@ -2,7 +2,9 @@ package com.classmate.forum_service.controller;
 
 import com.classmate.forum_service.dto.APIResponseDTO;
 import com.classmate.forum_service.dto.ForumResponseDTO;
+import com.classmate.forum_service.dto.ForumSubscriptionDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
+import com.classmate.forum_service.publisher.ForumSubscriptionPublisher;
 import com.classmate.forum_service.service.IForumService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +20,17 @@ import java.util.List;
 public class ForumController {
 
     private final IForumService forumService;
+    private final ForumSubscriptionPublisher subscriptionPublisher;
 
     /**
-     * Constructs a new ForumController with the specified forum service.
+     * Constructs a new ForumController with the specified forum service and RabbitMQ publisher.
      *
      * @param forumService the forum service
+     * @param subscriptionPublisher the RabbitMQ publisher
      */
-    public ForumController(IForumService forumService) {
+    public ForumController(IForumService forumService, ForumSubscriptionPublisher subscriptionPublisher) {
         this.forumService = forumService;
+        this.subscriptionPublisher = subscriptionPublisher;
     }
 
     /**
@@ -108,7 +113,7 @@ public class ForumController {
     }
 
     /**
-     * Adds a member to a forum.
+     * Adds a member to a forum and publishes the subscription event to RabbitMQ.
      *
      * @param forumId the ID of the forum
      * @param memberId the ID of the member to add
@@ -117,6 +122,10 @@ public class ForumController {
     @PostMapping("/{forumId}/members/{memberId}")
     public ResponseEntity<Void> addMember(@PathVariable Long forumId, @PathVariable Long memberId) {
         forumService.addMember(forumId, memberId);
+
+        ForumSubscriptionDTO subscriptionDTO = new ForumSubscriptionDTO(memberId, forumId);
+        subscriptionPublisher.publishSubscription(subscriptionDTO);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
