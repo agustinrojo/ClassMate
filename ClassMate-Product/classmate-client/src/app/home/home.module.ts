@@ -4,6 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { PostContainerComponent } from './post-container/post-container.component';
 import { PostComponent } from './post/post.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 
@@ -12,7 +13,8 @@ import { PostComponent } from './post/post.component';
     HomeComponent,
     NavComponent,
     PostContainerComponent,
-    PostComponent
+    PostComponent,
+    SidebarComponent
   ],
   imports: [
     CommonModule

@@ -52,7 +52,6 @@
               </div>
               <div class="row" *ngIf="registerForm.controls['email'].errors?.['invalidEmailFormat'] && registerForm.controls['email'].touched">
                 <div class=" text-danger fs-55">Formato de correo institucional invalido</div>
-
               </div>
             </div>
 
@@ -68,21 +67,16 @@
                 <div class="row" *ngIf="registerForm.controls['rePassword'].errors?.['required'] && registerForm.controls['rePassword'].touched">
                   <div class=" text-danger fs-55">Este campo es obligatorio</div>
                 </div>
-
               </div>
               <div class="row" *ngIf="registerForm.errors?.['passwordDoesntMatch'] && registerForm.controls['rePassword'].touched && registerForm.controls['password'].touched">
                 <div class=" text-danger fs-55">Las contraseñas no coinciden</div>
               </div>
-
-                <div *ngIf="loading" class="row mt-5 mb-2 justify-content-center">
-                  <span class="loader mr-1"></span>
-                </div>
-
+              <div *ngIf="loading" class="row mt-5 mb-2 justify-content-center">
+                <span class="loader mr-1"></span>
+              </div>
             </div>
 
-
-
-            </div>
+          </div>
 
           <div class="row mx-1 mb-2">
             <div class="col-12">
