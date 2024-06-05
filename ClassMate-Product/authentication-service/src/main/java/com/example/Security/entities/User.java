@@ -31,6 +31,8 @@ public class User implements UserDetails {
     private String password;
     private boolean locked = false;
     private boolean enabled = false;
+    private List<Long> forumsCreated;
+    private List<Long> forumsSubscribed;
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -70,5 +72,14 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public boolean isAlreadySubscribedToForum(Long forumId){
+        return this.forumsSubscribed.stream()
+                .anyMatch(f -> f.equals(forumId));
+    }
+
+    public void subscribeToForum(Long forumId){
+        forumsSubscribed.add(forumId);
     }
 }
