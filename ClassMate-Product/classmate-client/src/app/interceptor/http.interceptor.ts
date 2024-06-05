@@ -12,7 +12,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     if(req.url != "http://localhost:8080/api/auth/register" && req.url != "http://localhost:8080/api/auth/authenticate" && req.url != "http://localhost:8080/api/auth/validate" && req.url != "http://localhost:8080/api/auth/refresh_token"){
 
       const modifiedReq = req.clone({
-        headers: req.headers.set("Authorization", `Bearer ${localStorage.getItem("token")}`)
+        headers: req.headers.set("Authorization", `Bearer ${localStorage.getItem("accessToken")}`)
       })
       return next.handle(modifiedReq);
     }

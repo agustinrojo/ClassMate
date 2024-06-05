@@ -23,13 +23,10 @@ import org.springframework.security.web.server.authentication.logout.DelegatingS
 import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
 import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -44,7 +41,8 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URL = {"/api/auth/register",
     "/api/auth/authenticate",
     "/api/auth/refresh_token",
-    "/api/auth/validate",
+    "/api/auth/validate-token",
+    "/api/auth/validate-user-token",
     "/api/auth/confirm",
     "/error"};
     @Bean
@@ -59,7 +57,7 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated())
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("/api/auth/logout")
                         .addLogoutHandler(customLogoutHandler)
                         .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))//Esto devuelve un 200
                         .invalidateHttpSession(true)
@@ -70,11 +68,9 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-
-
     }
 
 
-
-
 }
+
+
