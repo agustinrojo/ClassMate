@@ -54,12 +54,12 @@ export class AuthServiceService {
     }
 
 
-    let url: string = `${this.baseUrl}/api/auth/validate`
+    let url: string = `${this.baseUrl}/api/auth/validate-user-token`
     return this.http.post<ValidationResponse>(url, req);
   }
 
   public logout(){
-    let url: string = `${this.baseUrl}/logout`;
+    let url: string = `${this.baseUrl}/api/auth/logout`;
     this.http.post<LoginResponse>(url, {});
 
     this.clearTokens();
