@@ -5,6 +5,10 @@ import { NavComponent } from './nav/nav.component';
 import { PostContainerComponent } from './post-container/post-container.component';
 import { PostComponent } from './post/post.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { Route, RouterModule, Routes } from '@angular/router';
+import { PostPageComponent } from './post-page/post-page/post-page.component';
+import { HomeRoutingModule } from './home-routing.module';
+import { ForumsPageModule } from './forums-page/forums-page.module';
 
 
 
@@ -14,10 +18,13 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     NavComponent,
     PostContainerComponent,
     PostComponent,
-    SidebarComponent
+    SidebarComponent,
+
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    HomeRoutingModule,
+    ForumsPageModule
   ],
   exports: [
     HomeComponent
