@@ -2,16 +2,13 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="api-gateway" />
         <module name="authentication-service" />
-        <module name="service-registry" />
       </profile>
-      <profile name="Annotation profile for comment-service" enabled="true">
+      <profile name="Annotation profile for post-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -21,23 +18,12 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
-        <module name="comment-service" />
         <module name="post-service" />
-        <module name="forum-service" />
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> ffddb292de78a0f48c46c7e26c8401920be15ddb
->>>>>>> a5a3c4342f3793c874e5d881cfea06d139f418a9
-        <module name="comment-service" />
->>>>>>> 93d5b307ccb867361519114ac82f1ac03793a540
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="api-gateway" options="-parameters" />
       <module name="authentication-service" options="-parameters" />
       <module name="comment-service" options="-parameters" />
       <module name="forum-service" options="-parameters" />
