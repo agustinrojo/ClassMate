@@ -152,7 +152,7 @@ public class ForumServiceImpl implements IForumService {
                                                     .userId(memberId)
                                                     .build();
 
-        rabbitTemplate.convertAndSend(forumExchange, subscriptionRoutingKey, forumSubscriptionDTO);
+        //rabbitTemplate.convertAndSend(forumExchange, subscriptionRoutingKey, forumSubscriptionDTO);
         forumRepository.save(forum);
     }
 

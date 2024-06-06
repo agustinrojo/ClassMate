@@ -55,6 +55,12 @@ body {
   color: #8c6e48; /* Tono cálido más oscuro */
 }
 
+.forum:hover {
+  transform: translateY(-5px); /* Mover hacia arriba al hacer hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra al hacer hover */
+  cursor: pointer;
+}
+
 @media (max-width: 600px) {
   .forums-container {
       padding: 15px;

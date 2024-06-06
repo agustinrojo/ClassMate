@@ -1,27 +1,24 @@
 <body>
   <div class="post-container">
     <div class="post">
-        <h2>#usuario</h2>
-        <p>Este es un ejemplo de un post similar a Twitter. Aquí iría el contenido del post.</p>
-        <span class="post-time">Hace 2 horas</span>
+        <h2>{{ post?.title }}</h2>
+        <p>{{ post?.body }}</p>
+        <span class="post-time">Creador: {{ post?.authorId }}</span>
+        <br>
+        <span class="post-time">Publicado: {{ post?.creationDate | date }}</span>
+
     </div>
+    <form class="comment-form mb-3" action="/comment" method="POST">
+      <label for="comment" class="mb-2">Agregar un comentario</label>
+      <textarea id="comment" name="comment" rows="3" required></textarea>
+      <button type="submit">Comentar</button>
+    </form>
+    <hr>
     <div class="comments-section">
-        <h3>Comentarios</h3>
-        <div class="comment">
-            <h4>#comentador1</h4>
-            <p>Este es un comentario de ejemplo.</p>
-            <span class="comment-time">Hace 1 hora</span>
-        </div>
-        <div class="comment">
-            <h4>#comentador2</h4>
-            <p>Otro comentario de ejemplo.</p>
-            <span class="comment-time">Hace 30 minutos</span>
-        </div>
-        <form class="comment-form" action="/comment" method="POST">
-            <label for="comment">Agregar un comentario</label>
-            <textarea id="comment" name="comment" rows="3" required></textarea>
-            <button type="submit">Comentar</button>
-        </form>
+        <h3 class="mb-3">Comentarios</h3>
+        <app-comment *ngFor="let comment of post?.commentDTOS" [comment]="comment" ></app-comment>
+
+
     </div>
 </div>
 </body>

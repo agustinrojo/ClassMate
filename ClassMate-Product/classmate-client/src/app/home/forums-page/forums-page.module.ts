@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ForumsPageComponent } from './forums-page/forums-page.component';
+import { ForumService } from '../../services/forum.service';
 
 
 
@@ -10,6 +11,9 @@ import { ForumsPageComponent } from './forums-page/forums-page.component';
   ],
   imports: [
     CommonModule
+  ],
+  providers: [
+    ForumService
   ]
 })
 export class ForumsPageModule { }

@@ -4,6 +4,7 @@ import com.example.Security.dto.ForumSubscriptionDTO;
 import com.example.Security.entities.User;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ public class ForumSubscriptionConsumer {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @RabbitListener(queues = "${rabbitmq.queue.subscription-queue}")
     public void subscribeToForum(ForumSubscriptionDTO forumSubscriptionDTO){
         Long userId = forumSubscriptionDTO.getUserId();

@@ -1,10 +1,10 @@
 <body>
   <div class="forums-container">
       <h1>Foros de Discusión</h1>
-      <div class="forum" >
-          <h2>Titulo</h2>
-          <p>Descripcion</p>
-          <span class="forum-details">N posts - Último mensaje: ayer</span>
+      <div class="forum" *ngFor="let forum of forums" (click)="navigateToForum(forum.id)" >
+          <h2>{{ forum.title }}</h2>
+          <p>{{ forum.description }}</p>
+          <span class="forum-details">Creado en {{ forum.creationDate | date }}</span>
       </div>
   </div>
 </body>
