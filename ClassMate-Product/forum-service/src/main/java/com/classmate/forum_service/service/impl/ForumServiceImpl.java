@@ -3,6 +3,7 @@ package com.classmate.forum_service.service.impl;
 import com.classmate.forum_service.client.IPostClient;
 import com.classmate.forum_service.dto.APIResponseDTO;
 import com.classmate.forum_service.dto.ForumResponseDTO;
+import com.classmate.forum_service.dto.ForumSubscriptionDTO;
 import com.classmate.forum_service.dto.PostDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.entity.Forum;
@@ -14,6 +15,8 @@ import com.classmate.forum_service.repository.IForumRepository;
 import com.classmate.forum_service.service.IForumService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,9 +31,14 @@ import java.util.stream.Collectors;
 @Service
 public class ForumServiceImpl implements IForumService {
 
+    @Value("${rabbitmq.forum-exchange.name}")
+    private String forumExchange;
+    @Value("${rabbitmq.exchange.routing-key}")
+    private String subscriptionRoutingKey;
     private final IForumRepository forumRepository;
     private final IForumMapper forumMapper;
     private final IPostClient postClient;
+    private final RabbitTemplate rabbitTemplate;
     private static final Logger LOGGER = LoggerFactory.getLogger(ForumServiceImpl.class);
 
     /**
@@ -40,10 +48,11 @@ public class ForumServiceImpl implements IForumService {
      * @param forumMapper the forum mapper
      * @param postClient the post client
      */
-    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient) {
+    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, RabbitTemplate rabbitTemplate) {
         this.forumRepository = forumRepository;
         this.forumMapper = forumMapper;
         this.postClient = postClient;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     /**
@@ -137,6 +146,13 @@ public class ForumServiceImpl implements IForumService {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
         forum.addMember(memberId);
+
+        ForumSubscriptionDTO forumSubscriptionDTO = ForumSubscriptionDTO.builder()
+                                                    .forumId(forumId)
+                                                    .userId(memberId)
+                                                    .build();
+
+        //rabbitTemplate.convertAndSend(forumExchange, subscriptionRoutingKey, forumSubscriptionDTO);
         forumRepository.save(forum);
     }
 

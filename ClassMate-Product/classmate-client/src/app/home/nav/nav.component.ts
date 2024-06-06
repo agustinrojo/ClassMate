@@ -15,4 +15,14 @@ export class NavComponent {
     this._router.navigate(["login"]);
     this._authService.logout();
   }
+
+  public navigateToForums(){
+    console.log("click")
+    this._router.navigate(["forums"]);
+  }
+
+  public navigateToMain(){
+    console.log("click")
+    this._router.navigate(["home/main"]);
+  }
 }

@@ -1,0 +1,24 @@
+<body>
+  <div class="post-container">
+    <div class="post">
+        <h2>{{ post?.title }}</h2>
+        <p>{{ post?.body }}</p>
+        <span class="post-time">Creador: {{ post?.authorId }}</span>
+        <br>
+        <span class="post-time">Publicado: {{ post?.creationDate | date }}</span>
+
+    </div>
+    <form class="comment-form mb-3" action="/comment" method="POST">
+      <label for="comment" class="mb-2">Agregar un comentario</label>
+      <textarea id="comment" name="comment" rows="3" required></textarea>
+      <button type="submit">Comentar</button>
+    </form>
+    <hr>
+    <div class="comments-section">
+        <h3 class="mb-3">Comentarios</h3>
+        <app-comment *ngFor="let comment of post?.commentDTOS" [comment]="comment" ></app-comment>
+
+
+    </div>
+</div>
+</body>

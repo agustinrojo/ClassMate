@@ -1,0 +1,9 @@
+<div class="post bg-dark" (click)="navigateToPost(post!.id)">
+  <h2>{{ post?.title }}</h2>
+  <p>{{ post?.body }}</p>
+  <div class="post-details">
+      <span>Creado por: {{ post?.authorId }}</span> |
+      <span>Comentarios: n</span> |
+      <span>Publicado: {{ post?.creationDate | date }}</span>
+  </div>
+</div>

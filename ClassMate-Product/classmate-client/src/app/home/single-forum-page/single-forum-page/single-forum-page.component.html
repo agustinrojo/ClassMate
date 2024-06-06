@@ -1,0 +1,8 @@
+<body>
+  <div class="forum-container">
+      <h1>{{ forum?.forum?.title }}</h1>
+
+      <app-post *ngFor="let post of forum?.posts" [post]="post"></app-post>
+
+  </div>
+</body>
