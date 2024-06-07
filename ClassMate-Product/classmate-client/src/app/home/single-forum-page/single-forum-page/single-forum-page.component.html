@@ -2,6 +2,8 @@
   <div class="forum-container">
       <h1>{{ forum?.forum?.title }}</h1>
 
+      <button class="btn mb-2" (click)="navigateToCreatePost()"> Añadir post </button>
+
       <app-post *ngFor="let post of forum?.posts" [post]="post"></app-post>
 
   </div>

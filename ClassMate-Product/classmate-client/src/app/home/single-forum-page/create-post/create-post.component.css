@@ -7,13 +7,12 @@ body {
   align-items: flex-start;
   padding: 20px;
   color: #f5f5f5; /* Color de texto claro */
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.forum-container {
+.post-container {
   background-color: #1e1e1e; /* Fondo de contenedor oscuro */
   padding: 20px;
   border-radius: 10px;
@@ -25,45 +24,45 @@ body {
   margin-bottom: 20px;
 }
 
-.forum-container h1 {
+.post-container h1 {
   margin-bottom: 1em;
   font-size: 2em;
   color: #d4a373; /* Tono cálido y claro */
   text-align: center;
 }
 
-.post { /* Fondo de post oscuro */
-  padding: 15px;
-  border-radius: 5px;
+.form-group {
   margin-bottom: 20px;
 }
 
-.post h2 {
-  margin-bottom: 0.5em;
-  font-size: 1.5em;
-  color: #b07a57; /* Tono cálido */
-}
-
-.post p {
+.form-group label {
+  display: block;
   font-size: 1em;
-  margin-bottom: 10px;
-  color: #f5f5f5; /* Color de texto claro */
+  color: #f5f5f5;
+  margin-bottom: 5px;
 }
 
-.post-details {
-  font-size: 0.9em;
-  color: #8c6e48; /* Tono cálido más oscuro */
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #333;
+  background-color: #2c2c2c;
+  color: #f5f5f5;
+  box-sizing: border-box;
 }
 
-.post:hover {
-  transform: translateY(-5px); /* Mover hacia arriba al hacer hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra al hacer hover */
-  cursor: pointer;
+.form-group input:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #d4a373;
 }
 
 button {
   background-color: #0f0f0f;
   color: #f5f5f5;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -73,26 +72,20 @@ button:hover {
   background-color: #141414; /* Un color más oscuro que #1e1e1e */
 }
 
-@media (max-width: 600px) {
-  .forum-container {
-      padding: 15px;
-  }
-
-  .forum-container h1 {
-      font-size: 1.5em;
-  }
-
-  .post h2 {
-      font-size: 1.3em;
-  }
-
-  .post p {
-      font-size: 0.9em;
-  }
-
-  .post-details {
-      font-size: 0.8em;
-  }
+button:disabled {
+  background-color: #3a3a3a; /* Fondo más claro para indicar deshabilitado */
+  color: #a9a9a9; /* Texto gris claro */
+  cursor: not-allowed; /* Cursor no permitido */
+  box-shadow: none; /* Sin sombra */
+  opacity: 0.6; /* Reducir opacidad */
 }
 
+@media (max-width: 600px) {
+  .post-container {
+    padding: 15px;
+  }
 
+  .post-container h1 {
+    font-size: 1.5em;
+  }
+}

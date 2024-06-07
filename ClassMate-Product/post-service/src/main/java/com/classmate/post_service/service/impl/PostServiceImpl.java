@@ -88,6 +88,7 @@ public class PostServiceImpl implements IPostService {
         validatePost(postDTO);
         LOGGER.info("Saving post...");
         Post post = postMapper.convertToPost(postDTO);
+        post.setId(null);
         Post savedPost = postRepository.save(post);
         return postMapper.convertToPostDTO(savedPost);
     }

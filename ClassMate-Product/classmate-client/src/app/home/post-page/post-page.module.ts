@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PostPageComponent } from './post-page/post-page.component';
 import { PostService } from '../../services/post.service';
 import { CommentComponent } from './comment/comment.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -12,7 +13,8 @@ import { CommentComponent } from './comment/comment.component';
     CommentComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   providers: [
     PostService

@@ -77,8 +77,16 @@ body {
   box-sizing: border-box;
 }
 
-.comment-form button:hover {
+.comment-form button
+:hover {
   background-color: #725a3d; /* Color del botón al pasar el cursor */
+}
+
+.comment-form button:disabled {
+
+  background-color: #b48c61; /* Color de fondo cuando el botón está deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor a no permitido */
+
 }
 
 @media (max-width: 600px) {

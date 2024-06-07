@@ -19,7 +19,7 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
   text-align: left;
   max-width: 600px;
-  width: 100%;
+  width: 100vh;
   box-sizing: border-box;
   margin-bottom: 20px;
 }
