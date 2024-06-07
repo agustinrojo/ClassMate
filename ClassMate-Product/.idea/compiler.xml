@@ -3,17 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-<<<<<<< HEAD
-      <profile name="Annotation profile for comment-service" enabled="true">
-=======
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="authentication-service" />
-      </profile>
       <profile name="Annotation profile for forum-service" enabled="true">
->>>>>>> rabbitmq
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -23,22 +13,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok-mapstruct-binding/0.2.0/lombok-mapstruct-binding-0.2.0.jar" />
         </processorPath>
-<<<<<<< HEAD
-        <module name="comment-service" />
-=======
->>>>>>> rabbitmq
         <module name="forum-service" />
+        <module name="comment-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="authentication-service" options="-parameters" />
-<<<<<<< HEAD
       <module name="comment-service" options="-parameters -parameters" />
-=======
-      <module name="comment-service" options="-parameters" />
->>>>>>> rabbitmq
       <module name="forum-service" options="-parameters" />
       <module name="post-service" options="-parameters" />
       <module name="service-registry" options="-parameters" />
