@@ -5,11 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO for forum subscription actions.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class ForumSubscriptionDTO {
-    Long userId;
-    Long forumId;
+    private Long userId;
+    private Long forumId;
 }

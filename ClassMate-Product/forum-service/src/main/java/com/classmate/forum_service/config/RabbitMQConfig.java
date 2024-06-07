@@ -18,21 +18,57 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.subscription-queue}")
     private String subscriptionQueue;
 
+    @Value("${rabbitmq.queue.add-admin-queue}")
+    private String addAdminQueue;
+
+    @Value("${rabbitmq.queue.remove-member-queue}")
+    private String removeMemberQueue;
+
+    @Value("${rabbitmq.queue.remove-admin-queue}")
+    private String removeAdminQueue;
+
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
 
     @Value("${rabbitmq.exchange.routing-key}")
     private String subscriptionRoutingKey;
 
-    @Bean
-    public Queue subscriptionQueue() {
-        return new Queue(subscriptionQueue, true); // durable queue
-    }
-    @Bean
-    public TopicExchange forumExchange() { return new TopicExchange(exchange); }
+    @Value("${rabbitmq.exchange.add-admin-routing-key}")
+    private String addAdminRoutingKey;
+
+    @Value("${rabbitmq.exchange.remove-member-routing-key}")
+    private String removeMemberRoutingKey;
+
+    @Value("${rabbitmq.exchange.remove-admin-routing-key}")
+    private String removeAdminRoutingKey;
 
     @Bean
-    public Binding subscriptionBinding(){
+    public Queue subscriptionQueue() {
+        return new Queue(subscriptionQueue, true);
+    }
+
+    @Bean
+    public Queue addAdminQueue() {
+        return new Queue(addAdminQueue, true);
+    }
+
+    @Bean
+    public Queue removeMemberQueue() {
+        return new Queue(removeMemberQueue, true);
+    }
+
+    @Bean
+    public Queue removeAdminQueue() {
+        return new Queue(removeAdminQueue, true);
+    }
+
+    @Bean
+    public TopicExchange forumExchange() {
+        return new TopicExchange(exchange);
+    }
+
+    @Bean
+    public Binding subscriptionBinding() {
         return BindingBuilder
                 .bind(subscriptionQueue())
                 .to(forumExchange())
@@ -40,15 +76,38 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public MessageConverter converter(){
+    public Binding addAdminBinding() {
+        return BindingBuilder
+                .bind(addAdminQueue())
+                .to(forumExchange())
+                .with(addAdminRoutingKey);
+    }
+
+    @Bean
+    public Binding removeMemberBinding() {
+        return BindingBuilder
+                .bind(removeMemberQueue())
+                .to(forumExchange())
+                .with(removeMemberRoutingKey);
+    }
+
+    @Bean
+    public Binding removeAdminBinding() {
+        return BindingBuilder
+                .bind(removeAdminQueue())
+                .to(forumExchange())
+                .with(removeAdminRoutingKey);
+    }
+
+    @Bean
+    public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public RabbitTemplate amqpTemplate(ConnectionFactory connectionFactory){
+    public RabbitTemplate amqpTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(converter());
         return rabbitTemplate;
     }
-
 }
