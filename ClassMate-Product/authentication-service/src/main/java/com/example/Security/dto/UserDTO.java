@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,6 @@ public class UserDTO {
     private String legajo;
     private String carrera;
     private String email;
+    private List<Long> forumsSubscribed;
+    private List<Long> forumsCreated;
 }

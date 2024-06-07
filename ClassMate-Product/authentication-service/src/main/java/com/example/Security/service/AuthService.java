@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -265,6 +266,8 @@ public class AuthService {
                 .email(req.getEmail())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .role(Role.USER)
+                .forumsSubscribed(new ArrayList<>())
+                .forumsCreated(new ArrayList<>())
                 .build();
     }
 
@@ -276,6 +279,8 @@ public class AuthService {
                 .email(user.getEmail())
                 .legajo(user.getLegajo())
                 .carrera(user.getCarrera())
+                .forumsSubscribed(user.getForumsSubscribed())
+                .forumsCreated(user.getForumsCreated())
                 .build();
     }
 

@@ -61,6 +61,29 @@ body {
   cursor: pointer;
 }
 
+button {
+  padding: 10px;
+  background-color: #8c6e48; /* Fondo del botón */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 40%;
+  box-sizing: border-box;
+}
+
+button:hover {
+  background-color: #725a3d; /* Color del botón al pasar el cursor */
+}
+
+button:disabled,
+.button-disabled {
+  background-color: #b48c61; /* Color de fondo cuando el botón está deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor a no permitido */
+}
+
 @media (max-width: 600px) {
   .forums-container {
       padding: 15px;

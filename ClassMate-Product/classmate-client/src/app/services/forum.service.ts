@@ -17,4 +17,8 @@ export class ForumService {
     return this.http.get<ForumApiResponseDTO>(`${this.baseUrl}/${id}`);
   }
 
+  public addMember(forumId: number, memberId: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${forumId}/members/${memberId}`, {});
+  }
+
 }

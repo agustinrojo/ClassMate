@@ -1,8 +1,16 @@
 <body>
   <div class="forums-container">
       <h1>Foros de Discusión</h1>
-      <div class="forum" *ngFor="let forum of forums" (click)="navigateToForum(forum.id)" >
-          <h2>{{ forum.title }}</h2>
+      <div class="forum" *ngFor="let forum of forums" >
+          <div class="row">
+            <div class="col-6">
+              <h2 (click)="navigateToForum(forum.id)">{{ forum.title }}</h2>
+            </div>
+            <div class="col-6 d-flex flex-row-reverse">
+              <button (click)="subscribe(forum.id)" [disabled]="forumsScubscribed.includes(forum.id)">{{ forumsScubscribed.includes(forum.id) ? "Suscripto" : "Suscribirse" }}</button>
+            </div>
+          </div>
+
           <p>{{ forum.description }}</p>
           <span class="forum-details">Creado en {{ forum.creationDate | date }}</span>
       </div>
