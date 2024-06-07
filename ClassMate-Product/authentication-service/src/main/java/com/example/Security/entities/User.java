@@ -42,6 +42,11 @@ public class User implements UserDetails {
     @Column(name = "forum_id")
     private List<Long> forumsSubscribed;
 
+    @ElementCollection
+    @CollectionTable(name = "forums_admin", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "forum_id")
+    private List<Long> forumsAdmin;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -90,5 +95,18 @@ public class User implements UserDetails {
 
     public void subscribeToForum(Long forumId){
         forumsSubscribed.add(forumId);
+    }
+
+    public boolean isAlreadyAdminOfForum(Long forumId) {
+        return this.forumsAdmin.stream()
+                .anyMatch(f -> f.equals(forumId));
+    }
+
+    public void addAdminToForum(Long forumId) {
+        forumsAdmin.add(forumId);
+    }
+
+    public void removeAdminFromForum(Long forumId) {
+        forumsAdmin.remove(forumId);
     }
 }

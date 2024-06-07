@@ -11,12 +11,11 @@ import com.classmate.forum_service.exception.ForumNotFoundException;
 import com.classmate.forum_service.exception.InvalidForumException;
 import com.classmate.forum_service.exception.UnauthorizedActionException;
 import com.classmate.forum_service.mapper.IForumMapper;
+import com.classmate.forum_service.publisher.ForumSubscriptionPublisher;
 import com.classmate.forum_service.repository.IForumRepository;
 import com.classmate.forum_service.service.IForumService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,28 +30,25 @@ import java.util.stream.Collectors;
 @Service
 public class ForumServiceImpl implements IForumService {
 
-    @Value("${rabbitmq.forum-exchange.name}")
-    private String forumExchange;
-    @Value("${rabbitmq.exchange.routing-key}")
-    private String subscriptionRoutingKey;
     private final IForumRepository forumRepository;
     private final IForumMapper forumMapper;
     private final IPostClient postClient;
-    private final RabbitTemplate rabbitTemplate;
+    private final ForumSubscriptionPublisher subscriptionPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(ForumServiceImpl.class);
 
     /**
-     * Constructs a new ForumServiceImpl with the specified repository, mapper, and post client.
+     * Constructs a new ForumServiceImpl with the specified repository, mapper, post client, and subscription publisher.
      *
      * @param forumRepository the forum repository
      * @param forumMapper the forum mapper
      * @param postClient the post client
+     * @param subscriptionPublisher the subscription publisher
      */
-    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, RabbitTemplate rabbitTemplate) {
+    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher) {
         this.forumRepository = forumRepository;
         this.forumMapper = forumMapper;
         this.postClient = postClient;
-        this.rabbitTemplate = rabbitTemplate;
+        this.subscriptionPublisher = subscriptionPublisher;
     }
 
     /**
@@ -148,11 +144,11 @@ public class ForumServiceImpl implements IForumService {
         forum.addMember(memberId);
 
         ForumSubscriptionDTO forumSubscriptionDTO = ForumSubscriptionDTO.builder()
-                                                    .forumId(forumId)
-                                                    .userId(memberId)
-                                                    .build();
+                .forumId(forumId)
+                .userId(memberId)
+                .build();
+        subscriptionPublisher.publishSubscription(forumSubscriptionDTO);
 
-        //rabbitTemplate.convertAndSend(forumExchange, subscriptionRoutingKey, forumSubscriptionDTO);
         forumRepository.save(forum);
     }
 
@@ -164,6 +160,13 @@ public class ForumServiceImpl implements IForumService {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
         forum.addAdmin(adminId);
+
+        ForumSubscriptionDTO adminDTO = ForumSubscriptionDTO.builder()
+                .forumId(forumId)
+                .userId(adminId)
+                .build();
+        subscriptionPublisher.publishAddAdmin(adminDTO);
+
         forumRepository.save(forum);
     }
 
@@ -175,6 +178,13 @@ public class ForumServiceImpl implements IForumService {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
         forum.removeMember(memberId);
+
+        ForumSubscriptionDTO memberDTO = ForumSubscriptionDTO.builder()
+                .forumId(forumId)
+                .userId(memberId)
+                .build();
+        subscriptionPublisher.publishRemoveMember(memberDTO);
+
         forumRepository.save(forum);
     }
 
@@ -186,6 +196,13 @@ public class ForumServiceImpl implements IForumService {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
         forum.removeAdmin(adminId);
+
+        ForumSubscriptionDTO adminDTO = ForumSubscriptionDTO.builder()
+                .forumId(forumId)
+                .userId(adminId)
+                .build();
+        subscriptionPublisher.publishRemoveAdmin(adminDTO);
+
         forumRepository.save(forum);
     }
 
