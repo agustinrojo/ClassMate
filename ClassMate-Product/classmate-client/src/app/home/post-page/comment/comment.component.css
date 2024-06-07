@@ -31,3 +31,7 @@
   color: #f5f5f5; /* Color de texto claro */
   text-align: left;
 }
+
+button{
+  height: 2.5em;
+}

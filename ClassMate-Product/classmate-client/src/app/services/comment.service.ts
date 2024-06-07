@@ -12,4 +12,8 @@ export class CommentService {
     return this.http.post<CommentDTO>(`${this.baseUrl}`, comment);
   }
 
+  public deleteComment(commentId: number, userId: number): Observable<void>{
+    return this.http.delete<void>(`${this.baseUrl}/${commentId}?userId=${userId}`)
+  }
+
 }

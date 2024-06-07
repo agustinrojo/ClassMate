@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommentDTO } from '../../../services/dto/comment/comment-dto.interface';
 import { LoginResponse } from '../../../auth/dto/login-response.interface';
 import { CommentService } from '../../../services/comment.service';
+import { User } from '../../../auth/dto/user-dto.interface';
 
 @Component({
   selector: 'app-post-page',
@@ -68,6 +69,23 @@ export class PostPageComponent implements OnInit{
       console.log(err);
     })
 
+  }
+
+  public deleteComment(event: number){
+    let user: User = JSON.parse(localStorage.getItem("user")!);
+    let userId = user.id;
+    this._commentService.deleteComment(event, userId)
+      .subscribe(() => {
+        //borrar comentario
+        const comments : CommentDTO[] = [...this.post.commentDTOS];
+        const deletedCommentIndex = comments.findIndex(c => c.id === event);
+        if(deletedCommentIndex !== -1){
+          this.post.commentDTOS.splice(deletedCommentIndex, 1);
+        }
+      },
+    err => {
+      console.log(err);
+    })
   }
 
 }

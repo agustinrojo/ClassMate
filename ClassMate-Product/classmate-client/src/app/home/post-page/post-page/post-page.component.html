@@ -25,7 +25,7 @@
     <hr>
     <div class="comments-section">
         <h3 class="mb-3">Comentarios</h3>
-        <app-comment *ngFor="let comment of post?.commentDTOS" [comment]="comment" ></app-comment>
+        <app-comment (deleteEvent)="deleteComment($event)" *ngFor="let comment of post?.commentDTOS" [comment]="comment" ></app-comment>
 
 
     </div>
