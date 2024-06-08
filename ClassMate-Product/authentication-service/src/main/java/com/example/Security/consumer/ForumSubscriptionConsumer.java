@@ -98,4 +98,26 @@ public class ForumSubscriptionConsumer {
 
         userRepository.save(user);
     }
+
+    @Transactional
+    @RabbitListener(queues = "${rabbitmq.queue.creator-update-queue}")
+    public void updateCreator(ForumSubscriptionDTO forumSubscriptionDTO) {
+        Long userId = forumSubscriptionDTO.getUserId();
+        Long forumId = forumSubscriptionDTO.getForumId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
+
+        if(user.getForumsCreated().contains(forumId)){
+            LOGGER.error(String.format("User %d is already the creator of forum %d.", userId, forumId));
+            return;
+        }
+
+        user.getForumsCreated().add(forumId);
+        user.getForumsAdmin().add(forumId);
+        user.getForumsSubscribed().add(forumId);
+
+        LOGGER.info(String.format("User %d is now the creator of forum %d.", userId, forumId));
+
+        userRepository.save(user);
+    }
 }

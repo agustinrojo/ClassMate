@@ -27,6 +27,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.remove-admin-queue}")
     private String removeAdminQueue;
 
+    @Value("${rabbitmq.queue.creator-update-queue}")
+    private String creatorUpdateQueue;
+
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
 
@@ -41,6 +44,9 @@ public class RabbitMQConfig {
 
     @Value("${rabbitmq.exchange.remove-admin-routing-key}")
     private String removeAdminRoutingKey;
+
+    @Value("${rabbitmq.exchange.creator-update-routing-key}")
+    private String creatorUpdateRoutingKey;
 
     @Bean
     public Queue subscriptionQueue() {
@@ -60,6 +66,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue removeAdminQueue() {
         return new Queue(removeAdminQueue, true);
+    }
+
+    @Bean
+    public Queue creatorUpdateQueue() {
+        return new Queue(creatorUpdateQueue, true);
     }
 
     @Bean
@@ -97,6 +108,14 @@ public class RabbitMQConfig {
                 .bind(removeAdminQueue())
                 .to(forumExchange())
                 .with(removeAdminRoutingKey);
+    }
+
+    @Bean
+    public Binding creatorUpdateBinding() {
+        return BindingBuilder
+                .bind(creatorUpdateQueue())
+                .to(forumExchange())
+                .with(creatorUpdateRoutingKey);
     }
 
     @Bean

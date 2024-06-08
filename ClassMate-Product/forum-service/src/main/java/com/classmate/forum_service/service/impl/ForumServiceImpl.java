@@ -1,10 +1,7 @@
 package com.classmate.forum_service.service.impl;
 
 import com.classmate.forum_service.client.IPostClient;
-import com.classmate.forum_service.dto.APIResponseDTO;
-import com.classmate.forum_service.dto.ForumResponseDTO;
-import com.classmate.forum_service.dto.ForumSubscriptionDTO;
-import com.classmate.forum_service.dto.PostDTO;
+import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.entity.Forum;
 import com.classmate.forum_service.exception.ForumNotFoundException;
@@ -102,8 +99,16 @@ public class ForumServiceImpl implements IForumService {
         forum.addMember(creatorId);
         forum.addAdmin(creatorId);
         Forum savedForum = forumRepository.save(forum);
+
+        ForumSubscriptionDTO creatorDTO = ForumSubscriptionDTO.builder()
+                .forumId(forum.getId())
+                .userId(creatorId)
+                .build();
+        subscriptionPublisher.publishCreatorUpdate(creatorDTO);
+
         return forumMapper.convertToForumResponseDTO(savedForum);
     }
+
 
     /**
      * {@inheritDoc}
@@ -132,6 +137,9 @@ public class ForumServiceImpl implements IForumService {
         }
 
         forumRepository.delete(forum);
+
+        ForumDeletionDTO forumDeletionDTO = new ForumDeletionDTO(id);
+        subscriptionPublisher.publishForumDeletion(forumDeletionDTO);
     }
 
     /**

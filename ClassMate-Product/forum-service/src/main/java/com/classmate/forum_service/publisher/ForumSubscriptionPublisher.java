@@ -1,5 +1,6 @@
 package com.classmate.forum_service.publisher;
 
+import com.classmate.forum_service.dto.ForumDeletionDTO;
 import com.classmate.forum_service.dto.ForumSubscriptionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,12 @@ public class ForumSubscriptionPublisher {
 
     @Value("${rabbitmq.exchange.remove-admin-routing-key}")
     private String removeAdminRoutingKey;
+
+    @Value("${rabbitmq.exchange.creator-update-routing-key}")
+    private String creatorUpdateRoutingKey;
+
+    @Value("${rabbitmq.exchange.delete-forum-routing-key}")
+    private String deleteForumRoutingKey;
 
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
@@ -50,5 +57,15 @@ public class ForumSubscriptionPublisher {
     public void publishRemoveAdmin(ForumSubscriptionDTO forumSubscriptionDTO) {
         LOGGER.info(String.format("Remove admin event sent to RabbitMQ -> %s", forumSubscriptionDTO.toString()));
         rabbitTemplate.convertAndSend(exchange, removeAdminRoutingKey, forumSubscriptionDTO);
+    }
+
+    public void publishCreatorUpdate(ForumSubscriptionDTO forumSubscriptionDTO) {
+        LOGGER.info(String.format("Creator update event sent to RabbitMQ -> %s", forumSubscriptionDTO.toString()));
+        rabbitTemplate.convertAndSend(exchange, creatorUpdateRoutingKey, forumSubscriptionDTO);
+    }
+
+    public void publishForumDeletion(ForumDeletionDTO forumDeletionDTO) {
+        LOGGER.info(String.format("Forum deletion event sent to RabbitMQ -> %s", forumDeletionDTO.toString()));
+        rabbitTemplate.convertAndSend(exchange, deleteForumRoutingKey, forumDeletionDTO);
     }
 }
