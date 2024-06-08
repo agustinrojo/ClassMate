@@ -7,6 +7,7 @@ import { CommentDTO } from '../../../services/dto/comment/comment-dto.interface'
 import { LoginResponse } from '../../../auth/dto/login-response.interface';
 import { CommentService } from '../../../services/comment.service';
 import { User } from '../../../auth/dto/user-dto.interface';
+import { AuthServiceService } from '../../../auth/auth-service.service';
 
 @Component({
   selector: 'app-post-page',
@@ -18,10 +19,12 @@ export class PostPageComponent implements OnInit{
   public bodyForm!: FormGroup;
 
   constructor( private _postService: PostService,
+               private _authService: AuthServiceService,
+               private _commentService: CommentService,
                private _activatedRoute: ActivatedRoute,
                private _router: Router,
-               private _fb: FormBuilder,
-               private _commentService: CommentService){ }
+               private _fb: FormBuilder
+               ){ }
 
   ngOnInit(): void {
     let postId = this._activatedRoute.snapshot.paramMap.get('id') || "0";
@@ -60,6 +63,8 @@ export class PostPageComponent implements OnInit{
       creationDate: new Date()
     };
 
+    this.bodyForm.reset();
+
     this._commentService.saveComment(newComment)
       .subscribe((comment: CommentDTO) => {
         this.post.commentDTOS.unshift(comment);
@@ -72,8 +77,7 @@ export class PostPageComponent implements OnInit{
   }
 
   public deleteComment(event: number){
-    let user: User = JSON.parse(localStorage.getItem("user")!);
-    let userId = user.id;
+    let userId: number = this._authService.getUserId();
     this._commentService.deleteComment(event, userId)
       .subscribe(() => {
         //borrar comentario
@@ -87,5 +91,7 @@ export class PostPageComponent implements OnInit{
       console.log(err);
     })
   }
+
+
 
 }

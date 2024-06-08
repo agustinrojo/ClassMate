@@ -52,6 +52,10 @@ export class ForumsPageComponent implements OnInit{
     })
   }
 
+  public navigateToCreateForum(){
+    this._router.navigate(["create-forum"]);
+  }
+
   private getForumsSubscribed(){
     let user: User = JSON.parse(localStorage.getItem("user")!);
     this.forumsScubscribed = user.forumsSubscribed;

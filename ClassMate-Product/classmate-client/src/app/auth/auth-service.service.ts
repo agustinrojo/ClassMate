@@ -102,4 +102,9 @@ export class AuthServiceService {
     localStorage.removeItem("refreshToken");
   }
 
+  public getUserId(): number{
+    let user: User = JSON.parse(localStorage.getItem("user")!);
+    return user.id;
+  }
+
 }

@@ -2,6 +2,9 @@ import { Component, OnInit, Renderer2 } from '@angular/core';
 import { ForumService } from '../../../services/forum.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ForumApiResponseDTO } from '../../../services/dto/forum/forum-api-response-dto.interface';
+import { PostService } from '../../../services/post.service';
+import { PostDTO } from '../../../services/dto/post/post-dto.interface';
+import { AuthServiceService } from '../../../auth/auth-service.service';
 
 @Component({
   selector: 'app-single-forum-page',
@@ -9,21 +12,20 @@ import { ForumApiResponseDTO } from '../../../services/dto/forum/forum-api-respo
   styleUrl: './single-forum-page.component.css'
 })
 export class SingleForumPageComponent implements OnInit{
-
+  public userId!: number;
   public forum!: ForumApiResponseDTO;
-  private clickListener!: () => void;
-
   constructor(
               private _forumService: ForumService,
+              private _postService: PostService,
+              private _authService: AuthServiceService,
               private _router: Router,
-              private _activatedRoute:ActivatedRoute,
-              private renderer: Renderer2
+              private _activatedRoute:ActivatedRoute
             ){}
 
   ngOnInit(): void {
     let forumId = this._activatedRoute.snapshot.paramMap.get('id') || "0";
     this.loadForum(forumId);
-
+    this.getUserId()
   }
 
 
@@ -42,6 +44,36 @@ export class SingleForumPageComponent implements OnInit{
   public navigateToCreatePost(){
     this._router.navigate([`forum/${this.forum.forum.id}/create-post`]);
   }
+
+  public deletePost(postId: number){
+    this._postService.deletePost(postId)
+      .subscribe(() => {
+        let posts : PostDTO[] = [...this.forum.posts];
+        let deletedPostIndex = posts.findIndex(p => p.id === postId);
+        if(deletedPostIndex !== -1){
+          this.forum.posts.splice(deletedPostIndex, 1);
+        }
+      },
+    err => {
+      console.log(err);
+    })
+  }
+
+  public deleteForum(){
+
+    this._forumService.deleteForum(this.forum.forum.id)
+      .subscribe(() => {
+        this._router.navigate(["forums"]);
+      },
+    err => {
+      console.log(err);
+    })
+  }
+
+  private getUserId(){
+    this.userId = this._authService.getUserId();
+  }
+
 
 
 

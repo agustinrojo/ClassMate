@@ -1,5 +1,19 @@
-<div class="post bg-dark" (click)="navigateToPost(post!.id)">
-  <h2>{{ post?.title }}</h2>
+<div class="post bg-dark" >
+  <div class="row">
+    <div class="col-6" (click)="navigateToPost(post!.id)"><h2>{{ post?.title }}</h2></div>
+    <div class="col-6 d-flex flex-row-reverse">
+      <div class="dropdown" *ngIf="post?.authorId === userId">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" (click)="deletePost()">Borrar</a></li>
+          <li><a class="dropdown-item">Editar</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <p>{{ post?.body }}</p>
   <div class="post-details">
       <span>Creado por: {{ post?.authorId }}</span> |

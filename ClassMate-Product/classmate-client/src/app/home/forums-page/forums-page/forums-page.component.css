@@ -61,7 +61,8 @@ body {
   cursor: pointer;
 }
 
-button {
+
+#subscribe {
   padding: 10px;
   background-color: #8c6e48; /* Fondo del botón */
   color: white;
@@ -73,15 +74,25 @@ button {
   width: 40%;
   box-sizing: border-box;
 }
-
-button:hover {
+#subscribe:hover {
   background-color: #725a3d; /* Color del botón al pasar el cursor */
 }
-
-button:disabled,
+#subscribe:disabled,
 .button-disabled {
   background-color: #b48c61; /* Color de fondo cuando el botón está deshabilitado */
   cursor: not-allowed; /* Cambia el cursor a no permitido */
+}
+
+
+#btn-create-forum{
+    background-color: #0f0f0f;
+    color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+#btn-create-forum:hover {
+  background-color: #141414; /* Un color más oscuro que #1e1e1e */
 }
 
 @media (max-width: 600px) {

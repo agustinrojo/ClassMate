@@ -19,7 +19,6 @@ import { PostPageModule } from './post-page/post-page.module';
     HomeComponent,
     NavComponent,
     PostContainerComponent,
-
     SidebarComponent,
 
   ],
