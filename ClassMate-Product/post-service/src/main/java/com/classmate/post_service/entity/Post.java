@@ -42,13 +42,13 @@ public class Post {
     /**
      * Title of the post.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String title;
 
     /**
      * Body content of the post.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5000)
     private String body;
 
     // Falta photo, attachments y valuation

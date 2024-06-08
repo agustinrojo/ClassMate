@@ -4,11 +4,11 @@
     <form id="createForumForm" [formGroup]="createForumForm">
       <div class="form-group">
         <label for="forum-title">Título del Foro</label>
-        <input type="text" id="forum-title" name="title" formControlName="title" required>
+        <input type="text" id="forum-title" name="title" formControlName="title" maxlength="100" required>
       </div>
       <div class="form-group">
         <label for="forum-description">Descripción del Foro</label>
-        <textarea id="forum-description" name="description" rows="5" formControlName="description" required></textarea>
+        <textarea id="forum-description" name="description" rows="5" formControlName="description"maxlength="300"  required></textarea>
       </div>
       <div class="row">
         <div class="col-6">

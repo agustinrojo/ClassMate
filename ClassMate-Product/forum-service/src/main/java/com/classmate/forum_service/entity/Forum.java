@@ -43,7 +43,7 @@ public class Forum {
     /**
      * The description of the forum.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 300)
     private String description;
 
     /**

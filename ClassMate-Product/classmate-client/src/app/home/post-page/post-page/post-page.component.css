@@ -32,6 +32,10 @@ body {
   margin-bottom: 0.5em;
   font-size: 1.5em;
   color: #d4a373; /* Tono cálido y claro */
+  max-width: 100%;
+  word-wrap: break-word; /* Rompe las palabras largas */
+  overflow-wrap: break-word; /* Rompe las palabras largas */
+  white-space: pre-wrap;
 }
 
 .post p {

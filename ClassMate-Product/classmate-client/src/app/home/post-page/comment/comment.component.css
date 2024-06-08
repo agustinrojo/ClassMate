@@ -3,6 +3,9 @@
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 10px;
+  max-width: 100%;
+  word-wrap: break-word; /* Rompe las palabras largas */
+  overflow-wrap: break-word; /* Rompe las palabras largas */
 }
 
 .comment h4 {
@@ -14,6 +17,7 @@
 .comment p {
   font-size: 0.9em;
   margin-bottom: 5px;
+  white-space: pre-wrap;
 }
 
 .comment-time {

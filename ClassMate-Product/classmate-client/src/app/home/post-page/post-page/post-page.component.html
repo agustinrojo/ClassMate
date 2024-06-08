@@ -19,7 +19,7 @@
     </div>
     <form [formGroup]="bodyForm" class="comment-form mb-3" (ngSubmit)="submit()" >
       <label for="comment" class="mb-2">Agregar un comentario</label>
-        <textarea formControlName="body" id="comment" name="comment" rows="3" required maxlength="700"></textarea>
+        <textarea formControlName="body" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
         <button type="submit" [disabled]="!bodyForm.valid" >Comentar</button>
     </form>
     <hr>

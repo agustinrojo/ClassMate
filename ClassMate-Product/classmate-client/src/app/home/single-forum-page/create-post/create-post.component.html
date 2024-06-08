@@ -4,11 +4,11 @@
     <form [formGroup]="createPostForm" (ngSubmit)="submit()">
       <div class="form-group" >
         <label for="post-title">Título del Post</label>
-        <input type="text" class="bg-dark" id="post-title" name="title" formControlName="title" >
+        <input type="text" class="bg-dark" id="post-title" name="title" formControlName="title" maxlength="300">
       </div>
       <div class="form-group">
         <label for="post-content">Contenido del Post</label>
-        <textarea id="post-content" class="bg-dark" name="content" rows="10" formControlName="body" ></textarea>
+        <textarea id="post-content" class="bg-dark" name="content" rows="10" formControlName="body" maxlength="5000"></textarea>
       </div>
       <div class="row">
         <div class="col-6">

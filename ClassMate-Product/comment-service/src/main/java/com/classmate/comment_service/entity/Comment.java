@@ -42,7 +42,7 @@ public class Comment {
     /**
      * The body content of the comment.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String body;
 
     /**
