@@ -1,4 +1,4 @@
-package com.classmate.post_service.config;
+package com.classmate.comment_service.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -18,26 +18,15 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.delete-post-queue}")
     private String deletePostQueue;
 
-    @Value("${rabbitmq.queue.delete-forum-queue}")
-    private String deleteForumQueue;
-
     @Value("${rabbitmq.post-exchange.name}")
     private String exchange;
 
     @Value("${rabbitmq.exchange.delete-post-routing-key}")
     private String deletePostRoutingKey;
 
-    @Value("${rabbitmq.exchange.delete-forum-routing-key}")
-    private String deleteForumRoutingKey;
-
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
-    }
-
-    @Bean
-    public Queue deleteForumQueue() {
-        return new Queue(deleteForumQueue, true); // durable queue
     }
 
     @Bean
@@ -54,14 +43,6 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding deleteForumBinding() {
-        return BindingBuilder
-                .bind(deleteForumQueue())
-                .to(postExchange())
-                .with(deleteForumRoutingKey);
-    }
-
-    @Bean
     public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
@@ -73,3 +54,4 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 }
+

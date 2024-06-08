@@ -4,10 +4,12 @@ import com.classmate.post_service.client.ICommentClient;
 import com.classmate.post_service.dto.APIResponseDTO;
 import com.classmate.post_service.dto.CommentDTO;
 import com.classmate.post_service.dto.PostDTO;
+import com.classmate.post_service.dto.PostDeletionDTO;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.exception.PostNotFoundException;
 import com.classmate.post_service.mapper.IPostMapper;
+import com.classmate.post_service.publisher.PostPublisher;
 import com.classmate.post_service.repository.IPostRepository;
 import com.classmate.post_service.service.IPostService;
 import org.slf4j.Logger;
@@ -28,7 +30,9 @@ public class PostServiceImpl implements IPostService {
 
     private final IPostRepository postRepository;
     private final IPostMapper postMapper;
-    private final ICommentClient ICommentClient;
+    private final ICommentClient iCommentClient;
+
+    private final PostPublisher postPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
     /**
@@ -36,12 +40,14 @@ public class PostServiceImpl implements IPostService {
      *
      * @param postRepository the post repository
      * @param postMapper the post mapper
-     * @param ICommentClient the comment client
+     * @param iCommentClient the comment client
+     * @param postPublisher RabbitMQ's publisher
      */
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, ICommentClient ICommentClient) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, ICommentClient iCommentClient, PostPublisher postPublisher) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
-        this.ICommentClient = ICommentClient;
+        this.iCommentClient = iCommentClient;
+        this.postPublisher = postPublisher;
     }
 
     /**
@@ -53,7 +59,7 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
         APIResponseDTO apiResponseDTO = postMapper.convertToAPIResponseDTO(post);
-        List<CommentDTO> commentDTOS = ICommentClient.getCommentsByPostId(id, 0, 10);
+        List<CommentDTO> commentDTOS = iCommentClient.getCommentsByPostId(id, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
     }
@@ -118,9 +124,14 @@ public class PostServiceImpl implements IPostService {
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
 
         if (!post.getAuthorId().equals(userId)) {
-            throw new RuntimeException("User not authorized to delete this comment");
+            throw new RuntimeException("User not authorized to delete this post");
         }
         postRepository.delete(post);
+
+        PostDeletionDTO postDeletionDTO = PostDeletionDTO.builder()
+                .postId(id)
+                .build();
+        postPublisher.publishPostDeletion(postDeletionDTO);
     }
 
     /**
