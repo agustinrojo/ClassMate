@@ -3,6 +3,7 @@ package com.classmate.post_service.controller;
 import com.classmate.post_service.dto.APIResponseDTO;
 import com.classmate.post_service.dto.CommentDTO;
 import com.classmate.post_service.dto.PostDTO;
+import com.classmate.post_service.dto.PostUpdateDTO;
 import com.classmate.post_service.repository.IPostRepository;
 import com.classmate.post_service.service.IPostService;
 import org.springframework.http.HttpStatus;
@@ -76,12 +77,12 @@ public class PostController {
     /**
      * Update an existing post.
      * @param id the ID of the post to update
-     * @param postDTO the updated post data
+     * @param postUpdateDTO the updated post data
      * @return a response indicating success or failure
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long id, @RequestBody PostDTO postDTO) {
-        postService.updatePost(id, postDTO);
+    public ResponseEntity<Void> updatePost(@PathVariable Long id, @RequestBody PostUpdateDTO postUpdateDTO) {
+        postService.updatePost(id, postUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -1,6 +1,7 @@
 package com.classmate.comment_service.service.impl;
 
 import com.classmate.comment_service.dto.CommentDTO;
+import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.entity.Comment;
 import com.classmate.comment_service.exception.CommentNotFoundException;
 import com.classmate.comment_service.exception.InvalidCommentException;
@@ -67,7 +68,7 @@ public class CommentServiceImpl implements ICommentService {
      */
     @Override
     public CommentDTO saveComment(CommentDTO commentDTO) {
-        validateCommment(commentDTO);
+        validateComment(commentDTO.getBody());
         LOGGER.info("Saving comment...");
         Comment comment = commentMapper.mapToComment(commentDTO);
         Comment savedComment = ICommentRepository.save(comment);
@@ -78,16 +79,15 @@ public class CommentServiceImpl implements ICommentService {
      * {@inheritDoc}
      */
     @Override
-    public void updateComment(Long id, CommentDTO commentDTO) {
-        validateCommment(commentDTO);
+    public void updateComment(Long id, CommentUpdateDTO commentUpdateDTO) {
+        validateComment(commentUpdateDTO.getBody());
         LOGGER.info("Updating comment...");
         Comment comment = ICommentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-        comment.setAuthorId(commentDTO.getAuthorId());
-        comment.setBody(commentDTO.getBody());
-        comment.setCreationDate(commentDTO.getCreationDate());
+        comment.setBody(commentUpdateDTO.getBody());
         ICommentRepository.save(comment);
     }
+
 
     /**
      * {@inheritDoc}
@@ -104,17 +104,18 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     /**
-     * Validates the comment content.
+     * Validates the comment data.
      *
-     * @param commentDTO the comment DTO
+     * @param body the comment body to validate
      * @throws InvalidCommentException if the comment is invalid
      */
-    private void validateCommment(CommentDTO commentDTO) {
-        if (commentDTO.getBody() == null || commentDTO.getBody().isEmpty()) {
+    private void validateComment(String body) {
+        if (body == null || body.isEmpty()) {
             throw new InvalidCommentException("Comment body cannot be empty");
         }
-        if (commentDTO.getBody().length() > 2000) {
+        if (body.length() > 2000) {
             throw new InvalidCommentException("Comment body cannot exceed 2000 characters");
         }
     }
+
 }

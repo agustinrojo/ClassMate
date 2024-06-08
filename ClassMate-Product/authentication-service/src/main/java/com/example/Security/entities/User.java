@@ -9,7 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import java.util.Collection;
 import java.util.List;
 
@@ -54,7 +53,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // deberia devolver una lista de roles
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
@@ -88,25 +86,48 @@ public class User implements UserDetails {
         return enabled;
     }
 
-    public boolean isAlreadySubscribedToForum(Long forumId){
-        return this.forumsSubscribed.stream()
-                .anyMatch(f -> f.equals(forumId));
+    public boolean isAlreadySubscribedToForum(Long forumId) {
+        return this.forumsSubscribed.contains(forumId);
     }
 
-    public void subscribeToForum(Long forumId){
+    public void subscribeToForum(Long forumId) {
+        if (isAlreadySubscribedToForum(forumId)) {
+            throw new IllegalArgumentException(String.format("User %d is already subscribed to forum %d.", id, forumId));
+        }
         forumsSubscribed.add(forumId);
     }
 
+    public void removeSubscriptionFromForum(Long forumId) {
+        if (!isAlreadySubscribedToForum(forumId)) {
+            throw new IllegalArgumentException(String.format("User %d is not subscribed to forum %d.", id, forumId));
+        }
+        forumsSubscribed.remove(forumId);
+    }
+
     public boolean isAlreadyAdminOfForum(Long forumId) {
-        return this.forumsAdmin.stream()
-                .anyMatch(f -> f.equals(forumId));
+        return this.forumsAdmin.contains(forumId);
     }
 
     public void addAdminToForum(Long forumId) {
+        if (isAlreadyAdminOfForum(forumId)) {
+            throw new IllegalArgumentException(String.format("User %d is already an admin of forum %d.", id, forumId));
+        }
         forumsAdmin.add(forumId);
     }
 
     public void removeAdminFromForum(Long forumId) {
+        if (!isAlreadyAdminOfForum(forumId)) {
+            throw new IllegalArgumentException(String.format("User %d is not an admin of forum %d.", id, forumId));
+        }
         forumsAdmin.remove(forumId);
+    }
+
+    public void addForumAsCreator(Long forumId) {
+        if (this.forumsCreated.contains(forumId)) {
+            throw new IllegalArgumentException(String.format("User %d is already the creator of forum %d.", id, forumId));
+        }
+        this.forumsCreated.add(forumId);
+        this.addAdminToForum(forumId);
+        this.subscribeToForum(forumId);
     }
 }
