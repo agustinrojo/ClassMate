@@ -2,6 +2,7 @@ package com.classmate.post_service.service;
 
 import com.classmate.post_service.dto.APIResponseDTO;
 import com.classmate.post_service.dto.PostDTO;
+import com.classmate.post_service.dto.PostUpdateDTO;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public interface IPostService {
      * @param id the ID of the post to update
      * @param postDTO the updated post data
      */
-    void updatePost(Long id, PostDTO postDTO);
+    void updatePost(Long id, PostUpdateDTO postUpdateDTO);
 
     /**
      * Deletes a post by its ID.

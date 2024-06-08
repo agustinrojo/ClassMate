@@ -1,6 +1,7 @@
 package com.classmate.comment_service.service;
 
 import com.classmate.comment_service.dto.CommentDTO;
+import com.classmate.comment_service.dto.CommentUpdateDTO;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public interface ICommentService {
      * @param id the ID of the comment to update
      * @param commentDTO the comment DTO
      */
-    void updateComment(Long id, CommentDTO commentDTO);
+    void updateComment(Long id, CommentUpdateDTO commentUpdateDTO);
 
     /**
      * Deletes a comment by its ID and user ID.

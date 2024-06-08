@@ -1,12 +1,11 @@
 package com.classmate.post_service;
 
 import com.classmate.post_service.client.ICommentClient;
-import com.classmate.post_service.dto.APIResponseDTO;
-import com.classmate.post_service.dto.CommentDTO;
-import com.classmate.post_service.dto.PostDTO;
+import com.classmate.post_service.dto.*;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.mapper.IPostMapper;
+import com.classmate.post_service.publisher.PostPublisher;
 import com.classmate.post_service.repository.IPostRepository;
 import com.classmate.post_service.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +32,9 @@ public class PostServiceImplTest {
 
     @Mock
     private ICommentClient commentClient;
+
+    @Mock
+    private PostPublisher postPublisher;
 
     @InjectMocks
     private PostServiceImpl postService;
@@ -124,12 +126,13 @@ public class PostServiceImplTest {
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         doNothing().when(postRepository).delete(post);
+        doNothing().when(postPublisher).publishPostDeletion(any(PostDeletionDTO.class));
 
         postService.deletePost(postId, userId);
 
         verify(postRepository, times(1)).delete(post);
+        verify(postPublisher, times(1)).publishPostDeletion(any(PostDeletionDTO.class));
     }
-
     /**
      * User Story CM-20: Modificar post
      * Probar modificar un post, modificando el título, sin pasarse del máximo de caracteres definido (PASA)
@@ -137,14 +140,14 @@ public class PostServiceImplTest {
     @Test
     public void testUpdatePostWithValidTitle() {
         Long postId = 1L;
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, "Updated title", "Valid body", null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("Updated title", "Valid body");
         Post post = new Post(postId, 1L, 1L, "Valid title", "Valid body", null);
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         when(postRepository.save(post)).thenReturn(post);
-        when(postMapper.convertToPostDTO(post)).thenReturn(postDTO);
+        when(postMapper.convertToPostDTO(post)).thenReturn(new PostDTO(postId, 1L, 1L, "Updated title", "Valid body", null));
 
-        postService.updatePost(postId, postDTO);
+        postService.updatePost(postId, postUpdateDTO);
 
         verify(postRepository, times(1)).save(post);
         assertEquals("Updated title", post.getTitle());
@@ -157,14 +160,14 @@ public class PostServiceImplTest {
     @Test
     public void testUpdatePostWithValidBody() {
         Long postId = 1L;
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, "Valid title", "Updated body", null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("Valid title", "Updated body");
         Post post = new Post(postId, 1L, 1L, "Valid title", "Valid body", null);
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         when(postRepository.save(post)).thenReturn(post);
-        when(postMapper.convertToPostDTO(post)).thenReturn(postDTO);
+        when(postMapper.convertToPostDTO(post)).thenReturn(new PostDTO(postId, 1L, 1L, "Valid title", "Updated body", null));
 
-        postService.updatePost(postId, postDTO);
+        postService.updatePost(postId, postUpdateDTO);
 
         verify(postRepository, times(1)).save(post);
         assertEquals("Updated body", post.getBody());
@@ -177,14 +180,14 @@ public class PostServiceImplTest {
     @Test
     public void testUpdatePostWithValidTitleAndBody() {
         Long postId = 1L;
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, "Updated title", "Updated body", null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("Updated title", "Updated body");
         Post post = new Post(postId, 1L, 1L, "Valid title", "Valid body", null);
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         when(postRepository.save(post)).thenReturn(post);
-        when(postMapper.convertToPostDTO(post)).thenReturn(postDTO);
+        when(postMapper.convertToPostDTO(post)).thenReturn(new PostDTO(postId, 1L, 1L, "Updated title", "Updated body", null));
 
-        postService.updatePost(postId, postDTO);
+        postService.updatePost(postId, postUpdateDTO);
 
         verify(postRepository, times(1)).save(post);
         assertEquals("Updated title", post.getTitle());
@@ -198,13 +201,13 @@ public class PostServiceImplTest {
     @Test
     public void testUpdatePostWithoutChangingAnything() {
         Long postId = 1L;
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, "Valid title", "Valid body", null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("Valid title", "Valid body");
         Post post = new Post(postId, 1L, 1L, "Valid title", "Valid body", null);
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
-        when(postMapper.convertToPostDTO(post)).thenReturn(postDTO);
+        when(postMapper.convertToPostDTO(post)).thenReturn(new PostDTO(postId, 1L, 1L, "Valid title", "Valid body", null));
 
-        postService.updatePost(postId, postDTO);
+        postService.updatePost(postId, postUpdateDTO);
 
         // Assert that nothing was changed
         verify(postRepository, times(1)).save(post);
@@ -219,9 +222,9 @@ public class PostServiceImplTest {
     @Test
     public void testUpdatePostWithoutTitle() {
         Long postId = 1L;
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, "", "Updated body", null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("", "Updated body");
 
-        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postDTO));
+        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postUpdateDTO));
         assertEquals("Post title cannot be empty", exception.getMessage());
     }
 
@@ -232,9 +235,9 @@ public class PostServiceImplTest {
     @Test
     public void testUpdatePostWithoutBody() {
         Long postId = 1L;
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, "Updated title", "", null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("Updated title", "");
 
-        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postDTO));
+        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postUpdateDTO));
         assertEquals("Post body cannot be empty", exception.getMessage());
     }
 
@@ -246,9 +249,9 @@ public class PostServiceImplTest {
     public void testUpdatePostWithTooLongTitle() {
         Long postId = 1L;
         String longTitle = "a".repeat(301);
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, longTitle, "Updated body", null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO(longTitle, "Updated body");
 
-        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postDTO));
+        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postUpdateDTO));
         assertEquals("Post title cannot exceed 300 characters", exception.getMessage());
     }
 
@@ -260,9 +263,9 @@ public class PostServiceImplTest {
     public void testUpdatePostWithTooLongBody() {
         Long postId = 1L;
         String longBody = "a".repeat(5001);
-        PostDTO postDTO = new PostDTO(postId, 1L, 1L, "Updated title", longBody, null);
+        PostUpdateDTO postUpdateDTO = new PostUpdateDTO("Updated title", longBody);
 
-        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postDTO));
+        InvalidPostException exception = assertThrows(InvalidPostException.class, () -> postService.updatePost(postId, postUpdateDTO));
         assertEquals("Post body cannot exceed 5000 characters", exception.getMessage());
     }
 

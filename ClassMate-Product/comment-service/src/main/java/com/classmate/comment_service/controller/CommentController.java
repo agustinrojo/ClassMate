@@ -1,6 +1,7 @@
 package com.classmate.comment_service.controller;
 
 import com.classmate.comment_service.dto.CommentDTO;
+import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.service.ICommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,12 +76,12 @@ public class CommentController {
      * Endpoint to update an existing comment by its ID.
      *
      * @param id the ID of the comment to be updated
-     * @param commentDTO the data transfer object containing the updated comment data
+     * @param commentUpdateDTO the data transfer object containing the updated comment data
      * @return a response entity with the HTTP status NO_CONTENT
      */
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateComment(@PathVariable("id") Long id, @RequestBody CommentDTO commentDTO) {
-        commentService.updateComment(id, commentDTO);
+    public ResponseEntity<Void> updateComment(@PathVariable("id") Long id, @RequestBody CommentUpdateDTO commentUpdateDTO) {
+        commentService.updateComment(id, commentUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

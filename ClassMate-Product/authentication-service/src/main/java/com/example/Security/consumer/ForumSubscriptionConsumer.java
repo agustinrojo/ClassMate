@@ -31,15 +31,13 @@ public class ForumSubscriptionConsumer {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
 
-        if(user.isAlreadySubscribedToForum(forumId)){
-            LOGGER.error(String.format("User %d already subscribed to forum %d.", userId, forumId));
-            return;
+        try {
+            user.subscribeToForum(forumId);
+            userRepository.save(user);
+            LOGGER.info(String.format("User %d subscribed to forum %d.", userId, forumId));
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
         }
-
-        user.subscribeToForum(forumId);
-        LOGGER.info(String.format("User %d subscribed to forum %d.", userId, forumId));
-
-        userRepository.save(user);
     }
 
     @Transactional
@@ -50,15 +48,13 @@ public class ForumSubscriptionConsumer {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
 
-        if(user.isAlreadyAdminOfForum(forumId)){
-            LOGGER.error(String.format("User %d is already an admin of forum %d.", userId, forumId));
-            return;
+        try {
+            user.addAdminToForum(forumId);
+            userRepository.save(user);
+            LOGGER.info(String.format("Admin %d added to forum %d.", userId, forumId));
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
         }
-
-        user.addAdminToForum(forumId);
-        LOGGER.info(String.format("Admin %d added to forum %d.", userId, forumId));
-
-        userRepository.save(user);
     }
 
     @Transactional
@@ -69,15 +65,13 @@ public class ForumSubscriptionConsumer {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
 
-        if(!user.isAlreadySubscribedToForum(forumId)){
-            LOGGER.error(String.format("User %d is not subscribed to forum %d.", userId, forumId));
-            return;
+        try {
+            user.removeSubscriptionFromForum(forumId);
+            userRepository.save(user);
+            LOGGER.info(String.format("Member %d removed from forum %d.", userId, forumId));
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
         }
-
-        user.getForumsSubscribed().remove(forumId);
-        LOGGER.info(String.format("Member %d removed from forum %d.", userId, forumId));
-
-        userRepository.save(user);
     }
 
     @Transactional
@@ -88,15 +82,13 @@ public class ForumSubscriptionConsumer {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
 
-        if(!user.isAlreadyAdminOfForum(forumId)){
-            LOGGER.error(String.format("User %d is not an admin of forum %d.", userId, forumId));
-            return;
+        try {
+            user.removeAdminFromForum(forumId);
+            userRepository.save(user);
+            LOGGER.info(String.format("Admin %d removed from forum %d.", userId, forumId));
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
         }
-
-        user.removeAdminFromForum(forumId);
-        LOGGER.info(String.format("Admin %d removed from forum %d.", userId, forumId));
-
-        userRepository.save(user);
     }
 
     @Transactional
@@ -107,17 +99,12 @@ public class ForumSubscriptionConsumer {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
 
-        if(user.getForumsCreated().contains(forumId)){
-            LOGGER.error(String.format("User %d is already the creator of forum %d.", userId, forumId));
-            return;
+        try {
+            user.addForumAsCreator(forumId);
+            userRepository.save(user);
+            LOGGER.info(String.format("User %d is now the creator of forum %d.", userId, forumId));
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
         }
-
-        user.getForumsCreated().add(forumId);
-        user.getForumsAdmin().add(forumId);
-        user.getForumsSubscribed().add(forumId);
-
-        LOGGER.info(String.format("User %d is now the creator of forum %d.", userId, forumId));
-
-        userRepository.save(user);
     }
 }
