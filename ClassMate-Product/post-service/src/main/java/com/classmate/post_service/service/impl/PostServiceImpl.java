@@ -1,10 +1,7 @@
 package com.classmate.post_service.service.impl;
 
 import com.classmate.post_service.client.ICommentClient;
-import com.classmate.post_service.dto.APIResponseDTO;
-import com.classmate.post_service.dto.CommentDTO;
-import com.classmate.post_service.dto.PostDTO;
-import com.classmate.post_service.dto.PostDeletionDTO;
+import com.classmate.post_service.dto.*;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.exception.PostNotFoundException;
@@ -30,7 +27,7 @@ public class PostServiceImpl implements IPostService {
 
     private final IPostRepository postRepository;
     private final IPostMapper postMapper;
-    private final ICommentClient iCommentClient;
+    private final ICommentClient commentClient;
 
     private final PostPublisher postPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
@@ -40,13 +37,13 @@ public class PostServiceImpl implements IPostService {
      *
      * @param postRepository the post repository
      * @param postMapper the post mapper
-     * @param iCommentClient the comment client
+     * @param commentClient the comment client
      * @param postPublisher RabbitMQ's publisher
      */
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, ICommentClient iCommentClient, PostPublisher postPublisher) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, ICommentClient commentClient, PostPublisher postPublisher) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
-        this.iCommentClient = iCommentClient;
+        this.commentClient = commentClient;
         this.postPublisher = postPublisher;
     }
 
@@ -59,7 +56,7 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
         APIResponseDTO apiResponseDTO = postMapper.convertToAPIResponseDTO(post);
-        List<CommentDTO> commentDTOS = iCommentClient.getCommentsByPostId(id, 0, 10);
+        List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
     }
@@ -91,7 +88,7 @@ public class PostServiceImpl implements IPostService {
      */
     @Override
     public PostDTO savePost(PostDTO postDTO) {
-        validatePost(postDTO);
+        validatePost(postDTO.getTitle(), postDTO.getBody());
         LOGGER.info("Saving post...");
         Post post = postMapper.convertToPost(postDTO);
         post.setId(null);
@@ -103,14 +100,13 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public void updatePost(Long id, PostDTO postDTO) {
-        validatePost(postDTO);
+    public void updatePost(Long id, PostUpdateDTO postUpdateDTO) {
+        validatePost(postUpdateDTO.getTitle(), postUpdateDTO.getBody());
         LOGGER.info("Updating post by id...");
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
-        post.setTitle(postDTO.getTitle());
-        post.setBody(postDTO.getBody());
-        post.setAuthorId(postDTO.getAuthorId());
+        post.setTitle(postUpdateDTO.getTitle());
+        post.setBody(postUpdateDTO.getBody());
         postRepository.save(post);
     }
 
@@ -137,19 +133,20 @@ public class PostServiceImpl implements IPostService {
     /**
      * Validates the post data.
      *
-     * @param postDTO the post data to validate
+     * @param title the title of the post to validate
+     * @param body the body of the post to validate
      */
-    private void validatePost(PostDTO postDTO) {
-        if (postDTO.getTitle() == null || postDTO.getTitle().isEmpty()) {
+    private void validatePost(String title, String body) {
+        if (title == null || title.isEmpty()) {
             throw new InvalidPostException("Post title cannot be empty");
         }
-        if (postDTO.getBody() == null || postDTO.getBody().isEmpty()) {
+        if (body == null || body.isEmpty()) {
             throw new InvalidPostException("Post body cannot be empty");
         }
-        if (postDTO.getBody().length() > 5000) {
+        if (body.length() > 5000) {
             throw new InvalidPostException("Post body cannot exceed 5000 characters");
         }
-        if (postDTO.getTitle().length() > 300) {
+        if (title.length() > 300) {
             throw new InvalidPostException("Post title cannot exceed 300 characters");
         }
     }

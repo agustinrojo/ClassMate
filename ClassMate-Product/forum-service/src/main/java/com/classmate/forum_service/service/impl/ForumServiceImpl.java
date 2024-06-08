@@ -109,7 +109,6 @@ public class ForumServiceImpl implements IForumService {
         return forumMapper.convertToForumResponseDTO(savedForum);
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -149,15 +148,17 @@ public class ForumServiceImpl implements IForumService {
     public void addMember(Long forumId, Long memberId) {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
-        forum.addMember(memberId);
-
-        ForumSubscriptionDTO forumSubscriptionDTO = ForumSubscriptionDTO.builder()
-                .forumId(forumId)
-                .userId(memberId)
-                .build();
-        subscriptionPublisher.publishSubscription(forumSubscriptionDTO);
-
-        forumRepository.save(forum);
+        try {
+            forum.addMember(memberId);
+            ForumSubscriptionDTO forumSubscriptionDTO = ForumSubscriptionDTO.builder()
+                    .forumId(forumId)
+                    .userId(memberId)
+                    .build();
+            subscriptionPublisher.publishSubscription(forumSubscriptionDTO);
+            forumRepository.save(forum);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     /**
@@ -167,15 +168,17 @@ public class ForumServiceImpl implements IForumService {
     public void addAdmin(Long forumId, Long adminId) {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
-        forum.addAdmin(adminId);
-
-        ForumSubscriptionDTO adminDTO = ForumSubscriptionDTO.builder()
-                .forumId(forumId)
-                .userId(adminId)
-                .build();
-        subscriptionPublisher.publishAddAdmin(adminDTO);
-
-        forumRepository.save(forum);
+        try {
+            forum.addAdmin(adminId);
+            ForumSubscriptionDTO adminDTO = ForumSubscriptionDTO.builder()
+                    .forumId(forumId)
+                    .userId(adminId)
+                    .build();
+            subscriptionPublisher.publishAddAdmin(adminDTO);
+            forumRepository.save(forum);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     /**
@@ -185,15 +188,17 @@ public class ForumServiceImpl implements IForumService {
     public void removeMember(Long forumId, Long memberId) {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
-        forum.removeMember(memberId);
-
-        ForumSubscriptionDTO memberDTO = ForumSubscriptionDTO.builder()
-                .forumId(forumId)
-                .userId(memberId)
-                .build();
-        subscriptionPublisher.publishRemoveMember(memberDTO);
-
-        forumRepository.save(forum);
+        try {
+            forum.removeMember(memberId);
+            ForumSubscriptionDTO memberDTO = ForumSubscriptionDTO.builder()
+                    .forumId(forumId)
+                    .userId(memberId)
+                    .build();
+            subscriptionPublisher.publishRemoveMember(memberDTO);
+            forumRepository.save(forum);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     /**
@@ -203,15 +208,17 @@ public class ForumServiceImpl implements IForumService {
     public void removeAdmin(Long forumId, Long adminId) {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
-        forum.removeAdmin(adminId);
-
-        ForumSubscriptionDTO adminDTO = ForumSubscriptionDTO.builder()
-                .forumId(forumId)
-                .userId(adminId)
-                .build();
-        subscriptionPublisher.publishRemoveAdmin(adminDTO);
-
-        forumRepository.save(forum);
+        try {
+            forum.removeAdmin(adminId);
+            ForumSubscriptionDTO adminDTO = ForumSubscriptionDTO.builder()
+                    .forumId(forumId)
+                    .userId(adminId)
+                    .build();
+            subscriptionPublisher.publishRemoveAdmin(adminDTO);
+            forumRepository.save(forum);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     /**

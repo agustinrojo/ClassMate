@@ -1,6 +1,7 @@
 package com.classmate.comment_service;
 
 import com.classmate.comment_service.dto.CommentDTO;
+import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.entity.Comment;
 import com.classmate.comment_service.exception.InvalidCommentException;
 import com.classmate.comment_service.exception.UnauthorizedActionException;
@@ -30,7 +31,7 @@ import static org.mockito.Mockito.*;
 public class CommentServiceImplTest {
 
     @Mock
-    private ICommentRepository ICommentRepository;
+    private ICommentRepository commentRepository;
 
     @Mock
     private CommentMapper commentMapper;
@@ -46,7 +47,6 @@ public class CommentServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-
     /**
      * User Story CM-10: Agregar comentario a Post
      * Probar agregar comentario con una cantidad de caracteres menor a 2000 (PASA).
@@ -57,7 +57,7 @@ public class CommentServiceImplTest {
         Comment comment = new Comment(null, 1L, 1L, "Valid comment body", null);
 
         when(commentMapper.mapToComment(commentDTO)).thenReturn(comment);
-        when(ICommentRepository.save(comment)).thenReturn(comment);
+        when(commentRepository.save(comment)).thenReturn(comment);
         when(commentMapper.mapToCommentDTO(comment)).thenReturn(commentDTO);
 
         CommentDTO savedComment = commentService.saveComment(commentDTO);
@@ -91,7 +91,6 @@ public class CommentServiceImplTest {
         assertEquals("Comment body cannot be empty", exception.getMessage());
     }
 
-
     /**
      * User Story CM-11: Eliminar Comentario a Post
      * Probar seleccionar icono “basura” y confirmar el borrado del comentario (PASA).
@@ -102,12 +101,12 @@ public class CommentServiceImplTest {
         Long userId = 1L; // The user attempting to delete the comment
         Comment comment = new Comment(commentId, 1L, userId, "Valid comment body", null);
 
-        when(ICommentRepository.findById(commentId)).thenReturn(Optional.of(comment));
-        doNothing().when(ICommentRepository).delete(comment);
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        doNothing().when(commentRepository).delete(comment);
 
         commentService.deleteComment(commentId, userId);
 
-        verify(ICommentRepository, times(1)).delete(comment);
+        verify(commentRepository, times(1)).delete(comment);
     }
 
     /**
@@ -121,14 +120,13 @@ public class CommentServiceImplTest {
         Long authorId = 1L; // Actual author ID of the comment
         Comment comment = new Comment(commentId, 1L, authorId, "This is a comment by another user", null);
 
-        when(ICommentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
 
         UnauthorizedActionException exception = assertThrows(UnauthorizedActionException.class, () -> commentService.deleteComment(commentId, anotherUserId));
         assertEquals("User not authorized to delete this comment", exception.getMessage());
 
-        verify(ICommentRepository, times(0)).delete(comment);
+        verify(commentRepository, times(0)).delete(comment);
     }
-
 
     /**
      * User Story CM-12: Modificar Comentario a Post
@@ -137,16 +135,16 @@ public class CommentServiceImplTest {
     @Test
     public void testUpdateCommentWithValidBody() {
         Long commentId = 1L;
-        CommentDTO commentDTO = new CommentDTO(commentId, 1L, 1L, "Updated comment body", null);
+        CommentUpdateDTO commentUpdateDTO = new CommentUpdateDTO("Updated comment body");
         Comment comment = new Comment(commentId, 1L, 1L, "Valid comment body", null);
 
-        when(ICommentRepository.findById(commentId)).thenReturn(Optional.of(comment));
-        when(ICommentRepository.save(comment)).thenReturn(comment);
-        when(commentMapper.mapToCommentDTO(comment)).thenReturn(commentDTO);
+        when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
+        when(commentRepository.save(comment)).thenReturn(comment);
+        when(commentMapper.mapToCommentDTO(comment)).thenReturn(new CommentDTO(commentId, 1L, 1L, "Updated comment body", null));
 
-        commentService.updateComment(commentId, commentDTO);
+        commentService.updateComment(commentId, commentUpdateDTO);
 
-        verify(ICommentRepository, times(1)).save(comment);
+        verify(commentRepository, times(1)).save(comment);
         assertEquals("Updated comment body", comment.getBody());
     }
 
@@ -158,9 +156,9 @@ public class CommentServiceImplTest {
     public void testUpdateCommentWithTooLongBody() {
         Long commentId = 1L;
         String longBody = "a".repeat(2001);
-        CommentDTO commentDTO = new CommentDTO(commentId, 1L, 1L, longBody, null);
+        CommentUpdateDTO commentUpdateDTO = new CommentUpdateDTO(longBody);
 
-        InvalidCommentException exception = assertThrows(InvalidCommentException.class, () -> commentService.updateComment(commentId, commentDTO));
+        InvalidCommentException exception = assertThrows(InvalidCommentException.class, () -> commentService.updateComment(commentId, commentUpdateDTO));
         assertEquals("Comment body cannot exceed 2000 characters", exception.getMessage());
     }
 
@@ -171,12 +169,11 @@ public class CommentServiceImplTest {
     @Test
     public void testUpdateCommentWithEmptyBody() {
         Long commentId = 1L;
-        CommentDTO commentDTO = new CommentDTO(commentId, 1L, 1L, "", null);
+        CommentUpdateDTO commentUpdateDTO = new CommentUpdateDTO("");
 
-        InvalidCommentException exception = assertThrows(InvalidCommentException.class, () -> commentService.updateComment(commentId, commentDTO));
+        InvalidCommentException exception = assertThrows(InvalidCommentException.class, () -> commentService.updateComment(commentId, commentUpdateDTO));
         assertEquals("Comment body cannot be empty", exception.getMessage());
     }
-
 
     /**
      * User Story CM-13: Ver comentario a Post
@@ -193,7 +190,7 @@ public class CommentServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Comment> commentsPage = new PageImpl<>(comments, pageable, comments.size());
 
-        when(ICommentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
+        when(commentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
         when(commentMapper.mapToCommentDTO(any(Comment.class))).thenAnswer(invocation -> {
             Comment comment = invocation.getArgument(0);
             return new CommentDTO(comment.getId(), comment.getPostId(), comment.getAuthorId(), comment.getBody(), comment.getCreationDate());
@@ -220,7 +217,7 @@ public class CommentServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Comment> commentsPage = new PageImpl<>(comments.subList(0, 10), pageable, comments.size());
 
-        when(ICommentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
+        when(commentRepository.findByPostId(postId, pageable)).thenReturn(commentsPage);
         when(commentMapper.mapToCommentDTO(any(Comment.class))).thenAnswer(invocation -> {
             Comment comment = invocation.getArgument(0);
             return new CommentDTO(comment.getId(), comment.getPostId(), comment.getAuthorId(), comment.getBody(), comment.getCreationDate());
@@ -242,7 +239,7 @@ public class CommentServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Comment> emptyPage = new PageImpl<>(new ArrayList<>(), pageable, 0);
 
-        when(ICommentRepository.findByPostId(postId, pageable)).thenReturn(emptyPage);
+        when(commentRepository.findByPostId(postId, pageable)).thenReturn(emptyPage);
 
         List<CommentDTO> returnedComments = commentService.getCommentsByPostId(postId, 0, 10);
 

@@ -71,11 +71,24 @@ public class Forum {
     private LocalDateTime creationDate;
 
     /**
+     * Checks if a user is already a member of the forum.
+     *
+     * @param memberId the ID of the member to check
+     * @return true if the user is already a member, false otherwise
+     */
+    public boolean isAlreadyMember(Long memberId) {
+        return memberIds.contains(memberId);
+    }
+
+    /**
      * Adds a member to the forum.
      *
      * @param memberId the ID of the member to add
      */
     public void addMember(Long memberId) {
+        if (isAlreadyMember(memberId)) {
+            throw new IllegalArgumentException(String.format("User %d is already a member of forum %d.", memberId, id));
+        }
         this.memberIds.add(memberId);
     }
 
@@ -85,7 +98,20 @@ public class Forum {
      * @param memberId the ID of the member to remove
      */
     public void removeMember(Long memberId) {
+        if (!isAlreadyMember(memberId)) {
+            throw new IllegalArgumentException(String.format("User %d is not a member of forum %d.", memberId, id));
+        }
         this.memberIds.remove(memberId);
+    }
+
+    /**
+     * Checks if a user is already an admin of the forum.
+     *
+     * @param adminId the ID of the admin to check
+     * @return true if the user is already an admin, false otherwise
+     */
+    public boolean isAlreadyAdmin(Long adminId) {
+        return adminIds.contains(adminId);
     }
 
     /**
@@ -94,6 +120,9 @@ public class Forum {
      * @param adminId the ID of the admin to add
      */
     public void addAdmin(Long adminId) {
+        if (isAlreadyAdmin(adminId)) {
+            throw new IllegalArgumentException(String.format("User %d is already an admin of forum %d.", adminId, id));
+        }
         this.adminIds.add(adminId);
     }
 
@@ -103,6 +132,9 @@ public class Forum {
      * @param adminId the ID of the admin to remove
      */
     public void removeAdmin(Long adminId) {
+        if (!isAlreadyAdmin(adminId)) {
+            throw new IllegalArgumentException(String.format("User %d is not an admin of forum %d.", adminId, id));
+        }
         this.adminIds.remove(adminId);
     }
 }
