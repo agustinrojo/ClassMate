@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileRequestDTO {
+public class FileDTO {
     private byte[] bytes;
     private String originalFilename;
     private String contentType;

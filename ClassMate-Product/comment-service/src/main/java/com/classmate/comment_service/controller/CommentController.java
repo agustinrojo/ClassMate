@@ -1,9 +1,11 @@
 package com.classmate.comment_service.controller;
 
-import com.classmate.comment_service.dto.CommentDTO;
+import com.classmate.comment_service.dto.CommentDTORequest;
+import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.service.ICommentService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +32,12 @@ public class CommentController {
     /**
      * Endpoint to save a new comment.
      *
-     * @param commentDTO the data transfer object representing the comment to be saved
+     * @param commentRequestDTO the data transfer object representing the comment to be saved
      * @return a response entity containing the saved comment and the HTTP status CREATED
      */
-    @PostMapping
-    public ResponseEntity<CommentDTO> saveComment(@RequestBody CommentDTO commentDTO) {
-        CommentDTO savedComment = commentService.saveComment(commentDTO);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CommentDTOResponse> saveComment(@ModelAttribute CommentDTORequest commentRequestDTO) {
+        CommentDTOResponse savedComment = commentService.saveComment(commentRequestDTO);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
@@ -46,9 +48,9 @@ public class CommentController {
      * @return a response entity containing the retrieved comment and the HTTP status OK
      */
     @GetMapping("{id}")
-    public ResponseEntity<CommentDTO> getCommentById(@PathVariable("id") Long id) {
-        CommentDTO commentDTO = commentService.getCommentById(id);
-        return new ResponseEntity<>(commentDTO, HttpStatus.OK);
+    public ResponseEntity<CommentDTORequest> getCommentById(@PathVariable("id") Long id) {
+        CommentDTORequest commentRequestDTO = commentService.getCommentById(id);
+        return new ResponseEntity<>(commentRequestDTO, HttpStatus.OK);
     }
 
     /**
@@ -65,10 +67,10 @@ public class CommentController {
      * @return a response entity containing the list of comments and the HTTP status OK
      */
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable("postId") Long postId,
-                                                                @RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "10") int size) {
-        List<CommentDTO> comments = commentService.getCommentsByPostId(postId, page, size);
+    public ResponseEntity<List<CommentDTORequest>> getCommentsByPostId(@PathVariable("postId") Long postId,
+                                                                       @RequestParam(defaultValue = "0") int page,
+                                                                       @RequestParam(defaultValue = "10") int size) {
+        List<CommentDTORequest> comments = commentService.getCommentsByPostId(postId, page, size);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 

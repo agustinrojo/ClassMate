@@ -1,21 +1,17 @@
 package com.classmate.comment_service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import com.classmate.comment_service.dto.filedtos.FileDTO;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * Data Transfer Object for Comment entity.
- */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDTO {
+public class CommentDTOResponse {
 
     /**
      * The unique identifier of the comment.
@@ -42,4 +38,6 @@ public class CommentDTO {
      * This field is automatically populated.
      */
     private LocalDateTime creationDate;
+
+    private List<FileDTO> files;
 }

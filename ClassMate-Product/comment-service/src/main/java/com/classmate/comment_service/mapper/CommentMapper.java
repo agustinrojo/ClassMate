@@ -1,13 +1,15 @@
 package com.classmate.comment_service.mapper;
 
-import com.classmate.comment_service.dto.CommentDTO;
+import com.classmate.comment_service.dto.CommentDTORequest;
+import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.entity.Comment;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * Mapper interface for converting between Comment and CommentDTO objects.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = AttachmentMapper.class)
 public interface CommentMapper {
 
     /**
@@ -16,13 +18,17 @@ public interface CommentMapper {
      * @param comment the Comment entity
      * @return the CommentDTO
      */
-    CommentDTO mapToCommentDTO(Comment comment);
+    CommentDTORequest mapToCommentDTO(Comment comment);
 
     /**
      * Converts a CommentDTO to a Comment entity.
      *
-     * @param commentDTO the CommentDTO
+     * @param commentRequestDTO the CommentDTO
      * @return the Comment entity
      */
-    Comment mapToComment(CommentDTO commentDTO);
+    Comment mapToComment(CommentDTORequest commentRequestDTO);
+
+    @Mapping(source = "attachments", target = "files")
+    CommentDTOResponse mapToCommentDTOResponse(Comment comment);
+
 }

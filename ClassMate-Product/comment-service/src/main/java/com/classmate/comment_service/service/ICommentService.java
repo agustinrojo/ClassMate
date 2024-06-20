@@ -1,8 +1,10 @@
 package com.classmate.comment_service.service;
 
-import com.classmate.comment_service.dto.CommentDTO;
+import com.classmate.comment_service.dto.CommentDTORequest;
+import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ public interface ICommentService {
      * @param id the ID of the comment
      * @return the comment DTO
      */
-    CommentDTO getCommentById(Long id);
+    CommentDTORequest getCommentById(Long id);
 
     /**
      * Retrieves a page of comments by post ID.
@@ -26,21 +28,21 @@ public interface ICommentService {
      * @param size the page size
      * @return a list of comment DTOs
      */
-    List<CommentDTO> getCommentsByPostId(Long postId, int page, int size);
+    List<CommentDTORequest> getCommentsByPostId(Long postId, int page, int size);
 
     /**
      * Saves a new comment.
      *
-     * @param commentDTO the comment DTO
+     * @param commentRequestDTO the comment DTO
      * @return the saved comment DTO
      */
-    CommentDTO saveComment(CommentDTO commentDTO);
+    CommentDTOResponse saveComment(CommentDTORequest commentRequestDTO);
 
     /**
      * Updates an existing comment.
      *
      * @param id the ID of the comment to update
-     * @param commentDTO the comment DTO
+     *  the comment DTO
      */
     void updateComment(Long id, CommentUpdateDTO commentUpdateDTO);
 
