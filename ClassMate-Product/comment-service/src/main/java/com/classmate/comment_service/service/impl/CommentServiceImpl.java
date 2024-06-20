@@ -4,13 +4,14 @@ import com.classmate.comment_service.client.FileServiceClient;
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
-import com.classmate.comment_service.dto.filedtos.FileDTO;
+import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
 import com.classmate.comment_service.exception.CommentNotFoundException;
 import com.classmate.comment_service.exception.InvalidCommentException;
 import com.classmate.comment_service.exception.UnauthorizedActionException;
 import com.classmate.comment_service.mapper.CommentMapper;
+import com.classmate.comment_service.publisher.CommentPublisher;
 import com.classmate.comment_service.repository.ICommentRepository;
 import com.classmate.comment_service.service.ICommentService;
 import org.slf4j.Logger;
@@ -18,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,12 +33,14 @@ public class CommentServiceImpl implements ICommentService {
     private final ICommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final FileServiceClient fileServiceClient;
+    private final CommentPublisher commentPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, FileServiceClient fileServiceClient) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, FileServiceClient fileServiceClient, CommentPublisher commentPublisher) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.fileServiceClient = fileServiceClient;
+        this.commentPublisher = commentPublisher;
     }
 
     @Override
@@ -89,10 +91,42 @@ public class CommentServiceImpl implements ICommentService {
     public void updateComment(Long id, CommentUpdateDTO commentUpdateDTO) {
         validateComment(commentUpdateDTO.getBody());
         LOGGER.info("Updating comment...");
+
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
+
         comment.setBody(commentUpdateDTO.getBody());
+
+        if (commentUpdateDTO.getFilesToAdd() != null && !commentUpdateDTO.getFilesToAdd().isEmpty()) {
+            addAttachments(comment, commentUpdateDTO.getFilesToAdd());
+        }
+        if (commentUpdateDTO.getFileIdsToRemove() != null && !commentUpdateDTO.getFileIdsToRemove().isEmpty()) {
+            removeAttachments(comment, commentUpdateDTO.getFileIdsToRemove());
+        }
+
         commentRepository.save(comment);
+    }
+
+    public void addAttachments(Comment comment, List<MultipartFile> filesToAdd) {
+        for (MultipartFile file : filesToAdd) {
+            Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
+            Attachment attachment = Attachment.builder()
+                    .id(fileId)
+                    .originalFilename(file.getOriginalFilename())
+                    .contentType(file.getContentType())
+                    .size(file.getSize())
+                    .build();
+            comment.addAttachment(attachment);
+        }
+    }
+
+    public void removeAttachments(Comment comment, List<Long> fileIdsToRemove) {
+        comment.removeAttachments(fileIdsToRemove);
+
+        for (Long fileId : fileIdsToRemove) {
+            FileDeletionDTO event = new FileDeletionDTO(fileId);
+            commentPublisher.publishFileDeleteEvent(event);
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -81,8 +82,9 @@ public class CommentController {
      * @param commentUpdateDTO the data transfer object containing the updated comment data
      * @return a response entity with the HTTP status NO_CONTENT
      */
-    @PutMapping("{id}")
-    public ResponseEntity<Void> updateComment(@PathVariable("id") Long id, @RequestBody CommentUpdateDTO commentUpdateDTO) {
+    @PutMapping(path = "{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateComment(@PathVariable("id") Long id,
+                                              @ModelAttribute CommentUpdateDTO commentUpdateDTO) {
         commentService.updateComment(id, commentUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
