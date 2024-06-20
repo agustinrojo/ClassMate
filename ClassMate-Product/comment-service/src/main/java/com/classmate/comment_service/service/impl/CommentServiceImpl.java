@@ -57,24 +57,23 @@ public class CommentServiceImpl implements ICommentService {
      * {@inheritDoc}
      */
     @Override
-    public CommentDTORequest getCommentById(Long id)  {
+    public CommentDTOResponse getCommentById(Long id)  {
         LOGGER.info("Getting comment by id...");
         Comment comment = ICommentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-        List<FileDTO> files = new ArrayList<>();
 
-        return commentMapper.mapToCommentDTO(comment);
+        return commentMapper.mapToCommentDTOResponse(comment);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<CommentDTORequest> getCommentsByPostId(Long postId, int page, int size) {
+    public List<CommentDTOResponse> getCommentsByPostId(Long postId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> commentsPage = ICommentRepository.findByPostId(postId, pageable);
         return commentsPage.getContent().stream()
-                .map(commentMapper::mapToCommentDTO)
+                .map(commentMapper::mapToCommentDTOResponse)
                 .collect(Collectors.toList());
     }
 

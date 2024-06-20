@@ -48,9 +48,9 @@ public class CommentController {
      * @return a response entity containing the retrieved comment and the HTTP status OK
      */
     @GetMapping("{id}")
-    public ResponseEntity<CommentDTORequest> getCommentById(@PathVariable("id") Long id) {
-        CommentDTORequest commentRequestDTO = commentService.getCommentById(id);
-        return new ResponseEntity<>(commentRequestDTO, HttpStatus.OK);
+    public ResponseEntity<CommentDTOResponse> getCommentById(@PathVariable("id") Long id) {
+        CommentDTOResponse commentDTOResponse = commentService.getCommentById(id);
+        return new ResponseEntity<>(commentDTOResponse, HttpStatus.OK);
     }
 
     /**
@@ -67,10 +67,10 @@ public class CommentController {
      * @return a response entity containing the list of comments and the HTTP status OK
      */
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<CommentDTORequest>> getCommentsByPostId(@PathVariable("postId") Long postId,
+    public ResponseEntity<List<CommentDTOResponse>> getCommentsByPostId(@PathVariable("postId") Long postId,
                                                                        @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size) {
-        List<CommentDTORequest> comments = commentService.getCommentsByPostId(postId, page, size);
+        List<CommentDTOResponse> comments = commentService.getCommentsByPostId(postId, page, size);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
