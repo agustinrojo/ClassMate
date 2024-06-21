@@ -1,5 +1,6 @@
 package com.classmate.comment_service.publisher;
 
+import com.classmate.comment_service.dto.filedtos.CommentDeletionDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,13 +14,20 @@ public class CommentPublisher {
     private String exchange;
 
     @Value("${rabbitmq.delete-file.routing-key}")
-    private String fileDeleteRoutingKey;
+    private String deleteFileRoutingKey;
+
+    @Value("${rabbitmq.delete-comment.routing-key}")
+    private String deleteCommentRoutingKey;
 
     public CommentPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void publishFileDeleteEvent(FileDeletionDTO event) {
-        rabbitTemplate.convertAndSend(exchange, fileDeleteRoutingKey, event);
+        rabbitTemplate.convertAndSend(exchange, deleteFileRoutingKey, event);
+    }
+
+    public void publishCommentDeleteEvent(CommentDeletionDTO event) {
+        rabbitTemplate.convertAndSend(exchange, deleteCommentRoutingKey, event);
     }
 }

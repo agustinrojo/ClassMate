@@ -1,5 +1,6 @@
 package com.example.storage_service.consumer;
 
+import com.example.storage_service.dto.CommentDeletionDTO;
 import com.example.storage_service.dto.FileDeletionDTO;
 import com.example.storage_service.repository.IFileRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -17,5 +18,12 @@ public class FileServiceListener {
     @RabbitListener(queues = "deleteFileQueue")
     public void handleFileDelete(FileDeletionDTO event) {
         fileRepository.deleteById(event.getFileId());
+    }
+
+    @RabbitListener(queues = "deleteCommentQueue")
+    public void handleCommentDelete(CommentDeletionDTO event) {
+        for (Long fileId : event.getAttachmentIdsToDelete()) {
+            fileRepository.deleteById(fileId);
+        }
     }
 }
