@@ -1,10 +1,8 @@
 package com.classmate.post_service.controller;
 
 import com.classmate.post_service.dto.APIResponseDTO;
-import com.classmate.post_service.dto.CommentDTO;
 import com.classmate.post_service.dto.PostDTO;
 import com.classmate.post_service.dto.PostUpdateDTO;
-import com.classmate.post_service.repository.IPostRepository;
 import com.classmate.post_service.service.IPostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

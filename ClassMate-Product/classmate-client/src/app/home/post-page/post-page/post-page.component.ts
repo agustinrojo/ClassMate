@@ -3,7 +3,7 @@ import { PostAPIResponseDTO } from '../../../services/dto/post/post-api-response
 import { PostService } from '../../../services/post.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommentDTO } from '../../../services/dto/comment/comment-dto.interface';
+import { CommentDTORequest } from '../../../services/dto/comment/comment-request-dto.interface';
 import { LoginResponse } from '../../../auth/dto/login-response.interface';
 import { CommentService } from '../../../services/comment.service';
 import { User } from '../../../auth/dto/user-dto.interface';
@@ -55,18 +55,19 @@ export class PostPageComponent implements OnInit{
     console.log("entro aca")
     let user = JSON.parse(localStorage.getItem("user") || "");
 
-    let newComment: CommentDTO = {
+    let newComment: CommentDTORequest = {
       id: 0,
       postId: this.post.id,
       authorId: user.id,
       body: this.bodyForm.get("body")?.value,
-      creationDate: new Date()
+      creationDate: new Date(),
+      files: []
     };
 
     this.bodyForm.reset();
 
     this._commentService.saveComment(newComment)
-      .subscribe((comment: CommentDTO) => {
+      .subscribe((comment: CommentDTORequest) => {
         this.post.commentDTOS.unshift(comment);
         console.log(this.post.commentDTOS)
       },
@@ -81,7 +82,7 @@ export class PostPageComponent implements OnInit{
     this._commentService.deleteComment(event, userId)
       .subscribe(() => {
         //borrar comentario
-        const comments : CommentDTO[] = [...this.post.commentDTOS];
+        const comments : CommentDTORequest[] = [...this.post.commentDTOS];
         const deletedCommentIndex = comments.findIndex(c => c.id === event);
         if(deletedCommentIndex !== -1){
           this.post.commentDTOS.splice(deletedCommentIndex, 1);

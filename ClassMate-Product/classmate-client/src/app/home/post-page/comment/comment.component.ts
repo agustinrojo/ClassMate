@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CommentDTO } from '../../../services/dto/comment/comment-dto.interface';
+import { CommentDTORequest } from '../../../services/dto/comment/comment-request-dto.interface';
 import { User } from '../../../auth/dto/user-dto.interface';
+import { CommentDTOResponse } from '../../../services/dto/comment/comment-response-dto.interface';
 
 @Component({
   selector: 'app-comment',
@@ -10,7 +11,7 @@ import { User } from '../../../auth/dto/user-dto.interface';
 export class CommentComponent implements OnInit{
 
   public userId! : number;
-  @Input() public comment!: CommentDTO;
+  @Input() public comment!: CommentDTOResponse;
   @Output() public deleteEvent = new EventEmitter<number>();
 
 
@@ -28,6 +29,7 @@ export class CommentComponent implements OnInit{
     let user: User = JSON.parse(localStorage.getItem("user")!);
     this.userId = user.id;
   }
+
 
 
 }
