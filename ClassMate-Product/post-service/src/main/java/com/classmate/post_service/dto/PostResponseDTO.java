@@ -1,5 +1,6 @@
 package com.classmate.post_service.dto;
 
+import com.classmate.post_service.dto.filedtos.FileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,39 +9,44 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Data Transfer Object for Comment entity.
- */
+
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDTOResponse {
+public class PostResponseDTO {
 
     /**
-     * The unique identifier of the comment.
+     * The unique identifier of the post.
      */
     private Long id;
 
     /**
-     * The identifier of the post to which the comment belongs.
+     * The identifier of the forum to which the post belongs.
      */
-    private Long postId;
+    private Long forumId;
 
     /**
-     * The identifier of the author who created the comment.
+     * The identifier of the author who created the post.
      */
     private Long authorId;
 
     /**
-     * The body content of the comment.
+     * The title of the post.
+     */
+    private String title;
+
+    /**
+     * The body content of the post.
      */
     private String body;
 
     /**
-     * The creation date and time of the comment.
+     * The creation date and time of the post.
      * This field is automatically populated.
      */
     private LocalDateTime creationDate;
+
     private List<FileDTO> files;
 }

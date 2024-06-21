@@ -1,4 +1,4 @@
-package com.classmate.comment_service.dto.filedtos;
+package com.classmate.comment_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

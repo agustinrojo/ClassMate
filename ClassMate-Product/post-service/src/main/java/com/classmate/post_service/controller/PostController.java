@@ -1,10 +1,9 @@
 package com.classmate.post_service.controller;
 
-import com.classmate.post_service.dto.APIResponseDTO;
-import com.classmate.post_service.dto.PostDTO;
-import com.classmate.post_service.dto.PostUpdateDTO;
+import com.classmate.post_service.dto.*;
 import com.classmate.post_service.service.IPostService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,12 +62,12 @@ public class PostController {
 
     /**
      * Create a new post.
-     * @param postDTO the post to create
+     * @param postRequestDTO the post to create
      * @return the created post
      */
-    @PostMapping
-    public ResponseEntity<PostDTO> savePost(@RequestBody PostDTO postDTO) {
-        PostDTO savedPost = postService.savePost(postDTO);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PostResponseDTO> savePost(@ModelAttribute PostRequestDTO postRequestDTO) {
+        PostResponseDTO savedPost = postService.savePost(postRequestDTO);
         return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
     }
 
@@ -78,8 +77,9 @@ public class PostController {
      * @param postUpdateDTO the updated post data
      * @return a response indicating success or failure
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updatePost(@PathVariable Long id, @RequestBody PostUpdateDTO postUpdateDTO) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updatePost(@PathVariable Long id,
+                                           @ModelAttribute PostUpdateDTO postUpdateDTO) {
         postService.updatePost(id, postUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

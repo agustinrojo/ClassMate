@@ -1,6 +1,6 @@
 package com.classmate.comment_service.publisher;
 
-import com.classmate.comment_service.dto.filedtos.CommentDeletionDTO;
+import com.classmate.comment_service.dto.CommentDeletionDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;

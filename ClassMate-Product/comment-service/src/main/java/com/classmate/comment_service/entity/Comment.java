@@ -55,7 +55,7 @@ public class Comment {
     @Column
     private LocalDateTime creationDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "comment_id")
     private List<Attachment> attachments;
 

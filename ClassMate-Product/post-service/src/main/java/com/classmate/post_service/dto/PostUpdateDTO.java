@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * Data Transfer Object for updating Post entity.
@@ -23,4 +26,8 @@ public class PostUpdateDTO {
      * The body content of the post.
      */
     private String body;
+
+    private List<MultipartFile> filesToAdd;
+
+    private List<Long> fileIdsToRemove;
 }

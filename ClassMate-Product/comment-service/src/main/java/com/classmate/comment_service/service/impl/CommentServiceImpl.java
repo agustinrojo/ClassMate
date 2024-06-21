@@ -4,7 +4,7 @@ import com.classmate.comment_service.client.FileServiceClient;
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
-import com.classmate.comment_service.dto.filedtos.CommentDeletionDTO;
+import com.classmate.comment_service.dto.CommentDeletionDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
@@ -63,12 +63,12 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public CommentDTOResponse saveComment(CommentDTORequest commentRequestDTO) {
+        LOGGER.info("Saving comment...");
         validateComment(commentRequestDTO.getBody());
         if (commentRequestDTO.getFiles() != null && !commentRequestDTO.getFiles().isEmpty()) {
             validateAttachments(commentRequestDTO.getFiles());
         }
 
-        LOGGER.info("Saving comment...");
 
         List<Attachment> attachments = uploadFiles(commentRequestDTO.getFiles());
 
@@ -80,6 +80,7 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public void updateComment(Long id, CommentUpdateDTO commentUpdateDTO) {
+        LOGGER.info("Updating comment by id...");
         validateComment(commentUpdateDTO.getBody());
 
         Comment comment = commentRepository.findById(id)
@@ -97,6 +98,26 @@ public class CommentServiceImpl implements ICommentService {
         }
 
         commentRepository.save(comment);
+    }
+
+
+    @Override
+    public void deleteComment(Long id, Long userId) {
+        LOGGER.info("Deleting comment...");
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
+        if (!comment.getAuthorId().equals(userId)) {
+            throw new UnauthorizedActionException("User not authorized to delete this comment");
+        }
+
+        List<Long> attachmentIds = comment.getAttachments().stream()
+                        .map(Attachment :: getId)
+                        .toList();
+
+        CommentDeletionDTO event = new CommentDeletionDTO(attachmentIds);
+        commentPublisher.publishCommentDeleteEvent(event);
+
+        commentRepository.delete(comment);
     }
 
     public void addAttachments(Comment comment, List<MultipartFile> filesToAdd) {
@@ -122,25 +143,6 @@ public class CommentServiceImpl implements ICommentService {
             FileDeletionDTO event = new FileDeletionDTO(fileId);
             commentPublisher.publishFileDeleteEvent(event);
         }
-    }
-
-    @Override
-    public void deleteComment(Long id, Long userId) {
-        LOGGER.info("Deleting comment...");
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-        if (!comment.getAuthorId().equals(userId)) {
-            throw new UnauthorizedActionException("User not authorized to delete this comment");
-        }
-
-        List<Long> attachmentIds = comment.getAttachments().stream()
-                        .map(Attachment :: getId)
-                        .toList();
-
-        CommentDeletionDTO event = new CommentDeletionDTO(attachmentIds);
-        commentPublisher.publishCommentDeleteEvent(event);
-
-        commentRepository.delete(comment);
     }
 
     private List<Attachment> uploadFiles(List<MultipartFile> files) {

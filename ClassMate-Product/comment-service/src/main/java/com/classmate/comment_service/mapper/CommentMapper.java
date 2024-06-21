@@ -12,13 +12,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = AttachmentMapper.class)
 public interface CommentMapper {
 
-    /**
-     * Converts a Comment entity to a CommentDTO.
-     *
-     * @param comment the Comment entity
-     * @return the CommentDTO
-     */
-    CommentDTORequest mapToCommentDTO(Comment comment);
+//    /**
+//     * Converts a Comment entity to a CommentDTO.
+//     *
+//     * @param comment the Comment entity
+//     * @return the CommentDTO
+//     */
+//    CommentDTORequest mapToCommentDTO(Comment comment);
 
     /**
      * Converts a CommentDTO to a Comment entity.
