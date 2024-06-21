@@ -278,9 +278,9 @@ public class PostServiceImplTest {
         Long postId = 1L;
         Post post = new Post(postId, 1L, 1L, "Valid title", "Valid body", null);
         APIResponseDTO apiResponseDTO = new APIResponseDTO(postId, 1L, 1L, "Valid title", "Valid body", null, null);
-        List<CommentDTO> commentDTOS = Arrays.asList(
-                new CommentDTO(1L, postId, 1L, "Comment 1", null),
-                new CommentDTO(2L, postId, 1L, "Comment 2", null)
+        List<CommentDTOResponse> commentDTOS = Arrays.asList(
+                new CommentDTOResponse(1L, postId, 1L, "Comment 1", null),
+                new CommentDTOResponse(2L, postId, 1L, "Comment 2", null)
         );
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));

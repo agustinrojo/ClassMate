@@ -56,7 +56,7 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
         APIResponseDTO apiResponseDTO = postMapper.convertToAPIResponseDTO(post);
-        List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
+        List<CommentDTOResponse> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
     }

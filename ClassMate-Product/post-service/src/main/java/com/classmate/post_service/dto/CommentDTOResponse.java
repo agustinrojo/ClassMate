@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Data Transfer Object for Comment entity.
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDTO {
+public class CommentDTOResponse {
 
     /**
      * The unique identifier of the comment.
@@ -41,4 +42,5 @@ public class CommentDTO {
      * This field is automatically populated.
      */
     private LocalDateTime creationDate;
+    private List<FileDTO> files;
 }

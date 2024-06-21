@@ -1,4 +1,4 @@
-import { CommentDTO } from "../comment/comment-dto.interface";
+import { CommentDTOResponse } from "../comment/comment-response-dto.interface";
 
 export interface PostAPIResponseDTO {
   id: number;
@@ -7,5 +7,5 @@ export interface PostAPIResponseDTO {
   title: string;
   body: string;
   creationDate: Date;
-  commentDTOS: CommentDTO[];
+  commentDTOS: CommentDTOResponse[];
 }

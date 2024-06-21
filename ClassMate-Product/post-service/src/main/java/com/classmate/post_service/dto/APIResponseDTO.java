@@ -51,5 +51,5 @@ public class APIResponseDTO {
     /**
      * A list of CommentDTO objects representing the comments associated with the post.
      */
-    private List<CommentDTO> commentDTOS;
+    private List<CommentDTOResponse> commentDTOS;
 }
