@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Entity class representing a comment in the system.
@@ -58,4 +59,14 @@ public class Comment {
     @JoinColumn(name = "comment_id")
     private List<Attachment> attachments;
 
+
+    public void addAttachment(Attachment attachment) {
+        this.attachments.add(attachment);
+    }
+
+    public void removeAttachments(List<Long> attachmentIds) {
+        this.attachments = this.attachments.stream()
+                .filter(attachment -> !attachmentIds.contains(attachment.getId()))
+                .collect(Collectors.toList());
+    }
 }

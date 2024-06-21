@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * Data Transfer Object for updating Comment entity.
@@ -14,8 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CommentUpdateDTO {
 
-    /**
-     * The body content of the comment.
-     */
     private String body;
+    private List<MultipartFile> filesToAdd;
+    private List<Long> fileIdsToRemove;
 }
