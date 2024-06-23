@@ -11,12 +11,14 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { HttpRequestInterceptor } from './interceptor/http.interceptor';
 import { HomeModule } from './home/home.module';
+import { TruncatePipe } from './pipes/truncate.pipe';
+import { FileSizePipe } from './pipes/file-size.pipe';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

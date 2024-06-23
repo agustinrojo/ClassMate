@@ -2,11 +2,16 @@
   <div class="post-container">
     <div class="post">
       <div class="row">
-        <div class="col-6">
+        <div class="col-10">
           <h2>{{ post.title }}</h2>
         </div>
-        <div class="col-6 d-flex flex-row-reverse">
-          <button class="btn btn-dark" (click)="goBackToForum()"> Volver a foro</button>
+
+        <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="post?.authorId === userId">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="deletePost()">Borrar</a></li>
+            <li><a class="dropdown-item" (click)="navigateToEditPost()">Editar</a></li>
+          </ul>
         </div>
 
       </div>
@@ -16,10 +21,21 @@
         <br>
         <span class="post-time">Publicado: {{ post.creationDate | date }}</span>
 
+        <div class="row d-flex flex-row-reverse">
+          <div class="col-3 my-2">
+            <button class="btn btn-dark" (click)="goBackToForum()"> Volver a foro</button>
+          </div>
+        </div>
+
     </div>
     <form [formGroup]="bodyForm" class="comment-form mb-3" (ngSubmit)="submit()" >
       <label for="comment" class="mb-2">Agregar un comentario</label>
-        <textarea formControlName="body" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
+        <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
+        <label for="file-upload" class="file-upload-label">Seleccionar archivos</label>
+        <input type="file" (change)="onFileChange($event)" id="file-upload" class="file-upload-input" multiple accept=".pdf, .xlsx, .docx, .jpg, .jpeg">
+
+        <app-file-badge *ngFor="let file of selectedFiles; let i = index" [file]="fileDTOs[i]" [canModify]="true" (removeEvent)="removeFile(i)"></app-file-badge>
+
         <button type="submit" [disabled]="!bodyForm.valid" >Comentar</button>
     </form>
     <hr>

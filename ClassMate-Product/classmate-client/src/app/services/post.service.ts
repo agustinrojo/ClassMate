@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { PostAPIResponseDTO } from './dto/post/post-api-response-dto';
 import { PostDTO } from './dto/post/post-dto.interface';
 import { User } from '../auth/dto/user-dto.interface';
+import { PostUpdateDTO } from './dto/post/post-update-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class PostService {
@@ -24,6 +25,10 @@ export class PostService {
     let user: User = JSON.parse(localStorage.getItem("user")!);
     let userId = user.id;
     return this.http.delete<void>(`${this.baseUrl}/${postId}?userId=${userId}`)
+  }
+
+  public updatePost(postId: number, updatedPost: PostUpdateDTO) : Observable<void>{
+    return this.http.put<void>(`${this.baseUrl}/${postId}`, updatedPost)
   }
 
 }

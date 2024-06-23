@@ -22,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -65,21 +67,25 @@ public class CommentServiceImpl implements ICommentService {
         validateComment(commentRequestDTO.getBody());
         validateAttachments(commentRequestDTO.getFiles());
 
+
         LOGGER.info("Saving comment...");
 
         List<Attachment> attachments = new ArrayList<>();
-        if (!commentRequestDTO.getFiles().isEmpty()) {
-            List<MultipartFile> files = commentRequestDTO.getFiles();
-            for (MultipartFile file : files) {
-                Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
-                attachments.add(Attachment.builder()
-                        .id(fileId)
-                        .contentType(file.getContentType())
-                        .originalFilename(file.getOriginalFilename())
-                        .size(file.getSize())
-                        .build());
+        if(!(commentRequestDTO.getFiles() == null)){
+            if ( !commentRequestDTO.getFiles().isEmpty()) {
+                List<MultipartFile> files = commentRequestDTO.getFiles();
+                for (MultipartFile file : files) {
+                    Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
+                    attachments.add(Attachment.builder()
+                            .id(fileId)
+                            .contentType(file.getContentType())
+                            .originalFilename(file.getOriginalFilename())
+                            .size(file.getSize())
+                            .build());
+                }
             }
         }
+
 
         Comment comment = commentMapper.mapToComment(commentRequestDTO);
         comment.setAttachments(attachments);

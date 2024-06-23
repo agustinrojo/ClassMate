@@ -1,0 +1,46 @@
+<form  class="comment-form mb-3" [formGroup]="editCommentForm" >
+  <label for="comment" class="mb-2">Editar comentario</label>
+    <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
+
+    <!-- <div class="row">
+      <div class="col-6">
+        <app-file-badge *ngFor="let file of files" [file]="file" [canModify]="true"></app-file-badge>
+      </div>
+      <div class="col-6 d-flex flex-row-reverse">
+        <button class="btn btn-danger">&times;</button>
+      </div>
+    </div> -->
+    <div class="row align-items-center" *ngFor="let file of files; let i = index">
+      <div class="col-6">
+        <app-file-badge  [file]="file"></app-file-badge>
+      </div>
+      <div class="col-5">
+        <p class="text-danger mx-2" *ngIf="markedForRemoval[i]">Marcado para eliminar</p>
+      </div>
+      <div class="col-1 d-flex justify-content-end">
+        <button class="btn btn-danger custom-btn-height" (click)="toggleMarkForRemoval(i)">{{ markedForRemoval[i] ? "Cancelar" : "&times;" }}</button>
+      </div>
+    </div>
+    <div class="mt-2" *ngIf="filesToAdd.length > 0">
+      <p>Archivos a agregar: </p>
+      <hr>
+      <div class="row align-items-center" *ngFor="let file of fileDTOsToAdd; let i = index">
+        <div class="col-6">
+          <app-file-badge  [file]="file"></app-file-badge>
+        </div>
+        <div class="col-6 d-flex flex-row-reverse">
+          <div class="col-1 d-flex justify-content-end">
+            <button class="btn btn-danger custom-btn-height" (click)="removeUploadedFile(i)">&times;</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <br>
+
+    <label for="add-file" class="add-file-label" >Seleccionar archivos</label>
+    <input type="file" (change)="onFileAdded($event)" id="add-file" class="add-file-input mb-3" multiple accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="(files.length + filesToAdd.length) >= 3">
+
+    <button type="submit" class="col-3" id="btn-confirm" (click)="confirmEdition()">Confirmar</button>
+    <button type="button" class="col-3 mx-2 bg-danger" (click)="cancel()">Cancelar</button>
+</form>

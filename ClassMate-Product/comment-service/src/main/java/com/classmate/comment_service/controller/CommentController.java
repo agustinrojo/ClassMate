@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,9 @@ public class CommentController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommentDTOResponse> saveComment(@ModelAttribute CommentDTORequest commentRequestDTO) {
+        if(commentRequestDTO.getFiles() == null){
+            commentRequestDTO.setFiles(new ArrayList<>());
+        }
         CommentDTOResponse savedComment = commentService.saveComment(commentRequestDTO);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }

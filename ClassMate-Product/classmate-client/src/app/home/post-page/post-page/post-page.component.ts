@@ -8,6 +8,10 @@ import { LoginResponse } from '../../../auth/dto/login-response.interface';
 import { CommentService } from '../../../services/comment.service';
 import { User } from '../../../auth/dto/user-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
+import { PostData } from '../../interfaces/post-data.interface';
+import { PostStateService } from '../../../services/dto/state-services/post-state.service';
+import { CommentDTOResponse } from '../../../services/dto/comment/comment-response-dto.interface';
+import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
 
 @Component({
   selector: 'app-post-page',
@@ -17,21 +21,27 @@ import { AuthServiceService } from '../../../auth/auth-service.service';
 export class PostPageComponent implements OnInit{
   public post!: PostAPIResponseDTO;
   public bodyForm!: FormGroup;
+  public userId! : number;
+  public selectedFiles: File[] = [];
+  public fileDTOs: FileDTO[] = [];
 
   constructor( private _postService: PostService,
                private _authService: AuthServiceService,
                private _commentService: CommentService,
+               private _postStateService: PostStateService,
                private _activatedRoute: ActivatedRoute,
                private _router: Router,
-               private _fb: FormBuilder
+               private _fb: FormBuilder,
                ){ }
 
   ngOnInit(): void {
+    this.userId = this._authService.getUserId();
     let postId = this._activatedRoute.snapshot.paramMap.get('id') || "0";
     this.loadPost(postId);
 
     this.bodyForm = this._fb.group({
-      body: ["", Validators.required, []]
+      body: ["", Validators.required, []],
+      files: []
     })
 
   }
@@ -52,7 +62,6 @@ export class PostPageComponent implements OnInit{
   }
 
   public submit(){
-    console.log("entro aca")
     let user = JSON.parse(localStorage.getItem("user") || "");
 
     let newComment: CommentDTORequest = {
@@ -61,13 +70,15 @@ export class PostPageComponent implements OnInit{
       authorId: user.id,
       body: this.bodyForm.get("body")?.value,
       creationDate: new Date(),
-      files: []
+      files: [...this.selectedFiles]
     };
 
     this.bodyForm.reset();
+    this.selectedFiles = [];
+    this.fileDTOs = [];
 
     this._commentService.saveComment(newComment)
-      .subscribe((comment: CommentDTORequest) => {
+      .subscribe((comment: CommentDTOResponse) => {
         this.post.commentDTOS.unshift(comment);
         console.log(this.post.commentDTOS)
       },
@@ -82,7 +93,7 @@ export class PostPageComponent implements OnInit{
     this._commentService.deleteComment(event, userId)
       .subscribe(() => {
         //borrar comentario
-        const comments : CommentDTORequest[] = [...this.post.commentDTOS];
+        const comments : CommentDTOResponse[] = [...this.post.commentDTOS];
         const deletedCommentIndex = comments.findIndex(c => c.id === event);
         if(deletedCommentIndex !== -1){
           this.post.commentDTOS.splice(deletedCommentIndex, 1);
@@ -91,6 +102,52 @@ export class PostPageComponent implements OnInit{
     err => {
       console.log(err);
     })
+  }
+
+  public deletePost(){
+    this._postService.deletePost(this.post.id)
+      .subscribe(() => {
+        this._router.navigate([`/forum/${this.post.forumId}`])
+      },
+    err => {
+      console.log(err);
+    })
+  }
+
+  public navigateToEditPost(){
+    let postData: PostData = {
+      title: this.post!.title,
+      body : this.post!.body
+    }
+    this._postStateService.setPostData(postData);
+    this._router.navigate([`post/edit/${this.post?.id}`]);
+  }
+
+  public onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      const files = event.target.files;
+      for (let i = 0; i < files.length; i++) {
+        this.selectedFiles.push(files[i]);
+        this.fileDTOs.push(this.mapFileToFIleDTO(files[i]));
+      }
+
+    }
+  }
+
+  public removeFile(index: number) {
+    this.selectedFiles.splice(index, 1);
+    this.fileDTOs.splice(index, 1);
+  }
+
+  public mapFileToFIleDTO(file: File){
+    let fileDTO: FileDTO = {
+      id: 0,
+      originalFilename: file.name,
+      contentType: file.type,
+      size: file.size
+    }
+    console.log(fileDTO)
+    return fileDTO;
   }
 
 

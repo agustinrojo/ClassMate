@@ -7,6 +7,7 @@ import { ForumsPageComponent } from './forums-page/forums-page/forums-page.compo
 import { SingleForumPageComponent } from './single-forum-page/single-forum-page/single-forum-page.component';
 import { CreatePostComponent } from './single-forum-page/create-post/create-post.component';
 import { CreateForumComponent } from './forums-page/create-forum/create-forum.component';
+import { EditPostComponent } from './single-forum-page/edit-post/edit-post.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,10 @@ export const routes: Routes = [
       {
         path: "post/:id",
         component: PostPageComponent
+      },
+      {
+        path: "post/edit/:id",
+        component: EditPostComponent
       },
       {
         path: "forums",

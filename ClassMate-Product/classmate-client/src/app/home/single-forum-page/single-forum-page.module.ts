@@ -4,6 +4,7 @@ import { SingleForumPageComponent } from './single-forum-page/single-forum-page.
 import { PostComponent } from './post/post.component';
 import { CreatePostComponent } from './create-post/create-post.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EditPostComponent } from './edit-post/edit-post.component';
 
 
 
@@ -12,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   declarations: [
     SingleForumPageComponent,
     PostComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    EditPostComponent
   ],
   imports: [
     CommonModule,

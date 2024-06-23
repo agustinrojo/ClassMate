@@ -4,5 +4,5 @@ export interface CommentDTORequest{
   authorId: number;
   body: string;
   creationDate: Date;
-  files: any[];
+  files: File[];
 }

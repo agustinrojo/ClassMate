@@ -93,6 +93,42 @@ body {
 
 }
 
+.file-upload-label {
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #8c6e48; /* Fondo del botón */
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 30%;
+}
+
+.file-upload-label:hover {
+  background-color: #725a3d; /* Color del botón al pasar el cursor */
+}
+
+.file-upload-input {
+  display: none; /* Ocultar el input de archivo real */
+  width: 30%;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+  background-color: #007bff;
+  color: white;
+  border-radius: 0.25em;
+}
+
+.badge span {
+  margin-left: 0.5em;
+  font-weight: bold;
+}
+
 @media (max-width: 600px) {
   .post-container {
       padding: 15px;

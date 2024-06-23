@@ -1,7 +1,7 @@
 <body>
   <div class="post-container">
-    <h1>Publicar Nuevo Post</h1>
-    <form [formGroup]="createPostForm" (ngSubmit)="submit()">
+    <h1>Editar Post</h1>
+    <form [formGroup]="editPostForm" (ngSubmit)="submit()">
       <div class="form-group" >
         <label for="post-title">Título del Post</label>
         <input type="text" class="bg-dark" id="post-title" name="title" formControlName="title" maxlength="300">
@@ -12,7 +12,7 @@
       </div>
       <div class="row">
         <div class="col-6">
-          <button type="submit" [disabled]="!createPostForm.valid || disableBtn">Publicar</button>
+          <button type="submit" [disabled]="!editPostForm.valid || disableBtn">Publicar</button>
         </div>
         <div class="col-6 d-flex flex-row-reverse">
           <button type="button" (click)="goBack()">Volver atrás</button>

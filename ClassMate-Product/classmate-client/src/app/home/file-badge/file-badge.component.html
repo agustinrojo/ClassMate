@@ -1,0 +1,9 @@
+<div class="badge">
+  <div (click)="downloadFile()">
+    {{ file.originalFilename | truncate}} <br> {{ file.size | fileSize }}
+  </div>
+
+  <span *ngIf="canModify" (click)="removeFile()" style="cursor: pointer;">&times;</span>
+</div>
+
+

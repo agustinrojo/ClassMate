@@ -1,0 +1,18 @@
+.badge {
+  display: inline-block;
+  padding: 0.5em 1em;
+  margin: 0.5em;
+  background-color: #007bff;
+  color: white;
+  border-radius: 0.25em;
+  word-wrap: break-word; /* Permite que las palabras largas se dividan y ajusten dentro del contenedor */
+  word-break: break-all; /* Permite que las palabras largas se dividan y ajusten dentro del contenedor */
+  white-space: normal; /* Permite que el texto envuelva a múltiples líneas */
+  max-width: 50%;
+  cursor: pointer;
+}
+
+.badge span {
+  margin-left: 0.5em;
+  font-weight: bold;
+}
