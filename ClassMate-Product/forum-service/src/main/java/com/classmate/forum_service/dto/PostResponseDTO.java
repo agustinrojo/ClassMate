@@ -1,11 +1,13 @@
 package com.classmate.forum_service.dto;
 
+import com.classmate.forum_service.dto.file.FileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Data Transfer Object for the Post entity.
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostDTO {
+public class PostResponseDTO {
 
     /**
      * The unique identifier of the post.
@@ -46,4 +48,6 @@ public class PostDTO {
      * This field is automatically populated.
      */
     private LocalDateTime creationDate;
+
+    private List<FileDTO> files;
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CapitalizePipe } from '../../pipes/capitalize.pipe';
+import { CapitalizePipe } from '../../shared/pipes/capitalize.pipe';
 import { validateEmail } from '../validators/validateEmail.validator';
 import { validatePasswordsMatch } from '../validators/validatePasswordsMatch.validator';
 ;

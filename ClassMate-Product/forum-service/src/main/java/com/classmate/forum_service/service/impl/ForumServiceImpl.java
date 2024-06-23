@@ -68,7 +68,7 @@ public class ForumServiceImpl implements IForumService {
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
 
-        List<PostDTO> postDTOS = postClient.getPostsByForumId(id, 0, 10);
+        List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, 0, 10);
         APIResponseDTO responseDTO = forumMapper.convertToAPIResponseDTO(forum);
         responseDTO.setPosts(postDTOS);
 

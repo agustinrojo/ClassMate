@@ -12,6 +12,8 @@ import { PostData } from '../../interfaces/post-data.interface';
 import { PostStateService } from '../../../services/dto/state-services/post-state.service';
 import { CommentDTOResponse } from '../../../services/dto/comment/comment-response-dto.interface';
 import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
+import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+import { FileService } from '../../../services/file.service';
 
 @Component({
   selector: 'app-post-page',
@@ -29,6 +31,7 @@ export class PostPageComponent implements OnInit{
                private _authService: AuthServiceService,
                private _commentService: CommentService,
                private _postStateService: PostStateService,
+               private _fileService: FileService,
                private _activatedRoute: ActivatedRoute,
                private _router: Router,
                private _fb: FormBuilder,
@@ -137,6 +140,21 @@ export class PostPageComponent implements OnInit{
   public removeFile(index: number) {
     this.selectedFiles.splice(index, 1);
     this.fileDTOs.splice(index, 1);
+  }
+
+  public downloadPostFile(file: FileDownloadEvent){
+    this._fileService.downloadFile(file.fileId).subscribe((blob: Blob) => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = file.fileName;
+      document.body.appendChild(a);  // Añadir el elemento al DOM
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+      document.body.removeChild(a);  // Eliminar el elemento del DOM
+    }, err => {
+      console.log(err);
+    })
   }
 
   public mapFileToFIleDTO(file: File){

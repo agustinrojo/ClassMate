@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PostAPIResponseDTO } from './dto/post/post-api-response-dto';
-import { PostDTO } from './dto/post/post-dto.interface';
+import { PostRequestDTO } from './dto/post/post-request-dto.interface';
 import { User } from '../auth/dto/user-dto.interface';
 import { PostUpdateDTO } from './dto/post/post-update-dto.interface';
 
@@ -17,8 +17,12 @@ export class PostService {
     return this.http.get<PostAPIResponseDTO>(`${this.baseUrl}/${id}`);
   }
 
-  public savePost(post:PostDTO): Observable<PostDTO>{
-    return this.http.post<PostDTO>(`${this.baseUrl}`, post);
+  public savePost(post:PostRequestDTO): Observable<PostRequestDTO>{
+    let postFormData: FormData = this.mapRequestToFormData(post);
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+
+    return this.http.post<PostRequestDTO>(`${this.baseUrl}`, postFormData, { headers });
   }
 
   public deletePost(postId: number){
@@ -29,6 +33,23 @@ export class PostService {
 
   public updatePost(postId: number, updatedPost: PostUpdateDTO) : Observable<void>{
     return this.http.put<void>(`${this.baseUrl}/${postId}`, updatedPost)
+  }
+
+  public mapRequestToFormData(req: PostRequestDTO): FormData {
+    const formData = new FormData();
+    formData.append("id", req.id.toString());
+    formData.append("forumId", req.forumId.toString());
+    formData.append("authorId", req.authorId.toString());
+    formData.append("title", req.title.toString());
+    formData.append("body", req.body.toString());
+
+    if (req.files && req.files.length > 0) {
+      for (let i = 0; i < req.files.length; i++) {
+        formData.append('files', req.files[i]);
+      }
+    }
+
+    return formData;
   }
 
 }

@@ -3,8 +3,9 @@ import { ForumService } from '../../../services/forum.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ForumApiResponseDTO } from '../../../services/dto/forum/forum-api-response-dto.interface';
 import { PostService } from '../../../services/post.service';
-import { PostDTO } from '../../../services/dto/post/post-dto.interface';
+import { PostRequestDTO } from '../../../services/dto/post/post-request-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
+import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
 
 @Component({
   selector: 'app-single-forum-page',
@@ -48,7 +49,7 @@ export class SingleForumPageComponent implements OnInit{
   public deletePost(postId: number){
     this._postService.deletePost(postId)
       .subscribe(() => {
-        let posts : PostDTO[] = [...this.forum.posts];
+        let posts : PostResponseDTO[] = [...this.forum.posts];
         let deletedPostIndex = posts.findIndex(p => p.id === postId);
         if(deletedPostIndex !== -1){
           this.forum.posts.splice(deletedPostIndex, 1);

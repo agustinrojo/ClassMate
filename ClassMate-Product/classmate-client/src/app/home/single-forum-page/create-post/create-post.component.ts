@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { PostService } from '../../../services/post.service';
-import { PostDTO } from '../../../services/dto/post/post-dto.interface';
+import { PostRequestDTO } from '../../../services/dto/post/post-request-dto.interface';
 import { delay } from 'rxjs';
+import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
+import { mapFileToFIleDTO } from '../../../mappers/mapFileToFileDTO.mapper';
 
 @Component({
   selector: 'app-create-post',
@@ -12,9 +14,12 @@ import { delay } from 'rxjs';
 })
 export class CreatePostComponent implements OnInit{
 
+
   public createPostForm!: FormGroup;
   public disableBtn = false;
   public showErr = false;
+  public selectedFiles: File[] = [];
+  public selectedFileDTOs: FileDTO[] = [];
 
   constructor(private _fb: FormBuilder,
               private _router:Router,
@@ -24,20 +29,22 @@ export class CreatePostComponent implements OnInit{
   ngOnInit(): void {
     this.createPostForm = this._fb.group({
       title : ["", Validators.required, [] ],
-      body  : ["", Validators.required, [] ]
+      body  : ["", Validators.required, [] ],
+      files : ["", [], []]
     })
   }
 
 
   public submit(){
     let user = JSON.parse(localStorage.getItem("user") || "{}");
-    let post: PostDTO = {
+    let post: PostRequestDTO = {
       id: 1,
       authorId: user.id,
       forumId: parseInt(this._activateRoute.snapshot.paramMap.get("id" || "0")!),
       title: this.createPostForm.get("title")?.value,
       body: this.createPostForm.get("body")?.value,
-      creationDate: new Date()
+      creationDate: new Date(),
+      files: this.selectedFiles
     }
 
     this._postService.savePost(post)
@@ -55,6 +62,21 @@ export class CreatePostComponent implements OnInit{
   public goBack(){
     let forumId: number = parseInt(this._activateRoute.snapshot.paramMap.get("id" || "0")!);
     this._router.navigate([`forums/${forumId}`]);
+  }
+
+  public onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      const files = event.target.files;
+      for (let i = 0; i < files.length; i++) {
+        this.selectedFiles.push(files[i]);
+        this.selectedFileDTOs.push(mapFileToFIleDTO(files[i]));
+      }
+    }
+  }
+
+  public removeFile(fileIndex: number) {
+    this.selectedFileDTOs.splice(fileIndex, 1);
+    this.selectedFiles.splice(fileIndex, 1);
   }
 
 

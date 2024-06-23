@@ -35,7 +35,7 @@ public interface IPostService {
      * @param size the number of posts per page
      * @return a list of PostDTOs belonging to the specified forum
      */
-    List<PostDTO> getPostsByForumId(Long forumId, int page, int size);
+    List<PostResponseDTO> getPostsByForumId(Long forumId, int page, int size);
 
     /**
      * Saves a new post.
@@ -49,7 +49,7 @@ public interface IPostService {
      * Updates an existing post.
      *
      * @param id the ID of the post to update
-     * @param postDTO the updated post data
+
      */
     void updatePost(Long id, PostUpdateDTO postUpdateDTO);
 

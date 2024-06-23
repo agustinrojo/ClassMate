@@ -2,11 +2,14 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 
 import { Router } from '@angular/router';
-import { PostDTO } from '../../../services/dto/post/post-dto.interface';
+import { PostRequestDTO } from '../../../services/dto/post/post-request-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { PostData } from '../../interfaces/post-data.interface';
 import { state } from '@angular/animations';
 import { PostStateService } from '../../../services/dto/state-services/post-state.service';
+import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
+import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+import { FileService } from '../../../services/file.service';
 
 @Component({
   selector: 'app-post',
@@ -15,11 +18,13 @@ import { PostStateService } from '../../../services/dto/state-services/post-stat
 })
 export class PostComponent implements OnInit{
 
+
   public userId!: number;
-  @Input() public post?: PostDTO;
+  @Input() public post?: PostResponseDTO;
   @Output() public deleteEvent: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _authService: AuthServiceService,
+              private _fileService: FileService,
               private _router: Router,
               private _postStateService: PostStateService) {}
 
@@ -38,6 +43,21 @@ export class PostComponent implements OnInit{
 
   public getUserId(){
     this.userId = this._authService.getUserId();
+  }
+
+  downloadPostFile(file: FileDownloadEvent) {
+    this._fileService.downloadFile(file.fileId).subscribe((blob: Blob) => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = file.fileName;
+      document.body.appendChild(a);  // Añadir el elemento al DOM
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+      document.body.removeChild(a);  // Eliminar el elemento del DOM
+    }, err => {
+      console.log(err);
+    })
   }
 
 

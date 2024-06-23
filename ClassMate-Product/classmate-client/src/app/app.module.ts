@@ -4,15 +4,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
-import { CapitalizePipe } from './pipes/capitalize.pipe';
+import { CapitalizePipe } from './shared/pipes/capitalize.pipe';
 import { AuthServiceService } from './auth/auth-service.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HttpRequestInterceptor } from './interceptor/http.interceptor';
 import { HomeModule } from './home/home.module';
-import { TruncatePipe } from './pipes/truncate.pipe';
-import { FileSizePipe } from './pipes/file-size.pipe';
+import { TruncatePipe } from './shared/pipes/truncate.pipe';
+import { FileSizePipe } from './shared/pipes/file-size.pipe';
 
 
 

@@ -24,5 +24,5 @@ public class APIResponseDTO {
     /**
      * The list of posts associated with the forum.
      */
-    private List<PostDTO> posts;
+    private List<PostResponseDTO> posts;
 }

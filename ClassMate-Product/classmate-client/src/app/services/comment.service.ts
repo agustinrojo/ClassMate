@@ -29,7 +29,7 @@ export class CommentService {
     return this.http.delete<void>(`${this.baseUrl}/${commentId}?userId=${userId}`)
   }
 
-  public editComment(commentId: number, commentUpdate: CommentUpdateDTO): Observable<void> {
+  public updateComment(commentId: number, commentUpdate: CommentUpdateDTO): Observable<void> {
     let updateFormData : FormData = this.mapUpdateToFormData(commentUpdate);
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');

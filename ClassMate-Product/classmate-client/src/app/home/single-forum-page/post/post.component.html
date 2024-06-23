@@ -14,6 +14,9 @@
   </div>
 
   <p>{{ post?.body }}</p>
+
+  <app-file-badge *ngFor="let file of post?.files" [file]="file" [canModify]="false" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
+
   <div class="post-details">
       <span>Creado por: {{ post?.authorId }}</span> |
       <span>Comentarios: n</span> |

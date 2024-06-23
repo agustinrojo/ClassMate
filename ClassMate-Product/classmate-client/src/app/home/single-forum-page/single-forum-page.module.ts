@@ -5,6 +5,8 @@ import { PostComponent } from './post/post.component';
 import { CreatePostComponent } from './create-post/create-post.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditPostComponent } from './edit-post/edit-post.component';
+import { PostPageModule } from '../post-page/post-page.module';
+import { SharedModule } from '../../shared/shared.module';
 
 
 
@@ -18,7 +20,8 @@ import { EditPostComponent } from './edit-post/edit-post.component';
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   exports: [
     PostComponent

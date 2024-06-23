@@ -3,7 +3,7 @@ package com.classmate.forum_service;
 import com.classmate.forum_service.client.IPostClient;
 import com.classmate.forum_service.dto.APIResponseDTO;
 import com.classmate.forum_service.dto.ForumResponseDTO;
-import com.classmate.forum_service.dto.PostDTO;
+import com.classmate.forum_service.dto.PostResponseDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.entity.Forum;
 import com.classmate.forum_service.exception.InvalidForumException;
@@ -293,7 +293,7 @@ public class ForumServiceImplTest {
         forum.setId(forumId);
         forum.setTitle("Forum title");
         forum.setDescription("Forum description");
-        List<PostDTO> postDTOs = Arrays.asList(new PostDTO(), new PostDTO());
+        List<PostResponseDTO> postDTOs = Arrays.asList(new PostResponseDTO(), new PostResponseDTO());
         APIResponseDTO apiResponseDTO = new APIResponseDTO();
         apiResponseDTO.setForum(new ForumResponseDTO());
         apiResponseDTO.setPosts(postDTOs);

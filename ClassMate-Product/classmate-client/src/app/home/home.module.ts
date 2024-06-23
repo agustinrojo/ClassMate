@@ -11,7 +11,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { ForumsPageModule } from './forums-page/forums-page.module';
 import { SingleForumPageModule } from './single-forum-page/single-forum-page.module';
 import { PostPageModule } from './post-page/post-page.module';
-import { FileBadgeComponent } from './file-badge/file-badge.component';
+import { FileBadgeComponent } from '../shared/file-badge/file-badge.component';
 
 
 

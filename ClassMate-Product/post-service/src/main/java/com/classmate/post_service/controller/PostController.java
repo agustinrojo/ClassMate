@@ -53,10 +53,10 @@ public class PostController {
      * @return a list of posts in the given forum
      */
     @GetMapping("/forum/{forumId}")
-    public ResponseEntity<List<PostDTO>> getPostsByForumId(@PathVariable Long forumId,
+    public ResponseEntity<List<PostResponseDTO>> getPostsByForumId(@PathVariable Long forumId,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int size) {
-        List<PostDTO> posts = postService.getPostsByForumId(forumId, page, size);
+        List<PostResponseDTO> posts = postService.getPostsByForumId(forumId, page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 

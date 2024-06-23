@@ -17,6 +17,11 @@
       </div>
 
         <p>{{ post.body }}</p>
+        <div class="row">
+          <app-file-badge *ngFor="let file of post.files" [file]="file" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
+        </div>
+
+
         <span class="post-time">Creador: {{ post.authorId }}</span>
         <br>
         <span class="post-time">Publicado: {{ post.creationDate | date }}</span>
@@ -42,8 +47,6 @@
     <div class="comments-section">
         <h3 class="mb-3">Comentarios</h3>
         <app-comment (deleteEvent)="deleteComment($event)" *ngFor="let comment of post?.commentDTOS" [comment]="comment" ></app-comment>
-
-
     </div>
 </div>
 </body>

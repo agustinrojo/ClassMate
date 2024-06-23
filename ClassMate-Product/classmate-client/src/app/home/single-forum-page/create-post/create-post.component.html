@@ -10,6 +10,16 @@
         <label for="post-content">Contenido del Post</label>
         <textarea id="post-content" class="bg-dark" name="content" rows="10" formControlName="body" maxlength="5000"></textarea>
       </div>
+      <div *ngIf="selectedFiles.length > 0" class="mb-3">
+        <p>Archivos Seleccionados</p>
+        <hr>
+        <app-file-badge *ngFor="let file of selectedFileDTOs; let i = index" [file]="file" [canModify]="true" (removeEvent)="removeFile(i)"></app-file-badge>
+
+      </div>
+
+      <label for="file-upload" class="file-upload-label">Seleccionar archivos</label>
+      <input type="file" (change)="onFileChange($event)" id="file-upload" class="file-upload-input" multiple accept=".pdf, .xlsx, .docx, .jpg, .jpeg">
+
       <div class="row">
         <div class="col-6">
           <button type="submit" [disabled]="!createPostForm.valid || disableBtn">Publicar</button>

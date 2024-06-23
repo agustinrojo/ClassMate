@@ -1,6 +1,6 @@
 package com.classmate.forum_service.client;
 
-import com.classmate.forum_service.dto.PostDTO;
+import com.classmate.forum_service.dto.PostResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +24,7 @@ public interface IPostClient {
      * @return a list of PostDTO objects representing the posts for the forum
      */
     @GetMapping("/api/posts/forum/{forumId}")
-    List<PostDTO> getPostsByForumId(@PathVariable("forumId") Long forumId,
-                                    @RequestParam("page") int page,
-                                    @RequestParam("size") int size);
+    List<PostResponseDTO> getPostsByForumId(@PathVariable("forumId") Long forumId,
+                                            @RequestParam("page") int page,
+                                            @RequestParam("size") int size);
 }

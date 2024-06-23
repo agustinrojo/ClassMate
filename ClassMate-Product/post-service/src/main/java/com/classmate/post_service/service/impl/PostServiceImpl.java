@@ -21,7 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -75,11 +77,11 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public List<PostDTO> getPostsByForumId(Long forumId, int page, int size) {
+    public List<PostResponseDTO> getPostsByForumId(Long forumId, int page, int size) {
         LOGGER.info("Getting posts by forum id...");
         Pageable pageRequest = PageRequest.of(page, size);
         return postRepository.findByForumId(forumId, pageRequest)
-                .map(postMapper::convertToPostDTO)
+                .map(postMapper::convertToPostResponseDTO)
                 .getContent();
     }
 
@@ -97,6 +99,7 @@ public class PostServiceImpl implements IPostService {
         List<Attachment> attachments = uploadFiles(postRequestDTO.getFiles());
 
         Post post = postMapper.mapToPost(postRequestDTO);
+        post.setCreationDate(LocalDateTime.now());
         post.setAttachments(attachments);
         Post savedPost = postRepository.save(post);
         return postMapper.convertToPostResponseDTO(savedPost);

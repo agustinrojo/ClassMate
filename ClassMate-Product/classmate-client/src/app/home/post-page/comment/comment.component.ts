@@ -38,7 +38,7 @@ export class CommentComponent implements OnInit{
   }
 
   public editComment(commentUpdate: CommentUpdateDTO){
-    this._commentService.editComment(this.comment.id, commentUpdate).subscribe(()=>{
+    this._commentService.updateComment(this.comment.id, commentUpdate).subscribe(()=>{
       this.editing = false;
       this.getComment();
     },
