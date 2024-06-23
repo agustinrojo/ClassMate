@@ -2,6 +2,8 @@ package com.classmate.post_service.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor

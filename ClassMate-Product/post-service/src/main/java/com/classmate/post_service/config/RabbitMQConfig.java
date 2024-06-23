@@ -21,14 +21,29 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.delete-forum-queue}")
     private String deleteForumQueue;
 
+    @Value("${rabbitmq.queue.delete-post-file-queue}")
+    private String deleteFileQueue;
+
+    @Value("${rabbitmq.queue.delete-post-all-file-queue}")
+    private String deletePostAllFileQueue;
+
     @Value("${rabbitmq.post-exchange.name}")
-    private String exchange;
+    private String postExchange;
+
+    @Value("${rabbitmq.file-exchange.name}")
+    private String fileExchange;
 
     @Value("${rabbitmq.exchange.delete-post-routing-key}")
     private String deletePostRoutingKey;
 
     @Value("${rabbitmq.exchange.delete-forum-routing-key}")
     private String deleteForumRoutingKey;
+
+    @Value("${rabbitmq.delete-post-file.routing-key}")
+    private String deleteFileRoutingKey;
+
+    @Value("${rabbitmq.exchange.delete-post-all-file.routing-key}")
+    private String deletePostAllFileRoutingKey;
 
     @Bean
     public Queue deletePostQueue() {
@@ -41,8 +56,23 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue deleteFileQueue() {
+        return new Queue(deleteFileQueue, true);
+    }
+
+    @Bean
+    public Queue deletePostAllFileQueue() {
+        return new Queue(deletePostAllFileQueue, true);
+    }
+
+    @Bean
     public TopicExchange postExchange() {
-        return new TopicExchange(exchange);
+        return new TopicExchange(postExchange);
+    }
+
+    @Bean
+    public TopicExchange fileExchange() {
+        return new TopicExchange(fileExchange);
     }
 
     @Bean
@@ -59,6 +89,22 @@ public class RabbitMQConfig {
                 .bind(deleteForumQueue())
                 .to(postExchange())
                 .with(deleteForumRoutingKey);
+    }
+
+    @Bean
+    public Binding deleteFileBinding() {
+        return BindingBuilder
+                .bind(deleteFileQueue())
+                .to(fileExchange())
+                .with(deleteFileRoutingKey);
+    }
+
+    @Bean
+    public Binding deletePostAllFileBinding() {
+        return BindingBuilder
+                .bind(deletePostAllFileQueue())
+                .to(fileExchange())
+                .with(deletePostAllFileRoutingKey);
     }
 
     @Bean

@@ -1,23 +1,19 @@
 package com.classmate.post_service.dto;
 
-import com.classmate.post_service.dto.filedtos.FileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Data Transfer Object for encapsulating the response of a post along with its comments.
- */
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class APIResponseDTO {
-
+@NoArgsConstructor
+public class PostRequestDTO {
     /**
      * The unique identifier of the post.
      */
@@ -48,11 +44,5 @@ public class APIResponseDTO {
      * This field is automatically populated.
      */
     private LocalDateTime creationDate;
-
-    /**
-     * A list of CommentDTO objects representing the comments associated with the post.
-     */
-    private List<CommentDTO> commentDTOS;
-
-    private List<FileDTO> files;
+    private List<MultipartFile> files;
 }

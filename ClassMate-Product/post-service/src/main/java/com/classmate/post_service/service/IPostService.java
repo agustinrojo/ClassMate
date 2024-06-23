@@ -1,8 +1,6 @@
 package com.classmate.post_service.service;
 
-import com.classmate.post_service.dto.APIResponseDTO;
-import com.classmate.post_service.dto.PostDTO;
-import com.classmate.post_service.dto.PostUpdateDTO;
+import com.classmate.post_service.dto.*;
 
 import java.util.List;
 
@@ -42,10 +40,10 @@ public interface IPostService {
     /**
      * Saves a new post.
      *
-     * @param postDTO the post data to save
+     * @param postRequestDTO the post data to save
      * @return the saved PostDTO
      */
-    PostDTO savePost(PostDTO postDTO);
+    PostResponseDTO savePost(PostRequestDTO postRequestDTO);
 
     /**
      * Updates an existing post.

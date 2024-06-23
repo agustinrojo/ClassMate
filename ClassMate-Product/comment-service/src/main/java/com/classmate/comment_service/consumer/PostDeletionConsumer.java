@@ -1,7 +1,10 @@
 package com.classmate.comment_service.consumer;
 
 import com.classmate.comment_service.dto.PostDeletionDTO;
+import com.classmate.comment_service.dto.CommentDeletionDTO;
+import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
+import com.classmate.comment_service.publisher.CommentPublisher;
 import com.classmate.comment_service.repository.ICommentRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class PostDeletionConsumer {
@@ -20,9 +25,11 @@ public class PostDeletionConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDeletionConsumer.class);
 
     private final ICommentRepository commentRepository;
+    private final CommentPublisher commentPublisher;
 
-    public PostDeletionConsumer(ICommentRepository commentRepository) {
+    public PostDeletionConsumer(ICommentRepository commentRepository, CommentPublisher commentPublisher) {
         this.commentRepository = commentRepository;
+        this.commentPublisher = commentPublisher;
     }
 
     @Transactional
@@ -35,6 +42,16 @@ public class PostDeletionConsumer {
 
         do {
             commentsPage = commentRepository.findByPostId(postId, pageable);
+            List<Comment> comments = commentsPage.getContent();
+
+            for (Comment comment : comments) {
+                List<Long> attachmentIds = comment.getAttachments().stream()
+                        .map(Attachment::getId)
+                        .toList();
+                CommentDeletionDTO event = new CommentDeletionDTO(attachmentIds);
+                commentPublisher.publishCommentDeleteEvent(event);
+            }
+
             commentRepository.deleteAll(commentsPage.getContent());
             pageable = commentsPage.nextPageable(); // Moves to the next page
         } while (commentsPage.hasNext());

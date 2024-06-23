@@ -2,6 +2,8 @@ package com.classmate.post_service.consumer;
 
 import com.classmate.post_service.dto.ForumDeletionDTO;
 import com.classmate.post_service.dto.PostDeletionDTO;
+import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
+import com.classmate.post_service.entity.Attachment;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.publisher.PostPublisher;
 import com.classmate.post_service.repository.IPostRepository;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -39,12 +43,31 @@ public class ForumDeletionConsumer {
 
         do {
             postsPage = postRepository.findByForumId(forumId, pageable);
-            postsPage.getContent().forEach(post -> {
-                postRepository.delete(post);
-                // Publish post deletion event for each post
-                PostDeletionDTO postDeletionDTO = new PostDeletionDTO(post.getId());
+            List<Post> posts = postsPage.getContent();
+
+            for (Post post : posts) {
+                // Publish file deletion event for all attachments of the post
+                List<Long> attachmentIds = post.getAttachments().stream()
+                        .map(Attachment::getId)
+                        .toList();
+
+                if (attachmentIds != null && !attachmentIds.isEmpty()) {
+                    PostFileDeletionDTO postFileDeletionDTO = PostFileDeletionDTO.builder()
+                            .attachmentIdsToDelete(attachmentIds)
+                            .build();
+                    postPublisher.publishPostAllFileDeleteEvent(postFileDeletionDTO);
+                }
+
+                // Publish post deletion event
+                PostDeletionDTO postDeletionDTO = PostDeletionDTO.builder()
+                        .postId(post.getId())
+                        .build();
                 postPublisher.publishPostDeletion(postDeletionDTO);
-            });
+
+                // Delete the post
+                postRepository.delete(post);
+            }
+
             pageable = postsPage.nextPageable();
         } while (postsPage.hasNext());
 

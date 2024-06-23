@@ -1,4 +1,4 @@
-package com.classmate.post_service.dto;
+package com.classmate.post_service.dto.filedtos;
 
 import lombok.*;
 

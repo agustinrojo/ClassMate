@@ -21,6 +21,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.delete-file-queue}")
     private String deleteFileQueue;
 
+    @Value("${rabbitmq.queue.delete-comment-queue}")
+    private String deleteCommentQueue;
+
     @Value("${rabbitmq.exchange.name}")
     private String postExchange;
 
@@ -33,6 +36,11 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.delete-file.routing-key}")
     private String deleteFileRoutingKey;
 
+    @Value("${rabbitmq.delete-comment.routing-key}")
+    private String deleteCommentRoutingKey;
+
+
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -41,6 +49,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue deleteFileQueue() {
         return new Queue(deleteFileQueue, true);
+    }
+
+    @Bean
+    public Queue deleteCommentQueue() {
+        return new Queue(deleteCommentQueue, true);
     }
 
     @Bean
@@ -67,6 +80,14 @@ public class RabbitMQConfig {
                 .bind(deleteFileQueue())
                 .to(fileExchange())
                 .with(deleteFileRoutingKey);
+    }
+
+    @Bean
+    public Binding deleteCommentBinding() {
+        return BindingBuilder
+                .bind(deleteCommentQueue())
+                .to(fileExchange())
+                .with(deleteCommentRoutingKey);
     }
 
     @Bean

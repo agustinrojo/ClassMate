@@ -15,9 +15,11 @@ public interface FileServiceClient {
     @PostMapping(value = "/api/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<FileResponseDTO> uploadFile(@RequestPart("file") MultipartFile file);
 
-    @GetMapping("/api/files/{fileId}")
-    ResponseEntity<FileDTO> downloadFile(@PathVariable("fileId") Long fileId);
+// YAGNI
+//    @GetMapping("/api/files/{fileId}")
+//    ResponseEntity<FileDTO> downloadFile(@PathVariable("fileId") Long fileId);
+//
+//    @DeleteMapping("/api/files/{fileId}")
+//    ResponseEntity<Void> deleteFile(@PathVariable("fileId") Long fileId);
 
-    @DeleteMapping("/api/files/{fileId}")
-    ResponseEntity<Void> deleteFile(@PathVariable("fileId") Long fileId);
 }

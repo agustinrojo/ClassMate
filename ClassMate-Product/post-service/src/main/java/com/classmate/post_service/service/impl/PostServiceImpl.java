@@ -1,7 +1,11 @@
 package com.classmate.post_service.service.impl;
 
 import com.classmate.post_service.client.ICommentClient;
+import com.classmate.post_service.client.IFileServiceClient;
 import com.classmate.post_service.dto.*;
+import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
+import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
+import com.classmate.post_service.entity.Attachment;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.exception.PostNotFoundException;
@@ -15,8 +19,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -28,22 +35,15 @@ public class PostServiceImpl implements IPostService {
     private final IPostRepository postRepository;
     private final IPostMapper postMapper;
     private final ICommentClient commentClient;
-
+    private final IFileServiceClient fileServiceClient;
     private final PostPublisher postPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    /**
-     * Constructs a new PostServiceImpl with the specified repository, mapper, and comment client.
-     *
-     * @param postRepository the post repository
-     * @param postMapper the post mapper
-     * @param commentClient the comment client
-     * @param postPublisher RabbitMQ's publisher
-     */
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, ICommentClient commentClient, PostPublisher postPublisher) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, PostPublisher postPublisher) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.commentClient = commentClient;
+        this.fileServiceClient = fileServiceClient;
         this.postPublisher = postPublisher;
     }
 
@@ -56,7 +56,7 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
         APIResponseDTO apiResponseDTO = postMapper.convertToAPIResponseDTO(post);
-        List<CommentDTOResponse> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
+        List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
     }
@@ -87,13 +87,19 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public PostDTO savePost(PostDTO postDTO) {
-        validatePost(postDTO.getTitle(), postDTO.getBody());
+    public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {
         LOGGER.info("Saving post...");
-        Post post = postMapper.convertToPost(postDTO);
-        post.setId(null);
+        validatePost(postRequestDTO.getTitle(), postRequestDTO.getBody());
+        if (postRequestDTO.getFiles() != null && !postRequestDTO.getFiles().isEmpty()) {
+            validateAttachments(postRequestDTO.getFiles());
+        }
+
+        List<Attachment> attachments = uploadFiles(postRequestDTO.getFiles());
+
+        Post post = postMapper.mapToPost(postRequestDTO);
+        post.setAttachments(attachments);
         Post savedPost = postRepository.save(post);
-        return postMapper.convertToPostDTO(savedPost);
+        return postMapper.convertToPostResponseDTO(savedPost);
     }
 
     /**
@@ -101,12 +107,24 @@ public class PostServiceImpl implements IPostService {
      */
     @Override
     public void updatePost(Long id, PostUpdateDTO postUpdateDTO) {
-        validatePost(postUpdateDTO.getTitle(), postUpdateDTO.getBody());
         LOGGER.info("Updating post by id...");
+        validatePost(postUpdateDTO.getTitle(), postUpdateDTO.getBody());
+
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
+
         post.setTitle(postUpdateDTO.getTitle());
         post.setBody(postUpdateDTO.getBody());
+
+        if (postUpdateDTO.getFileIdsToRemove() != null && !postUpdateDTO.getFileIdsToRemove().isEmpty()) {
+            removeAttachments(post, postUpdateDTO.getFileIdsToRemove());
+        }
+
+        if (postUpdateDTO.getFilesToAdd() != null && !postUpdateDTO.getFilesToAdd().isEmpty()) {
+            validateAttachmentsForUpdate(post, postUpdateDTO.getFilesToAdd());
+            addAttachments(post, postUpdateDTO.getFilesToAdd());
+        }
+
         postRepository.save(post);
     }
 
@@ -122,12 +140,67 @@ public class PostServiceImpl implements IPostService {
         if (!post.getAuthorId().equals(userId)) {
             throw new RuntimeException("User not authorized to delete this post");
         }
-        postRepository.delete(post);
 
+        List<Long> attachmentIds = post.getAttachments().stream()
+                .map(Attachment :: getId)
+                .toList();
+
+        // Publish file deletion event for all attachments
+        PostFileDeletionDTO postFileDeletionDTO = PostFileDeletionDTO.builder()
+                .attachmentIdsToDelete(attachmentIds)
+                .build();
+        postPublisher.publishPostAllFileDeleteEvent(postFileDeletionDTO);
+
+        // Publish post deletion event
         PostDeletionDTO postDeletionDTO = PostDeletionDTO.builder()
                 .postId(id)
                 .build();
         postPublisher.publishPostDeletion(postDeletionDTO);
+
+        // Delete the post
+        postRepository.delete(post);
+    }
+
+    public void addAttachments(Post post, List<MultipartFile> filesToAdd) {
+        for (MultipartFile file : filesToAdd) {
+            Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
+            Attachment attachment = Attachment.builder()
+                    .id(fileId)
+                    .originalFilename(file.getOriginalFilename())
+                    .contentType(file.getContentType())
+                    .size(file.getSize())
+                    .build();
+            post.addAttachment(attachment);
+        }
+    }
+
+    public void removeAttachments(Post post, List<Long> fileIdsToRemove) {
+        List<Long> validFileIdsToRemove = validateFileIdsToRemove(post, fileIdsToRemove);
+
+        // Remove the attachments
+        post.removeAttachments(validFileIdsToRemove);
+
+        // Publish the events after updating the state
+        for (Long fileId : validFileIdsToRemove) {
+            FileDeletionDTO event = new FileDeletionDTO(fileId);
+            postPublisher.publishPostFileDeleteEvent(event);
+        }
+    }
+
+    private List<Attachment> uploadFiles(List<MultipartFile> files) {
+        List<Attachment> attachments = new ArrayList<>();
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
+                attachments.add(Attachment.builder()
+                        .id(fileId)
+                        .contentType(file.getContentType())
+                        .originalFilename(file.getOriginalFilename())
+                        .size(file.getSize())
+                        .build());
+            }
+        }
+        return attachments;
     }
 
     /**
@@ -149,5 +222,35 @@ public class PostServiceImpl implements IPostService {
         if (title.length() > 300) {
             throw new InvalidPostException("Post title cannot exceed 300 characters");
         }
+    }
+
+    private void validateAttachments(List<MultipartFile> files) {
+        if (files.size() > 5) {
+            throw new IllegalArgumentException("No more than 5 attachments allowed.");
+        }
+        for (MultipartFile file : files) {
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new IllegalArgumentException("File size should not exceed 10MB.");
+            }
+        }
+    }
+
+    private void validateAttachmentsForUpdate(Post post, List<MultipartFile> filesToAdd) {
+        int totalAttachments = post.getAttachments().size() + filesToAdd.size();
+        if (totalAttachments > 5) {
+            throw new IllegalArgumentException("No more than 5 attachments allowed.");
+        }
+        for (MultipartFile file : filesToAdd) {
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new IllegalArgumentException("File size should not exceed 10MB.");
+            }
+        }
+    }
+
+    public List<Long> validateFileIdsToRemove(Post post, List<Long> fileIdsToRemove) {
+        return post.getAttachments().stream()
+                .filter(attachment -> fileIdsToRemove.contains(attachment.getId()))
+                .map(Attachment :: getId)
+                .toList();
     }
 }

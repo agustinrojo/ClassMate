@@ -8,6 +8,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Entity class representing a Post in the forum.
@@ -60,4 +63,23 @@ public class Post {
     @CreationTimestamp
     @Column
     private LocalDateTime creationDate;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "post_id")
+    private List<Attachment> attachments;
+
+
+    public void addAttachment(Attachment attachment) {
+        this.attachments.add(attachment);
+    }
+
+    public void removeAttachments(List<Long> attachmentIds) {
+        Iterator<Attachment> iterator = this.attachments.iterator();
+        while (iterator.hasNext()) {
+            Attachment attachment = iterator.next();
+            if (attachmentIds.contains(attachment.getId())) {
+                iterator.remove();
+            }
+        }
+    }
 }

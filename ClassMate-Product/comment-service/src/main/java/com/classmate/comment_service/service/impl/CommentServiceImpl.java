@@ -4,6 +4,7 @@ import com.classmate.comment_service.client.FileServiceClient;
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
+import com.classmate.comment_service.dto.CommentDeletionDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
@@ -64,6 +65,7 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public CommentDTOResponse saveComment(CommentDTORequest commentRequestDTO) {
+
         validateComment(commentRequestDTO.getBody());
         validateAttachments(commentRequestDTO.getFiles());
 
@@ -95,22 +97,44 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public void updateComment(Long id, CommentUpdateDTO commentUpdateDTO) {
+        LOGGER.info("Updating comment by id...");
         validateComment(commentUpdateDTO.getBody());
-        LOGGER.info("Updating comment...");
 
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
 
         comment.setBody(commentUpdateDTO.getBody());
 
-        if (commentUpdateDTO.getFilesToAdd() != null && !commentUpdateDTO.getFilesToAdd().isEmpty()) {
-            addAttachments(comment, commentUpdateDTO.getFilesToAdd());
-        }
         if (commentUpdateDTO.getFileIdsToRemove() != null && !commentUpdateDTO.getFileIdsToRemove().isEmpty()) {
             removeAttachments(comment, commentUpdateDTO.getFileIdsToRemove());
         }
 
+        if (commentUpdateDTO.getFilesToAdd() != null && !commentUpdateDTO.getFilesToAdd().isEmpty()) {
+            validateAttachmentsForUpdate(comment, commentUpdateDTO.getFilesToAdd());
+            addAttachments(comment, commentUpdateDTO.getFilesToAdd());
+        }
+
         commentRepository.save(comment);
+    }
+
+
+    @Override
+    public void deleteComment(Long id, Long userId) {
+        LOGGER.info("Deleting comment...");
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
+        if (!comment.getAuthorId().equals(userId)) {
+            throw new UnauthorizedActionException("User not authorized to delete this comment");
+        }
+
+        List<Long> attachmentIds = comment.getAttachments().stream()
+                        .map(Attachment :: getId)
+                        .toList();
+
+        CommentDeletionDTO event = new CommentDeletionDTO(attachmentIds);
+        commentPublisher.publishCommentDeleteEvent(event);
+
+        commentRepository.delete(comment);
     }
 
     public void addAttachments(Comment comment, List<MultipartFile> filesToAdd) {
@@ -127,23 +151,36 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     public void removeAttachments(Comment comment, List<Long> fileIdsToRemove) {
-        comment.removeAttachments(fileIdsToRemove);
 
-        for (Long fileId : fileIdsToRemove) {
+        List<Long> validFileIdsToRemove = validateFileIdsToRemove(comment, fileIdsToRemove);
+
+        // Remove the attachments from the existing list
+        List<Attachment> remainingAttachments = comment.getAttachments().stream()
+                .filter(attachment -> !validFileIdsToRemove.contains(attachment.getId()))
+                .toList();
+        comment.getAttachments().clear();
+        comment.getAttachments().addAll(remainingAttachments);
+
+        for (Long fileId : validFileIdsToRemove) {
             FileDeletionDTO event = new FileDeletionDTO(fileId);
             commentPublisher.publishFileDeleteEvent(event);
         }
     }
 
-    @Override
-    public void deleteComment(Long id, Long userId) {
-        LOGGER.info("Deleting comment...");
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-        if (!comment.getAuthorId().equals(userId)) {
-            throw new UnauthorizedActionException("User not authorized to delete this comment");
+    private List<Attachment> uploadFiles(List<MultipartFile> files) {
+        List<Attachment> attachments = new ArrayList<>();
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
+                attachments.add(Attachment.builder()
+                        .id(fileId)
+                        .contentType(file.getContentType())
+                        .originalFilename(file.getOriginalFilename())
+                        .size(file.getSize())
+                        .build());
+            }
         }
-        commentRepository.delete(comment);
+        return attachments;
     }
 
     private void validateComment(String body) {
@@ -164,5 +201,25 @@ public class CommentServiceImpl implements ICommentService {
                 throw new IllegalArgumentException("File size should not exceed 10MB.");
             }
         }
+    }
+
+    private void validateAttachmentsForUpdate(Comment comment, List<MultipartFile> filesToAdd) {
+        int totalAttachments = comment.getAttachments().size() + filesToAdd.size();
+        if (totalAttachments > 3) {
+            throw new IllegalArgumentException("No more than 3 attachments allowed.");
+        }
+        for (MultipartFile file : filesToAdd) {
+            if (file.getSize() > 10 * 1024 * 1024) {
+                throw new IllegalArgumentException("File size should not exceed 10MB.");
+            }
+        }
+    } // Siempre me apasionó el DRY
+
+    public List<Long> validateFileIdsToRemove(Comment comment, List<Long> fileIdsToRemove) {
+        List<Long> validFileIdsToRemove = comment.getAttachments().stream()
+                .filter(attachment -> fileIdsToRemove.contains(attachment.getId()))
+                .map(Attachment :: getId)
+                .toList();
+        return validFileIdsToRemove;
     }
 }

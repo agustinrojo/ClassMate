@@ -55,7 +55,7 @@ public class Comment {
     @Column
     private LocalDateTime creationDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "comment_id")
     private List<Attachment> attachments;
 
@@ -65,8 +65,6 @@ public class Comment {
     }
 
     public void removeAttachments(List<Long> attachmentIds) {
-        this.attachments = this.attachments.stream()
-                .filter(attachment -> !attachmentIds.contains(attachment.getId()))
-                .collect(Collectors.toList());
+        this.attachments.removeIf(attachment -> attachmentIds.contains(attachment.getId()));
     }
 }
