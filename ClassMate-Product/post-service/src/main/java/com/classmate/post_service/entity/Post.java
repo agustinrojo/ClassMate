@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,8 +74,12 @@ public class Post {
     }
 
     public void removeAttachments(List<Long> attachmentIds) {
-        this.attachments = this.attachments.stream()
-                .filter(attachment -> !attachmentIds.contains(attachment.getId()))
-                .collect(Collectors.toList());
+        Iterator<Attachment> iterator = this.attachments.iterator();
+        while (iterator.hasNext()) {
+            Attachment attachment = iterator.next();
+            if (attachmentIds.contains(attachment.getId())) {
+                iterator.remove();
+            }
+        }
     }
 }

@@ -65,8 +65,6 @@ public class Comment {
     }
 
     public void removeAttachments(List<Long> attachmentIds) {
-        this.attachments = this.attachments.stream()
-                .filter(attachment -> !attachmentIds.contains(attachment.getId()))
-                .collect(Collectors.toList());
+        this.attachments.removeIf(attachment -> attachmentIds.contains(attachment.getId()));
     }
 }

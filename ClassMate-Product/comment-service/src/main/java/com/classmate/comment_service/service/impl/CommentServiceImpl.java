@@ -137,7 +137,12 @@ public class CommentServiceImpl implements ICommentService {
 
         List<Long> validFileIdsToRemove = validateFileIdsToRemove(comment, fileIdsToRemove);
 
-        comment.removeAttachments(validFileIdsToRemove);
+        // Remove the attachments from the existing list
+        List<Attachment> remainingAttachments = comment.getAttachments().stream()
+                .filter(attachment -> !validFileIdsToRemove.contains(attachment.getId()))
+                .toList();
+        comment.getAttachments().clear();
+        comment.getAttachments().addAll(remainingAttachments);
 
         for (Long fileId : validFileIdsToRemove) {
             FileDeletionDTO event = new FileDeletionDTO(fileId);

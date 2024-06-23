@@ -24,26 +24,40 @@ public class PostPublisher {
     @Value("${rabbitmq.exchange.delete-post-routing-key}")
     private String deletePostRoutingKey;
 
-    @Value("${rabbitmq.delete-file.routing-key}")
+    @Value("${rabbitmq.delete-post-file.routing-key}")
     private String deletePostFileRoutingKey;
+
+    @Value("${rabbitmq.exchange.delete-post-all-file.routing-key}")
+    private String deletePostAllFileRoutingKey;
 
     public PostPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void publishPostDeletion(PostDeletionDTO postDeletionDTO) {
-        LOGGER.info(String.format("Post deletion event sent to RabbitMQ -> %s", postDeletionDTO.toString()));
-        rabbitTemplate.convertAndSend(exchange, deletePostRoutingKey, postDeletionDTO);
+        if (postDeletionDTO != null) {
+            LOGGER.info(String.format("Post deletion event sent to RabbitMQ -> %s", postDeletionDTO.toString()));
+            rabbitTemplate.convertAndSend(exchange, deletePostRoutingKey, postDeletionDTO);
+        } else {
+            LOGGER.error("PostDeletionDTO is null, skipping event publication");
+        }
     }
 
-    public void publishPostFileDeleteEvent(PostFileDeletionDTO postFileDeletionDTO) {
-        LOGGER.info(String.format("Post file deletion event sent to RabbitMQ -> %s", postFileDeletionDTO.toString()));
-        rabbitTemplate.convertAndSend(fileExchange, deletePostFileRoutingKey, postFileDeletionDTO);
+    public void publishPostAllFileDeleteEvent(PostFileDeletionDTO postFileDeletionDTO) {
+        if (postFileDeletionDTO != null) {
+            LOGGER.info(String.format("Post all file deletion event sent to RabbitMQ -> %s", postFileDeletionDTO.toString()));
+            rabbitTemplate.convertAndSend(fileExchange, deletePostAllFileRoutingKey, postFileDeletionDTO);
+        } else {
+            LOGGER.error("PostFileDeletionDTO is null, skipping event publication");
+        }
     }
 
-    public void publishFileDeleteEvent(FileDeletionDTO event) {
-        LOGGER.info(String.format("Post file deletion event sent to RabbitMQ -> %s", event.toString()));
-        rabbitTemplate.convertAndSend(fileExchange, deletePostFileRoutingKey, event);
+    public void publishPostFileDeleteEvent(FileDeletionDTO event) {
+        if (event != null) {
+            LOGGER.info(String.format("Post file deletion event sent to RabbitMQ -> %s", event.getFileId().toString()));
+            rabbitTemplate.convertAndSend(fileExchange, deletePostFileRoutingKey, event);
+        } else {
+            LOGGER.error("FileDeletionDTO is null, skipping event publication");
+        }
     }
 }
-

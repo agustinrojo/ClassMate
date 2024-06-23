@@ -24,6 +24,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.delete-post-file-queue}")
     private String deletePostFileQueue;
 
+    @Value("${rabbitmq.queue.delete-post-all-file-queue}")
+    private String deletePostAllFileQueue;
+
     @Value("${rabbitmq.file-exchange.name}")
     private String fileExchange;
 
@@ -35,6 +38,9 @@ public class RabbitMQConfig {
 
     @Value("${rabbitmq.delete-post-file.routing-key}")
     private String deletePostFileRoutingKey;
+
+    @Value("${rabbitmq.exchange.delete-post-all-file.routing-key}")
+    private String deletePostAllFileRoutingKey;
 
     @Bean
     public Queue deleteFileQueue() {
@@ -49,6 +55,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue deletePostFileQueue() {
         return new Queue(deletePostFileQueue, true);
+    }
+
+    @Bean
+    public Queue deletePostAllFileQueue() {
+        return new Queue(deletePostAllFileQueue, true);
     }
 
     @Bean
@@ -81,6 +92,14 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Binding deletePostAllFileBinding() {
+        return BindingBuilder
+                .bind(deletePostAllFileQueue())
+                .to(fileExchange())
+                .with(deletePostAllFileRoutingKey);
+    }
+
+    @Bean
     public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
@@ -92,4 +111,3 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 }
-

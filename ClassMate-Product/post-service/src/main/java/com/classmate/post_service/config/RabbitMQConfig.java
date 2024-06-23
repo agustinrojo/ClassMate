@@ -21,8 +21,11 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.delete-forum-queue}")
     private String deleteForumQueue;
 
-    @Value("${rabbitmq.queue.delete-file-queue}")
+    @Value("${rabbitmq.queue.delete-post-file-queue}")
     private String deleteFileQueue;
+
+    @Value("${rabbitmq.queue.delete-post-all-file-queue}")
+    private String deletePostAllFileQueue;
 
     @Value("${rabbitmq.post-exchange.name}")
     private String postExchange;
@@ -36,8 +39,11 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.delete-forum-routing-key}")
     private String deleteForumRoutingKey;
 
-    @Value("${rabbitmq.delete-file.routing-key}")
+    @Value("${rabbitmq.delete-post-file.routing-key}")
     private String deleteFileRoutingKey;
+
+    @Value("${rabbitmq.exchange.delete-post-all-file.routing-key}")
+    private String deletePostAllFileRoutingKey;
 
     @Bean
     public Queue deletePostQueue() {
@@ -52,6 +58,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue deleteFileQueue() {
         return new Queue(deleteFileQueue, true);
+    }
+
+    @Bean
+    public Queue deletePostAllFileQueue() {
+        return new Queue(deletePostAllFileQueue, true);
     }
 
     @Bean
@@ -86,6 +97,14 @@ public class RabbitMQConfig {
                 .bind(deleteFileQueue())
                 .to(fileExchange())
                 .with(deleteFileRoutingKey);
+    }
+
+    @Bean
+    public Binding deletePostAllFileBinding() {
+        return BindingBuilder
+                .bind(deletePostAllFileQueue())
+                .to(fileExchange())
+                .with(deletePostAllFileRoutingKey);
     }
 
     @Bean

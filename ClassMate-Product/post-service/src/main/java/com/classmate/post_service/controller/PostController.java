@@ -82,7 +82,7 @@ public class PostController {
                                            @ModelAttribute PostUpdateDTO postUpdateDTO) {
         postService.updatePost(id, postUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    } // Enviar: title, body, filesToAdd, filesIdToRemove
 
     /**
      * Delete a post by its ID.

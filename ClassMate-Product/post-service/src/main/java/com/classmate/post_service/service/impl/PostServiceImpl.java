@@ -149,7 +149,7 @@ public class PostServiceImpl implements IPostService {
         PostFileDeletionDTO postFileDeletionDTO = PostFileDeletionDTO.builder()
                 .attachmentIdsToDelete(attachmentIds)
                 .build();
-        postPublisher.publishPostFileDeleteEvent(postFileDeletionDTO);
+        postPublisher.publishPostAllFileDeleteEvent(postFileDeletionDTO);
 
         // Publish post deletion event
         PostDeletionDTO postDeletionDTO = PostDeletionDTO.builder()
@@ -175,14 +175,15 @@ public class PostServiceImpl implements IPostService {
     }
 
     public void removeAttachments(Post post, List<Long> fileIdsToRemove) {
-
         List<Long> validFileIdsToRemove = validateFileIdsToRemove(post, fileIdsToRemove);
 
+        // Remove the attachments
         post.removeAttachments(validFileIdsToRemove);
 
+        // Publish the events after updating the state
         for (Long fileId : validFileIdsToRemove) {
             FileDeletionDTO event = new FileDeletionDTO(fileId);
-            postPublisher.publishFileDeleteEvent(event);
+            postPublisher.publishPostFileDeleteEvent(event);
         }
     }
 
@@ -225,7 +226,7 @@ public class PostServiceImpl implements IPostService {
 
     private void validateAttachments(List<MultipartFile> files) {
         if (files.size() > 5) {
-            throw new IllegalArgumentException("No more than 3 attachments allowed.");
+            throw new IllegalArgumentException("No more than 5 attachments allowed.");
         }
         for (MultipartFile file : files) {
             if (file.getSize() > 10 * 1024 * 1024) {
@@ -237,7 +238,7 @@ public class PostServiceImpl implements IPostService {
     private void validateAttachmentsForUpdate(Post post, List<MultipartFile> filesToAdd) {
         int totalAttachments = post.getAttachments().size() + filesToAdd.size();
         if (totalAttachments > 5) {
-            throw new IllegalArgumentException("No more than 3 attachments allowed.");
+            throw new IllegalArgumentException("No more than 5 attachments allowed.");
         }
         for (MultipartFile file : filesToAdd) {
             if (file.getSize() > 10 * 1024 * 1024) {
@@ -247,10 +248,9 @@ public class PostServiceImpl implements IPostService {
     }
 
     public List<Long> validateFileIdsToRemove(Post post, List<Long> fileIdsToRemove) {
-        List<Long> validFileIdsToRemove = post.getAttachments().stream()
+        return post.getAttachments().stream()
                 .filter(attachment -> fileIdsToRemove.contains(attachment.getId()))
                 .map(Attachment :: getId)
                 .toList();
-        return validFileIdsToRemove;
     }
 }
