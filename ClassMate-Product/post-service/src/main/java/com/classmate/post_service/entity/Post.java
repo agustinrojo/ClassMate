@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,6 +69,12 @@ public class Post {
     @JoinColumn(name = "post_id")
     private List<Attachment> attachments;
 
+    @ElementCollection
+    private List<Long> upvotesByUserId = new ArrayList<>();
+
+    @ElementCollection
+    private List<Long> downvotesByUserId = new ArrayList<>();
+
 
     public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
@@ -81,5 +88,24 @@ public class Post {
                 iterator.remove();
             }
         }
+    }
+
+    public void addUpvote(Long userId) {
+        if (!upvotesByUserId.contains(userId)) {
+            upvotesByUserId.add(userId);
+            downvotesByUserId.remove(userId);
+        }
+    }
+
+    public void addDownvote(Long userId) {
+        if (!downvotesByUserId.contains(userId)) {
+            downvotesByUserId.add(userId);
+            upvotesByUserId.remove(userId);
+        }
+    }
+
+    public void removeVote(Long userId) {
+        upvotesByUserId.remove(userId);
+        downvotesByUserId.remove(userId);
     }
 }

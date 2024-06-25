@@ -103,7 +103,7 @@ public class PostServiceImpl implements IPostService {
             return new ArrayList<>();
         }
 
-        Pageable pageRequest = PageRequest.of(page, size);;
+        Pageable pageRequest = PageRequest.of(page, size);
         return postRepository.findByForumIdInOrderByCreationDateDesc(forumIds, pageRequest)
                 .map(postMapper::convertToPostResponseDTO)
                 .getContent();

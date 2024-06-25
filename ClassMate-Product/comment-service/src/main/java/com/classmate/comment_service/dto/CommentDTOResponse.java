@@ -40,4 +40,8 @@ public class CommentDTOResponse {
     private LocalDateTime creationDate;
 
     private List<FileDTO> files;
+
+    private boolean likedByUser;
+
+    private boolean dislikedByUser;
 }
