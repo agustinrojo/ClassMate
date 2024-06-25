@@ -107,4 +107,9 @@ export class AuthServiceService {
     return user.id;
   }
 
+  public getForumsSubscibed(): number[] {
+    let user: User = JSON.parse(localStorage.getItem("user")!);
+    return user.forumsSubscribed;
+  }
+
 }

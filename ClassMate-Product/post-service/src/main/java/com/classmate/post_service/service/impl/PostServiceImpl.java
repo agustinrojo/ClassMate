@@ -95,6 +95,20 @@ public class PostServiceImpl implements IPostService {
         return isPostAuthorDTO;
     }
 
+    public List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, int page, int size){
+        List<Long> forumIds = requestByForumsDTO.getForumIds();
+        LOGGER.info("Getting posts of forums: " + forumIds + " page: " + page + ", size: " + size);
+
+        if(forumIds.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        Pageable pageRequest = PageRequest.of(page, size);;
+        return postRepository.findByForumIdInOrderByCreationDateDesc(forumIds, pageRequest)
+                .map(postMapper::convertToPostResponseDTO)
+                .getContent();
+    }
+
     /**
      * {@inheritDoc}
      */

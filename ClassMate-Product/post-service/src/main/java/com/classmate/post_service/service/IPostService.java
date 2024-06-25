@@ -62,4 +62,6 @@ public interface IPostService {
     void deletePost(Long id, Long userId);
 
     IsPostAuthorDTO isPostAuthor(Long postId, Long authorId);
+
+    List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, int page, int size);
 }

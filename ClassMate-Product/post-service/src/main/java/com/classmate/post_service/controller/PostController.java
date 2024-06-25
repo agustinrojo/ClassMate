@@ -67,6 +67,14 @@ public class PostController {
         return new ResponseEntity<>(isPostAuthorDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/forumsSubscribed")
+    public ResponseEntity<List<PostResponseDTO>> getPostBySubscribedForums(@RequestBody RequestByForumsDTO requestByForumsDTO,
+                                                                           @RequestParam(defaultValue = "0") int page,
+                                                                           @RequestParam(defaultValue = "10") int size){
+        List<PostResponseDTO> posts =postService.getPostsBySubscribedForums(requestByForumsDTO, page, size);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
     /**
      * Create a new post.
      * @param postRequestDTO the post to create

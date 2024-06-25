@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repository interface for performing CRUD operations on Post entities.
  */
@@ -28,4 +30,6 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
      * @return a page of posts with titles containing the specified string
      */
     Page<Post> findByTitleContainingIgnoreCaseOrderByCreationDateDesc(String name, Pageable pageable);
+
+    Page<Post> findByForumIdInOrderByCreationDateDesc(List<Long> forumIds, Pageable pageable);
 }

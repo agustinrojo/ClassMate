@@ -38,7 +38,8 @@ function checkForum(forumId: number): Observable<boolean> {
         return false;
       }
     }),
-    catchError(() => {
+    catchError((err) => {
+      console.log(err)
       _router.navigate(["home/main"]);
       return of(false);
     })
