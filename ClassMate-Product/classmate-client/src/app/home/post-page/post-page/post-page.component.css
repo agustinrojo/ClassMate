@@ -110,10 +110,24 @@ body {
   background-color: #725a3d; /* Color del botón al pasar el cursor */
 }
 
+.file-upload-label-disabled {
+  background-color: #725a3d; /* Color del botón al pasar el cursor */
+  cursor: not-allowed;
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  width: 30%;
+}
+
 .file-upload-input {
   display: none; /* Ocultar el input de archivo real */
   width: 30%;
 }
+
+.file
 
 .badge {
   display: inline-block;

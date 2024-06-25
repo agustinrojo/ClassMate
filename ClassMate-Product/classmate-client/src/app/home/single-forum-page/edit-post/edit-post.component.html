@@ -10,12 +10,43 @@
         <label for="post-content">Contenido del Post</label>
         <textarea id="post-content" class="bg-dark" name="content" rows="10" formControlName="body" maxlength="5000"></textarea>
       </div>
+      <div class="row align-items-center" *ngFor="let file of postData.files; let i = index;">
+        <div class="col-6">
+          <app-file-badge  [file]="file"></app-file-badge>
+        </div>
+        <div class="col-5">
+          <p class="text-danger mx-2" *ngIf="markedForRemoval[i]">Marcado para eliminar</p>
+        </div>
+        <div class="col-1 d-flex justify-content-end">
+          <button class="btn btn-danger custom-btn-height" (click)="toggleMarkForRemoval(i)">{{ markedForRemoval[i] ? "Cancelar" : "&times;" }}</button>
+        </div>
+      </div>
+
+      <div class="mt-2" *ngIf="filesToAdd.length > 0">
+        <p>Archivos a agregar: </p>
+        <hr>
+        <div class="row align-items-center" *ngFor="let file of fileDTOsToAdd; let i = index">
+          <div class="col-6">
+            <app-file-badge  [file]="file"></app-file-badge>
+          </div>
+          <div class="col-6 d-flex flex-row-reverse">
+            <div class="col-1 d-flex justify-content-end">
+              <button type="button" class="btn btn-danger custom-btn-height" (click)="removeUploadedFile(i)">&times;</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <br>
+
+      <label for="add-file" class="add-file-label" >Seleccionar archivos</label>
+      <input type="file" (change)="onFileAdded($event)" id="add-file" class="add-file-input mb-3" formControlName="files" accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="(postData.files.length + filesToAdd.length) >= 3">
       <div class="row">
         <div class="col-6">
-          <button type="submit" [disabled]="!editPostForm.valid || disableBtn">Publicar</button>
+          <button type="submit" class="edit-post-btn" [disabled]="!editPostForm.valid || disableBtn">Publicar</button>
         </div>
         <div class="col-6 d-flex flex-row-reverse">
-          <button type="button" (click)="goBack()">Volver atrás</button>
+          <button type="button" class="edit-post-btn" (click)="goBack()">Volver atrás</button>
         </div>
         <div class="col-6">
           <p class="text-danger" *ngIf="showErr"> No se pudo publicar el post. Redirigiendo a foro...</p>

@@ -40,7 +40,6 @@
 
     <label for="add-file" class="add-file-label" >Seleccionar archivos</label>
     <input type="file" (change)="onFileAdded($event)" id="add-file" class="add-file-input mb-3" multiple accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="(files.length + filesToAdd.length) >= 3">
-
     <button type="submit" class="col-3" id="btn-confirm" (click)="confirmEdition()">Confirmar</button>
     <button type="button" class="col-3 mx-2 bg-danger" (click)="cancel()">Cancelar</button>
 </form>

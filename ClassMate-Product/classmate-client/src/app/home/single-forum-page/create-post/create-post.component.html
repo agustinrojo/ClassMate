@@ -19,7 +19,8 @@
 
       <label for="file-upload" class="file-upload-label">Seleccionar archivos</label>
       <input type="file" (change)="onFileChange($event)" id="file-upload" class="file-upload-input" multiple accept=".pdf, .xlsx, .docx, .jpg, .jpeg">
-
+      <p><i>Sólo se pueden subir hasta 3 archivos</i></p>
+      <p><i>Formatos permitidos: .pdf, .xlsx, .docx, .jpg, .jpeg</i></p>
       <div class="row">
         <div class="col-6">
           <button type="submit" [disabled]="!createPostForm.valid || disableBtn">Publicar</button>

@@ -1,6 +1,7 @@
 package com.classmate.forum_service.controller;
 
 import com.classmate.forum_service.dto.APIResponseDTO;
+import com.classmate.forum_service.dto.ForumExistsDTO;
 import com.classmate.forum_service.dto.ForumResponseDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.service.IForumService;
@@ -65,6 +66,12 @@ public class ForumController {
                                                                    @RequestParam(defaultValue = "10") int size) {
         List<ForumResponseDTO> forums = forumService.getForumsByTitle(title, page, size);
         return new ResponseEntity<>(forums, HttpStatus.OK);
+    }
+
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<ForumExistsDTO> forumExists(@PathVariable("id") Long forumId){
+        ForumExistsDTO forumExistsDTO = forumService.forumExists(forumId);
+        return new ResponseEntity<>(forumExistsDTO, HttpStatus.OK);
     }
 
     /**

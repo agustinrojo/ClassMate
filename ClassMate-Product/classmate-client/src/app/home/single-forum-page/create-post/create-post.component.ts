@@ -61,7 +61,7 @@ export class CreatePostComponent implements OnInit{
 
   public goBack(){
     let forumId: number = parseInt(this._activateRoute.snapshot.paramMap.get("id" || "0")!);
-    this._router.navigate([`forums/${forumId}`]);
+    this._router.navigate([`forum/${forumId}`]);
   }
 
   public onFileChange(event: any) {

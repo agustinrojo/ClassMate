@@ -60,4 +60,6 @@ public interface IPostService {
      * @param userId the ID of the user attempting to delete the post
      */
     void deletePost(Long id, Long userId);
+
+    IsPostAuthorDTO isPostAuthor(Long postId, Long authorId);
 }

@@ -1,6 +1,7 @@
 package com.classmate.forum_service.service;
 
 import com.classmate.forum_service.dto.APIResponseDTO;
+import com.classmate.forum_service.dto.ForumExistsDTO;
 import com.classmate.forum_service.dto.ForumResponseDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 
@@ -92,4 +93,6 @@ public interface IForumService {
      * @param adminId the ID of the admin to remove
      */
     void removeAdmin(Long forumId, Long adminId);
+
+    ForumExistsDTO forumExists(Long id);
 }

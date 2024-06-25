@@ -3,6 +3,7 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-image: url('./assets/Sprinkle.svg');
+  background-attachment: fixed;
   /*display: flex;
   justify-content: center;
   align-items: center; */

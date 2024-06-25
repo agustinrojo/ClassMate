@@ -57,7 +57,34 @@ body {
   border-color: #d4a373;
 }
 
-button {
+.add-file-label {
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #8c6e48; /* Fondo del botón */
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 30%;
+}
+
+.add-file-label:hover {
+  background-color: #725a3d; /* Color del botón al pasar el cursor */
+}
+
+.add-file-input {
+  display: none; /* Ocultar el input de archivo real */
+  width: 30%;
+}
+
+.add-file-input:disabled {
+  background-color: #b48c61; /* Color de fondo cuando el botón está deshabilitado */
+  cursor: not-allowed; /* Cambia el cursor a no permitido */
+}
+
+.edit-post-btn {
   background-color: #0f0f0f;
   color: #f5f5f5;
   padding: 10px 20px;
@@ -68,11 +95,11 @@ button {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-button:hover {
+.edit-post-btn:hover {
   background-color: #141414; /* Un color más oscuro que #1e1e1e */
 }
 
-button:disabled {
+.edit-post-btn:disabled {
   background-color: #3a3a3a; /* Fondo más claro para indicar deshabilitado */
   color: #a9a9a9; /* Texto gris claro */
   cursor: not-allowed; /* Cursor no permitido */

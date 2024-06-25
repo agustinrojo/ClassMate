@@ -8,6 +8,8 @@ import { SingleForumPageComponent } from './single-forum-page/single-forum-page/
 import { CreatePostComponent } from './single-forum-page/create-post/create-post.component';
 import { CreateForumComponent } from './forums-page/create-forum/create-forum.component';
 import { EditPostComponent } from './single-forum-page/edit-post/edit-post.component';
+import { CanActivateEditPost, CanMatchEditPost } from '../auth/guards/edit-post.guard';
+import { CanActivateForum, CanMatchForum } from '../auth/guards/forum.guard';
 
 export const routes: Routes = [
   {
@@ -25,7 +27,9 @@ export const routes: Routes = [
       },
       {
         path: "post/edit/:id",
-        component: EditPostComponent
+        component: EditPostComponent,
+        canMatch: [CanMatchEditPost],
+        canActivate: [CanActivateEditPost]
       },
       {
         path: "forums",
@@ -33,7 +37,9 @@ export const routes: Routes = [
       },
       {
         path: "forum/:id",
-        component: SingleForumPageComponent
+        component: SingleForumPageComponent,
+        canMatch: [CanMatchForum],
+        canActivate: [CanActivateForum]
       },
       {
         path: "forum/:id/create-post",

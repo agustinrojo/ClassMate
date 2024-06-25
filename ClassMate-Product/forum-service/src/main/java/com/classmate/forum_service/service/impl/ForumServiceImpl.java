@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -83,6 +84,15 @@ public class ForumServiceImpl implements IForumService {
         LOGGER.info("Getting forums by title...");
         Page<Forum> postsPage = forumRepository.findByTitleContainingIgnoreCaseOrderByCreationDateDesc(title, PageRequest.of(page, size));
         return postsPage.getContent().stream().map(forumMapper::convertToForumResponseDTO).collect(Collectors.toList());
+    }
+
+    public ForumExistsDTO forumExists(Long forumId){
+        Optional<Forum> existingForum = forumRepository.findById(forumId);
+        ForumExistsDTO forumExistsDTO = ForumExistsDTO.builder().exists(false).build();
+        if(existingForum.isPresent()){
+            forumExistsDTO.setExists(true);
+        }
+        return forumExistsDTO;
     }
 
     /**

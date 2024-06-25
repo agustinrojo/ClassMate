@@ -71,6 +71,10 @@ export class SingleForumPageComponent implements OnInit{
     })
   }
 
+  public goBack(){
+    this._router.navigate(["forums"])
+  }
+
   private getUserId(){
     this.userId = this._authService.getUserId();
   }

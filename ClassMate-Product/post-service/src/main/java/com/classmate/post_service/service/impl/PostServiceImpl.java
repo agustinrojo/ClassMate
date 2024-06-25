@@ -85,6 +85,16 @@ public class PostServiceImpl implements IPostService {
                 .getContent();
     }
 
+    public IsPostAuthorDTO isPostAuthor(Long postId, Long authorId){
+        Post existingPost = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(String.format("Post with id %d not found", postId)));
+        IsPostAuthorDTO isPostAuthorDTO = IsPostAuthorDTO.builder().isAuthor(false).build();
+        if(existingPost.getAuthorId().equals(authorId)){
+            isPostAuthorDTO.setAuthor(true);
+        }
+        return isPostAuthorDTO;
+    }
+
     /**
      * {@inheritDoc}
      */

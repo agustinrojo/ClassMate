@@ -53,7 +53,6 @@ export class PostPageComponent implements OnInit{
     this._postService.getPostById(postId)
     .subscribe(p => {
       this.post = p;
-
     },
   err => {
     console.log(err);
@@ -120,7 +119,8 @@ export class PostPageComponent implements OnInit{
   public navigateToEditPost(){
     let postData: PostData = {
       title: this.post!.title,
-      body : this.post!.body
+      body : this.post!.body,
+      files: this.post.files
     }
     this._postStateService.setPostData(postData);
     this._router.navigate([`post/edit/${this.post?.id}`]);

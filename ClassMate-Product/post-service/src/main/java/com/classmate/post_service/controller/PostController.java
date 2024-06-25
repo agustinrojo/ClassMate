@@ -60,6 +60,13 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/isAuthor/{postId}/{authorId}")
+    public ResponseEntity<IsPostAuthorDTO> isPostAuthor(@PathVariable("postId") Long postId,
+                                                        @PathVariable("authorId") Long authorId){
+        IsPostAuthorDTO isPostAuthorDTO = postService.isPostAuthor(postId, authorId);
+        return new ResponseEntity<>(isPostAuthorDTO, HttpStatus.OK);
+    }
+
     /**
      * Create a new post.
      * @param postRequestDTO the post to create
