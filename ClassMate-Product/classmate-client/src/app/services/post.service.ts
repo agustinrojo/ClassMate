@@ -30,7 +30,7 @@ export class PostService {
     return this.http.post<PostRequestDTO>(`${this.baseUrl}`, postFormData, { headers });
   }
 
-  public deletePost(postId: number){
+  public deletePost(postId: number): Observable<void>{
     let user: User = JSON.parse(localStorage.getItem("user")!);
     let userId = user.id;
     return this.http.delete<void>(`${this.baseUrl}/${postId}?userId=${userId}`)
