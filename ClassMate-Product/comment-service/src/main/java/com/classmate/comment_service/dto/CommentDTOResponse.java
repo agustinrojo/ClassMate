@@ -44,4 +44,6 @@ public class CommentDTOResponse {
     private boolean likedByUser;
 
     private boolean dislikedByUser;
+
+    private int valoration;
 }

@@ -23,8 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +52,8 @@ public class CommentServiceImpl implements ICommentService {
 
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(comment);
         commentDTOResponse.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
+        commentDTOResponse.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
+        commentDTOResponse.setValoration(comment.getValoration());
         return commentDTOResponse;
     }
 
@@ -62,12 +62,7 @@ public class CommentServiceImpl implements ICommentService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> commentsPage = commentRepository.findByPostId(postId, pageable);
         return commentsPage.getContent().stream()
-                .map(comment -> {
-                    CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(comment);
-                    commentDTOResponse.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
-                    commentDTOResponse.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
-                    return commentDTOResponse;
-                })
+                .map(comment -> getCommentResponseDTO(comment, userId))
                 .collect(Collectors.toList());
     }
 
@@ -89,6 +84,7 @@ public class CommentServiceImpl implements ICommentService {
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(savedComment);
         commentDTOResponse.setLikedByUser(true);
         commentDTOResponse.setDislikedByUser(false);
+        commentDTOResponse.setValoration(1);
         return commentDTOResponse;
     }
 
@@ -213,10 +209,17 @@ public class CommentServiceImpl implements ICommentService {
     } // Siempre me apasionó el DRY
 
     public List<Long> validateFileIdsToRemove(Comment comment, List<Long> fileIdsToRemove) {
-        List<Long> validFileIdsToRemove = comment.getAttachments().stream()
+        return comment.getAttachments().stream()
                 .filter(attachment -> fileIdsToRemove.contains(attachment.getId()))
                 .map(Attachment :: getId)
                 .toList();
-        return validFileIdsToRemove;
+    }
+
+    public CommentDTOResponse getCommentResponseDTO(Comment comment, Long userId) {
+        CommentDTOResponse commentResponseDTO = commentMapper.mapToCommentDTOResponse(comment);
+        commentResponseDTO.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
+        commentResponseDTO.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
+        commentResponseDTO.setValoration(comment.getValoration());
+        return commentResponseDTO;
     }
 }

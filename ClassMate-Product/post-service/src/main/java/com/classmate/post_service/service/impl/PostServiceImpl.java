@@ -131,7 +131,11 @@ public class PostServiceImpl implements IPostService {
         post.setAttachments(attachments);
         post.addUpvote(postRequestDTO.getAuthorId());
         Post savedPost = postRepository.save(post);
-        return getPostResponseDTO(savedPost, savedPost.getAuthorId());
+        PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
+        postResponseDTO.setLikedByUser(true);
+        postResponseDTO.setDislikedByUser(false);
+        postResponseDTO.setValoration(1);
+        return postResponseDTO;
     }
 
     /**
