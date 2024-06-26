@@ -18,7 +18,7 @@
   <app-file-badge *ngFor="let file of post?.files" [file]="file" [canModify]="false" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
 
   <div class="row">
-    <app-valoration [valoration]="postValoration" (likeEvent)="upvotePost()"></app-valoration>
+    <app-valoration [valoration]="postValoration" (likeEvent)="upvotePost()" (dislikeEvent)="downvotePost()" (removeEvent)="removePostVote()"></app-valoration>
   </div>
 
 

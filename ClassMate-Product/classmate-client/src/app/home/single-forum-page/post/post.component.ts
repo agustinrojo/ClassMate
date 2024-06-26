@@ -57,7 +57,7 @@ export class PostComponent implements OnInit{
     this.userId = this._authService.getUserId();
   }
 
-  downloadPostFile(file: FileDownloadEvent) {
+  public downloadPostFile(file: FileDownloadEvent) {
     this._fileService.downloadFile(file.fileId).subscribe((blob: Blob) => {
       const a = document.createElement('a');
       const objectUrl = URL.createObjectURL(blob);
@@ -73,12 +73,33 @@ export class PostComponent implements OnInit{
   }
 
   public upvotePost() {
-    console.log("upvote")
     if(this.post.likedByUser){
       return;
     }
     this._postService.upvotePost(this.post.id).subscribe(() => {
       console.log("Upvote success")
+    },
+  err => {
+    console.log(err);
+  })
+  }
+
+  public downvotePost() {
+    if(this.post.dislikedByUser){
+      return;
+    }
+    this._postService.downvotePost(this.post.id).subscribe(() => {
+      console.log("Downvote success")
+    },
+  err => {
+    console.log(err);
+  })
+  }
+
+  public removePostVote() {
+
+    this._postService.removePostVote(this.post.id).subscribe(() => {
+      console.log("Remove success")
     },
   err => {
     console.log(err);
