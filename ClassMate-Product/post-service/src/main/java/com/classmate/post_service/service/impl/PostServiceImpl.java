@@ -62,6 +62,7 @@ public class PostServiceImpl implements IPostService {
         apiResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
         apiResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
         apiResponseDTO.setValoration(post.getValoration());
+        apiResponseDTO.setHasBeenEdited(post.getHasBeenEdited());
         List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, userId, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
@@ -149,19 +150,22 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
 
-        post.setTitle(postUpdateDTO.getTitle());
-        post.setBody(postUpdateDTO.getBody());
+        if(!post.getHasBeenEdited()){
+            post.setTitle(postUpdateDTO.getTitle());
+            post.setBody(postUpdateDTO.getBody());
 
-        if (postUpdateDTO.getFileIdsToRemove() != null && !postUpdateDTO.getFileIdsToRemove().isEmpty()) {
-            removeAttachments(post, postUpdateDTO.getFileIdsToRemove());
+            if (postUpdateDTO.getFileIdsToRemove() != null && !postUpdateDTO.getFileIdsToRemove().isEmpty()) {
+                removeAttachments(post, postUpdateDTO.getFileIdsToRemove());
+            }
+
+            if (postUpdateDTO.getFilesToAdd() != null && !postUpdateDTO.getFilesToAdd().isEmpty()) {
+                validateAttachmentsForUpdate(post, postUpdateDTO.getFilesToAdd());
+                addAttachments(post, postUpdateDTO.getFilesToAdd());
+            }
+            post.setHasBeenEdited(true);
+            postRepository.save(post);
         }
 
-        if (postUpdateDTO.getFilesToAdd() != null && !postUpdateDTO.getFilesToAdd().isEmpty()) {
-            validateAttachmentsForUpdate(post, postUpdateDTO.getFilesToAdd());
-            addAttachments(post, postUpdateDTO.getFilesToAdd());
-        }
-
-        postRepository.save(post);
     }
 
     /**

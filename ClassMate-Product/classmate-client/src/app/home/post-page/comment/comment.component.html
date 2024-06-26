@@ -6,8 +6,8 @@
     <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="comment?.authorId === userId">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item" (click)="deleteComment()">Borrar</a></li>
-        <li><a class="dropdown-item" (click)="toggleEditing()">Editar</a></li>
+        <li><button class="dropdown-item" (click)="deleteComment()">Borrar</button></li>
+        <li><button class="dropdown-item" (click)="toggleEditing()" [disabled]="comment.hasBeenEdited">Editar</button></li>
       </ul>
     </div>
   </div>
@@ -16,6 +16,13 @@
 
   <app-file-badge  *ngFor="let file of comment.files" [file]="file"  (downloadFileEvent)="downloadFile($event)" [canModify]="false" ></app-file-badge>
   <br>
-  <span class="comment-time">{{ comment.creationDate | date }}</span>
+  <div class="row">
+    <div class="col-6">
+      <span class="comment-time">{{ comment.creationDate | date }}</span>
+    </div>
+    <div class="col-6 comment-time d-flex flex-row-reverse" *ngIf="comment.hasBeenEdited">
+      <em>Editado</em>
+    </div>
+  </div>
 </div>
 <app-edit-comment (cancelEditing)="cancelEdition()" (editComment)="editComment($event)"  [body]="comment.body" [files]="comment.files" *ngIf="editing"></app-edit-comment>

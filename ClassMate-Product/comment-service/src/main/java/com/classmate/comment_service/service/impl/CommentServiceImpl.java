@@ -96,18 +96,21 @@ public class CommentServiceImpl implements ICommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
 
-        comment.setBody(commentUpdateDTO.getBody());
+        if(!comment.getHasBeenEdited()){
+            comment.setBody(commentUpdateDTO.getBody());
 
-        if (commentUpdateDTO.getFileIdsToRemove() != null && !commentUpdateDTO.getFileIdsToRemove().isEmpty()) {
-            removeAttachments(comment, commentUpdateDTO.getFileIdsToRemove());
+            if (commentUpdateDTO.getFileIdsToRemove() != null && !commentUpdateDTO.getFileIdsToRemove().isEmpty()) {
+                removeAttachments(comment, commentUpdateDTO.getFileIdsToRemove());
+            }
+
+            if (commentUpdateDTO.getFilesToAdd() != null && !commentUpdateDTO.getFilesToAdd().isEmpty()) {
+                validateAttachmentsForUpdate(comment, commentUpdateDTO.getFilesToAdd());
+                addAttachments(comment, commentUpdateDTO.getFilesToAdd());
+            }
+            comment.setHasBeenEdited(true);
+            commentRepository.save(comment);
         }
 
-        if (commentUpdateDTO.getFilesToAdd() != null && !commentUpdateDTO.getFilesToAdd().isEmpty()) {
-            validateAttachmentsForUpdate(comment, commentUpdateDTO.getFilesToAdd());
-            addAttachments(comment, commentUpdateDTO.getFilesToAdd());
-        }
-
-        commentRepository.save(comment);
     }
 
 

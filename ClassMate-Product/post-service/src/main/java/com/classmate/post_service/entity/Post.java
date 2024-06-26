@@ -1,10 +1,7 @@
 package com.classmate.post_service.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -18,6 +15,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -65,6 +63,9 @@ public class Post {
     @Column
     private LocalDateTime creationDate;
 
+    @Column
+    private Boolean hasBeenEdited = false;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "post_id")
     private List<Attachment> attachments;
@@ -110,6 +111,8 @@ public class Post {
     }
 
     public int getValoration(){
-        return (this.upvotesByUserId.size() - this.downvotesByUserId.size());
+        return this.upvotesByUserId.size() - this.downvotesByUserId.size();
     }
+
+
 }

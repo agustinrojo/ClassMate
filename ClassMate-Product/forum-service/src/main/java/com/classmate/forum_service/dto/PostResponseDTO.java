@@ -1,10 +1,7 @@
 package com.classmate.forum_service.dto;
 
 import com.classmate.forum_service.dto.file.FileDTO;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostResponseDTO {
@@ -50,6 +48,8 @@ public class PostResponseDTO {
     private LocalDateTime creationDate;
 
     private List<FileDTO> files;
+
+    private boolean hasBeenEdited;
 
     private int valoration;
 

@@ -29,6 +29,7 @@ public interface CommentMapper {
     Comment mapToComment(CommentDTORequest commentRequestDTO);
 
     @Mapping(source = "attachments", target = "files")
+    @Mapping(source = "hasBeenEdited", target = "hasBeenEdited")
     CommentDTOResponse mapToCommentDTOResponse(Comment comment);
 
 }

@@ -36,6 +36,29 @@
   text-align: left;
 }
 
+.dropdown-menu {
+  background-color: #343a40; /* Fondo oscuro */
+  border: none; /* Eliminar borde predeterminado */
+}
+
+.dropdown-item {
+  color: #f8f9fa; /* Color de texto claro */
+}
+
+.dropdown-item:hover {
+  background-color: #495057; /* Fondo al hacer hover */
+  color: #ffffff; /* Color de texto al hacer hover */
+}
+
+.dropdown-item.disabled {
+  background-color: #212529; /* Fondo más oscuro */
+  color: #6c757d; /* Color de texto deshabilitado */
+  border: 1px solid #6c757d; /* Borde para hacer más obvio */
+  pointer-events: none; /* Deshabilitar eventos de puntero */
+  cursor: not-allowed; /* Mostrar cursor no permitido */
+  opacity: 0.6; /* Hacer más claro para resaltar que está deshabilitado */
+}
+
 button{
   height: 2.5em;
 }

@@ -6,7 +6,7 @@
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
         </button>
-        <ul class="dropdown-menu">
+          <ul class="dropdown-menu">
           <li><a class="dropdown-item" (click)="deletePost()">Borrar</a></li>
         </ul>
       </div>
@@ -26,5 +26,7 @@
       <span>Creado por: {{ post.authorId }}</span> |
       <span>Comentarios: n</span> |
       <span>Publicado: {{ post.creationDate | date }}</span>
+      <br>
+      <em *ngIf="post.hasBeenEdited">Editado</em>
   </div>
 </div>

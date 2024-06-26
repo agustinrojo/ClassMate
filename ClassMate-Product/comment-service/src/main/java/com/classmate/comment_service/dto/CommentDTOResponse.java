@@ -41,6 +41,8 @@ public class CommentDTOResponse {
 
     private List<FileDTO> files;
 
+    private Boolean hasBeenEdited;
+
     private boolean likedByUser;
 
     private boolean dislikedByUser;

@@ -49,7 +49,9 @@ public class PostResponseDTO {
     private LocalDateTime creationDate;
 
     private List<FileDTO> files;
-    
+
+    private Boolean hasBeenEdited;
+
     private int valoration;
     
     private boolean likedByUser;

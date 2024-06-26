@@ -28,6 +28,7 @@ export class CommentComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
+    console.log(this.comment)
     this.getUserId();
 
   }
@@ -43,6 +44,7 @@ export class CommentComponent implements OnInit{
       this.getComment();
     },
     err => {
+      console.log(err)
       this.showErr = true;
     })
   }

@@ -36,6 +36,7 @@ public class CommentDTO {
      */
     private String body;
 
+    private Boolean hasBeenEdited;
     /**
      * The creation date and time of the comment.
      * This field is automatically populated.

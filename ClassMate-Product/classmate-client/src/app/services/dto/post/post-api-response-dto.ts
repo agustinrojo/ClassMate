@@ -7,6 +7,7 @@ export interface PostAPIResponseDTO {
   authorId: number;
   title: string;
   body: string;
+  hasBeenEdited: boolean | null;
   creationDate: Date;
   commentDTOS: CommentDTOResponse[];
   files: FileDTO[];

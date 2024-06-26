@@ -8,6 +8,7 @@ export interface PostResponseDTO{
   body: string;
   creationDate: Date;
   files: FileDTO[];
+  hasBeenEdited: boolean;
   valoration: number;
   likedByUser: boolean;
   dislikedByUser: boolean;

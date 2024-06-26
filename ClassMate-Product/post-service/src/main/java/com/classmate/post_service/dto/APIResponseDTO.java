@@ -56,6 +56,8 @@ public class APIResponseDTO {
 
     private List<FileDTO> files;
 
+    private Boolean hasBeenEdited;
+
     private int valoration;
 
     private boolean likedByUser;

@@ -4,17 +4,22 @@ import { CommentDTORequest } from './dto/comment/comment-request-dto.interface';
 import { Observable } from 'rxjs';
 import { CommentDTOResponse } from './dto/comment/comment-response-dto.interface';
 import { CommentUpdateDTO } from './dto/comment/comment-update-dto.interface';
+import { AuthServiceService } from '../auth/auth-service.service';
 
 
 @Injectable({providedIn: 'root'})
 export class CommentService {
   private baseUrl: string = "http://localhost:8080/api/comments"
-  constructor(private http: HttpClient) { }
+  private userId: number;
+
+  constructor(private http: HttpClient,
+              private _authService: AuthServiceService
+  ) {
+    this.userId = this._authService.getUserId();
+   }
 
   public getCommentById(commentId: number): Observable<CommentDTOResponse>{
-
-
-    return this.http.get<CommentDTOResponse>(`${this.baseUrl}/${commentId}`);
+    return this.http.get<CommentDTOResponse>(`${this.baseUrl}/${commentId}?userId=${this.userId}`);
   }
 
   public saveComment(comment: CommentDTORequest): Observable<CommentDTOResponse>{

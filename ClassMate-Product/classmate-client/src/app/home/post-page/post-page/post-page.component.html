@@ -9,8 +9,8 @@
         <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="post?.authorId === userId">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" (click)="deletePost()">Borrar</a></li>
-            <li><a class="dropdown-item" (click)="navigateToEditPost()">Editar</a></li>
+            <li><button class="dropdown-item" (click)="deletePost()">Borrar</button></li>
+            <li><button class="dropdown-item" (click)="navigateToEditPost()" [disabled]="post.hasBeenEdited">Editar</button></li>
           </ul>
         </div>
 
@@ -25,7 +25,8 @@
         <span class="post-time">Creador: {{ post.authorId }}</span>
         <br>
         <span class="post-time">Publicado: {{ post.creationDate | date }}</span>
-
+        <br>
+        <em class="post-time" *ngIf="post.hasBeenEdited">Editado</em>
         <div class="row d-flex flex-row-reverse">
           <div class="col-3 my-2">
             <button class="btn btn-dark" (click)="goBackToForum()"> Volver a foro</button>
