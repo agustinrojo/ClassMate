@@ -55,4 +55,8 @@ public class APIResponseDTO {
     private List<CommentDTO> commentDTOS;
 
     private List<FileDTO> files;
+
+    private boolean likedByUser;
+
+    private boolean dislikedByUser;
 }

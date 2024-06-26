@@ -53,11 +53,15 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public APIResponseDTO getPostById(Long id) {
+    public APIResponseDTO getPostById(Long id, Long userId) {
         LOGGER.info("Getting post by id...");
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
         APIResponseDTO apiResponseDTO = postMapper.convertToAPIResponseDTO(post);
+
+        apiResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
+        apiResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
+
         List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
@@ -77,11 +81,16 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public List<PostResponseDTO> getPostsByForumId(Long forumId, int page, int size) {
+    public List<PostResponseDTO> getPostsByForumId(Long forumId, Long userId, int page, int size) {
         LOGGER.info("Getting posts by forum id...");
         Pageable pageRequest = PageRequest.of(page, size);
         return postRepository.findByForumId(forumId, pageRequest)
-                .map(postMapper::convertToPostResponseDTO)
+                .map(post -> {
+                    PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(post);
+                    postResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
+                    postResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
+                    return  postResponseDTO;
+                })
                 .getContent();
     }
 
@@ -95,7 +104,7 @@ public class PostServiceImpl implements IPostService {
         return isPostAuthorDTO;
     }
 
-    public List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, int page, int size){
+    public List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, Long userId, int page, int size){
         List<Long> forumIds = requestByForumsDTO.getForumIds();
         LOGGER.info("Getting posts of forums: " + forumIds + " page: " + page + ", size: " + size);
 
@@ -105,7 +114,12 @@ public class PostServiceImpl implements IPostService {
 
         Pageable pageRequest = PageRequest.of(page, size);
         return postRepository.findByForumIdInOrderByCreationDateDesc(forumIds, pageRequest)
-                .map(postMapper::convertToPostResponseDTO)
+                .map(post -> {
+                    PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(post);
+                    postResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
+                    postResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
+                    return  postResponseDTO;
+                })
                 .getContent();
     }
 
@@ -125,8 +139,12 @@ public class PostServiceImpl implements IPostService {
         Post post = postMapper.mapToPost(postRequestDTO);
         post.setCreationDate(LocalDateTime.now());
         post.setAttachments(attachments);
+        post.addUpvote(postRequestDTO.getAuthorId());
         Post savedPost = postRepository.save(post);
-        return postMapper.convertToPostResponseDTO(savedPost);
+        PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
+        postResponseDTO.setLikedByUser(true);
+        postResponseDTO.setDislikedByUser(false);
+        return postResponseDTO;
     }
 
     /**

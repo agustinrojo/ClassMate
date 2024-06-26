@@ -15,7 +15,7 @@ public interface IPostService {
      * @param id the ID of the post
      * @return the APIResponseDTO containing the post and its comments
      */
-    APIResponseDTO getPostById(Long id);
+    APIResponseDTO getPostById(Long id, Long userId);
 
     /**
      * Retrieves posts by name with pagination support.
@@ -35,7 +35,7 @@ public interface IPostService {
      * @param size the number of posts per page
      * @return a list of PostDTOs belonging to the specified forum
      */
-    List<PostResponseDTO> getPostsByForumId(Long forumId, int page, int size);
+    List<PostResponseDTO> getPostsByForumId(Long forumId, Long userId, int page, int size);
 
     /**
      * Saves a new post.
@@ -63,5 +63,5 @@ public interface IPostService {
 
     IsPostAuthorDTO isPostAuthor(Long postId, Long authorId);
 
-    List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, int page, int size);
+    List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, Long userId, int page, int size);
 }

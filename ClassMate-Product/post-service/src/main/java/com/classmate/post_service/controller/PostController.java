@@ -2,6 +2,7 @@ package com.classmate.post_service.controller;
 
 import com.classmate.post_service.dto.*;
 import com.classmate.post_service.service.IPostService;
+import com.classmate.post_service.service.IPostValorationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,12 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostController {
     private final IPostService postService;
+    private final IPostValorationService valorationService;
 
-    public PostController(IPostService postService) {
+    public PostController(IPostService postService, IPostValorationService valorationService) {
         this.postService = postService;
+        this.valorationService = valorationService;
     }
-
 
     /**
      * Get a post by its ID along with its comments.
@@ -25,8 +27,9 @@ public class PostController {
      * @return the post along with its comments
      */
     @GetMapping("/{id}")
-    public ResponseEntity<APIResponseDTO> getPostById(@PathVariable Long id) {
-        APIResponseDTO apiResponseDTO = postService.getPostById(id);
+    public ResponseEntity<APIResponseDTO> getPostById(@PathVariable Long id,
+                                                      @RequestParam("userId") Long userId) {
+        APIResponseDTO apiResponseDTO = postService.getPostById(id, userId);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
     }
 
@@ -54,9 +57,10 @@ public class PostController {
      */
     @GetMapping("/forum/{forumId}")
     public ResponseEntity<List<PostResponseDTO>> getPostsByForumId(@PathVariable Long forumId,
+                                                           @RequestParam("userId") Long userId,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int size) {
-        List<PostResponseDTO> posts = postService.getPostsByForumId(forumId, page, size);
+        List<PostResponseDTO> posts = postService.getPostsByForumId(forumId, userId, page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
@@ -69,9 +73,10 @@ public class PostController {
 
     @GetMapping("/forumsSubscribed")
     public ResponseEntity<List<PostResponseDTO>> getPostBySubscribedForums(@RequestBody RequestByForumsDTO requestByForumsDTO,
+                                                                           @RequestParam("userId") Long userId,
                                                                            @RequestParam(defaultValue = "0") int page,
                                                                            @RequestParam(defaultValue = "10") int size){
-        List<PostResponseDTO> posts =postService.getPostsBySubscribedForums(requestByForumsDTO, page, size);
+        List<PostResponseDTO> posts =postService.getPostsBySubscribedForums(requestByForumsDTO, userId, page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
@@ -84,6 +89,27 @@ public class PostController {
     public ResponseEntity<PostResponseDTO> savePost(@ModelAttribute PostRequestDTO postRequestDTO) {
         PostResponseDTO savedPost = postService.savePost(postRequestDTO);
         return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{postId}/upvote")
+    public ResponseEntity<Void> upvotePost(@PathVariable("postId") Long postId,
+                                           @RequestParam("userId") Long userId){
+        valorationService.upvotePost(postId, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{postId}/downvote")
+    public ResponseEntity<Void> downvotePost(@PathVariable("postId") Long postId,
+                                           @RequestParam("userId") Long userId){
+        valorationService.downvotePost(postId, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{postId}/removeVote")
+    public ResponseEntity<Void> removeVote(@PathVariable("postId") Long postId,
+                                             @RequestParam("userId") Long userId){
+        valorationService.removeVoteFromPost(postId, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
