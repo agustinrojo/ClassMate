@@ -61,7 +61,7 @@ public class PostServiceImpl implements IPostService {
 
         apiResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
         apiResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
-
+        apiResponseDTO.setValoration(post.getValoration());
         List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
@@ -85,12 +85,7 @@ public class PostServiceImpl implements IPostService {
         LOGGER.info("Getting posts by forum id...");
         Pageable pageRequest = PageRequest.of(page, size);
         return postRepository.findByForumId(forumId, pageRequest)
-                .map(post -> {
-                    PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(post);
-                    postResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
-                    postResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
-                    return  postResponseDTO;
-                })
+                .map(post -> getPostResponseDTO(post, userId))
                 .getContent();
     }
 
@@ -114,12 +109,7 @@ public class PostServiceImpl implements IPostService {
 
         Pageable pageRequest = PageRequest.of(page, size);
         return postRepository.findByForumIdInOrderByCreationDateDesc(forumIds, pageRequest)
-                .map(post -> {
-                    PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(post);
-                    postResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
-                    postResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
-                    return  postResponseDTO;
-                })
+                .map(post -> getPostResponseDTO(post, userId))
                 .getContent();
     }
 
@@ -141,10 +131,7 @@ public class PostServiceImpl implements IPostService {
         post.setAttachments(attachments);
         post.addUpvote(postRequestDTO.getAuthorId());
         Post savedPost = postRepository.save(post);
-        PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
-        postResponseDTO.setLikedByUser(true);
-        postResponseDTO.setDislikedByUser(false);
-        return postResponseDTO;
+        return getPostResponseDTO(savedPost, savedPost.getAuthorId());
     }
 
     /**
@@ -297,5 +284,13 @@ public class PostServiceImpl implements IPostService {
                 .filter(attachment -> fileIdsToRemove.contains(attachment.getId()))
                 .map(Attachment :: getId)
                 .toList();
+    }
+
+    public PostResponseDTO getPostResponseDTO(Post post, Long userId){
+        PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(post);
+        postResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
+        postResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
+        postResponseDTO.setValoration(post.getValoration());
+        return postResponseDTO;
     }
 }

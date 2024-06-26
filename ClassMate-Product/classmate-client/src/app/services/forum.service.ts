@@ -10,14 +10,18 @@ import { ForumExistsDTO } from './dto/forum/forum-exists-dto.interface';
 @Injectable({providedIn: 'root'})
 export class ForumService {
   private baseUrl : String = "http://localhost:8080/api/forums";
-  constructor(private http: HttpClient, private _authService: AuthServiceService) { }
+  private userId : number;
+  constructor(private http: HttpClient,
+              private _authService: AuthServiceService) {
+                this.userId = this._authService.getUserId();
+               }
 
   public getForums() : Observable<ForumDTO[]> {
     return this.http.get<ForumDTO[]>(`${this.baseUrl}`);
   }
 
   public getForumById(id: string) : Observable<ForumApiResponseDTO> {
-    return this.http.get<ForumApiResponseDTO>(`${this.baseUrl}/${id}`);
+    return this.http.get<ForumApiResponseDTO>(`${this.baseUrl}/${id}?userId=${this.userId}`);
   }
 
   public forumExists(forumId: number): Observable<ForumExistsDTO> {

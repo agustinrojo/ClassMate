@@ -10,6 +10,8 @@ import { PostStateService } from '../../../services/dto/state-services/post-stat
 import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
 import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
 import { FileService } from '../../../services/file.service';
+import { Valoration } from '../../interfaces/valoration.interface';
+import { PostService } from '../../../services/post.service';
 
 @Component({
   selector: 'app-post',
@@ -19,17 +21,27 @@ import { FileService } from '../../../services/file.service';
 export class PostComponent implements OnInit{
 
 
+
   public userId!: number;
-  @Input() public post?: PostResponseDTO;
+  public postValoration!: Valoration;
+  @Input() public post!: PostResponseDTO;
   @Output() public deleteEvent: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _authService: AuthServiceService,
               private _fileService: FileService,
               private _router: Router,
-              private _postStateService: PostStateService) {}
+              private _postService: PostService
+            ) {}
 
   ngOnInit(): void {
     this.getUserId();
+    this.postValoration = {
+      id: this.post.id,
+      valoration: this.post.valoration,
+      likedByUser: this.post.likedByUser,
+      dislikedByUser: this.post.dislikedByUser
+    }
+    console.log(this.post)
   }
 
 
@@ -60,6 +72,18 @@ export class PostComponent implements OnInit{
     })
   }
 
+  public upvotePost() {
+    console.log("upvote")
+    if(this.post.likedByUser){
+      return;
+    }
+    this._postService.upvotePost(this.post.id).subscribe(() => {
+      console.log("Upvote success")
+    },
+  err => {
+    console.log(err);
+  })
+  }
 
 
 }

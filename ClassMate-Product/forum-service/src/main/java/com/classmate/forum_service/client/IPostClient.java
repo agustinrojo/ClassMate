@@ -25,6 +25,7 @@ public interface IPostClient {
      */
     @GetMapping("/api/posts/forum/{forumId}")
     List<PostResponseDTO> getPostsByForumId(@PathVariable("forumId") Long forumId,
+                                            @RequestParam("userId") Long userId,
                                             @RequestParam("page") int page,
                                             @RequestParam("size") int size);
 }

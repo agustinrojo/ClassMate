@@ -47,8 +47,9 @@ public class ForumController {
      * @return the forum along with its posts
      */
     @GetMapping("/{id}")
-    public ResponseEntity<APIResponseDTO> getForumById(@PathVariable Long id) {
-        APIResponseDTO apiResponseDTO = forumService.getForumById(id);
+    public ResponseEntity<APIResponseDTO> getForumById(@PathVariable Long id,
+                                                       @RequestParam("userId") Long userId) {
+        APIResponseDTO apiResponseDTO = forumService.getForumById(id, userId);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
     }
 

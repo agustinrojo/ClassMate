@@ -1,0 +1,56 @@
+.like-dislike {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.like-dislike .btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  border: none;
+  border-radius: 3px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.like-dislike .btn-like {
+  background-color: #343A40; /* Color para el estado no likeado */
+  color: #ffffff;
+}
+
+.like-dislike .btn-like:hover {
+  background-color: #218838; /* Efecto hover para el estado no likeado */
+  transform: translateY(-2px);
+}
+
+.like-dislike .btn-like-liked {
+  margin: 0 5px;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  border: none;
+  border-radius: 3px;
+  transition: transform 0.2s, background-color 0.2s;
+  background-color: #007BFF; /* Color para el estado likeado */
+  color: #ffffff;
+}
+
+.like-dislike .btn-like-liked:hover {
+  background-color: #0056b3; /* Efecto hover para el estado likeado */
+  transform: translateY(-2px);
+}
+
+.like-dislike .btn-dislike {
+  background-color: #343A40; /* Color contrastante para el botón de dislike */
+  color: #ffffff;
+}
+
+.like-dislike .btn-dislike:hover {
+  background-color: #c82333; /* Efecto hover para el botón de dislike */
+  transform: translateY(-2px);
+}
+
+.like-dislike .counter {
+  font-size: 1em;
+  color: #f5f5f5; /* Color del contador */
+  margin: 0 5px;
+}

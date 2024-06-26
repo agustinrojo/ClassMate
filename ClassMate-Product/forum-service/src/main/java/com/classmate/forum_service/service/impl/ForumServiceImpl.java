@@ -64,12 +64,12 @@ public class ForumServiceImpl implements IForumService {
      * {@inheritDoc}
      */
     @Override
-    public APIResponseDTO getForumById(Long id) {
+    public APIResponseDTO getForumById(Long id, Long userId) {
         LOGGER.info("Getting forum by id...");
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
 
-        List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, 0, 10);
+        List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, userId,0, 10);
         APIResponseDTO responseDTO = forumMapper.convertToAPIResponseDTO(forum);
         responseDTO.setPosts(postDTOS);
 

@@ -1,6 +1,6 @@
 <div class="post bg-dark" >
   <div class="row">
-    <div class="col-10" (click)="navigateToPost(post!.id)"><h2>{{ post?.title }}</h2></div>
+    <div class="col-10" (click)="navigateToPost(post!.id)"><h2>{{ post.title }}</h2></div>
     <div class="col-2 d-flex flex-row-reverse">
       <div class="dropdown" *ngIf="post?.authorId === userId">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -13,13 +13,18 @@
     </div>
   </div>
 
-  <p>{{ post?.body }}</p>
+  <p>{{ post.body }}</p>
 
   <app-file-badge *ngFor="let file of post?.files" [file]="file" [canModify]="false" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
 
+  <div class="row">
+    <app-valoration [valoration]="postValoration" (likeEvent)="upvotePost()"></app-valoration>
+  </div>
+
+
   <div class="post-details">
-      <span>Creado por: {{ post?.authorId }}</span> |
+      <span>Creado por: {{ post.authorId }}</span> |
       <span>Comentarios: n</span> |
-      <span>Publicado: {{ post?.creationDate | date }}</span>
+      <span>Publicado: {{ post.creationDate | date }}</span>
   </div>
 </div>

@@ -25,7 +25,7 @@ public interface IForumService {
      * @param id the ID of the forum
      * @return the forum along with its posts
      */
-    APIResponseDTO getForumById(Long id);
+    APIResponseDTO getForumById(Long id, Long userId);
 
     /**
      * Retrieves forums by their title.

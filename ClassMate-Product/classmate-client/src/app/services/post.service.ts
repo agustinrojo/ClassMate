@@ -6,16 +6,21 @@ import { PostRequestDTO } from './dto/post/post-request-dto.interface';
 import { User } from '../auth/dto/user-dto.interface';
 import { PostUpdateDTO } from './dto/post/post-update-dto.interface';
 import { IsPostAuthor } from './dto/post/is-post-author-dto.interface';
+import { AuthServiceService } from '../auth/auth-service.service';
 
 @Injectable({providedIn: 'root'})
 export class PostService {
 
   private baseUrl:string = "http://localhost:8080/api/posts"
-
-  constructor(private http: HttpClient) { }
+  private userId: number;
+  constructor(private http: HttpClient,
+              private _authService: AuthServiceService
+  ) {
+    this.userId = this._authService.getUserId();
+  }
 
   public getPostById(id: string) : Observable<PostAPIResponseDTO> {
-    return this.http.get<PostAPIResponseDTO>(`${this.baseUrl}/${id}`);
+    return this.http.get<PostAPIResponseDTO>(`${this.baseUrl}/${id}?userId=${this.userId}`);
   }
 
   public isPostAuthor(postId: number, userId: number): Observable<IsPostAuthor>{
@@ -30,6 +35,17 @@ export class PostService {
     return this.http.post<PostRequestDTO>(`${this.baseUrl}`, postFormData, { headers });
   }
 
+  public upvotePost(postId: number): Observable<void>{
+    return this.http.post<void>(`${this.baseUrl}/${postId}/upvote?userId=${this.userId}`, {})
+  }
+
+  public downvotePost(postId: number): Observable<void>{
+    return this.http.post<void>(`${this.baseUrl}/${postId}/downvote?userId=${this.userId}`, {})
+  }
+
+  public removePostVote(postId: number): Observable<void>{
+    return this.http.post<void>(`${this.baseUrl}/${postId}/removeVote?userId=${this.userId}`, {})
+  }
   public deletePost(postId: number): Observable<void>{
     let user: User = JSON.parse(localStorage.getItem("user")!);
     let userId = user.id;

@@ -108,4 +108,8 @@ public class Post {
         upvotesByUserId.remove(userId);
         downvotesByUserId.remove(userId);
     }
+
+    public int getValoration(){
+        return (this.upvotesByUserId.size() - this.downvotesByUserId.size());
+    }
 }
