@@ -4,6 +4,7 @@ import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.service.ICommentService;
+import com.classmate.comment_service.service.ICommentValorationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,16 @@ public class CommentController {
 
     private final ICommentService commentService;
 
+    private final ICommentValorationService valorationService;
+
     /**
      * Constructor to inject the comment service dependency.
      *
      * @param commentService the comment service to be injected
      */
-    public CommentController(ICommentService commentService) {
+    public CommentController(ICommentService commentService, ICommentValorationService valorationService) {
         this.commentService = commentService;
+        this.valorationService = valorationService;
     }
 
     /**
@@ -46,6 +50,27 @@ public class CommentController {
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
+    @PostMapping("/{commentId}/upvote")
+    public ResponseEntity<Void> upvoteComment(@PathVariable("commentId") Long commentId,
+                                           @RequestParam("userId") Long userId){
+        valorationService.upvoteComment(commentId, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{commentId}/downvote")
+    public ResponseEntity<Void> downvoteComment(@PathVariable("commentId") Long commentId,
+                                             @RequestParam("userId") Long userId){
+        valorationService.downvoteComment(commentId, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{commentId}/removeVote")
+    public ResponseEntity<Void> removeComment(@PathVariable("commentId") Long commentId,
+                                           @RequestParam("userId") Long userId){
+        valorationService.removeVoteFromComment(commentId, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     /**
      * Endpoint to retrieve a comment by its ID.
      *
@@ -53,8 +78,9 @@ public class CommentController {
      * @return a response entity containing the retrieved comment and the HTTP status OK
      */
     @GetMapping("{id}")
-    public ResponseEntity<CommentDTOResponse> getCommentById(@PathVariable("id") Long id) {
-        CommentDTOResponse commentDTOResponse = commentService.getCommentById(id);
+    public ResponseEntity<CommentDTOResponse> getCommentById(@PathVariable("id") Long id,
+                                                             @RequestParam("userId") Long userId) {
+        CommentDTOResponse commentDTOResponse = commentService.getCommentById(id, userId);
         return new ResponseEntity<>(commentDTOResponse, HttpStatus.OK);
     }
 
@@ -73,9 +99,10 @@ public class CommentController {
      */
     @GetMapping("/post/{postId}")
     public ResponseEntity<List<CommentDTOResponse>> getCommentsByPostId(@PathVariable("postId") Long postId,
+                                                                       @RequestParam("userId") Long userId,
                                                                        @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size) {
-        List<CommentDTOResponse> comments = commentService.getCommentsByPostId(postId, page, size);
+        List<CommentDTOResponse> comments = commentService.getCommentsByPostId(postId, userId, page, size);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 

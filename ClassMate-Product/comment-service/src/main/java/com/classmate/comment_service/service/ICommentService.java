@@ -18,7 +18,7 @@ public interface ICommentService {
      * @param id the ID of the comment
      * @return the comment DTO
      */
-    CommentDTOResponse getCommentById(Long id);
+    CommentDTOResponse getCommentById(Long id, Long userId);
 
     /**
      * Retrieves a page of comments by post ID.
@@ -28,7 +28,7 @@ public interface ICommentService {
      * @param size the page size
      * @return a list of comment DTOs
      */
-    List<CommentDTOResponse> getCommentsByPostId(Long postId, int page, int size);
+    List<CommentDTOResponse> getCommentsByPostId(Long postId, Long userId, int page, int size);
 
     /**
      * Saves a new comment.

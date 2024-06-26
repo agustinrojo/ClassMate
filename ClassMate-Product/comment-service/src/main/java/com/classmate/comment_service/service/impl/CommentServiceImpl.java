@@ -47,19 +47,27 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    public CommentDTOResponse getCommentById(Long id) {
+    public CommentDTOResponse getCommentById(Long id, Long userId) {
         LOGGER.info("Getting comment by id...");
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-        return commentMapper.mapToCommentDTOResponse(comment);
+
+        CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(comment);
+        commentDTOResponse.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
+        return commentDTOResponse;
     }
 
     @Override
-    public List<CommentDTOResponse> getCommentsByPostId(Long postId, int page, int size) {
+    public List<CommentDTOResponse> getCommentsByPostId(Long postId, Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> commentsPage = commentRepository.findByPostId(postId, pageable);
         return commentsPage.getContent().stream()
-                .map(commentMapper::mapToCommentDTOResponse)
+                .map(comment -> {
+                    CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(comment);
+                    commentDTOResponse.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
+                    commentDTOResponse.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
+                    return commentDTOResponse;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -72,27 +80,16 @@ public class CommentServiceImpl implements ICommentService {
 
         LOGGER.info("Saving comment...");
 
-        List<Attachment> attachments = new ArrayList<>();
-        if(!(commentRequestDTO.getFiles() == null)){
-            if ( !commentRequestDTO.getFiles().isEmpty()) {
-                List<MultipartFile> files = commentRequestDTO.getFiles();
-                for (MultipartFile file : files) {
-                    Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
-                    attachments.add(Attachment.builder()
-                            .id(fileId)
-                            .contentType(file.getContentType())
-                            .originalFilename(file.getOriginalFilename())
-                            .size(file.getSize())
-                            .build());
-                }
-            }
-        }
-
+        List<Attachment> attachments = uploadFiles(commentRequestDTO.getFiles());
 
         Comment comment = commentMapper.mapToComment(commentRequestDTO);
         comment.setAttachments(attachments);
+        comment.addUpvote(commentRequestDTO.getAuthorId());
         Comment savedComment = commentRepository.save(comment);
-        return commentMapper.mapToCommentDTOResponse(savedComment);
+        CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(savedComment);
+        commentDTOResponse.setLikedByUser(true);
+        commentDTOResponse.setDislikedByUser(false);
+        return commentDTOResponse;
     }
 
     @Override
