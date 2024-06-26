@@ -25,6 +25,7 @@ public interface ICommentClient {
      */
     @GetMapping(("/api/comments/post/{postId}"))
     List<CommentDTO> getCommentsByPostId(@RequestParam("postId") Long postId,
+                                         @RequestParam("userId") Long userId,
                                          @RequestParam("page") int page,
                                          @RequestParam("size") int size);
 }

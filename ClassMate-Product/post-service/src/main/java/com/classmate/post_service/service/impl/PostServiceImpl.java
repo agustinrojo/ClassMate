@@ -62,7 +62,7 @@ public class PostServiceImpl implements IPostService {
         apiResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
         apiResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
         apiResponseDTO.setValoration(post.getValoration());
-        List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, 0, 10);
+        List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, userId, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
         return apiResponseDTO;
     }
