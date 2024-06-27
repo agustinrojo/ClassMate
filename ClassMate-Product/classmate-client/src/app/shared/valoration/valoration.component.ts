@@ -79,7 +79,6 @@ export class ValorationComponent implements OnInit{
 
     switch (action) {
       case ValorationType.LIKE:
-        console.log("emit")
         this.likeEvent.emit();
         break;
       case ValorationType.DISLIKE:

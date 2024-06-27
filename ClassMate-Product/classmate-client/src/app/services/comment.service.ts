@@ -42,6 +42,18 @@ export class CommentService {
     return this.http.put<void>(`${this.baseUrl}/${commentId}`, updateFormData, { headers });
   }
 
+  public upvoteComment(commentId: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${commentId}/upvote?userId=${this.userId}` , {} );
+  }
+
+  public downvoteComment(commentId: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${commentId}/downvote?userId=${this.userId}` , {});
+  }
+
+  public removeCommentVote(commentId: number): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/${commentId}/removeVote?userId=${this.userId}` , {});
+  }
+
   public mapRequestToFormData(req: CommentDTORequest): FormData {
     const formData = new FormData();
     formData.append("id", req.id.toString())

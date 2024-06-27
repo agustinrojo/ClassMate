@@ -5,7 +5,10 @@ export interface CommentDTOResponse{
   postId: number;
   authorId: number;
   body: string;
-  hasBeenEdited: boolean;
   creationDate: Date;
   files: FileDTO[];
+  hasBeenEdited: boolean;
+  valoration: number;
+  likedByUser: boolean;
+  dislikedByUser: boolean;
 }

@@ -62,3 +62,44 @@
 button{
   height: 2.5em;
 }
+
+.like-dislike {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.like-dislike .btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  border: none;
+  border-radius: 3px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.like-dislike .btn-like {
+  background-color: #343A40;
+  color: #ffffff;
+}
+
+.like-dislike .btn-like:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.like-dislike .btn-dislike {
+  background-color: #343A40;
+  color: #ffffff;
+}
+
+.like-dislike .btn-dislike:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+.like-dislike .counter {
+  font-size: 1em;
+  color: #f5f5f5;
+  margin: 0 5px;
+}

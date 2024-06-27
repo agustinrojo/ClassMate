@@ -6,6 +6,7 @@ import { CommentService } from '../../../services/comment.service';
 import { CommentUpdateDTO } from '../../../services/dto/comment/comment-update-dto.interface';
 import { FileService } from '../../../services/file.service';
 import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+import { Valoration } from '../../interfaces/valoration.interface';
 
 @Component({
   selector: 'app-comment',
@@ -18,6 +19,7 @@ export class CommentComponent implements OnInit{
   public editing: boolean = false;
   public disableBtn: boolean = false;
   public showErr : boolean = false;
+  public commentValoration!: Valoration;
   @Input() public comment!: CommentDTOResponse;
   @Output() public deleteEvent = new EventEmitter<number>();
 
@@ -31,6 +33,12 @@ export class CommentComponent implements OnInit{
     console.log(this.comment)
     this.getUserId();
 
+    this.commentValoration = {
+      id: this.comment.id,
+      valoration: this.comment.valoration,
+      likedByUser: this.comment.likedByUser,
+      dislikedByUser: this.comment.dislikedByUser
+    }
   }
 
   public deleteComment(){
@@ -85,5 +93,39 @@ export class CommentComponent implements OnInit{
       console.log(err);
     })
   }
+
+  public upvoteComment() {
+    if (this.comment.likedByUser) {
+      return;
+    }
+    this._commentService.upvoteComment(this.comment.id).subscribe(() => {
+      console.log("Upvote success")
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  public downvoteComment() {
+    if (this.comment.dislikedByUser) {
+      return;
+    }
+    this._commentService.downvoteComment(this.comment.id).subscribe(() => {
+      console.log("Downvote success");
+    },
+    err => {
+      console.log(err);
+    });
+  }
+
+  public removeCommentVote() {
+    this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
+      console.log("Remove vote success");
+    },
+    err => {
+      console.log(err);
+    });
+  }
+
+
 
 }
