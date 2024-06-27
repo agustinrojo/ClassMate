@@ -71,6 +71,7 @@ public class ForumServiceImpl implements IForumService {
 
         List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, userId,0, 10);
 
+
         APIResponseDTO responseDTO = forumMapper.convertToAPIResponseDTO(forum);
         responseDTO.setPosts(postDTOS);
 
