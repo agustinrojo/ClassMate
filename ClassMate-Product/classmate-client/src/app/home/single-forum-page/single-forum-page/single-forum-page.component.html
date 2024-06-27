@@ -10,8 +10,8 @@
 
             </button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" (click)="deleteForum()">Borrar</a></li>
-              <li><a class="dropdown-item" (click)="editForum()">Editar</a></li>
+              <li><button class="dropdown-item" (click)="deleteForum()">Borrar</button></li>
+              <li><button class="dropdown-item" (click)="editForum()" [disabled]="forum.forum.hasBeenEdited">Editar</button></li>
             </ul>
           </div>
 
@@ -20,6 +20,8 @@
       <div class="row mx-3">
         <div class="col-8">
           <p>{{ forum.forum.description }}</p>
+          <br>
+          <span class="forum-details" *ngIf="forum.forum.hasBeenEdited"><em>Editado</em></span>
         </div>
         <div class="col-4 d-flex flex-row-reverse">
           <button class="btn" (click)="goBack()">Volver atrás</button>

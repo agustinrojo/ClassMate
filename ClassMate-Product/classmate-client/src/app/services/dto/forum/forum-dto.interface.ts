@@ -6,4 +6,5 @@ export interface ForumDTO {
   memberIds : number[]
   adminIds : number[]
   creationDate : Date;
+  hasBeenEdited: boolean;
 }

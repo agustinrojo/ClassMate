@@ -139,9 +139,13 @@ public class ForumServiceImpl implements IForumService {
         LOGGER.info("Updating forum by id...");
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
-        forum.setTitle(forumRequestDTO.getTitle());
-        forum.setDescription(forumRequestDTO.getDescription());
-        forumRepository.save(forum);
+        if(!forum.getHasBeenEdited()){
+            forum.setTitle(forumRequestDTO.getTitle());
+            forum.setDescription(forumRequestDTO.getDescription());
+            forum.setHasBeenEdited(true);
+            forumRepository.save(forum);
+        }
+
     }
 
     /**

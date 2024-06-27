@@ -34,6 +34,11 @@ body {
   text-align: center;
 }
 
+.forum-details {
+  font-size: 0.9em;
+  color: #8c6e48; /* Tono cálido más oscuro */
+}
+
 .post { /* Fondo de post oscuro */
   padding: 15px;
   border-radius: 5px;
@@ -62,6 +67,30 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra al hacer hover */
   cursor: pointer;
 }
+
+.dropdown-menu {
+  background-color: #343a40; /* Fondo oscuro */
+  border: none; /* Eliminar borde predeterminado */
+}
+
+.dropdown-item {
+  color: #f8f9fa; /* Color de texto claro */
+}
+
+.dropdown-item:hover {
+  background-color: #495057; /* Fondo al hacer hover */
+  color: #ffffff; /* Color de texto al hacer hover */
+}
+
+.dropdown-item.disabled {
+  background-color: #212529; /* Fondo más oscuro */
+  color: #6c757d; /* Color de texto deshabilitado */
+  border: 1px solid #6c757d; /* Borde para hacer más obvio */
+  pointer-events: none; /* Deshabilitar eventos de puntero */
+  cursor: not-allowed; /* Mostrar cursor no permitido */
+  opacity: 0.6; /* Hacer más claro para resaltar que está deshabilitado */
+}
+
 
 button {
   background-color: #0f0f0f;

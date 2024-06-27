@@ -55,6 +55,7 @@ export class EditForumComponent implements OnInit{
     },
     err => {
       this.showerr = true;
+      console.log(err);
       debounceTime(3000);
       this._router.navigate([`forum/${this.forumId}`]);
     })
