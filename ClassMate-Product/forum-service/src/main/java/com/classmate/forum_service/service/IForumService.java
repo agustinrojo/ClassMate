@@ -3,6 +3,7 @@ package com.classmate.forum_service.service;
 import com.classmate.forum_service.dto.APIResponseDTO;
 import com.classmate.forum_service.dto.ForumExistsDTO;
 import com.classmate.forum_service.dto.ForumResponseDTO;
+import com.classmate.forum_service.dto.IsForumCreatorDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 
 import java.util.List;
@@ -95,4 +96,6 @@ public interface IForumService {
     void removeAdmin(Long forumId, Long adminId);
 
     ForumExistsDTO forumExists(Long id);
+
+    IsForumCreatorDTO isForumCreator(Long forumId , Long userId);
 }
