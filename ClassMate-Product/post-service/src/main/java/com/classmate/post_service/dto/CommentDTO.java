@@ -35,8 +35,7 @@ public class CommentDTO {
      * The body content of the comment.
      */
     private String body;
-
-    private Boolean hasBeenEdited;
+    
     /**
      * The creation date and time of the comment.
      * This field is automatically populated.
@@ -44,4 +43,12 @@ public class CommentDTO {
     private LocalDateTime creationDate;
 
     private List<FileDTO> files;
+
+    private Boolean hasBeenEdited;
+
+    private int valoration;
+
+    private boolean likedByUser;
+
+    private boolean dislikedByUser;
 }

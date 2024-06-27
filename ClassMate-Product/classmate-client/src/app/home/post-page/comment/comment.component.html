@@ -24,5 +24,8 @@
       <em>Editado</em>
     </div>
   </div>
+  <div class="row">
+    <app-valoration [valoration]="commentValoration" (likeEvent)="upvoteComment()" (dislikeEvent)="downvoteComment()" (removeEvent)="removeCommentVote()"></app-valoration>
+  </div>
 </div>
 <app-edit-comment (cancelEditing)="cancelEdition()" (editComment)="editComment($event)"  [body]="comment.body" [files]="comment.files" *ngIf="editing"></app-edit-comment>
