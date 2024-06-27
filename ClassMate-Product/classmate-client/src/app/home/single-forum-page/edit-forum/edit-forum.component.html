@@ -1,0 +1,25 @@
+<body>
+  <div class="forum-container">
+    <h1>Editar Foro</h1>
+    <form id="createForumForm" [formGroup]="editForumForm">
+      <div class="form-group">
+        <label for="forum-title">Título del Foro</label>
+        <input type="text" id="forum-title" name="title" formControlName="title" maxlength="100" required>
+      </div>
+      <div class="form-group">
+        <label for="forum-description">Descripción del Foro</label>
+        <textarea id="forum-description" name="description" rows="5" formControlName="description"maxlength="300"  required></textarea>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <button type="submit" [disabled]="!editForumForm.valid || disableBtn" (click)="editForum()">Editar Foro</button>
+        </div>
+        <div class="col-6 d-flex flex-row-reverse">
+          <button type="submit" (click)="goBack()">Volver atrás</button>
+        </div>
+      </div>
+      <p class="text-danger" *ngIf="showerr"> No se pudo crear el foro. Redireccionando hacia página anterior...</p>
+    </form>
+  </div>
+
+</body>

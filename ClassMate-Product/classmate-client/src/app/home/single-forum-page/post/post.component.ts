@@ -41,7 +41,6 @@ export class PostComponent implements OnInit{
       likedByUser: this.post.likedByUser,
       dislikedByUser: this.post.dislikedByUser
     }
-    console.log(this.post)
   }
 
 

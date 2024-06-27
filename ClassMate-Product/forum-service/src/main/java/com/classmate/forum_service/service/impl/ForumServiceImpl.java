@@ -70,7 +70,6 @@ public class ForumServiceImpl implements IForumService {
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
 
         List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, userId,0, 10);
-        System.out.println(postDTOS.get(0));
         APIResponseDTO responseDTO = forumMapper.convertToAPIResponseDTO(forum);
         responseDTO.setPosts(postDTOS);
 
@@ -94,6 +93,16 @@ public class ForumServiceImpl implements IForumService {
             forumExistsDTO.setExists(true);
         }
         return forumExistsDTO;
+    }
+
+    public IsForumCreatorDTO isForumCreator(Long forumId ,Long userId){
+        Optional<Forum> existingForum = forumRepository.findById(forumId);
+        if(existingForum.isPresent()){
+            Forum forum = existingForum.get();
+            return IsForumCreatorDTO.builder().isAuthor(forum.getCreatorId().equals(userId)).build();
+        } else {
+            return IsForumCreatorDTO.builder().isAuthor(false).build();
+        }
     }
 
     /**

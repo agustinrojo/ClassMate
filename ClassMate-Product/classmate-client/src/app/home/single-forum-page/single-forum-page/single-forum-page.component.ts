@@ -6,6 +6,8 @@ import { PostService } from '../../../services/post.service';
 import { PostRequestDTO } from '../../../services/dto/post/post-request-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
+import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
+import { ForumData } from '../../interfaces/forum-data.interface';
 
 @Component({
   selector: 'app-single-forum-page',
@@ -19,6 +21,7 @@ export class SingleForumPageComponent implements OnInit{
               private _forumService: ForumService,
               private _postService: PostService,
               private _authService: AuthServiceService,
+              private _forumStateService: ForumStateService,
               private _router: Router,
               private _activatedRoute:ActivatedRoute
             ){}
@@ -69,6 +72,15 @@ export class SingleForumPageComponent implements OnInit{
     err => {
       console.log(err);
     })
+  }
+
+  public editForum(){
+    let forumData: ForumData = {
+      title: this.forum.forum.title,
+      description: this.forum.forum.description
+    }
+    this._forumStateService.setForumData(forumData);
+    this._router.navigate([`forum/edit/${this.forum.forum.id}`]);
   }
 
   public goBack(){
