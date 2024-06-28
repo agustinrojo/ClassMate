@@ -1,8 +1,8 @@
 package com.example.Security.consumer;
 
-import com.example.Security.dto.ForumSubscriptionDTO;
+import com.example.Security.dto.forum.ForumDeletionDTO;
+import com.example.Security.dto.forum.ForumSubscriptionDTO;
 import com.example.Security.entities.User;
-import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,6 +54,15 @@ public class ForumSubscriptionConsumer {
     @RabbitListener(queues = "${rabbitmq.queue.creator-update-queue}")
     public void updateCreator(ForumSubscriptionDTO forumSubscriptionDTO) {
         handleSubscription(forumSubscriptionDTO, this::updateCreatorInternal);
+    }
+
+    @Transactional
+    @RabbitListener(queues = "${rabbitmq.queue.delete-forum-subscription-queue}")
+    public void handleForumSubscriptionDeletion(ForumDeletionDTO forumDeletionDTO){
+        Long deletedForumId = forumDeletionDTO.getForumId();
+        LOGGER.info(String.format("Removing forums subscriptions of forum: '%d'", deletedForumId));
+        handleForumDeletionFromSubscribedUsers(deletedForumId);
+        handleForumDeletionFromCreatorUser(deletedForumId);
     }
 
     private void handleSubscription(ForumSubscriptionDTO forumSubscriptionDTO, SubscriptionHandler handler) {
@@ -104,4 +114,23 @@ public class ForumSubscriptionConsumer {
     private interface SubscriptionHandler {
         void handle(User user, Long forumId);
     }
+
+    private void handleForumDeletionFromSubscribedUsers(Long deletedForumId){
+        List<User> usersSubscribed = this.userRepository.findByForumsSubscribedContaining(deletedForumId);
+        usersSubscribed
+                .forEach(u -> u.removeForumSubscription(deletedForumId));
+        userRepository.saveAll(usersSubscribed);
+    }
+
+    private void handleForumDeletionFromCreatorUser(Long deletedForumId){
+        List<User> forumCreatorsUsers = this.userRepository.findByForumsCreatedContaining(deletedForumId);
+
+        forumCreatorsUsers
+                .forEach(u -> {
+                    u.removeForumCreated(deletedForumId);
+
+                });
+        userRepository.saveAll(forumCreatorsUsers);
+    }
+
 }

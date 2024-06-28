@@ -1,4 +1,4 @@
-package com.example.Security.dto;
+package com.example.Security.dto.forum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -164,6 +164,7 @@ public class ForumServiceImpl implements IForumService {
 
         ForumDeletionDTO forumDeletionDTO = new ForumDeletionDTO(id);
         subscriptionPublisher.publishForumDeletion(forumDeletionDTO);
+        subscriptionPublisher.publishForumSubscriptionDeletion(forumDeletionDTO);
     }
 
     /**
