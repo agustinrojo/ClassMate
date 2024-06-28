@@ -133,6 +133,7 @@ public class User implements UserDetails {
 
     public void removeForumSubscription(Long forumId){
         this.forumsSubscribed.removeIf(id -> id.equals(forumId));
+        this.forumsAdmin.removeIf(id -> id.equals(forumId));
     }
 
     public void removeForumCreated(Long forumId){

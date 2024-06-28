@@ -13,12 +13,14 @@ import { HttpRequestInterceptor } from './interceptor/http.interceptor';
 import { HomeModule } from './home/home.module';
 import { TruncatePipe } from './shared/pipes/truncate.pipe';
 import { FileSizePipe } from './shared/pipes/file-size.pipe';
+import { CreateProfileComponent } from './create-profile/create-profile.component';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    CreateProfileComponent,
   ],
   imports: [
     BrowserModule,

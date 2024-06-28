@@ -1,0 +1,115 @@
+body {
+  background-color: #121212; /* Fondo oscuro (negro) */
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Alinea el contenido más arriba */
+  height: 100vh;
+  color: #f5f5f5; /* Color de texto claro */
+  background-size: cover; /* Ajusta el tamaño del fondo */
+  background-position: center; /* Centra la imagen de fondo */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  padding-top: 20px; /* Espacio superior para mayor ajuste */
+}
+
+.profile-container {
+  background-color: #1e1e1e; /* Fondo de contenedor oscuro */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+  text-align: center;
+  max-width: 600px;
+  width: 90%;
+  box-sizing: border-box;
+}
+
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+h1 {
+  margin-bottom: 0.5em;
+  font-size: 2em;
+  color: #d4a373; /* Tono cálido y claro */
+}
+
+h2 {
+  margin-bottom: 1em;
+  font-size: 1.5em;
+  color: #b07a57; /* Tono cálido */
+}
+
+.user-info {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.user-info p {
+  margin: 5px 0;
+}
+
+.post-list {
+  text-align: left;
+}
+
+.post {
+  background-color: #292929; /* Fondo de input oscuro */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  color: #f5f5f5; /* Color de texto claro */
+}
+
+.custom-file-upload {
+  padding: 10px;
+  background-color: #8c6e48; /* Fondo del botón */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.custom-file-upload:hover {
+  background-color: #725a3d; /* Color del botón al pasar el cursor */
+}
+
+input[type="file"] {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .profile-container {
+      padding: 15px;
+  }
+
+  .profile-picture {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 15px;
+  }
+
+  h1 {
+      font-size: 1.5em;
+  }
+
+  h2 {
+      font-size: 1.2em;
+  }
+}
