@@ -1,8 +1,8 @@
 package com.example.Security.service;
 
-import com.example.Security.dto.FileDTO;
-import com.example.Security.dto.UserProfileRequestDTO;
-import com.example.Security.dto.UserProfileResponseDTO;
+import com.example.Security.dto.user.FileDTO;
+import com.example.Security.dto.user.UserProfileRequestDTO;
+import com.example.Security.dto.user.UserProfileResponseDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.entities.User;
 import com.example.Security.entities.UserProfile;

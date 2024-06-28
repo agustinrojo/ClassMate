@@ -14,20 +14,21 @@ import { HomeModule } from './home/home.module';
 import { TruncatePipe } from './shared/pipes/truncate.pipe';
 import { FileSizePipe } from './shared/pipes/file-size.pipe';
 import { CreateProfileComponent } from './create-profile/create-profile.component';
+import { CreateProfileModule } from './create-profile/create-profile.module';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CreateProfileComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AuthModule,
     RouterModule,
-    HomeModule
+    HomeModule,
+    CreateProfileModule
   ],
   providers: [
     AuthServiceService,

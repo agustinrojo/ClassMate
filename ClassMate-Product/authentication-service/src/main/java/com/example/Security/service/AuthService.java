@@ -1,7 +1,14 @@
 package com.example.Security.service;
 
 import com.example.Security.Email.EmailSender;
-import com.example.Security.dto.*;
+import com.example.Security.dto.auth.AuthReq;
+import com.example.Security.dto.auth.AuthenticationResp;
+import com.example.Security.dto.register.RegisterReq;
+import com.example.Security.dto.register.RegisterRespDTO;
+import com.example.Security.dto.token.TokenValidationRequest;
+import com.example.Security.dto.token.TokenValidationResponse;
+import com.example.Security.dto.user.UserDTO;
+import com.example.Security.dto.token.UserTokenValidationRequest;
 import com.example.Security.entities.ConfirmationToken;
 import com.example.Security.entities.JWTToken;
 import com.example.Security.entities.Role;

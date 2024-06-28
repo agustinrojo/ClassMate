@@ -1,6 +1,12 @@
 package com.example.Security.controllers;
 
-import com.example.Security.dto.*;
+import com.example.Security.dto.auth.AuthReq;
+import com.example.Security.dto.auth.AuthenticationResp;
+import com.example.Security.dto.register.RegisterReq;
+import com.example.Security.dto.register.RegisterRespDTO;
+import com.example.Security.dto.token.TokenValidationRequest;
+import com.example.Security.dto.token.TokenValidationResponse;
+import com.example.Security.dto.token.UserTokenValidationRequest;
 import com.example.Security.service.AuthService;
 import com.example.Security.service.ConfirmationTokenService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +38,6 @@ public class AuthenticationControllers {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResp> authenticate(@RequestBody AuthReq request){
-        System.out.println("llego a /authenticate");
         return ResponseEntity.ok(authService.authenticate(request));
     }
 

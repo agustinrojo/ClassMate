@@ -1,4 +1,4 @@
-package com.example.Security.dto;
+package com.example.Security.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRespDTO {
-    private boolean success;
+@NoArgsConstructor
+public class TokenValidationRequest {
+    String token;
 }

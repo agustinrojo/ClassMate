@@ -1,5 +1,6 @@
-package com.example.Security.dto;
+package com.example.Security.dto.auth;
 
+import com.example.Security.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

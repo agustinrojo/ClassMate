@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, CanMatch, GuardResult, MaybeAsync,
 import { AuthServiceService } from '../auth-service.service';
 import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { ValidationResponse } from '../dto/validation-response.interface';
+import { checkProfileSet } from './profile-set.guard';
 
 
 const checkAuthStatus = (): Observable<boolean> => {
@@ -21,7 +22,7 @@ const checkAuthStatus = (): Observable<boolean> => {
       }
     }),
     catchError((err) => {
-      console.log(err);
+
       router.navigate(['/login']);
       return of(false);
     })
@@ -50,3 +51,15 @@ export const canActivateGuard: CanActivateFn = (
 
   return checkAuthStatus();
 };
+
+// function checkIfUserHasProfileSet(){
+//   let profileSet: boolean = false;
+//   console.log("checkin")
+//   checkProfileSet().subscribe((resp: boolean) => {
+//     console.log(resp)
+//     profileSet = resp;
+//   })
+
+//   return profileSet;
+// }
+

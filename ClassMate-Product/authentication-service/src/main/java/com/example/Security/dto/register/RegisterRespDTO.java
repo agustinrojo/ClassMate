@@ -1,4 +1,4 @@
-package com.example.Security.dto;
+package com.example.Security.dto.register;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AuthReq {
-    private String email;
-    private String password;
+@AllArgsConstructor
+public class RegisterRespDTO {
+    private boolean success;
 }

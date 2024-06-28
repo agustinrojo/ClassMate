@@ -1,7 +1,7 @@
 package com.example.Security.controllers;
 
-import com.example.Security.dto.UserProfileRequestDTO;
-import com.example.Security.dto.UserProfileResponseDTO;
+import com.example.Security.dto.user.UserProfileRequestDTO;
+import com.example.Security.dto.user.UserProfileResponseDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
