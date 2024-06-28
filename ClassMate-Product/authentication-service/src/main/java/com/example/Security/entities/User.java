@@ -31,6 +31,10 @@ public class User implements UserDetails {
     private boolean locked = false;
     private boolean enabled = false;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_id")
+    private UserProfile userProfile;
+
     @ElementCollection
     @CollectionTable(name = "forums_created", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "forum_id")
