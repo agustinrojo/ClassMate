@@ -6,6 +6,7 @@ import { ForumApiResponseDTO } from './dto/forum/forum-api-response-dto.interfac
 import { ForumRequestDTO } from './dto/forum/create/forum-request-dto.interface';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { ForumExistsDTO } from './dto/forum/forum-exists-dto.interface';
+import { IsForumCreatorDTO } from './dto/forum/is-forum-creator-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class ForumService {
@@ -28,12 +29,20 @@ export class ForumService {
     return this.http.get<ForumExistsDTO>(`${this.baseUrl}/exists/${forumId}`);
   }
 
+  public isForumCreator(forumId: number): Observable<IsForumCreatorDTO> {
+    return this.http.get<IsForumCreatorDTO>(`${this.baseUrl}/isCreator/${forumId}?userId=${this.userId}`);
+  }
+
   public addMember(forumId: number, memberId: number): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/${forumId}/members/${memberId}`, {});
   }
 
   public saveForum(forum: ForumRequestDTO, creatorId: number) : Observable<ForumDTO> {
     return this.http.post<ForumDTO>(`${this.baseUrl}?creatorId=${creatorId}`, forum);
+  }
+
+  public updateForum(forumId: number, forumUpdate: ForumRequestDTO): Observable<void>{
+    return this.http.put<void>(`${this.baseUrl}/${forumId}`, forumUpdate);
   }
 
   public deleteForum(forumId : number) {

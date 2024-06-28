@@ -70,6 +70,8 @@ public class Forum {
     @Column
     private LocalDateTime creationDate;
 
+    @Column
+    private Boolean hasBeenEdited;
     /**
      * Checks if a user is already a member of the forum.
      *

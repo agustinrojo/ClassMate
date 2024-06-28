@@ -3,6 +3,7 @@ package com.classmate.forum_service.controller;
 import com.classmate.forum_service.dto.APIResponseDTO;
 import com.classmate.forum_service.dto.ForumExistsDTO;
 import com.classmate.forum_service.dto.ForumResponseDTO;
+import com.classmate.forum_service.dto.IsForumCreatorDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.service.IForumService;
 import org.springframework.http.HttpStatus;
@@ -73,6 +74,13 @@ public class ForumController {
     public ResponseEntity<ForumExistsDTO> forumExists(@PathVariable("id") Long forumId){
         ForumExistsDTO forumExistsDTO = forumService.forumExists(forumId);
         return new ResponseEntity<>(forumExistsDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/isCreator/{forumId}")
+    public ResponseEntity<IsForumCreatorDTO> isForumCreator(@PathVariable("forumId") Long forumId,
+                                                            @RequestParam("userId") Long userId) {
+        IsForumCreatorDTO isForumCreatorDTO = forumService.isForumCreator(forumId, userId);
+        return new ResponseEntity<>(isForumCreatorDTO, HttpStatus.OK);
     }
 
     /**

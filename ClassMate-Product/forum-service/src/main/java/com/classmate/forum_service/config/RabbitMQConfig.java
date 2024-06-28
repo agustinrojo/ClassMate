@@ -33,6 +33,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.delete-forum-queue}")
     private String deleteForumQueue;
 
+    @Value("${rabbitmq.queue.delete-forum-subscription-queue}")
+    private String deleteForumSubscriptionQueue;
+
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
 
@@ -53,6 +56,9 @@ public class RabbitMQConfig {
 
     @Value("${rabbitmq.exchange.delete-forum-routing-key}")
     private String deleteForumRoutingKey;
+
+    @Value("${rabbitmq.exchange.delete-forum-subscription-routing-key}")
+    private String deleteForumSubcriptionRoutingKey;
 
     @Bean
     public Queue subscriptionQueue() {
@@ -83,6 +89,9 @@ public class RabbitMQConfig {
     public Queue deleteForumQueue() {
         return new Queue(deleteForumQueue, true);
     }
+
+    @Bean
+    public Queue deleteForumSubcriptionQueue() { return new Queue(deleteForumSubscriptionQueue, true); }
 
     @Bean
     public TopicExchange forumExchange() {
@@ -135,6 +144,14 @@ public class RabbitMQConfig {
                 .bind(deleteForumQueue())
                 .to(forumExchange())
                 .with(deleteForumRoutingKey);
+    }
+
+    @Bean
+    public Binding deleteForumSubscriptionBinding() {
+        return BindingBuilder
+                .bind(deleteForumSubcriptionQueue())
+                .to(forumExchange())
+                .with(deleteForumSubcriptionRoutingKey);
     }
 
     @Bean

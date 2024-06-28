@@ -16,7 +16,7 @@
 
       </div>
 
-        <p>{{ post.body }}</p>
+        <p [innerHTML]="post.body | linkify"></p>
         <div class="row">
           <app-file-badge *ngFor="let file of post.files" [file]="file" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
         </div>

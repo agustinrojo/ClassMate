@@ -23,9 +23,7 @@ export class PostContainerComponent implements OnInit{
   ){ }
 
   ngOnInit(): void {
-    console.log("llego aca")
     let forumsSubscribed: number[] = this._authService.getForumsSubscibed();
-    console.log(forumsSubscribed)
     for (const forumId of forumsSubscribed) {
       this._forumsService.getForumById(forumId.toString()).subscribe((forum: ForumApiResponseDTO) => {
         let forumData: ForumData = {

@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <p>{{ comment.body }}</p>
+  <p [innerHTML]="comment.body | linkify"></p>
 
   <app-file-badge  *ngFor="let file of comment.files" [file]="file"  (downloadFileEvent)="downloadFile($event)" [canModify]="false" ></app-file-badge>
   <br>

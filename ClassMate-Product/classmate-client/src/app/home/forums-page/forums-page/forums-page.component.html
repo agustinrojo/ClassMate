@@ -12,8 +12,10 @@
             </div>
           </div>
 
-          <p>{{ forum.description }}</p>
+          <p [innerHTML]="forum.description | linkify"></p>
           <span class="forum-details">Creado en {{ forum.creationDate | date }}</span>
+          <br>
+          <span class="forum-details" *ngIf="forum.hasBeenEdited"><em>Editado</em></span>
       </div>
   </div>
 </body>

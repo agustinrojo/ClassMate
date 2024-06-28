@@ -134,4 +134,12 @@ public class User implements UserDetails {
         this.addAdminToForum(forumId);
         this.subscribeToForum(forumId);
     }
+
+    public void removeForumSubscription(Long forumId){
+        this.forumsSubscribed.removeIf(id -> id.equals(forumId));
+    }
+
+    public void removeForumCreated(Long forumId){
+        this.forumsCreated.removeIf(id -> id.equals(forumId));
+    }
 }

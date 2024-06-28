@@ -52,4 +52,6 @@ public class ForumResponseDTO {
      * This field is automatically populated.
      */
     private LocalDateTime creationDate;
+
+    private Boolean hasBeenEdited;
 }

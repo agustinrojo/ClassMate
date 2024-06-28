@@ -70,7 +70,6 @@ public class ForumServiceImpl implements IForumService {
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
 
         List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, userId,0, 10);
-        
 
         APIResponseDTO responseDTO = forumMapper.convertToAPIResponseDTO(forum);
         responseDTO.setPosts(postDTOS);
@@ -95,6 +94,16 @@ public class ForumServiceImpl implements IForumService {
             forumExistsDTO.setExists(true);
         }
         return forumExistsDTO;
+    }
+
+    public IsForumCreatorDTO isForumCreator(Long forumId ,Long userId){
+        Optional<Forum> existingForum = forumRepository.findById(forumId);
+        if(existingForum.isPresent()){
+            Forum forum = existingForum.get();
+            return IsForumCreatorDTO.builder().isAuthor(forum.getCreatorId().equals(userId)).build();
+        } else {
+            return IsForumCreatorDTO.builder().isAuthor(false).build();
+        }
     }
 
     /**
@@ -130,9 +139,13 @@ public class ForumServiceImpl implements IForumService {
         LOGGER.info("Updating forum by id...");
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
-        forum.setTitle(forumRequestDTO.getTitle());
-        forum.setDescription(forumRequestDTO.getDescription());
-        forumRepository.save(forum);
+        if(!forum.getHasBeenEdited()){
+            forum.setTitle(forumRequestDTO.getTitle());
+            forum.setDescription(forumRequestDTO.getDescription());
+            forum.setHasBeenEdited(true);
+            forumRepository.save(forum);
+        }
+
     }
 
     /**
@@ -151,6 +164,7 @@ public class ForumServiceImpl implements IForumService {
 
         ForumDeletionDTO forumDeletionDTO = new ForumDeletionDTO(id);
         subscriptionPublisher.publishForumDeletion(forumDeletionDTO);
+        subscriptionPublisher.publishForumSubscriptionDeletion(forumDeletionDTO);
     }
 
     /**

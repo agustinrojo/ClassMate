@@ -30,6 +30,10 @@
   margin-right: 20px; /* Margen derecho para separar el título del botón */
 }
 
+:hover {
+  cursor: pointer;
+}
+
 .nav__button {
   background-color: #8c5e3c; /* Mismo color oscuro que la barra de búsqueda */
   color: #fff;

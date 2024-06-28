@@ -32,8 +32,12 @@ public class ForumSubscriptionPublisher {
     @Value("${rabbitmq.exchange.delete-forum-routing-key}")
     private String deleteForumRoutingKey;
 
+    @Value("${rabbitmq.exchange.delete-forum-subscription-routing-key}")
+    private String deleteForumSubcriptionRoutingKey;
+
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
+
 
     public ForumSubscriptionPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -67,5 +71,10 @@ public class ForumSubscriptionPublisher {
     public void publishForumDeletion(ForumDeletionDTO forumDeletionDTO) {
         LOGGER.info(String.format("Forum deletion event sent to RabbitMQ -> %s", forumDeletionDTO.toString()));
         rabbitTemplate.convertAndSend(exchange, deleteForumRoutingKey, forumDeletionDTO);
+    }
+
+    public void publishForumSubscriptionDeletion(ForumDeletionDTO forumDeletionDTO){
+        LOGGER.info(String.format("Forum deletion event sent to RabbitMQ -> %s", forumDeletionDTO.toString()));
+        rabbitTemplate.convertAndSend(exchange, deleteForumSubcriptionRoutingKey, forumDeletionDTO);
     }
 }

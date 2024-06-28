@@ -5,6 +5,7 @@ import com.classmate.forum_service.dto.ForumResponseDTO;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.entity.Forum;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * Mapper interface for converting between Forum entity and DTOs.
@@ -18,6 +19,7 @@ public interface IForumMapper {
      * @param forum the Forum entity
      * @return the ForumResponseDTO
      */
+    @Mapping(source = "hasBeenEdited", target = "hasBeenEdited")
     ForumResponseDTO convertToForumResponseDTO(Forum forum);
 
     /**

@@ -5,6 +5,7 @@ import { CapitalizePipe } from './pipes/capitalize.pipe';
 import { FileSizePipe } from './pipes/file-size.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { ValorationComponent } from './valoration/valoration.component';
+import { LinkifyPipe } from './pipes/linkify.pipe';
 
 
 
@@ -14,17 +15,19 @@ import { ValorationComponent } from './valoration/valoration.component';
     CapitalizePipe,
     FileSizePipe,
     TruncatePipe,
-    ValorationComponent
+    ValorationComponent,
+    LinkifyPipe
   ],
   imports: [
     CommonModule
   ],
   exports: [
     FileBadgeComponent,
+    ValorationComponent,
     CapitalizePipe,
     FileSizePipe,
     TruncatePipe,
-    ValorationComponent
+    LinkifyPipe
   ]
 })
 export class SharedModule { }
