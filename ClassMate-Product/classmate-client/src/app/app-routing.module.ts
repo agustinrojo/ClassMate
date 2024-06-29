@@ -29,8 +29,8 @@ const routes: Routes = [
   {
     path       : "create-profile",
     component  : CreateProfileComponent,
-    canMatch   : [CanMatchCreateProfileGuard],
-    canActivate: [CanActivateCreateProfileGuard]
+    // canMatch   : [CanMatchCreateProfileGuard],
+    // canActivate: [CanActivateCreateProfileGuard]
   },
   {
     path       : "home",
