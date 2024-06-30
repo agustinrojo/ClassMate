@@ -1,0 +1,18 @@
+<body>
+  <div class="profile-container">
+      <div class="profile-picture">
+          <img [src]="userProfilePhoto" alt="Foto de Perfil">
+      </div>
+      <h1>&#64;{{ userProfile.nickname }}</h1>
+      <div class="user-info">
+          <h2>{{ userData.firstName }} {{ userData.lastName }}</h2>
+          <p>{{ userData.legajo }}</p>
+          <div class="card" *ngIf="userProfile.description"  data-bs-theme="dark">
+              <div class="card-body">
+                  <p>{{ userProfile.description }}</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</body>

@@ -10,8 +10,8 @@
     </div>
 
     <div class="nav__user">
-      <img src="user-avatar.png" class="nav__user-avatar" alt="User Avatar">
-      <span class="nav__user-name">{{ username }}</span>
+      <img [src]="userProfilePhoto" class="nav__user-avatar" alt="User Avatar">
+      <span class="nav__user-name" (click)="navigateToProfile()">{{ userProfile.nickname }}</span>
       <div class="dropdown">
         <button class="dropdown__toggle">▼</button>
         <div class="dropdown__menu">

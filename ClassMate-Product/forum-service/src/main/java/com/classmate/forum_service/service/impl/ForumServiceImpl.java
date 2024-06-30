@@ -119,6 +119,7 @@ public class ForumServiceImpl implements IForumService {
         forum.setAdminIds(new ArrayList<>());
         forum.addMember(creatorId);
         forum.addAdmin(creatorId);
+        forum.setHasBeenEdited(false);
         Forum savedForum = forumRepository.save(forum);
 
         ForumSubscriptionDTO creatorDTO = ForumSubscriptionDTO.builder()

@@ -11,7 +11,7 @@ export const CanActivateCreateProfileGuard: CanActivateFn = (
   state: RouterStateSnapshot
   ) => {
 
-    return !checkProfileSet();
+    return checkProfileSet();
 }
 
 
@@ -19,7 +19,7 @@ export const CanMatchCreateProfileGuard: CanMatchFn = (
   route: Route,
   segments: UrlSegment[]
 ) => {
-  return !checkProfileSet();
+  return checkProfileSet();
 }
 
 
@@ -30,10 +30,10 @@ function checkProfileSet(): Observable<boolean>{
   return userProfileService.getUserProfile().pipe(
     map((resp: UserProfileResponseDTO) => {
       if(resp){
-        return true;
+        return false;
       } else {
 
-        return false;
+        return true;
       }
     }),
     catchError(err => {

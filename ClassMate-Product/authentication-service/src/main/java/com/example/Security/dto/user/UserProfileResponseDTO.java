@@ -11,6 +11,6 @@ import lombok.*;
 public class UserProfileResponseDTO {
     private Long userId;
     private String nickname;
-    private FileDTO profilePhoto;
+    private ProfilePhotoDTO profilePhoto;
     private String description;
 }

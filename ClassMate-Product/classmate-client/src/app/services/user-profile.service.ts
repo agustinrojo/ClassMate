@@ -9,6 +9,8 @@ import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response
 export class UserProfileService {
   private userId: number;
   private baseUrl: string = "http://localhost:8080/api/profiles";
+  private userProfile?: UserProfileResponseDTO;
+  private userProfilePhoto?: string | null;
 
   constructor(
     private http: HttpClient,
@@ -21,11 +23,21 @@ export class UserProfileService {
     return this.http.get<UserProfileResponseDTO>(`${this.baseUrl}/${this.userId}`);
   }
 
+  public getUserProfilePhoto( photoId: number ): Observable<Blob>{
+
+    return this.http.get(`${this.baseUrl}/photo/${photoId}`, {responseType: 'blob'})
+  }
+
   public saveUserProfile( userProfileReq:UserProfileRequestDTO ): Observable<UserProfileResponseDTO>{
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');
     let formData = this.mapUserProfileReqToFormData(userProfileReq);
     return this.http.post<UserProfileResponseDTO>(`${this.baseUrl}`, formData, { headers });
+  }
+
+  public setUserProfile(userProfile: UserProfileResponseDTO, photoUrl: string){
+    this.userProfile = userProfile;
+    this.userProfilePhoto = photoUrl;
   }
 
   private mapUserProfileReqToFormData(req: UserProfileRequestDTO): FormData{
@@ -36,6 +48,7 @@ export class UserProfileService {
     formData.append("description", req.description);
     return formData;
   }
+
 
 
 

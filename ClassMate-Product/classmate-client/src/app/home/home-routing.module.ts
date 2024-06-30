@@ -12,6 +12,7 @@ import { CanActivateEditPost, CanMatchEditPost } from '../auth/guards/edit-post.
 import { CanActivateForum, CanMatchForum } from '../auth/guards/forum.guard';
 import { EditForumComponent } from './single-forum-page/edit-forum/edit-forum.component';
 import { CanActivateEditForum, CanMatchEditForum } from '../auth/guards/edit-forum.guard';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
 
 export const routes: Routes = [
   {
@@ -56,6 +57,10 @@ export const routes: Routes = [
       {
         path: "create-forum",
         component: CreateForumComponent
+      },
+      {
+        path: "profile/:id",
+        component: ProfilePageComponent
       }
     ]
   }

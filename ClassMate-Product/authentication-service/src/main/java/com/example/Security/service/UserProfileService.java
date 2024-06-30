@@ -1,6 +1,6 @@
 package com.example.Security.service;
 
-import com.example.Security.dto.user.FileDTO;
+import com.example.Security.dto.user.ProfilePhotoDTO;
 import com.example.Security.dto.user.UserProfileRequestDTO;
 import com.example.Security.dto.user.UserProfileResponseDTO;
 import com.example.Security.entities.Attachment;
@@ -72,8 +72,8 @@ public class UserProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("Profile photo not found"));
     }
 
-    private FileDTO convertToFileDTO(Attachment attachment) {
-        return FileDTO.builder()
+    private ProfilePhotoDTO convertToFileDTO(Attachment attachment) {
+        return ProfilePhotoDTO.builder()
                 .photoId(attachment.getId())
                 .originalFilename(attachment.getOriginalFilename())
                 .contentType(attachment.getContentType())

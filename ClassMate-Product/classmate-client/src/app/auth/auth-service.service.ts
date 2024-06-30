@@ -9,6 +9,7 @@ import { LoginResponse } from './dto/login-response.interface';
 import { User } from './dto/user-dto.interface';
 import { ValidationResponse } from './dto/validation-response.interface';
 import { ValidationRequest } from './dto/validation-request.interface';
+import { UserData } from './interfaces/user-data.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ import { ValidationRequest } from './dto/validation-request.interface';
 export class AuthServiceService {
 
   private baseUrl: string = "http://localhost:8080";
+  private user!: User;
 
   constructor(private http: HttpClient) { }
 
@@ -32,8 +34,9 @@ export class AuthServiceService {
   public setAuthData(authData:LoginResponse){
     this.setAccessToken(authData.accessToken);
     this.setRefreshToken(authData.refreshToken);
-    localStorage.setItem("user", JSON.stringify(authData.user));
-
+    let user: User = authData.user;
+    localStorage.setItem("user", JSON.stringify(user));
+    this.user = user;
   }
 
   public checkAuthentication(): Observable<ValidationResponse>{
@@ -112,4 +115,16 @@ export class AuthServiceService {
     return user.forumsSubscribed;
   }
 
+  public getUser(): User {
+    return this.user;
+  }
+
+  public getUserData(): UserData {
+    let userFistLastName : UserData = {
+      firstName: this.user.firstName,
+      lastName : this.user.lastName,
+      legajo   : this.user.legajo
+    }
+    return userFistLastName;
+  }
 }

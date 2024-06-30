@@ -12,6 +12,7 @@ import { ForumsPageModule } from './forums-page/forums-page.module';
 import { SingleForumPageModule } from './single-forum-page/single-forum-page.module';
 import { PostPageModule } from './post-page/post-page.module';
 import { FileBadgeComponent } from '../shared/file-badge/file-badge.component';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
 
 
 
@@ -20,7 +21,8 @@ import { FileBadgeComponent } from '../shared/file-badge/file-badge.component';
     HomeComponent,
     NavComponent,
     PostContainerComponent,
-    SidebarComponent
+    SidebarComponent,
+    ProfilePageComponent
 
   ],
   imports: [
