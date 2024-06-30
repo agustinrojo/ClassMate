@@ -20,4 +20,5 @@ public class UserDTO {
     private String email;
     private List<Long> forumsSubscribed;
     private List<Long> forumsCreated;
+
 }

@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileDTO {
+public class ProfilePhotoDTO {
     private Long photoId;
     private String originalFilename;
     private String contentType;
