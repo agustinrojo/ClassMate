@@ -23,7 +23,7 @@ export class EditProfileComponent implements OnInit{
   public currentProfile!: UserProfileData | null;
   public currentProfilePhoto!: File | null;
   public currentProfilePhotoDTO!: FileDTO | null;
-  private userId!: string;
+  public userId!: string;
 
   constructor(private _userProfileStateService: UserProfileStateService,
               private _userProfileService: UserProfileService,

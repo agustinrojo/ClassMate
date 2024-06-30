@@ -2,7 +2,7 @@
   <div class="profile-container">
       <div class="dropdown-container">
           <button class="dropdown-button">Opciones</button>
-          <div class="dropdown-menu">
+          <div class="dropdown-menu" *ngIf="userId == loggedUserId">
               <a (click)="navigateToEditProfile()">Editar</a>
 
           </div>

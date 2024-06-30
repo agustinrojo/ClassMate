@@ -2,7 +2,7 @@ body {
   background-color: #121212; /* Fondo oscuro (negro) */
   margin: 0;
   font-family: Arial, sans-serif;
-  background-image: url('./assets/Sprinkle.svg');
+  background-image: url('./assets/simple-shiny.svg');
   background-attachment: fixed;
   /*display: flex;
   justify-content: center;

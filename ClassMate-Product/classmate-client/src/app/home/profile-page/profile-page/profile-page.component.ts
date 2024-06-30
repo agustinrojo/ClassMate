@@ -20,7 +20,8 @@ export class ProfilePageComponent implements OnInit{
   public userProfilePhotoURL!: string;
   public userProfilePhoto!: Blob;
   public userData!: UserData;
-  private userId!: string;
+  public userId!: string;
+  public loggedUserId!: string;
 
   constructor( private _userProfileService: UserProfileService,
                private _userProfileStateService: UserProfileStateService,
@@ -30,7 +31,7 @@ export class ProfilePageComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-
+    this.loggedUserId = this._authService.getUserId().toString();
     this.userData = this._authService.getUserData();
     this.userId = this._activatedRoute.snapshot.paramMap.get("id" || "0")!
 

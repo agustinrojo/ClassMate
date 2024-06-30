@@ -1,5 +1,5 @@
 .nav {
-  background-color: #b07a57;
+  background-color: #1a1a1a ;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
@@ -58,7 +58,7 @@
   padding: 8px;
   border-radius: 4px;
   border: none;
-  background-color: #8c5e3c; /* Color de fondo oscuro */
+  background-color: #2e2e2e; /* Color de fondo oscuro */
   color: #fff; /* Color del texto */
 }
 
