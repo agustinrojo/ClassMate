@@ -1,4 +1,4 @@
-package com.example.Security.dto.user;
+package com.example.Security.dto.user.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfileDTO {
+public class UserProfileUpdateDTO {
     private String nickname;
-    private Long profilePhoto;
+    private ProfilePhotoUpdateDTO profilePhotoUpdateDTO;
     private String description;
 }

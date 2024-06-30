@@ -4,13 +4,13 @@ import { AuthServiceService } from '../auth/auth-service.service';
 import { UserProfileRequestDTO } from './dto/user-profile/user-profile-request-dto.interface';
 import { Observable } from 'rxjs';
 import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response-dto.interface';
+import { UserProfileData } from '../home/interfaces/user-profile-data.interface';
+import { UserProfileUpdateDTO } from './dto/user-profile/user-profile-update-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class UserProfileService {
   private userId: number;
   private baseUrl: string = "http://localhost:8080/api/profiles";
-  private userProfile?: UserProfileResponseDTO;
-  private userProfilePhoto?: string | null;
 
   constructor(
     private http: HttpClient,
@@ -19,9 +19,12 @@ export class UserProfileService {
     this.userId = this._authService.getUserId();
   }
 
-  public getUserProfile(): Observable<UserProfileResponseDTO>{
-    return this.http.get<UserProfileResponseDTO>(`${this.baseUrl}/${this.userId}`);
+
+
+  public getUserProfile( userId: string ): Observable<UserProfileResponseDTO>{
+    return this.http.get<UserProfileResponseDTO>(`${this.baseUrl}/${userId}`);
   }
+
 
   public getUserProfilePhoto( photoId: number ): Observable<Blob>{
 
@@ -35,10 +38,13 @@ export class UserProfileService {
     return this.http.post<UserProfileResponseDTO>(`${this.baseUrl}`, formData, { headers });
   }
 
-  public setUserProfile(userProfile: UserProfileResponseDTO, photoUrl: string){
-    this.userProfile = userProfile;
-    this.userProfilePhoto = photoUrl;
+  public updateUserProfile( userProfileUpdateDTO : UserProfileUpdateDTO ): Observable<void> {
+    let formData: FormData = this.mapUserProfileUpdateToFormData(userProfileUpdateDTO);
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+    return this.http.put<void>(`${this.baseUrl}/${this.userId}`, formData, { headers });
   }
+
 
   private mapUserProfileReqToFormData(req: UserProfileRequestDTO): FormData{
     let formData: FormData = new FormData();
@@ -49,6 +55,15 @@ export class UserProfileService {
     return formData;
   }
 
+  private mapUserProfileUpdateToFormData(userProfileUpdate: UserProfileUpdateDTO) {
+    let formData: FormData = new FormData();
+
+    formData.append("nickname", userProfileUpdate.nickname);
+    formData.append("description", userProfileUpdate.description);
+    formData.append("profilePhotoUpdateDTO.photoToAdd", userProfileUpdate.profilePhotoUpdateDTO.photoToAdd);
+
+    return formData;
+  }
 
 
 

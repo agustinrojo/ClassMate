@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthServiceService } from '../../auth/auth-service.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../auth/dto/user-dto.interface';
 import { UserProfileService } from '../../services/user-profile.service';
 import { UserProfileResponseDTO } from '../../services/dto/user-profile/user-profile-response-dto.interface';
@@ -14,14 +14,16 @@ export class NavComponent implements OnInit{
 
   public userProfile!: UserProfileResponseDTO;
   public userProfilePhoto!: string | null;
+  public userId!: number;
 
   constructor(private _authService: AuthServiceService,
               private _router: Router,
+              private _activatedRoute: ActivatedRoute,
               private _userProfileService: UserProfileService){}
 
   ngOnInit(): void {
+    this.userId = this._authService.getUserId();
     this.getUserProfile();
-    this._userProfileService.setUserProfile(this.userProfile, this.userProfilePhoto!);
   }
 
   public logout(){
@@ -45,7 +47,8 @@ export class NavComponent implements OnInit{
 
 
   private getUserProfile(){
-    this._userProfileService.getUserProfile().subscribe((resp: UserProfileResponseDTO) => {
+    this._userProfileService.getUserProfile(this.userId.toString()).subscribe((resp: UserProfileResponseDTO) => {
+      console.log(resp);
       this.userProfile = resp;
       this.getUserProfilePhoto(this.userProfile.profilePhoto.photoId);
     },

@@ -71,6 +71,29 @@ h2 {
   color: #f5f5f5; /* Color de texto claro */
 }
 
+.custom-file-upload {
+  padding: 10px;
+  background-color: #8c6e48; /* Fondo del botón */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.custom-file-upload:hover {
+  background-color: #725a3d; /* Color del botón al pasar el cursor */
+}
+
+input[type="file"] {
+  display: none;
+}
+
 @media (max-width: 600px) {
   .profile-container {
       padding: 15px;

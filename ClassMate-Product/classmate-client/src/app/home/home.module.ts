@@ -12,7 +12,10 @@ import { ForumsPageModule } from './forums-page/forums-page.module';
 import { SingleForumPageModule } from './single-forum-page/single-forum-page.module';
 import { PostPageModule } from './post-page/post-page.module';
 import { FileBadgeComponent } from '../shared/file-badge/file-badge.component';
-import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { ProfilePageComponent } from './profile-page/profile-page/profile-page.component';
+import { EditProfileComponent } from './profile-page/edit-profile/edit-profile.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -22,14 +25,18 @@ import { ProfilePageComponent } from './profile-page/profile-page.component';
     NavComponent,
     PostContainerComponent,
     SidebarComponent,
-    ProfilePageComponent
+    ProfilePageComponent,
+    EditProfileComponent
+
 
   ],
   imports: [
     CommonModule,
     HomeRoutingModule,
     ForumsPageModule,
-    SingleForumPageModule
+    SingleForumPageModule,
+    ReactiveFormsModule,
+    SharedModule
   ],
   exports: [
     HomeComponent

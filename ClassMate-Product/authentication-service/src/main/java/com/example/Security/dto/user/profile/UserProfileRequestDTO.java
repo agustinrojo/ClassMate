@@ -1,4 +1,4 @@
-package com.example.Security.dto.user;
+package com.example.Security.dto.user.profile;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

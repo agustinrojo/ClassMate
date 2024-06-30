@@ -1,0 +1,44 @@
+<body>
+  <div class="profile-container container">
+    <h1>Editar Perfil</h1>
+    <form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+        <div class="input-group mb-3" data-bs-theme="dark">
+          <span class="input-group-text" id="basic-addon1" >&#64;</span>
+          <input type="text" class="form-control" formControlName="nickname" placeholder="Username" aria-label="Username" maxlength="15" aria-describedby="basic-addon1">
+        </div>
+        <div class="row" *ngIf="editProfileForm.controls['nickname'].errors?.['required'] && editProfileForm.controls['nickname'].touched">
+          <div class="col-6">
+            <p class="text-danger">Este campo es obligatorio</p>
+          </div>
+        </div>
+      <label for="file-upload" class="custom-file-upload">
+        Subir Foto de Perfil
+      </label>
+      <input id="file-upload" formControlName="profilePhoto" (change)="onFileChange($event)" accept=".jpg, .jpeg, .png" type="file"/>
+      <app-file-badge *ngIf="currentProfilePhotoDTO" [file]="currentProfilePhotoDTO" [canModify]="true" (removeEvent)="removePhoto()"></app-file-badge>
+      <div class="row" *ngIf="editProfileForm.controls['profilePhoto'].errors?.['required'] && editProfileForm.controls['profilePhoto'].touched">
+        <div class="col-6">
+          <p class="text-danger">Este campo es obligatorio</p>
+        </div>
+      </div>
+      <div class="input-group " data-bs-theme="dark">
+        <span class="input-group-text">Descripción <span class="p-1"></span></span>
+        <textarea class="form-control" formControlName="description" aria-label="Descripción" maxlength="1500"></textarea>
+      </div>
+      <div class="row mt-3">
+        <div class="col-6">
+          <button type="submit" class="btn btn-success" [disabled]="!editProfileForm.valid || disableBtn">Editar Perfil</button>
+        </div>
+        <div class="col-6">
+          <button type="submit" class="btn btn-danger" (click)="goBack()">Cancelar</button>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-3" *ngIf="showErr">
+        <div class="col-6">
+          <p class="text-danger">Error al crear perfil, porfavor inténtelo mas tarde</p>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</body>

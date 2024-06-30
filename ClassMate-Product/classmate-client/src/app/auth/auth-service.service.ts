@@ -17,7 +17,6 @@ import { UserData } from './interfaces/user-data.interface';
 export class AuthServiceService {
 
   private baseUrl: string = "http://localhost:8080";
-  private user!: User;
 
   constructor(private http: HttpClient) { }
 
@@ -36,7 +35,6 @@ export class AuthServiceService {
     this.setRefreshToken(authData.refreshToken);
     let user: User = authData.user;
     localStorage.setItem("user", JSON.stringify(user));
-    this.user = user;
   }
 
   public checkAuthentication(): Observable<ValidationResponse>{
@@ -116,14 +114,17 @@ export class AuthServiceService {
   }
 
   public getUser(): User {
-    return this.user;
+    return JSON.parse(localStorage.getItem("user")!);
   }
 
+
+
   public getUserData(): UserData {
+    let user: User = this.getUser();
     let userFistLastName : UserData = {
-      firstName: this.user.firstName,
-      lastName : this.user.lastName,
-      legajo   : this.user.legajo
+      firstName: user.firstName,
+      lastName : user.lastName,
+      legajo   : user.legajo
     }
     return userFistLastName;
   }

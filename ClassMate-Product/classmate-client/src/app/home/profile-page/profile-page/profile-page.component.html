@@ -1,7 +1,14 @@
 <body>
   <div class="profile-container">
+      <div class="dropdown-container">
+          <button class="dropdown-button">Opciones</button>
+          <div class="dropdown-menu">
+              <a (click)="navigateToEditProfile()">Editar</a>
+
+          </div>
+      </div>
       <div class="profile-picture">
-          <img [src]="userProfilePhoto" alt="Foto de Perfil">
+          <img [src]="userProfilePhotoURL" alt="Foto de Perfil">
       </div>
       <h1>&#64;{{ userProfile.nickname }}</h1>
       <div class="user-info">
@@ -14,5 +21,4 @@
           </div>
       </div>
   </div>
-
 </body>

@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, CanMatch, GuardResult, MaybeAsync,
 import { AuthServiceService } from '../auth-service.service';
 import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { ValidationResponse } from '../dto/validation-response.interface';
-import { checkProfileSet } from './profile-set.guard';
+
 
 
 const checkAuthStatus = (): Observable<boolean> => {

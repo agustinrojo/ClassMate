@@ -1,8 +1,10 @@
 package com.example.Security.controllers;
 
-import com.example.Security.dto.user.UserProfileRequestDTO;
-import com.example.Security.dto.user.UserProfileResponseDTO;
+import com.example.Security.dto.user.profile.UserProfileRequestDTO;
+import com.example.Security.dto.user.profile.UserProfileResponseDTO;
+import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
 import com.example.Security.entities.Attachment;
+import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -53,7 +55,22 @@ public class UserProfileController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + photo.getOriginalFilename() + "\"")
                     .body(resource);
         } catch (IllegalArgumentException e) {
+            System.out.println(e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateUserProfile(@PathVariable("userId") Long userId,
+                                                  @ModelAttribute UserProfileUpdateDTO userProfileUpdateDTO){
+        try {
+            service.updateUserProfile(userId, userProfileUpdateDTO);
+        } catch (IOException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ResourceWithNumericValueDoesNotExistException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

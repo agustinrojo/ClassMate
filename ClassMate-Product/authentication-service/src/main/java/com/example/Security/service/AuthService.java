@@ -9,7 +9,6 @@ import com.example.Security.dto.token.TokenValidationRequest;
 import com.example.Security.dto.token.TokenValidationResponse;
 import com.example.Security.dto.user.UserDTO;
 import com.example.Security.dto.token.UserTokenValidationRequest;
-import com.example.Security.dto.user.UserProfileDTO;
 import com.example.Security.entities.*;
 import com.example.Security.exception.EmailAlreadyTakenException;
 import com.example.Security.exception.EmailNotValidException;

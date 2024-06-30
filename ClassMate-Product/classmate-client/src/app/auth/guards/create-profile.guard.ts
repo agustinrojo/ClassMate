@@ -10,8 +10,9 @@ export const CanActivateCreateProfileGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot
   ) => {
+    const userId: string = route.paramMap.get("id")!;
 
-    return checkProfileSet();
+    return checkProfileSet(userId);
 }
 
 
@@ -19,15 +20,17 @@ export const CanMatchCreateProfileGuard: CanMatchFn = (
   route: Route,
   segments: UrlSegment[]
 ) => {
-  return checkProfileSet();
+  const idSegment = segments.find(segment => segment.path.match(/^\d+$/));
+  const userId = idSegment ? idSegment.path : "0";
+  return checkProfileSet(userId);
 }
 
 
-function checkProfileSet(): Observable<boolean>{
+function checkProfileSet( userId: string ): Observable<boolean>{
   let userProfileService: UserProfileService = inject(UserProfileService);
   let router : Router = inject(Router);
 
-  return userProfileService.getUserProfile().pipe(
+  return userProfileService.getUserProfile(userId).pipe(
     map((resp: UserProfileResponseDTO) => {
       if(resp){
         return false;
