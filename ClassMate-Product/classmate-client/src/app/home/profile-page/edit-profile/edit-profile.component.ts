@@ -47,6 +47,7 @@ export class EditProfileComponent implements OnInit{
       const files = event.target.files;
         this.currentProfilePhoto = files[0];
         this.currentProfilePhotoDTO = mapFileToFIleDTO(files[0]);
+        this.editProfileForm.get("profilePhoto")!.setValue(this.currentProfilePhoto);
     }
   }
 
