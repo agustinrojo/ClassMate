@@ -25,6 +25,10 @@ export class ForumService {
     return this.http.get<ForumApiResponseDTO>(`${this.baseUrl}/${id}?userId=${this.userId}`);
   }
 
+  public getForumsByTitle(title: string, page: number = 0, size: number = 10) : Observable<ForumDTO[]> {
+    return this.http.get<ForumDTO[]>(`${this.baseUrl}/search?title=${title}&page=${page}&size=${size}`);
+  }
+
   public forumExists(forumId: number): Observable<ForumExistsDTO> {
     return this.http.get<ForumExistsDTO>(`${this.baseUrl}/exists/${forumId}`);
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ForumService } from '../../../services/forum.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ForumApiResponseDTO } from '../../../services/dto/forum/forum-api-response-dto.interface';
@@ -14,7 +14,7 @@ import { ForumData } from '../../interfaces/forum-data.interface';
   templateUrl: './single-forum-page.component.html',
   styleUrl: './single-forum-page.component.css'
 })
-export class SingleForumPageComponent implements OnInit{
+export class SingleForumPageComponent implements OnInit, OnDestroy{
   public userId!: number;
   public forum!: ForumApiResponseDTO;
   constructor(
@@ -26,19 +26,26 @@ export class SingleForumPageComponent implements OnInit{
               private _activatedRoute:ActivatedRoute
             ){}
 
+
   ngOnInit(): void {
     let forumId = this._activatedRoute.snapshot.paramMap.get('id') || "0";
     this.loadForum(forumId);
     this.getUserId()
   }
 
+  ngOnDestroy(): void {
+    this._forumStateService.setCurrentForumData(null);
+  }
 
 
   public loadForum(forumId: string) {
     this._forumService.getForumById(forumId)
           .subscribe(f => {
             this.forum = f;
-
+            this._forumStateService.setCurrentForumData({
+              id: this.forum.forum.id,
+              title: this.forum.forum.title
+            })
           },
         err => {
           console.log(err);

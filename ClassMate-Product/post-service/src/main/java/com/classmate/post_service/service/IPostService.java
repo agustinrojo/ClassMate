@@ -25,7 +25,11 @@ public interface IPostService {
      * @param size the number of posts per page
      * @return a list of PostDTOs matching the search criteria
      */
-    List<PostDTO> getPostsByName(String name, int page, int size);
+    List<PostResponseDTO> getPostsByName(String name, int page, int size);
+
+
+    List<PostResponseDTO> getPostsByNameAndForumId(String name, Long forumId, int page, int size);
+
 
     /**
      * Retrieves posts by forum ID with pagination support.
@@ -36,6 +40,7 @@ public interface IPostService {
      * @return a list of PostDTOs belonging to the specified forum
      */
     List<PostResponseDTO> getPostsByForumId(Long forumId, Long userId, int page, int size);
+
 
     /**
      * Saves a new post.

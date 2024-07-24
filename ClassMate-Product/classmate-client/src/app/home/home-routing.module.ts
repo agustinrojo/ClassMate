@@ -15,6 +15,7 @@ import { CanActivateEditForum, CanMatchEditForum } from '../auth/guards/edit-for
 import { ProfilePageComponent } from './profile-page/profile-page/profile-page.component';
 import { EditProfileComponent } from './profile-page/edit-profile/edit-profile.component';
 
+
 export const routes: Routes = [
   {
     path: "",
@@ -66,7 +67,7 @@ export const routes: Routes = [
       {
         path: "profile/:id/edit",
         component: EditProfileComponent
-      }
+      },
     ]
   }
 ]
