@@ -29,11 +29,11 @@ export const routes: Routes = [
         pathMatch: "full"
       },
       {
-        path: "/forum/:forumId/post/:id",
+        path: "forum/:forumId/post/:id",
         component: PostPageComponent
       },
       {
-        path: "/forum/:forumId/post/edit/:id",
+        path: "forum/:forumId/post/edit/:id",
         component: EditPostComponent,
         canMatch: [CanMatchEditPost],
         canActivate: [CanActivateEditPost]
@@ -75,7 +75,7 @@ export const routes: Routes = [
         component: ForumSearchResultComponent // Add forum search results route
       },
       {
-        path: '/forum/:forumId/posts/search',
+        path: 'forum/:forumId/posts/search',
         component: PostSearchResultComponent // Add post search results route
       },
     ]

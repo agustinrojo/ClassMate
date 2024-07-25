@@ -30,6 +30,7 @@ export class EditPostComponent implements OnInit{
   public filesToAdd: File[] = [];
   public fileDTOsToAdd: FileDTO[] = [];
   private postId!: number;
+  private forumId!: number;
 
 
 
@@ -40,7 +41,8 @@ export class EditPostComponent implements OnInit{
               private _postService: PostService){}
 
   ngOnInit(): void {
-    this.postId = parseInt(this._activatedRoute.snapshot.paramMap.get("id" || "0")!)
+    this.postId = parseInt(this._activatedRoute.snapshot.paramMap.get("id")!)
+    this.forumId = parseInt(this._activatedRoute.snapshot.paramMap.get("forumId")!)
     this._postStateService.getPostData().subscribe((postData : PostData | null) => {
       if(postData) {
         this.postData = postData;
@@ -81,19 +83,19 @@ export class EditPostComponent implements OnInit{
     }
 
     this._postService.updatePost(this.postId, updatedPost).subscribe(() => {
-      this._router.navigate([`post/${this.postId}`]);
+      this._router.navigate([`forum/${this.forumId}/post/${this.postId}`]);
     },
     err => {
       console.log(err);
       this.showErr = true;
       delay(3000);
-      this._router.navigate([`post/${this.postId}`]);
+      this._router.navigate([`forum/${this.forumId}/post/${this.postId}`]);
     }
   )
   }
 
   public goBack() {
-    this._router.navigate([`post/${this.postId}`])
+    this._router.navigate([`forum/${this.forumId}/post/${this.postId}`])
   }
 
   public toggleMarkForRemoval(index: number) {

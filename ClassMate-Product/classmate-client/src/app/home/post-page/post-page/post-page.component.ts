@@ -39,7 +39,7 @@ export class PostPageComponent implements OnInit{
 
   ngOnInit(): void {
     this.userId = this._authService.getUserId();
-    let postId = this._activatedRoute.snapshot.paramMap.get('id') || "0";
+    let postId = this._activatedRoute.snapshot.paramMap.get('id')!;
     this.loadPost(postId);
 
     this.bodyForm = this._fb.group({
@@ -124,7 +124,7 @@ export class PostPageComponent implements OnInit{
       files: this.post.files
     }
     this._postStateService.setPostData(postData);
-    this._router.navigate([`post/edit/${this.post?.id}`]);
+    this._router.navigate([`forum/${this.post.forumId}/post/edit/${this.post?.id}`]);
   }
 
   public onFileChange(event: any) {
