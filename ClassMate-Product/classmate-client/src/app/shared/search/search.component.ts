@@ -1,24 +1,25 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ForumDTO } from '../../services/dto/forum/forum-dto.interface';
 import { PostResponseDTO } from '../../services/dto/post/post-response-dto.interface';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ForumService } from '../../services/forum.service';
 import { ForumStateService } from '../../services/dto/state-services/forum-state.service';
 import { CurrentForumData } from '../../home/interfaces/current-forum-data.interface';
-import { filter } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit, AfterViewInit {
+export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   public searchQuery: string = '';
   public searchPlaceholder: string = 'Buscar...';
   public isPostSearch: boolean = false;
   public searchResults: (ForumDTO | PostResponseDTO)[] = [];
   public showResults: boolean = false;
   public currentForum: CurrentForumData | null = null;
+  private navigationSubscription!: Subscription;
 
   @ViewChild('forumTag') forumTag!: ElementRef;
   @ViewChild('searchInput') searchInput!: ElementRef;
@@ -28,7 +29,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
     private _route: ActivatedRoute,
     private _forumService: ForumService,
     private _forumStateService: ForumStateService,
-    private _elementRef: ElementRef
+    private _elementRef: ElementRef,
+    private _cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -36,20 +38,42 @@ export class SearchComponent implements OnInit, AfterViewInit {
       this.currentForum = currentForumData;
       this.isPostSearch = !!currentForumData;
       this.searchPlaceholder = currentForumData ? `Buscar en /${currentForumData.title}` : 'Buscar Foros...';
-      this.adjustPadding(); // Adjust padding based on forum tag visibility
+      this.adjustPadding();
     });
 
-    this._router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      if (!this._route.snapshot.queryParams['query']) {
-        this.resetSearch();  // Clear the search query only if not returning to the search results page
+    this.navigationSubscription = this._router.events.pipe(
+    ).subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.checkAndResetForumContext();
       }
     });
   }
 
+  private checkAndResetForumContext(): void {
+    const currentUrl = this._router.url;
+
+    if (this.currentForum && !currentUrl.includes(`forum/${this.currentForum!.id}`)) {
+      this.resetForumContext();
+    } else {
+
+      this.resetSearch();
+      this._forumStateService.getCurrentForumData().subscribe((currentForumData: CurrentForumData | null) => {
+        this.currentForum = currentForumData;
+        this.isPostSearch = !!currentForumData;
+        this.searchPlaceholder = currentForumData ? `Buscar en /${currentForumData.title}` : 'Buscar Foros...';
+        this.adjustPadding();
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+  }
+
   ngAfterViewInit(): void {
-    this.adjustPadding(); // Adjust padding on initial view load
+    this.adjustPadding();
   }
 
   onSearchChange(event: Event): void {
@@ -70,17 +94,16 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   onEnter(): void {
     if (this.isPostSearch && this.currentForum) {
-      this._router.navigate(['posts/search'], { queryParams: { query: this.searchQuery, forumId: this.currentForum.id } });
+      this._router.navigate([`forum/${this.currentForum.id}/posts/search`], { queryParams: { query: this.searchQuery, forumId: this.currentForum.id } });
     } else {
       this._router.navigate(['forums/search'], { queryParams: { query: this.searchQuery } });
     }
   }
 
   onResultClick(id: number): void {
-    console.log(id);
-
     if (!this.isPostSearch) {
       this._router.navigate([`forum/${id}`]);
+      this.adjustPadding();
     }
   }
 
@@ -115,13 +138,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   adjustPadding(reset: boolean = false): void {
-    if (this.searchInput) {
-      if (reset) {
-        this.searchInput.nativeElement.style.paddingLeft = '20px'; // Default padding-left value
-      } else if (this.forumTag) {
-        const tagWidth = this.forumTag.nativeElement.offsetWidth;
-        this.searchInput.nativeElement.style.paddingLeft = `${tagWidth + 13}px`; // Adjust as needed
-      }
+    if (reset || !this.currentForum) {
+      this.searchInput.nativeElement.style.paddingLeft = '20px';
+    } else if (this.forumTag) {
+      const tagWidth = this.forumTag.nativeElement.offsetWidth;
+      this.searchInput.nativeElement.style.paddingLeft = `${tagWidth + 13}px`;
     }
+    this._cdr.detectChanges(); // Ensure the view is updated with the new padding
   }
 }

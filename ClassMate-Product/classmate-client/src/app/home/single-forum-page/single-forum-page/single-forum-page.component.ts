@@ -14,9 +14,10 @@ import { ForumData } from '../../interfaces/forum-data.interface';
   templateUrl: './single-forum-page.component.html',
   styleUrl: './single-forum-page.component.css'
 })
-export class SingleForumPageComponent implements OnInit, OnDestroy{
+export class SingleForumPageComponent implements OnInit{
   public userId!: number;
   public forum!: ForumApiResponseDTO;
+
   constructor(
               private _forumService: ForumService,
               private _postService: PostService,
@@ -33,9 +34,9 @@ export class SingleForumPageComponent implements OnInit, OnDestroy{
     this.getUserId()
   }
 
-  ngOnDestroy(): void {
-    this._forumStateService.setCurrentForumData(null);
-  }
+  // ngOnDestroy(): void {
+  //   this._forumStateService.setCurrentForumData(null);
+  // }
 
 
   public loadForum(forumId: string) {
