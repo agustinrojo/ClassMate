@@ -1,41 +1,103 @@
 .nav__search {
-  flex: 2;
-  text-align: center;
   position: relative;
+  text-align: center;
+  width: 100%;
+  max-width: 1300px;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
 }
 
 .nav__search-input {
   width: 100%;
-  max-width: 600px;
-  padding: 12px; /* Increase padding for larger input */
-  border-radius: 4px;
-  border: none;
-  background-color: #2e2e2e; /* Dark background color */
-  color: #fff; /* Text color */
-  outline: none; /* Remove the default outline */
-  font-size: 1.1em; /* Increase font size */
+  padding: 12px 20px;
+  padding-left: calc(); /* 20px padding + 5px margin + 150px tag */
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  background-color: #2e2e2e;
+  color: #fff;
+  box-sizing: border-box;
+  outline: none;
+  transition: padding-left 0.3s ease;
+}
+
+.nav__search-input.has-tag {
+  padding-left: calc(); /* Adjust based on tag width */
 }
 
 .nav__search-input:focus {
-  outline: none; /* Ensure no outline on focus */
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Optional: Add a subtle shadow for focus */
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
 .nav__search-input::placeholder {
-  color: #cccccc; /* Placeholder color */
-  opacity: 1; /* Ensure the color is not affected by opacity */
+  color: #cccccc;
 }
+
+.forum-tag {
+  display: flex;
+  align-items: center;
+  background-color: #3a3a3a;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 12px;
+  position: absolute;
+  left: 10px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forum-tag span {
+  font-size: 12px;
+  margin-right: 5px; /* Space between text and button */
+}
+
+.forum-tag button {
+  position: relative; /* Ensure the pseudo-element is positioned relative to the button */
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.forum-tag button:hover::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* Ensure it doesn't interfere with clicking the button */
+}
+
 
 .search-results {
   position: absolute;
-  background-color: #1a1a1a; /* Match the navbar background color */
+  background-color: #1a1a1a;
   border: 1px solid #ccc;
   width: 100%;
-  max-width: 600px; /* Match the width of the input */
+  max-width: 800px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
-  margin-top: 8px; /* Space between the input and results */
+  margin-top: 8px;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
@@ -45,8 +107,8 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to start horizontally */
-  color: #fff; /* Text color */
+  align-items: flex-start;
+  color: #fff;
 }
 
 .result-content {
@@ -56,14 +118,14 @@
 }
 
 .result-title {
-  font-size: 1em; /* Font size for title */
+  font-size: 1em;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Handle long titles with ellipsis */
+  text-overflow: ellipsis;
 }
 
 .result-members {
-  font-size: 0.8em; /* Smaller font size for members count */
-  color: #aaaaaa; /* Darker color for members count */
-  margin-top: 4px; /* Add space between title and members count */
+  font-size: 0.8em;
+  color: #aaaaaa;
+  margin-top: 4px;
 }

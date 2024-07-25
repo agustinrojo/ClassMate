@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ForumDTO } from '../../services/dto/forum/forum-dto.interface';
 import { PostResponseDTO } from '../../services/dto/post/post-response-dto.interface';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -10,16 +10,18 @@ import { filter } from 'rxjs';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrl: './search.component.css'
+  styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, AfterViewInit {
   public searchQuery: string = '';
   public searchPlaceholder: string = 'Buscar...';
   public isPostSearch: boolean = false;
   public searchResults: (ForumDTO | PostResponseDTO)[] = [];
   public showResults: boolean = false;
-  public forumId: number | null = null;
+  public currentForum: CurrentForumData | null = null;
 
+  @ViewChild('forumTag') forumTag!: ElementRef;
+  @ViewChild('searchInput') searchInput!: ElementRef;
 
   constructor(
     private _router: Router,
@@ -27,23 +29,16 @@ export class SearchComponent implements OnInit {
     private _forumService: ForumService,
     private _forumStateService: ForumStateService,
     private _elementRef: ElementRef
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
     this._forumStateService.getCurrentForumData().subscribe((currentForumData: CurrentForumData | null) => {
-      if (currentForumData != null) {
-        this.searchPlaceholder = `Buscar en /${currentForumData.title}`;
-        this.isPostSearch = true;
-        this.forumId = currentForumData.id;
-      } else {
-        this.searchPlaceholder = 'Buscar Foros...';
-        this.isPostSearch = false;
-        this.forumId = null;
-      }
+      this.currentForum = currentForumData;
+      this.isPostSearch = !!currentForumData;
+      this.searchPlaceholder = currentForumData ? `Buscar en /${currentForumData.title}` : 'Buscar Foros...';
+      this.adjustPadding(); // Adjust padding based on forum tag visibility
     });
 
-    // Clear the search query after navigation if navigating away from the search results page
     this._router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -53,11 +48,14 @@ export class SearchComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.adjustPadding(); // Adjust padding on initial view load
+  }
+
   onSearchChange(event: Event): void {
     if (!this.isPostSearch) {
       const target = event.target as HTMLInputElement;
-      const query = target ? target.value : '';
-      this.searchQuery = query;
+      this.searchQuery = target ? target.value : '';
 
       if (this.searchQuery.length > 2) {
         this._forumService.getForumsByTitle(this.searchQuery, 0, 10).subscribe(results => {
@@ -71,14 +69,16 @@ export class SearchComponent implements OnInit {
   }
 
   onEnter(): void {
-    if (this.isPostSearch && this.forumId) {
-      this._router.navigate(['posts/search'], { queryParams: { query: this.searchQuery, forumId: this.forumId } });
+    if (this.isPostSearch && this.currentForum) {
+      this._router.navigate(['posts/search'], { queryParams: { query: this.searchQuery, forumId: this.currentForum.id } });
     } else {
       this._router.navigate(['forums/search'], { queryParams: { query: this.searchQuery } });
     }
   }
 
   onResultClick(id: number): void {
+    console.log(id);
+
     if (!this.isPostSearch) {
       this._router.navigate([`forum/${id}`]);
     }
@@ -98,12 +98,30 @@ export class SearchComponent implements OnInit {
     this.showResults = false;
   }
 
-
-  @HostListener('document:click', ['$event']) // Carlitos
+  @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     if (!this._elementRef.nativeElement.contains(event.target)) {
       this.showResults = false;
     }
   }
-}
 
+  resetForumContext(): void {
+    this._forumStateService.setCurrentForumData(null);
+    this.currentForum = null;
+    this.isPostSearch = false;
+    this.searchPlaceholder = 'Buscar Foros...';
+    this.adjustPadding(true);
+    this.resetSearch();
+  }
+
+  adjustPadding(reset: boolean = false): void {
+    if (this.searchInput) {
+      if (reset) {
+        this.searchInput.nativeElement.style.paddingLeft = '20px'; // Default padding-left value
+      } else if (this.forumTag) {
+        const tagWidth = this.forumTag.nativeElement.offsetWidth;
+        this.searchInput.nativeElement.style.paddingLeft = `${tagWidth + 13}px`; // Adjust as needed
+      }
+    }
+  }
+}
