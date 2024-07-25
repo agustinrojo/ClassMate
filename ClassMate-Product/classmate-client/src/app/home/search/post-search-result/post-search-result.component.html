@@ -1,0 +1,19 @@
+<div class="container">
+  <h1>Search Results for Posts</h1>
+  <div *ngIf="posts.length > 0; else noResults">
+    <section class="posts">
+      <div class="row">
+        <div class="col-8">
+          <div class="post" *ngFor="let post of posts" (click)="navigateToPost(post.id)">
+            <h2>{{ post.title }}</h2>
+            <p [innerHTML]="post.body | linkify"></p>
+            <span class="post-details">Creado en {{ post.creationDate | date }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <ng-template #noResults>
+    <p>No posts found for "{{ query }}"{{ forumId ? ' in this forum' : '' }}.</p>
+  </ng-template>
+</div>

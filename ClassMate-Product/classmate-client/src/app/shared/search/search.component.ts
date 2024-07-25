@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { ForumDTO } from '../../services/dto/forum/forum-dto.interface';
 import { PostResponseDTO } from '../../services/dto/post/post-response-dto.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ForumService } from '../../services/forum.service';
 import { ForumStateService } from '../../services/dto/state-services/forum-state.service';
 import { CurrentForumData } from '../../home/interfaces/current-forum-data.interface';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-search',
@@ -19,23 +20,35 @@ export class SearchComponent implements OnInit {
   public showResults: boolean = false;
   public forumId: number | null = null;
 
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
     private _forumService: ForumService,
-    private _forumStateService: ForumStateService
+    private _forumStateService: ForumStateService,
+    private _elementRef: ElementRef
   ) { }
 
+
   ngOnInit(): void {
-    this._forumStateService.getCurrentForumData().subscribe((currentForumData: CurrentForumData | null ) => {
+    this._forumStateService.getCurrentForumData().subscribe((currentForumData: CurrentForumData | null) => {
       if (currentForumData != null) {
-        this.searchPlaceholder = `/${currentForumData.title}`;
+        this.searchPlaceholder = `Buscar en /${currentForumData.title}`;
         this.isPostSearch = true;
         this.forumId = currentForumData.id;
       } else {
-        this.searchPlaceholder = 'Buscar...';
+        this.searchPlaceholder = 'Buscar Foros...';
         this.isPostSearch = false;
         this.forumId = null;
+      }
+    });
+
+    // Clear the search query after navigation if navigating away from the search results page
+    this._router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      if (!this._route.snapshot.queryParams['query']) {
+        this.resetSearch();  // Clear the search query only if not returning to the search results page
       }
     });
   }
@@ -59,9 +72,9 @@ export class SearchComponent implements OnInit {
 
   onEnter(): void {
     if (this.isPostSearch && this.forumId) {
-      this._router.navigate(['post/search'], { queryParams: { query: this.searchQuery, forumId: this.forumId } });
+      this._router.navigate(['posts/search'], { queryParams: { query: this.searchQuery, forumId: this.forumId } });
     } else {
-      this._router.navigate(['forum/search'], { queryParams: { query: this.searchQuery } });
+      this._router.navigate(['forums/search'], { queryParams: { query: this.searchQuery } });
     }
   }
 
@@ -75,8 +88,22 @@ export class SearchComponent implements OnInit {
     return (result as ForumDTO).memberIds !== undefined;
   }
 
-  getMemberCount(forum: ForumDTO): number {
-    return forum.memberIds.length;
+  getMemberCountText(forum: ForumDTO): string {
+    const count = forum.memberIds.length;
+    return count === 1 ? `${count} miembro` : `${count} miembros`;
+  }
+
+  private resetSearch(): void {
+    this.searchQuery = '';
+    this.showResults = false;
+  }
+
+
+  @HostListener('document:click', ['$event']) // Carlitos
+  onDocumentClick(event: Event): void {
+    if (!this._elementRef.nativeElement.contains(event.target)) {
+      this.showResults = false;
+    }
   }
 }
 

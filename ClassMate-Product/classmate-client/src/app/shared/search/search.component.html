@@ -10,7 +10,7 @@
     <div *ngFor="let result of searchResults" class="search-result-item" (click)="onResultClick(result.id)">
       <div class="result-content">
         <span class="result-title">{{ result.title }}</span>
-        <span class="result-members" *ngIf="isForumDTO(result)">{{ getMemberCount(result) }} members</span>
+        <span class="result-members" *ngIf="isForumDTO(result)">{{ getMemberCountText(result) }}</span>
       </div>
     </div>
   </div>

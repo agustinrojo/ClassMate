@@ -1,0 +1,104 @@
+.forums-container {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  max-width: 800px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.forums-container h1 {
+  font-size: 2em;
+  color: #d4a373;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.forum {
+  background-color: #292929;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+.forum h2 {
+  font-size: 1.5em;
+  color: #b07a57;
+  cursor: pointer;
+}
+
+.forum p {
+  font-size: 1em;
+  color: #f5f5f5;
+}
+
+.forum-details {
+  font-size: 0.9em;
+  color: #8c6e48;
+}
+
+.forum h2:hover {
+  text-decoration: underline;
+}
+
+#subscribe {
+  padding: 10px;
+  background-color: #8c6e48;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#subscribe:hover {
+  background-color: #725a3d;
+}
+
+#subscribe:disabled {
+  background-color: #b48c61;
+  cursor: not-allowed;
+}
+
+button {
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #343A40;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #555;
+}
+
+@media (max-width: 600px) {
+  .forums-container {
+      padding: 15px;
+  }
+
+  .forums-container h1 {
+      font-size: 1.5em;
+  }
+
+  .forum h2 {
+      font-size: 1.3em;
+  }
+
+  .forum p {
+      font-size: 0.9em;
+  }
+
+  .forum-details {
+      font-size: 0.8em;
+  }
+
+}
