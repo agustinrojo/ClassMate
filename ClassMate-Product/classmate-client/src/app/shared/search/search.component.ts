@@ -26,7 +26,6 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _router: Router,
-    private _route: ActivatedRoute,
     private _forumService: ForumService,
     private _forumStateService: ForumStateService,
     private _elementRef: ElementRef,
@@ -35,10 +34,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this._forumStateService.getCurrentForumData().subscribe((currentForumData: CurrentForumData | null) => {
-      this.currentForum = currentForumData;
-      this.isPostSearch = !!currentForumData;
-      this.searchPlaceholder = currentForumData ? `Buscar en /${currentForumData.title}` : 'Buscar Foros...';
-      this.adjustPadding();
+      this.updateForumContext(currentForumData);
     });
 
     this.navigationSubscription = this._router.events.pipe(
@@ -47,6 +43,13 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.checkAndResetForumContext();
       }
     });
+  }
+
+  private updateForumContext(currentForumData: CurrentForumData | null): void {
+    this.currentForum = currentForumData;
+    this.isPostSearch = !!currentForumData;
+    this.searchPlaceholder = currentForumData ? `Buscar en /${currentForumData.title}` : 'Buscar Foros...';
+    this.adjustPadding();
   }
 
   private checkAndResetForumContext(): void {

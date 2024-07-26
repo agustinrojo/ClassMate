@@ -24,7 +24,7 @@ export const routes: Routes = [
     component: HomeComponent,
     children: [
       {
-        path: "main",
+        path: "home/main",
         component: PostContainerComponent,
         pathMatch: "full"
       },

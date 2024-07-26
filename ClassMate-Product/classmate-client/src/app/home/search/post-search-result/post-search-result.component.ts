@@ -18,28 +18,27 @@ export class PostSearchResultComponent implements OnInit {
     private _router: Router,
     private _postService: PostService
   ) {}
-
   ngOnInit(): void {
     this._route.queryParams.subscribe(params => {
       this.query = params['query'] || '';
       this.forumId = params['forumId'] ? +params['forumId'] : null;
-      this.searchPosts();
+
+      this.loadPosts();
     });
+
   }
 
-  searchPosts(): void {
+  private loadPosts(): void {
     if (this.forumId) {
+      // Fetch posts from specific forum
       this._postService.getPostsByNameAndForumId(this.query, this.forumId).subscribe(posts => {
         this.posts = posts;
       });
     } else {
+      // Fetch posts across all forums
       this._postService.getPostsByName(this.query).subscribe(posts => {
         this.posts = posts;
       });
     }
-  }
-
-  navigateToPost(id: number): void {
-    this._router.navigate([`post/${id}`]);
   }
 }

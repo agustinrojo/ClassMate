@@ -29,9 +29,14 @@ export class SingleForumPageComponent implements OnInit{
 
 
   ngOnInit(): void {
-    let forumId = this._activatedRoute.snapshot.paramMap.get('id') || "0";
-    this.loadForum(forumId);
-    this.getUserId()
+     // Subscribe to changes in route parameters
+     this._activatedRoute.params.subscribe(params => {
+      const forumId = params['id'];
+      if (forumId) {
+        this.loadForum(forumId);
+      }
+    });
+    this.getUserId();
   }
 
   // ngOnDestroy(): void {

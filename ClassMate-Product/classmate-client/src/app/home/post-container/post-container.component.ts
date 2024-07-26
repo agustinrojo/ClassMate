@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PostResponseDTO } from '../../services/dto/post/post-response-dto.interface';
 import { AuthServiceService } from '../../auth/auth-service.service';
 import { ForumService } from '../../services/forum.service';
@@ -12,8 +12,6 @@ import { PostService } from '../../services/post.service';
   styleUrl: './post-container.component.css'
 })
 export class PostContainerComponent implements OnInit{
-
-
   public forums: ForumData[] = [];
   public posts: PostResponseDTO[] = [];
 
@@ -23,10 +21,14 @@ export class PostContainerComponent implements OnInit{
   ){ }
 
   ngOnInit(): void {
-    let forumsSubscribed: number[] = this._authService.getForumsSubscibed();
+    this.loadSubscribedPosts();
+  }
+
+  private loadSubscribedPosts(): void {
+    const forumsSubscribed: number[] = this._authService.getForumsSubscibed();
     for (const forumId of forumsSubscribed) {
       this._forumsService.getForumById(forumId.toString()).subscribe((forum: ForumApiResponseDTO) => {
-        let forumData: ForumData = {
+        const forumData: ForumData = {
           id: forum.forum.id,
           title: forum.forum.title
         }
@@ -39,7 +41,6 @@ export class PostContainerComponent implements OnInit{
       console.log(err)
     })
     }
-
   }
 
   public deletePost(post: PostResponseDTO) {
