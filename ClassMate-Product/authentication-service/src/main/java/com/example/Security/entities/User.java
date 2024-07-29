@@ -52,8 +52,14 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<JWTToken> tokens;
+
+    @ElementCollection
+    @CollectionTable(name = "chatroom_ids_in", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "chatroom_id_in")
+    private List<String> chatroomIdsIn;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -142,5 +148,9 @@ public class User implements UserDetails {
 
     public void removeForumCreated(Long forumId){
         this.forumsCreated.removeIf(id -> id.equals(forumId));
+    }
+
+    public void addChatroom(String chatId){
+        chatroomIdsIn.add(chatId);
     }
 }
