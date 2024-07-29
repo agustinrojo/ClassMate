@@ -2,10 +2,12 @@ package com.example.Security.controllers;
 
 import com.example.Security.dto.user.profile.UserProfileRequestDTO;
 import com.example.Security.dto.user.profile.UserProfileResponseDTO;
+import com.example.Security.dto.user.profile.UserProfileSearchDTO;
 import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.service.UserProfileService;
+import com.example.Security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UserProfileController {
     private final UserProfileService service;
+    private final UserService userService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponseDTO> createUserProfile(@ModelAttribute UserProfileRequestDTO requestDTO) {
@@ -58,6 +61,15 @@ public class UserProfileController {
             System.out.println(e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/search/{nickname}")
+    public ResponseEntity<UserProfileSearchDTO> searchUserByNickname(@PathVariable("nickname") String nickname){
+        UserProfileSearchDTO userProfileSearchDTO = userService.searchUserByNickname(nickname);
+        if(userProfileSearchDTO == null){
+            return ResponseEntity.ok().build();
+        }
+        return new ResponseEntity<>(userProfileSearchDTO, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
