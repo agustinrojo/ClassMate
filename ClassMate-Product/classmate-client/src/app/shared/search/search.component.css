@@ -1,4 +1,5 @@
 .nav__search {
+  padding: 3px;
   position: relative;
   text-align: center;
   width: 100%;
@@ -17,11 +18,11 @@
 
 .nav__search-input {
   width: 100%;
-  padding: 12px 20px;
-  padding-left: calc(); /* 20px padding + 5px margin + 150px tag */
+  padding: 10px 20px; /* Increased padding for more height */
+  padding-left: 20px; /* Adjusted padding calculation */
   border-radius: 20px;
   border: 1px solid #ccc;
-  font-size: 1em;
+  font-size: 14px; /* Increased font size */
   background-color: #2e2e2e;
   color: #fff;
   box-sizing: border-box;
@@ -30,7 +31,7 @@
 }
 
 .nav__search-input.has-tag {
-  padding-left: calc(); /* Adjust based on tag width */
+  padding-left: calc(20px + 150px); /* Adjusted based on tag width */
 }
 
 .nav__search-input:focus {
@@ -46,7 +47,7 @@
   align-items: center;
   background-color: #3a3a3a;
   color: #ffffff;
-  padding: 5px 10px;
+  padding: 4px 8px; /* Reduced padding */
   border-radius: 12px;
   position: absolute;
   left: 10px;
@@ -62,7 +63,7 @@
 }
 
 .forum-tag button {
-  position: relative; /* Ensure the pseudo-element is positioned relative to the button */
+  position: relative;
   background: none;
   border: none;
   color: #fff;
@@ -84,9 +85,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: none; /* Ensure it doesn't interfere with clicking the button */
+  pointer-events: none;
 }
-
 
 .search-results {
   position: absolute;

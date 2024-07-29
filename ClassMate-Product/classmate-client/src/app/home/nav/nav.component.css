@@ -1,59 +1,36 @@
 .nav {
-  background-color: #1a1a1a ;
+  background-color: #141414;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
   width: 100%;
-  padding: 10px 0;
-  margin-top: 0; /* Elimina el margen superior */
+  padding: 5px 0;
   z-index: 1000;
+  border-bottom: 1px solid #444;
 }
 
 .nav__container {
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .nav__brand {
-  flex: 1;
   display: flex;
-  align-items: center;
-}
-
-.nav__title {
-  color: #fff;
-  font-size: 1.5em;
-  margin: 0;
-  margin-right: 20px; /* Margen derecho para separar el título del botón */
-}
-
-:hover {
+  align-items: flex-start; /* Aligns the icon higher */
   cursor: pointer;
+  padding-top: 3px; /* Adjust this value to raise the icon higher */
 }
 
-.nav__button {
-  background-color: #8c5e3c; /* Mismo color oscuro que la barra de búsqueda */
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-size: 1em;
+.nav__icon {
+  height: 40px;
+  width: auto;
+  margin-left: 0;
+  vertical-align: middle;
 }
-
-.nav__button:hover {
-  background-color: #7b5033; /* Un tono más oscuro para el efecto hover */
-}
-
-
-
-
 
 .nav__user {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -69,6 +46,7 @@
 .nav__user-name {
   color: #fff;
   font-size: 1em;
+  cursor: pointer;
 }
 
 .dropdown {

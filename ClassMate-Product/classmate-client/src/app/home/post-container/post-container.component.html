@@ -1,23 +1,23 @@
 <div class="container">
   <h2 *ngIf="forums.length == 0" class="mt-2">No estás suscripto a ningún foro todavía...</h2>
   <div *ngIf="forums.length > 0">
-    <header >
+    <!-- <header>
       <h1>Listado de Publicaciones</h1>
-    </header>
+    </header> -->
 
-    <section class="posts" >
-
-      <h2>Publicaciones</h2>
+    <section class="posts">
+      <!-- <h2>Publicaciones</h2> -->
       <div class="row">
+        <!-- <h3>(Botón de filtros)</h3> -->
+        <hr>
         <div class="col-8">
           <app-post *ngFor="let post of posts" [post]="post" (deleteEvent)="deletePost(post)"></app-post>
         </div>
-        <div class="col-4">
+        <!-- Optional .col-4 for future use, currently commented out -->
+        <!-- <div class="col-4">
           <app-sidebar [forums]="forums"></app-sidebar>
-        </div>
+        </div> -->
       </div>
-
     </section>
   </div>
-
 </div>
