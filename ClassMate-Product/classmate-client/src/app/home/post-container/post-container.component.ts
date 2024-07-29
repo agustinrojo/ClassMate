@@ -14,6 +14,7 @@ import { PostService } from '../../services/post.service';
 export class PostContainerComponent implements OnInit{
   public forums: ForumData[] = [];
   public posts: PostResponseDTO[] = [];
+  public noSubscribedForums: boolean = false;
 
   constructor(private _authService: AuthServiceService,
               private _forumsService: ForumService,
@@ -22,6 +23,7 @@ export class PostContainerComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadSubscribedPosts();
+    this.noSubscribedForums = this.forums.length == 0;
   }
 
   private loadSubscribedPosts(): void {

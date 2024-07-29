@@ -25,10 +25,10 @@ public interface IPostService {
      * @param size the number of posts per page
      * @return a list of PostDTOs matching the search criteria
      */
-    List<PostResponseDTO> getPostsByName(String name, int page, int size);
+    List<PostResponseDTO> getPostsByName(String name, Long userId, int page, int size);
 
 
-    List<PostResponseDTO> getPostsByNameAndForumId(String name, Long forumId, int page, int size);
+    List<PostResponseDTO> getPostsByNameAndForumId(String name, Long forumId, Long userId, int page, int size);
 
 
     /**

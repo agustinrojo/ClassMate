@@ -1,6 +1,9 @@
 <div class="forums-container">
-  <h1>Search Results for Forums</h1>
-  <div *ngIf="forums.length > 0; else noResults">
+  <button class="forums-button" [ngClass]="{'active-button': isForumSearchActive}"  (click)="navigateToForumSearch()">Foros</button>
+  <button class="posts-button" (click)="switchToPostSearch()">Todos los Posts</button>
+  <hr>
+  <div *ngIf="noForumsFound">No se encontraron foros para "{{ query }}"</div>
+  <div *ngIf="!noForumsFound">
     <div class="forum" *ngFor="let forum of forums">
       <div class="row">
         <div class="col-6">
@@ -13,13 +16,9 @@
         </div>
       </div>
       <p [innerHTML]="forum.description | linkify"></p>
-      <span class="forum-details">{{ getMemberCountText(forum) }} </span>
+      <span class="forum-details">{{ getMemberCountText(forum) }}</span>
       <br>
       <span class="forum-details" *ngIf="forum.hasBeenEdited"><em>Edited</em></span>
     </div>
   </div>
-  <ng-template #noResults>
-    <p>No forums found for "{{ query }}".</p>
-  </ng-template>
-  <button (click)="switchToPostSearch()">Search Posts with "{{ query }}"</button>
 </div>

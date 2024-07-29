@@ -25,11 +25,11 @@ export class PostService {
   }
 
   public getPostsByName(name: string, page: number = 0, size: number = 10) : Observable<PostResponseDTO[]> {
-    return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/search?name=${name}&page=${page}&size=${size}`);
+    return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/search?name=${name}&userId=${this.userId}&page=${page}&size=${size}`);
   }
 
   public getPostsByNameAndForumId(name: string, forumId: number, page: number = 0, size: number = 10) : Observable<PostResponseDTO[]> {
-    return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/search/${forumId}?name=${name}&page=${page}&size=${size}`);
+    return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/search/${forumId}?name=${name}&userId=${this.userId}&page=${page}&size=${size}`);
   }
 
   public isPostAuthor(postId: number, userId: number): Observable<IsPostAuthor>{

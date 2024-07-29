@@ -1,5 +1,5 @@
 <div class="container">
-  <h2 *ngIf="forums.length == 0" class="mt-2">No estás suscripto a ningún foro todavía...</h2>
+  <h2 *ngIf="!noSubscribedForums" class="mt-2">No estás suscripto a ningún foro todavía...</h2>
   <div *ngIf="forums.length > 0">
     <!-- <header>
       <h1>Listado de Publicaciones</h1>

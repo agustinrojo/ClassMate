@@ -14,6 +14,8 @@ import { CommentDTOResponse } from '../../../services/dto/comment/comment-respon
 import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
 import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
 import { FileService } from '../../../services/file.service';
+import { ForumService } from '../../../services/forum.service';
+import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
 
 @Component({
   selector: 'app-post-page',
@@ -35,6 +37,8 @@ export class PostPageComponent implements OnInit{
                private _activatedRoute: ActivatedRoute,
                private _router: Router,
                private _fb: FormBuilder,
+               private _forumService: ForumService,
+               private _forumStateService: ForumStateService
                ){ }
 
   ngOnInit(): void {
@@ -47,6 +51,27 @@ export class PostPageComponent implements OnInit{
       files: []
     })
 
+
+    this._activatedRoute.params.subscribe(params => {
+      const forumId = params['forumId'];
+      if (forumId) {
+        this.loadForum(forumId);
+      }
+    });
+
+  }
+  public loadForum(forumId: string) {
+    //  TODO: Ver como hacer para que no se llame si ya estabas en el forum
+    this._forumService.getForumById(forumId)
+          .subscribe(f => {
+            this._forumStateService.setCurrentForumData({
+              id: f.forum.id,
+              title: f.forum.title
+            })
+          },
+        err => {
+          console.log(err);
+        })
   }
 
   public loadPost(postId: string){

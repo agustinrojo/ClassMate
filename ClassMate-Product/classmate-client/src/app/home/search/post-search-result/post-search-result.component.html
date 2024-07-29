@@ -1,9 +1,9 @@
 <div class="container">
-  <h1>Search Results for "{{ query }}"</h1>
-  <div *ngIf="posts.length > 0; else noResults">
+  <button class="forums-button"  (click)="navigateToForumSearch()">Foros</button>
+  <button class="posts-button" [ngClass]="{'active-button': isAllPostsSearch}" (click)="switchToPostSearch()">Todos los Posts</button>
+  <hr>
+  <div *ngIf="noPostsFound" >No se encontraron posts para "{{ query }}"{{ forumId ? ' en este foro' : '' }}</div>
+  <div *ngIf="!noPostsFound">
     <app-post *ngFor="let post of posts" [post]="post"></app-post>
   </div>
-  <ng-template #noResults>
-    <p>No posts found for "{{ query }}"{{ forumId ? ' in this forum' : '' }}.</p>
-  </ng-template>
 </div>
