@@ -4,7 +4,6 @@ import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { PostContainerComponent } from './post-container/post-container.component';
 
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { Route, RouterModule, Routes } from '@angular/router';
 import { PostPageComponent } from './post-page/post-page/post-page.component';
 import { HomeRoutingModule } from './home-routing.module';
@@ -26,13 +25,10 @@ import { PostSearchResultComponent } from './search/post-search-result/post-sear
     HomeComponent,
     NavComponent,
     PostContainerComponent,
-    SidebarComponent,
     ProfilePageComponent,
     EditProfileComponent,
     ForumSearchResultComponent,
     PostSearchResultComponent
-
-
   ],
   imports: [
     CommonModule,

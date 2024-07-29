@@ -78,6 +78,10 @@ export const routes: Routes = [
         path: 'forum/:forumId/posts/search',
         component: PostSearchResultComponent // Add post search results route
       },
+      {
+        path: 'posts/search',
+        component: PostSearchResultComponent // Add post search results route
+      },
     ]
   }
 ]

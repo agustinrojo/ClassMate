@@ -1,5 +1,5 @@
 .container {
-  width: 70%;
+  width: 50%;
   margin: 0 auto;
   padding: 20px;
   background-color: #1e1e1e;
@@ -7,20 +7,52 @@
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  overflow: hidden; /* Para evitar desbordamientos visuales */
+  overflow: hidden;
 }
 
 h1 {
-  font-size: 24px;
-  color: #333;
+  font-size: 2em;
+  color: #d4a373;
   margin-bottom: 20px;
 }
 
 p {
-  font-size: 16px;
-  color: #666;
+  font-size: 1.25em;
+  color: #f5f5f5;
+  margin: 20px 0;
 }
 
 .app-post {
+  margin-bottom: 20px;
+}
+
+.forums-button,
+.posts-button {
+  background-color: #343A40;
+  color: white;
+  border: none;
+  border-radius: 15px; /* More rounded edges */
+  padding: 8px 15px; /* Smaller size */
+  font-size: 0.9em; /* Smaller font size */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 0; /* Bottom margin for spacing */
+  margin-right: 5px;
+  display: inline-block; /* Align to the left */
+}
+
+.forums-button:hover,
+.posts-button:hover {
+  background-color: #555;
+}
+
+.active-button {
+  background-color: #555;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-color: #444;
   margin-bottom: 20px;
 }

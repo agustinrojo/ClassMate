@@ -1,20 +1,44 @@
 .forums-container {
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  text-align: left;
-  max-width: 800px;
-  width: 100%;
-  box-sizing: border-box;
+  width: 50%;
   margin: 0 auto;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
-.forums-container h1 {
-  font-size: 2em;
-  color: #d4a373;
-  margin-bottom: 1em;
-  text-align: center;
+.forums-button,
+.posts-button {
+  background-color: #343A40;
+  color: white;
+  border: none;
+  border-radius: 15px; /* More rounded edges */
+  padding: 8px 15px; /* Smaller size */
+  font-size: 0.9em; /* Smaller font size */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 0; /* Bottom margin for spacing */
+  margin-right: 5px;
+  display: inline-block; /* Align to the left */
+}
+
+.forums-button:hover,
+.posts-button:hover {
+  background-color: #555;
+}
+
+.active-button {
+  background-color: #555;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-color: #444;
+  margin-bottom: 15px;
 }
 
 .forum {
@@ -63,42 +87,4 @@
 #subscribe:disabled {
   background-color: #b48c61;
   cursor: not-allowed;
-}
-
-button {
-  padding: 10px;
-  margin-top: 20px;
-  background-color: #343A40;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #555;
-}
-
-@media (max-width: 600px) {
-  .forums-container {
-      padding: 15px;
-  }
-
-  .forums-container h1 {
-      font-size: 1.5em;
-  }
-
-  .forum h2 {
-      font-size: 1.3em;
-  }
-
-  .forum p {
-      font-size: 0.9em;
-  }
-
-  .forum-details {
-      font-size: 0.8em;
-  }
-
 }

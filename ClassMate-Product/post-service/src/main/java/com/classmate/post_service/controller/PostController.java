@@ -42,18 +42,20 @@ public class PostController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<PostResponseDTO>> getPostsByName(@RequestParam String name,
+                                                        @RequestParam("userId") Long userId,
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size) {
-        List<PostResponseDTO> posts = postService.getPostsByName(name, page, size);
+        List<PostResponseDTO> posts = postService.getPostsByName(name, userId, page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @GetMapping("/search/{forumId}")
-    public ResponseEntity<List<PostResponseDTO>> getPostsByNameAndForumId(@RequestParam String name,
-                                                        @PathVariable Long forumId,
+    public ResponseEntity<List<PostResponseDTO>> getPostsByNameAndForumId(@PathVariable Long forumId,
+                                                        @RequestParam String name,
+                                                        @RequestParam("userId") Long userId,
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size) {
-        List<PostResponseDTO> posts = postService.getPostsByNameAndForumId(name, forumId, page, size);
+        List<PostResponseDTO> posts = postService.getPostsByNameAndForumId(name, forumId, userId, page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 

@@ -20,6 +20,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   public showResults: boolean = false;
   public currentForum: CurrentForumData | null = null;
   private navigationSubscription!: Subscription;
+  private isSearchPage: boolean = true;
 
   @ViewChild('forumTag') forumTag!: ElementRef;
   @ViewChild('searchInput') searchInput!: ElementRef;
@@ -40,7 +41,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.navigationSubscription = this._router.events.pipe(
     ).subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.checkAndResetForumContext();
+        this.isSearchPage = event.urlAfterRedirects.includes('/search');
+        this.checkAndResetForumContext(event.urlAfterRedirects);
       }
     });
   }
@@ -52,13 +54,12 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.adjustPadding();
   }
 
-  private checkAndResetForumContext(): void {
-    const currentUrl = this._router.url;
+  private checkAndResetForumContext(currentUrl: string): void {
+    const isSameForum = this.currentForum && currentUrl.includes(`forum/${this.currentForum.id}`);
 
-    if (this.currentForum && !currentUrl.includes(`forum/${this.currentForum!.id}`)) {
+    if (this.currentForum && !isSameForum) {
       this.resetForumContext();
     } else {
-
       this.resetSearch();
       this._forumStateService.getCurrentForumData().subscribe((currentForumData: CurrentForumData | null) => {
         this.currentForum = currentForumData;
@@ -120,7 +121,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private resetSearch(): void {
-    this.searchQuery = '';
+    if (!this.isSearchPage) this.searchQuery = '';
     this.showResults = false;
   }
 
@@ -135,7 +136,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this._forumStateService.setCurrentForumData(null);
     this.currentForum = null;
     this.isPostSearch = false;
-    this.searchPlaceholder = 'Buscar Foros...';
+    if (!this.isSearchPage) this.searchPlaceholder = 'Buscar Foros...';
     this.adjustPadding(true);
     this.resetSearch();
   }

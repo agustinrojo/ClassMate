@@ -13,6 +13,8 @@ export class ForumSearchResultComponent implements OnInit {
   public forums: ForumDTO[] = [];
   public query: string = '';
   public forumsSubscribed: number[] = [];
+  public noForumsFound: boolean = false;
+  public isForumSearchActive: boolean = true;
 
   constructor(
     private _route: ActivatedRoute,
@@ -31,6 +33,7 @@ export class ForumSearchResultComponent implements OnInit {
   searchForums(): void {
     this._forumService.getForumsByTitle(this.query).subscribe(forums => {
       this.forums = forums;
+      this.noForumsFound = this.forums.length === 0;
     });
   }
 
@@ -38,9 +41,16 @@ export class ForumSearchResultComponent implements OnInit {
     this._router.navigate([`forum/${id}`]);
   }
 
+  navigateToForumSearch(): void {
+    this.isForumSearchActive = true;
+    this._router.navigate(['forums/search'], { queryParams: { query: this.query } });
+  }
+
   switchToPostSearch(): void {
+    this.isForumSearchActive = false;
     this._router.navigate(['posts/search'], { queryParams: { query: this.query } });
   }
+
 
   subscribe(forumId: number): void {
     this._forumService.addMember(forumId, 123).subscribe(() => { // Replace '123' with actual user ID logic

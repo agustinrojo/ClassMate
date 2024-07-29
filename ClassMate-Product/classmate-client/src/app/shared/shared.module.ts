@@ -8,6 +8,7 @@ import { ValorationComponent } from './valoration/valoration.component';
 import { LinkifyPipe } from './pipes/linkify.pipe';
 import { FormsModule } from '@angular/forms';
 import { SearchComponent } from './search/search.component';
+import { SharedSidebarComponent } from './shared-sidebar/shared-sidebar.component';
 
 
 
@@ -20,7 +21,8 @@ import { SearchComponent } from './search/search.component';
     TruncatePipe,
     ValorationComponent,
     LinkifyPipe,
-    SearchComponent
+    SearchComponent,
+    SharedSidebarComponent
 
   ],
   imports: [
@@ -34,7 +36,8 @@ import { SearchComponent } from './search/search.component';
     FileSizePipe,
     TruncatePipe,
     LinkifyPipe,
-    SearchComponent
+    SearchComponent,
+    SharedSidebarComponent
 
   ]
 })

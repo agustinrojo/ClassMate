@@ -1,0 +1,13 @@
+<div class="shared-sidebar-container">
+  <div class="sidebar-section">
+    <h2 class="sidebar-title" (click)="toggleSection('forums')">Foros</h2>
+    <ul class="sidebar-list" *ngIf="sections['forums']">
+      <li *ngFor="let forum of forums" (click)="navigateToForum(forum.id)">
+        <!-- Icon or Image Placeholder -->
+        <!-- <img [src]="forum.icon" class="forum-icon" alt="Forum Icon"> -->
+        {{ forum.title }}
+      </li>
+    </ul>
+  </div>
+
+  <hr> <!-- Separator line -->

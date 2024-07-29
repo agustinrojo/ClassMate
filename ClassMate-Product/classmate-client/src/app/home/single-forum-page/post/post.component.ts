@@ -34,16 +34,18 @@ export class PostComponent implements OnInit{
             ) {}
 
   ngOnInit(): void {
-    this.getUserId();
-    this.postValoration = {
-      id: this.post.id,
-      valoration: this.post.valoration,
-      likedByUser: this.post.likedByUser,
-      dislikedByUser: this.post.dislikedByUser
-    }
+    this.setPostValoration();
   }
 
-
+private setPostValoration(): void {
+  this.getUserId();
+  this.postValoration = {
+    id: this.post.id,
+    valoration: this.post.valoration,
+    likedByUser: this.post.likedByUser,
+    dislikedByUser: this.post.dislikedByUser
+  }
+}
   public navigateToPost(postId: number){
     this._router.navigate([`forum/${this.post.forumId}/post/${postId}`]);
   }
