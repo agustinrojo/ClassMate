@@ -1,0 +1,9 @@
+<div class="container">
+  <h1>Search Results for "{{ query }}"</h1>
+  <div *ngIf="posts.length > 0; else noResults">
+    <app-post *ngFor="let post of posts" [post]="post"></app-post>
+  </div>
+  <ng-template #noResults>
+    <p>No posts found for "{{ query }}"{{ forumId ? ' in this forum' : '' }}.</p>
+  </ng-template>
+</div>

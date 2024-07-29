@@ -14,6 +14,9 @@ import { EditForumComponent } from './single-forum-page/edit-forum/edit-forum.co
 import { CanActivateEditForum, CanMatchEditForum } from '../auth/guards/edit-forum.guard';
 import { ProfilePageComponent } from './profile-page/profile-page/profile-page.component';
 import { EditProfileComponent } from './profile-page/edit-profile/edit-profile.component';
+import { ForumSearchResultComponent } from './search/forum-search-result/forum-search-result.component';
+import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
+
 
 export const routes: Routes = [
   {
@@ -21,16 +24,16 @@ export const routes: Routes = [
     component: HomeComponent,
     children: [
       {
-        path: "main",
+        path: "home/main",
         component: PostContainerComponent,
         pathMatch: "full"
       },
       {
-        path: "post/:id",
+        path: "forum/:forumId/post/:id",
         component: PostPageComponent
       },
       {
-        path: "post/edit/:id",
+        path: "forum/:forumId/post/edit/:id",
         component: EditPostComponent,
         canMatch: [CanMatchEditPost],
         canActivate: [CanActivateEditPost]
@@ -66,7 +69,15 @@ export const routes: Routes = [
       {
         path: "profile/:id/edit",
         component: EditProfileComponent
-      }
+      },
+      {
+        path: 'forums/search',
+        component: ForumSearchResultComponent // Add forum search results route
+      },
+      {
+        path: 'forum/:forumId/posts/search',
+        component: PostSearchResultComponent // Add post search results route
+      },
     ]
   }
 ]

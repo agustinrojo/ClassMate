@@ -6,6 +6,9 @@ import { FileSizePipe } from './pipes/file-size.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { ValorationComponent } from './valoration/valoration.component';
 import { LinkifyPipe } from './pipes/linkify.pipe';
+import { FormsModule } from '@angular/forms';
+import { SearchComponent } from './search/search.component';
+
 
 
 
@@ -16,10 +19,13 @@ import { LinkifyPipe } from './pipes/linkify.pipe';
     FileSizePipe,
     TruncatePipe,
     ValorationComponent,
-    LinkifyPipe
+    LinkifyPipe,
+    SearchComponent
+
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   exports: [
     FileBadgeComponent,
@@ -27,7 +33,9 @@ import { LinkifyPipe } from './pipes/linkify.pipe';
     CapitalizePipe,
     FileSizePipe,
     TruncatePipe,
-    LinkifyPipe
+    LinkifyPipe,
+    SearchComponent
+
   ]
 })
 export class SharedModule { }

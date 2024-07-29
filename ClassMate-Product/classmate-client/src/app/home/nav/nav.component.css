@@ -48,24 +48,9 @@
   background-color: #7b5033; /* Un tono más oscuro para el efecto hover */
 }
 
-.nav__search {
-  flex: 2;
-  text-align: center;
-}
 
-.nav__search-input {
-  width: 70%;
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  background-color: #2e2e2e; /* Color de fondo oscuro */
-  color: #fff; /* Color del texto */
-}
 
-.nav__search-input::placeholder {
-  color: #cccccc; /* Color del placeholder */
-  opacity: 1; /* Asegura que el color no se vea afectado por la opacidad */
-}
+
 
 .nav__user {
   flex: 1;

@@ -45,7 +45,7 @@ export class PostComponent implements OnInit{
 
 
   public navigateToPost(postId: number){
-    this._router.navigate([`post/${postId}`]);
+    this._router.navigate([`forum/${this.post.forumId}/post/${postId}`]);
   }
 
   public deletePost() {

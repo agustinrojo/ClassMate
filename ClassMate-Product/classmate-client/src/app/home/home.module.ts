@@ -16,6 +16,8 @@ import { ProfilePageComponent } from './profile-page/profile-page/profile-page.c
 import { EditProfileComponent } from './profile-page/edit-profile/edit-profile.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { ForumSearchResultComponent } from './search/forum-search-result/forum-search-result.component';
+import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
 
 
 
@@ -26,7 +28,9 @@ import { SharedModule } from '../shared/shared.module';
     PostContainerComponent,
     SidebarComponent,
     ProfilePageComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    ForumSearchResultComponent,
+    PostSearchResultComponent
 
 
   ],

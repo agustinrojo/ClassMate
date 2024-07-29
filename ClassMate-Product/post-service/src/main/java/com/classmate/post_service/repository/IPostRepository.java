@@ -31,5 +31,7 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
      */
     Page<Post> findByTitleContainingIgnoreCaseOrderByCreationDateDesc(String name, Pageable pageable);
 
+    Page<Post> findByTitleContainingIgnoreCaseAndForumIdOrderByCreationDateDesc(String name, Long forumId, Pageable pageable);
+
     Page<Post> findByForumIdInOrderByCreationDateDesc(List<Long> forumIds, Pageable pageable);
 }

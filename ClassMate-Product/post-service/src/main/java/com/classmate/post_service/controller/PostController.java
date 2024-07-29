@@ -41,10 +41,19 @@ public class PostController {
      * @return a list of posts with the given name
      */
     @GetMapping("/search")
-    public ResponseEntity<List<PostDTO>> getPostsByName(@RequestParam String name,
+    public ResponseEntity<List<PostResponseDTO>> getPostsByName(@RequestParam String name,
                                                         @RequestParam(defaultValue = "0") int page,
                                                         @RequestParam(defaultValue = "10") int size) {
-        List<PostDTO> posts = postService.getPostsByName(name, page, size);
+        List<PostResponseDTO> posts = postService.getPostsByName(name, page, size);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{forumId}")
+    public ResponseEntity<List<PostResponseDTO>> getPostsByNameAndForumId(@RequestParam String name,
+                                                        @PathVariable Long forumId,
+                                                        @RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "10") int size) {
+        List<PostResponseDTO> posts = postService.getPostsByNameAndForumId(name, forumId, page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 

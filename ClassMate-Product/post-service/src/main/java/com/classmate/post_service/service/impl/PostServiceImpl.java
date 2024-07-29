@@ -72,10 +72,17 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public List<PostDTO> getPostsByName(String name, int page, int size) {
+    public List<PostResponseDTO> getPostsByName(String name, int page, int size) {
         LOGGER.info("Getting posts by name...");
         Page<Post> postsPage = postRepository.findByTitleContainingIgnoreCaseOrderByCreationDateDesc(name, PageRequest.of(page, size));
-        return postsPage.getContent().stream().map(postMapper::convertToPostDTO).collect(Collectors.toList());
+        return postsPage.getContent().stream().map(postMapper::convertToPostResponseDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostResponseDTO> getPostsByNameAndForumId(String name, Long forumId, int page, int size) {
+        LOGGER.info("Getting posts by name and forumId...");
+        Page<Post> postsPage = postRepository.findByTitleContainingIgnoreCaseAndForumIdOrderByCreationDateDesc(name, forumId,PageRequest.of(page, size));
+        return postsPage.getContent().stream().map(postMapper::convertToPostResponseDTO).collect(Collectors.toList());
     }
 
     /**

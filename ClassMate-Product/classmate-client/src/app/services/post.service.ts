@@ -7,6 +7,7 @@ import { User } from '../auth/dto/user-dto.interface';
 import { PostUpdateDTO } from './dto/post/post-update-dto.interface';
 import { IsPostAuthor } from './dto/post/is-post-author-dto.interface';
 import { AuthServiceService } from '../auth/auth-service.service';
+import { PostResponseDTO } from './dto/post/post-response-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class PostService {
@@ -21,6 +22,14 @@ export class PostService {
 
   public getPostById(id: string) : Observable<PostAPIResponseDTO> {
     return this.http.get<PostAPIResponseDTO>(`${this.baseUrl}/${id}?userId=${this.userId}`);
+  }
+
+  public getPostsByName(name: string, page: number = 0, size: number = 10) : Observable<PostResponseDTO[]> {
+    return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/search?name=${name}&page=${page}&size=${size}`);
+  }
+
+  public getPostsByNameAndForumId(name: string, forumId: number, page: number = 0, size: number = 10) : Observable<PostResponseDTO[]> {
+    return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/search/${forumId}?name=${name}&page=${page}&size=${size}`);
   }
 
   public isPostAuthor(postId: number, userId: number): Observable<IsPostAuthor>{
