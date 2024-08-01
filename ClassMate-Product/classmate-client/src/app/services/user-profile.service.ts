@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response-dto.interface';
 import { UserProfileData } from '../home/interfaces/user-profile-data.interface';
 import { UserProfileUpdateDTO } from './dto/user-profile/user-profile-update-dto.interface';
+import { UserProfileSearchDTO } from './dto/user-profile/user-profile-search-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class UserProfileService {
@@ -43,6 +44,10 @@ export class UserProfileService {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');
     return this.http.put<void>(`${this.baseUrl}/${this.userId}`, formData, { headers });
+  }
+
+  public searchChatUserByNickname( nicknameSubstr: string, page: number = 0, size: number = 10 ) : Observable<UserProfileSearchDTO[]>{
+    return this.http.get<UserProfileSearchDTO[]>(`${this.baseUrl}/search/${nicknameSubstr}?page=${page}&size=${size}`);
   }
 
 

@@ -7,6 +7,7 @@ import { canActivateGuard, canMatchGuard } from './auth/guards/auth.guard';
 import { HomeComponent } from './home/home/home.component';
 import { CreateProfileComponent } from './create-profile/create-profile.component';
 import { CanActivateCreateProfileGuard, CanMatchCreateProfileGuard } from './auth/guards/create-profile.guard';
+import { ChatContainerComponent } from './home/chat/chat-container/chat-container.component';
 
 const routes: Routes = [
   {

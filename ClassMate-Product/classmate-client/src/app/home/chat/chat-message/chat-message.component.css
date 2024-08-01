@@ -1,0 +1,23 @@
+.message {
+  margin-bottom: 10px;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.message p {
+  margin: 0;
+}
+
+.sender {
+  background-color: #3498db;
+  color: #fff;
+  align-self: flex-end;
+  border-radius: 15px 15px 0 15px;
+}
+
+.receiver {
+  background-color: #444;
+  color: #e0e0e0;
+  align-self: flex-start;
+  border-radius: 15px 15px 15px 0;
+}

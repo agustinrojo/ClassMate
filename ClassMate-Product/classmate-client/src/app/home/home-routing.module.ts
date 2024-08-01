@@ -16,6 +16,7 @@ import { ProfilePageComponent } from './profile-page/profile-page/profile-page.c
 import { EditProfileComponent } from './profile-page/edit-profile/edit-profile.component';
 import { ForumSearchResultComponent } from './search/forum-search-result/forum-search-result.component';
 import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
+import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
 
 
 export const routes: Routes = [
@@ -82,6 +83,10 @@ export const routes: Routes = [
         path: 'posts/search',
         component: PostSearchResultComponent // Add post search results route
       },
+      {
+        path       : "chat",
+        component  : ChatContainerComponent
+      }
     ]
   }
 ]

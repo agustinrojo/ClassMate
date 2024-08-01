@@ -1,0 +1,32 @@
+.user-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+:hover {
+  background-color: #333;
+  color: #e0e0e0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.user-item.active {
+  background-color: #333;
+  color: #e0e0e0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+
+.user-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-item span {
+  font-weight: bold;
+}

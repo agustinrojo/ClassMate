@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/profiles")
@@ -64,12 +65,14 @@ public class UserProfileController {
     }
 
     @GetMapping("/search/{nickname}")
-    public ResponseEntity<UserProfileSearchDTO> searchUserByNickname(@PathVariable("nickname") String nickname){
-        UserProfileSearchDTO userProfileSearchDTO = userService.searchUserByNickname(nickname);
-        if(userProfileSearchDTO == null){
-            return ResponseEntity.ok().build();
-        }
-        return new ResponseEntity<>(userProfileSearchDTO, HttpStatus.OK);
+    public ResponseEntity<List<UserProfileSearchDTO>> searchUserByNickname(
+            @PathVariable("nickname") String nickname,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        List<UserProfileSearchDTO> users = userService.searchUserByNickname(nickname, page, size);
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
