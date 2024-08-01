@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit{
 
 
   constructor(private _fb: FormBuilder, private _authService: AuthServiceService, private _router:Router){
-    this.carreras = ["carrera", "sistemas", "industrial", "mecanica", "quimica", "electrica", "electronica"];
+    this.carreras = ["sistemas", "industrial", "mecanica", "quimica", "electrica", "electronica"];
     this.loading  = false;
   }
   ngOnInit(): void {
@@ -36,7 +36,18 @@ export class RegisterComponent implements OnInit{
       validator: validatePasswordsMatch
     })
 
+    // Se suscribe a cambios en el legajo o la carrera
+    this.registerForm.get('legajo')?.valueChanges.subscribe(() => {this.updateEmail()});
+    this.registerForm.get('carrera')?.valueChanges.subscribe(() => {this.updateEmail()});
+  }
 
+  private updateEmail(): void {
+    const legajo: string = this.registerForm.get('legajo')?.value;
+    const carrera: string = this.registerForm.get('carrera')?.value.toLowerCase();
+    if (legajo && carrera) {
+      const email: string = `${legajo}@${carrera}.frc.utn.edu.ar`;
+      this.registerForm.get('email')?.setValue(email, { emitEvent: false });
+    }
   }
 
   public onSubmit(){
