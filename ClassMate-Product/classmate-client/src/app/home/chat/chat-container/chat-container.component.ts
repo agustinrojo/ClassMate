@@ -8,6 +8,7 @@ import { ChatRoomOutputDTO } from '../../../services/dto/chat/chatroom/chatroom-
 import { ChatMessageOutputDTO } from '../../../services/dto/chat/chat-message/chat-message-output-dto.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChatMessageInputDTO } from '../../../services/dto/chat/chat-message/chat-message-input-dto.interface';
+import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-chat-container',
@@ -20,6 +21,7 @@ export class ChatContainerComponent implements OnInit{
   public knownUsers: UserProfileSearchDTO[] = [];
   public messagesList: ChatMessageOutputDTO[] = [];
   public selectedUser: UserProfileSearchDTO | undefined;
+  public chatroomIds: number[] = [];
   public messageForm!: FormGroup;
   public loggedUser!: User;
 
@@ -36,7 +38,8 @@ export class ChatContainerComponent implements OnInit{
   ngOnInit(): void {
     this.loggedUser = this._authService.getUser();
     this.initMessageForm();
-    this.getKnownUsers();
+    this.getChatrooms();
+
     this.listenMessages();
   }
 
@@ -68,18 +71,18 @@ export class ChatContainerComponent implements OnInit{
       content: newMessage.content,
       timeStamp: new Date()
     })
+
     this._chatService.sendMessage(newMessage);
     this.messageForm.get("messageInput")!.reset();
-  }
+    if(!this.checkKnownUser(newMessage.receiverId)){
 
-  private getKnownUsers() {
-    let chatroomIds: number [] = this.loggedUser.chatroomIdsIn;
-    if(chatroomIds.length > 0){
-      this._chatService.getKnownUsers(chatroomIds).subscribe((userProfiles :  UserProfileSearchDTO[]) => {
-        this.knownUsers = userProfiles;
-      });
+      this.getNewUser(newMessage.receiverId);
+      delay(3000)
+      this.refreshChatrooms();
     }
   }
+
+
 
   public setSelectedUser(receiver: UserProfileSearchDTO){
     this.selectedUser = receiver;
@@ -93,6 +96,15 @@ export class ChatContainerComponent implements OnInit{
       console.log(messages);
       this.getUnknownUsers(messages);
        this.messagesList = messages;
+    })
+  }
+
+  private getChatrooms(){
+    this._chatService.getChatroomsBySender().subscribe((chatrooms: ChatRoomOutputDTO[]) => {
+      chatrooms.forEach((chatroom: ChatRoomOutputDTO) => {
+        this.chatroomIds.push(chatroom.id);
+      })
+      this.getKnownUsers();
     })
   }
 
@@ -120,9 +132,46 @@ export class ChatContainerComponent implements OnInit{
     return this.knownUsers.some((user: UserProfileSearchDTO) => user.userId === userId);
   }
 
+  private getKnownUsers() {
+    console.log("entro a getKnownUsers()", this.chatroomIds.length)
+    if(this.chatroomIds.length > 0){
+
+      this._chatService.getKnownUsers(this.chatroomIds).subscribe((userProfiles :  UserProfileSearchDTO[]) => {
+        console.log(userProfiles);
+        this.knownUsers = userProfiles;
+      },
+    err => {
+      console.log(err);
+    });
+    }
+  }
+
+  private getNewUser(userId: number){
+    this._userProfileService.findUserProfileSearchById(userId).subscribe((u: UserProfileSearchDTO) => {
+      console.log(u);
+      this.knownUsers.unshift(u);
+      this.setSelectedUser(u);
+    },
+    err => {
+      console.log(err);
+    })
+  }
+
   private initMessageForm(){
     this.messageForm = this._fb.group({
       messageInput: ["", Validators.required, []]
+
+    })
+  }
+
+  private refreshChatrooms(){
+    this._chatService.getChatroomsBySender().subscribe((chatrooms: ChatRoomOutputDTO[]) => {
+      let chatroomIds: number[] = [];
+      chatrooms.forEach((chatroom: ChatRoomOutputDTO) => {
+        chatroomIds.push(chatroom.id);
+      })
+      console.log(chatroomIds);
+      this._authService.setNewChatroomIds(chatroomIds);
     })
   }
 

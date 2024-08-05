@@ -24,13 +24,11 @@ export class SharedSidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSubscribedForums();
-    console.log("Llegamos");
 
   }
 
   private loadSubscribedForums(): void {
     const forumsSubscribed: number[] = this._authService.getForumsSubscibed();
-    console.log('Subscribed forums IDs:', forumsSubscribed);
     if (forumsSubscribed && forumsSubscribed.length > 0) {
       forumsSubscribed.forEach(forumId => {
         this._forumsService.getForumById(forumId.toString()).subscribe({
@@ -40,7 +38,6 @@ export class SharedSidebarComponent implements OnInit {
               title: forum.forum.title
             };
             this.forums.unshift(forumData);
-            console.log('Loaded forum:', forumData);  // Log each forum loaded
           },
           error: (err) => {
             console.error(`Error loading forum with ID ${forumId}`, err);

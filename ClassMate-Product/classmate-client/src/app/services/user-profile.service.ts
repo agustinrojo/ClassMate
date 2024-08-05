@@ -58,6 +58,10 @@ export class UserProfileService {
     return this.http.get<UserProfileSearchDTO[]>(`${this.baseUrl}/search/findMultiple` , { params });
   }
 
+  public findUserProfileSearchById(userId: number): Observable<UserProfileSearchDTO> {
+    return this.http.get<UserProfileSearchDTO>(`${this.baseUrl}/search/profileSearch/${userId}`);
+  }
+
   private mapUserProfileReqToFormData(req: UserProfileRequestDTO): FormData{
     let formData: FormData = new FormData();
     formData.append("userId", this.userId.toString());

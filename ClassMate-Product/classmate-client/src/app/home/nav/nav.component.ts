@@ -48,7 +48,6 @@ export class NavComponent implements OnInit{
 
   private getUserProfile(){
     this._userProfileService.getUserProfile(this.userId.toString()).subscribe((resp: UserProfileResponseDTO) => {
-      console.log(resp);
       this.userProfile = resp;
       this.getUserProfilePhoto(this.userProfile.profilePhoto.photoId);
     },

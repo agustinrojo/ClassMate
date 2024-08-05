@@ -4,6 +4,7 @@ import com.example.Security.dto.user.profile.UserProfileSearchDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.entities.User;
 import com.example.Security.entities.UserProfile;
+import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.repositories.UserRepository;
 import org.mapstruct.control.MappingControl;
 import org.springframework.core.io.ByteArrayResource;
@@ -34,6 +35,13 @@ public class UserService {
         return usersList.stream()
                 .map(this::mapUserToSearchDTO)
                 .collect(Collectors.toList());
+    }
+
+    public UserProfileSearchDTO findUserProfileSearchById(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
+
+        return mapUserToSearchDTO(user);
     }
 
     public List<UserProfileSearchDTO> findMultipleUsers(List<Long> userIds){

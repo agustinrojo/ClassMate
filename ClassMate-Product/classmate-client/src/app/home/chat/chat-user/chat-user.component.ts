@@ -10,10 +10,11 @@ import { UserProfileSearchDTO } from '../../../services/dto/user-profile/user-pr
 export class ChatUserComponent implements OnInit{
 
   @Input() public user!: UserProfileSearchDTO;
-  public userProfilePhoto!: string;
+  @Input() public isSelected!: boolean;
+  // public userProfilePhoto!: string;
 
   ngOnInit(): void {
-    console.log(this.user.profilePhoto);
-    this.userProfilePhoto = URL.createObjectURL(this.user.profilePhoto);
+    // console.log(this.user.profilePhoto);
+    // this.userProfilePhoto = URL.createObjectURL(this.user.profilePhoto);
   }
 }

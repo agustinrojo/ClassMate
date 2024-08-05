@@ -126,4 +126,10 @@ export class AuthServiceService {
     }
     return userFistLastName;
   }
+
+  public setNewChatroomIds(chatroomIds: number[]){
+    let user: User = this.getUser();
+    user.chatroomIdsIn = chatroomIds;
+    localStorage.setItem("user", JSON.stringify(user));
+  }
 }

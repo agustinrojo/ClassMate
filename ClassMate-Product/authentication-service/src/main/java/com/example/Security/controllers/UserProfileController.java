@@ -81,6 +81,12 @@ public class UserProfileController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/search/profileSearch/{userId}")
+    public ResponseEntity<UserProfileSearchDTO> findUserProfileSearchById(@PathVariable("userId") Long userId){
+        UserProfileSearchDTO userProfileSearchDTO = userService.findUserProfileSearchById(userId);
+        return new ResponseEntity<>(userProfileSearchDTO, HttpStatus.OK);
+    }
+
     @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateUserProfile(@PathVariable("userId") Long userId,
                                                   @ModelAttribute UserProfileUpdateDTO userProfileUpdateDTO){
