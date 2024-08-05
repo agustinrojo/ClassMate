@@ -1,9 +1,6 @@
 package com.classmate.forum_service.service;
 
-import com.classmate.forum_service.dto.APIResponseDTO;
-import com.classmate.forum_service.dto.ForumExistsDTO;
-import com.classmate.forum_service.dto.ForumResponseDTO;
-import com.classmate.forum_service.dto.IsForumCreatorDTO;
+import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 
 import java.util.List;
@@ -27,6 +24,8 @@ public interface IForumService {
      * @return the forum along with its posts
      */
     APIResponseDTO getForumById(Long id, Long userId);
+
+    ForumSidebarDataDTO getForumSidebarDataById(Long id);
 
     /**
      * Retrieves forums by their title.

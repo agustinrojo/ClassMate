@@ -1,19 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { ForumDTO } from './dto/forum/forum-dto.interface';
 import { ForumApiResponseDTO } from './dto/forum/forum-api-response-dto.interface';
 import { ForumRequestDTO } from './dto/forum/create/forum-request-dto.interface';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { ForumExistsDTO } from './dto/forum/forum-exists-dto.interface';
 import { IsForumCreatorDTO } from './dto/forum/is-forum-creator-dto.interface';
+import { ForumDataSidebar } from './dto/forum/forum-data-dto.interface';
+import { ForumStateService } from './dto/state-services/forum-state.service';
 
 @Injectable({providedIn: 'root'})
 export class ForumService {
   private baseUrl : String = "http://localhost:8080/api/forums";
   private userId : number;
   constructor(private http: HttpClient,
-              private _authService: AuthServiceService) {
+              private _authService: AuthServiceService,
+              private _forumStateService: ForumStateService
+          ) {
                 this.userId = this._authService.getUserId();
                }
 
@@ -23,6 +27,10 @@ export class ForumService {
 
   public getForumById(id: string) : Observable<ForumApiResponseDTO> {
     return this.http.get<ForumApiResponseDTO>(`${this.baseUrl}/${id}?userId=${this.userId}`);
+  }
+
+  public getForumDataSidebarById(id: string) : Observable<ForumDataSidebar> {
+    return this.http.get<ForumDataSidebar>(`${this.baseUrl}/sidebarData/${id}`);
   }
 
   public getForumsByTitle(title: string, page: number = 0, size: number = 10) : Observable<ForumDTO[]> {
@@ -38,7 +46,23 @@ export class ForumService {
   }
 
   public addMember(forumId: number, memberId: number): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/${forumId}/members/${memberId}`, {});
+    return this.http.post<void>(`${this.baseUrl}/${forumId}/members/${memberId}`, {}).pipe(
+      tap(() => {
+        this.updateLocalStorage(forumId, false);
+        this.getForumDataSidebarById(forumId.toString()).subscribe((forum) => {
+          this._forumStateService.setForumCreationEvent(forum);
+        });
+      })
+    );
+  }
+
+  public removeMember(forumId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${forumId}/members/${this.userId}`).pipe(
+      tap(() => {
+        this.updateLocalStorage(forumId, false);
+        this._forumStateService.setForumRemovalEvent(forumId);
+      })
+    );
   }
 
   public saveForum(forum: ForumRequestDTO, creatorId: number) : Observable<ForumDTO> {
@@ -49,9 +73,27 @@ export class ForumService {
     return this.http.put<void>(`${this.baseUrl}/${forumId}`, forumUpdate);
   }
 
-  public deleteForum(forumId : number) {
-    let userId: number = this._authService.getUserId();
-    return this.http.delete<void>(`${this.baseUrl}/${forumId}?userId=${userId}`);
+  public deleteForum(forumId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${forumId}?userId=${this.userId}`).pipe(
+      tap(() => {
+        this.updateLocalStorage(forumId, true);
+        this._forumStateService.setForumRemovalEvent(forumId);
+      })
+    );
+  }
+
+  private updateLocalStorage(forumId: number, isDeletion: boolean): void {
+    let user = JSON.parse(localStorage.getItem("user")!);
+
+    // Remove from subscribed forums
+    user.forumsSubscribed = user.forumsSubscribed.filter((id: number) => id !== forumId);
+
+    if (isDeletion) {
+      // Remove from created forums
+      user.forumsCreated = user.forumsCreated.filter((id: number) => id !== forumId);
+    }
+
+    localStorage.setItem("user", JSON.stringify(user));
   }
 
 }

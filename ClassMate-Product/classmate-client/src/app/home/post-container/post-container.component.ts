@@ -3,7 +3,7 @@ import { PostResponseDTO } from '../../services/dto/post/post-response-dto.inter
 import { AuthServiceService } from '../../auth/auth-service.service';
 import { ForumService } from '../../services/forum.service';
 import { ForumApiResponseDTO } from '../../services/dto/forum/forum-api-response-dto.interface';
-import { ForumData } from '../../services/dto/forum/forum-data-dto.interface';
+import { ForumDataSidebar } from '../../services/dto/forum/forum-data-dto.interface';
 import { PostService } from '../../services/post.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { PostService } from '../../services/post.service';
   styleUrl: './post-container.component.css'
 })
 export class PostContainerComponent implements OnInit{
-  public forums: ForumData[] = [];
+  public forums: ForumDataSidebar[] = [];
   public posts: PostResponseDTO[] = [];
   public noSubscribedForums: boolean = false;
 
@@ -30,7 +30,7 @@ export class PostContainerComponent implements OnInit{
     const forumsSubscribed: number[] = this._authService.getForumsSubscibed();
     for (const forumId of forumsSubscribed) {
       this._forumsService.getForumById(forumId.toString()).subscribe((forum: ForumApiResponseDTO) => {
-        const forumData: ForumData = {
+        const forumData: ForumDataSidebar = {
           id: forum.forum.id,
           title: forum.forum.title
         }

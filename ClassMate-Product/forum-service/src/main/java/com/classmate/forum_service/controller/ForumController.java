@@ -1,9 +1,6 @@
 package com.classmate.forum_service.controller;
 
-import com.classmate.forum_service.dto.APIResponseDTO;
-import com.classmate.forum_service.dto.ForumExistsDTO;
-import com.classmate.forum_service.dto.ForumResponseDTO;
-import com.classmate.forum_service.dto.IsForumCreatorDTO;
+import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.service.IForumService;
 import org.springframework.http.HttpStatus;
@@ -52,6 +49,12 @@ public class ForumController {
                                                        @RequestParam("userId") Long userId) {
         APIResponseDTO apiResponseDTO = forumService.getForumById(id, userId);
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/sidebarData/{id}")
+    public ResponseEntity<ForumSidebarDataDTO> getForumDataSidebarById(@PathVariable Long id) {
+        ForumSidebarDataDTO forumSidebarDataDTO = forumService.getForumSidebarDataById(id);
+        return new ResponseEntity<>(forumSidebarDataDTO, HttpStatus.OK);
     }
 
     /**

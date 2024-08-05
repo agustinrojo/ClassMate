@@ -27,7 +27,6 @@ export class UserProfileService {
 
 
   public getUserProfilePhoto( photoId: number ): Observable<Blob>{
-
     return this.http.get(`${this.baseUrl}/photo/${photoId}`, {responseType: 'blob'})
   }
 

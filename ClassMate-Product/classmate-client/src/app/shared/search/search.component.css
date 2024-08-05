@@ -7,31 +7,27 @@
 }
 
 .search-container {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
+  position: relative;
 }
 
 .nav__search-input {
   width: 100%;
-  padding: 10px 20px; /* Increased padding for more height */
-  padding-left: 20px; /* Adjusted padding calculation */
+  padding: 10px 20px; /* Default padding */
+  padding-left: var(--padding-left, 20px); /* Use CSS variable for dynamic padding */
   border-radius: 20px;
   border: 1px solid #ccc;
-  font-size: 14px; /* Increased font size */
+  font-size: 14px;
   background-color: #2e2e2e;
   color: #fff;
   box-sizing: border-box;
   outline: none;
-  transition: padding-left 0.3s ease;
+  transition: padding-left 0.3s ease, width 0.3s ease; /* Added transition for padding-left and width */
 }
 
 .nav__search-input.has-tag {
-  padding-left: calc(20px + 150px); /* Adjusted based on tag width */
+  padding-left: var(--padding-left, 20px); /* Adjusted based on dynamic padding */
 }
 
 .nav__search-input:focus {
@@ -51,7 +47,7 @@
   border-radius: 12px;
   position: absolute;
   left: 10px;
-  max-width: 150px;
+  max-width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

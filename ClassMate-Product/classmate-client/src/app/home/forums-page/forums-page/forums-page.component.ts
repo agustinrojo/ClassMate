@@ -11,15 +11,17 @@ import { User } from '../../../auth/dto/user-dto.interface';
 })
 export class ForumsPageComponent implements OnInit{
   public forums : ForumDTO[] = [];
-  public forumsScubscribed! : number[];
+  public forumsSubscribed! : number[];
+  public forumsCreated! : number[];
 
   constructor(private _forumService: ForumService, private _router: Router){
 
   }
 
   ngOnInit(): void {
-    this.loadForums();
     this.getForumsSubscribed();
+    this.loadForums();
+
   }
 
   public loadForums() : ForumDTO[]{
@@ -39,10 +41,19 @@ export class ForumsPageComponent implements OnInit{
     this._router.navigate([`forum/${id}`])
   }
 
+  public toggleSubscription(forumId: number): void {
+    if (this.forumsSubscribed.includes(forumId)) {
+      this.unsubscribe(forumId);
+    } else {
+      this.subscribe(forumId);
+    }
+  }
+
   public subscribe(forumId: number){
     let user: User = JSON.parse(localStorage.getItem("user")!);
     return this._forumService.addMember(forumId, user.id)
       .subscribe(() => {
+        this.forumsSubscribed.unshift(forumId);
         user.forumsSubscribed.unshift(forumId);
         localStorage.setItem("user", JSON.stringify(user));
         this.getForumsSubscribed();
@@ -58,7 +69,21 @@ export class ForumsPageComponent implements OnInit{
 
   private getForumsSubscribed(){
     let user: User = JSON.parse(localStorage.getItem("user")!);
-    this.forumsScubscribed = user.forumsSubscribed;
+    this.forumsSubscribed = user.forumsSubscribed;
+    this.forumsCreated = user.forumsCreated;
+  }
+
+  public unsubscribe(forumId: number): void {
+    this._forumService.removeMember(forumId).subscribe(() => {
+      this.getForumsSubscribed();
+    },
+    err => {
+      console.log(err);
+    });
+  }
+
+  public isCreator(forumId: number): boolean {
+    return this.forumsCreated.includes(forumId);
   }
 
 }

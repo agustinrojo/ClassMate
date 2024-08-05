@@ -1,4 +1,4 @@
-export interface ForumData {
+export interface ForumDataSidebar {
   id: number;
   title: string;
 }

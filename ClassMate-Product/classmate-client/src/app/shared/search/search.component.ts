@@ -143,11 +143,17 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   adjustPadding(reset: boolean = false): void {
     if (reset || !this.currentForum) {
-      this.searchInput.nativeElement.style.paddingLeft = '20px';
+      this.searchInput.nativeElement.style.setProperty('--padding-left', '20px');
+      this.searchInput.nativeElement.classList.remove('has-tag');
     } else if (this.forumTag) {
-      const tagWidth = this.forumTag.nativeElement.offsetWidth;
-      this.searchInput.nativeElement.style.paddingLeft = `${tagWidth + 13}px`;
+      this.calculateTagWidth();
+      this.searchInput.nativeElement.classList.add('has-tag');
     }
     this._cdr.detectChanges(); // Ensure the view is updated with the new padding
+  }
+
+  private calculateTagWidth(): void {
+    const tagWidth = this.forumTag.nativeElement.offsetWidth;
+    this.searchInput.nativeElement.style.setProperty('--padding-left', `${tagWidth + 18}px`);
   }
 }

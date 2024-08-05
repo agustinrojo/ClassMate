@@ -1,6 +1,7 @@
 .nav {
   background-color: #141414;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   width: 100%;
@@ -8,6 +9,7 @@
   z-index: 1000;
   border-bottom: 1px solid #444;
 }
+
 
 .nav__container {
   width: 100%;
