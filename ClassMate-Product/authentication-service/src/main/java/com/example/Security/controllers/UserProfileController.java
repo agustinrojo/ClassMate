@@ -2,10 +2,12 @@ package com.example.Security.controllers;
 
 import com.example.Security.dto.user.profile.UserProfileRequestDTO;
 import com.example.Security.dto.user.profile.UserProfileResponseDTO;
+import com.example.Security.dto.user.profile.UserProfileSearchDTO;
 import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.service.UserProfileService;
+import com.example.Security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -15,12 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/profiles")
 @RequiredArgsConstructor
 public class UserProfileController {
     private final UserProfileService service;
+    private final UserService userService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponseDTO> createUserProfile(@ModelAttribute UserProfileRequestDTO requestDTO) {
@@ -58,6 +62,29 @@ public class UserProfileController {
             System.out.println(e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/search/{nickname}")
+    public ResponseEntity<List<UserProfileSearchDTO>> searchUserByNickname(
+            @PathVariable("nickname") String nickname,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        List<UserProfileSearchDTO> users = userService.searchUserByNickname(nickname, page, size);
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/findMultiple")
+    public ResponseEntity<List<UserProfileSearchDTO>> findMulitpleUsers(@RequestParam("userId") List<Long> userIds){
+        List<UserProfileSearchDTO> users = userService.findMultipleUsers(userIds);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/profileSearch/{userId}")
+    public ResponseEntity<UserProfileSearchDTO> findUserProfileSearchById(@PathVariable("userId") Long userId){
+        UserProfileSearchDTO userProfileSearchDTO = userService.findUserProfileSearchById(userId);
+        return new ResponseEntity<>(userProfileSearchDTO, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

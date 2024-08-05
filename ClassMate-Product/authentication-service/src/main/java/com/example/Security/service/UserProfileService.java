@@ -1,9 +1,6 @@
 package com.example.Security.service;
 
-import com.example.Security.dto.user.profile.ProfilePhotoDTO;
-import com.example.Security.dto.user.profile.UserProfileRequestDTO;
-import com.example.Security.dto.user.profile.UserProfileResponseDTO;
-import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
+import com.example.Security.dto.user.profile.*;
 import com.example.Security.entities.Attachment;
 import com.example.Security.entities.User;
 import com.example.Security.entities.UserProfile;
@@ -113,6 +110,8 @@ public class UserProfileService {
                 .build();
     }
 
+
+
     public void updateUserProfile(Long userId, UserProfileUpdateDTO userProfileUpdateDTO) throws IOException {
         User existingUser = userRepository.findById(userId)
                                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
@@ -143,4 +142,5 @@ public class UserProfileService {
         existingUser.setUserProfile(userProfile);
         userRepository.save(existingUser);
     }
+
 }

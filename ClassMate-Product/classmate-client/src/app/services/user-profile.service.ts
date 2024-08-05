@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { UserProfileRequestDTO } from './dto/user-profile/user-profile-request-dto.interface';
@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response-dto.interface';
 import { UserProfileData } from '../home/interfaces/user-profile-data.interface';
 import { UserProfileUpdateDTO } from './dto/user-profile/user-profile-update-dto.interface';
+import { UserProfileSearchDTO } from './dto/user-profile/user-profile-search-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class UserProfileService {
@@ -44,6 +45,21 @@ export class UserProfileService {
     return this.http.put<void>(`${this.baseUrl}/${this.userId}`, formData, { headers });
   }
 
+  public searchChatUserByNickname( nicknameSubstr: string, page: number = 0, size: number = 10 ) : Observable<UserProfileSearchDTO[]>{
+    return this.http.get<UserProfileSearchDTO[]>(`${this.baseUrl}/search/${nicknameSubstr}?page=${page}&size=${size}`);
+  }
+
+  public findMultipleUsers(userIds: number[]): Observable<UserProfileSearchDTO[]> {
+    let params: HttpParams = new HttpParams();
+    userIds.forEach((userId: number) => {
+      params = params.append("userId", userId);
+    });
+    return this.http.get<UserProfileSearchDTO[]>(`${this.baseUrl}/search/findMultiple` , { params });
+  }
+
+  public findUserProfileSearchById(userId: number): Observable<UserProfileSearchDTO> {
+    return this.http.get<UserProfileSearchDTO>(`${this.baseUrl}/search/profileSearch/${userId}`);
+  }
 
   private mapUserProfileReqToFormData(req: UserProfileRequestDTO): FormData{
     let formData: FormData = new FormData();

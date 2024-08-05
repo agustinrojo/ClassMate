@@ -46,14 +46,10 @@ export class AuthServiceService {
     const jwt : string = localStorage.getItem("accessToken") || "";
     const id  : number = user.id || 0;
 
-
-
-
     const req : ValidationRequest = {
       token: jwt,
       userId: id
     }
-
 
     let url: string = `${this.baseUrl}/api/auth/validate-user-token`
     return this.http.post<ValidationResponse>(url, req);
@@ -117,7 +113,9 @@ export class AuthServiceService {
     return JSON.parse(localStorage.getItem("user")!);
   }
 
-
+  public getAccessToken(): string {
+    return (localStorage.getItem("accessToken")!);
+  }
 
   public getUserData(): UserData {
     let user: User = this.getUser();
@@ -127,5 +125,11 @@ export class AuthServiceService {
       legajo   : user.legajo
     }
     return userFistLastName;
+  }
+
+  public setNewChatroomIds(chatroomIds: number[]){
+    let user: User = this.getUser();
+    user.chatroomIdsIn = chatroomIds;
+    localStorage.setItem("user", JSON.stringify(user));
   }
 }

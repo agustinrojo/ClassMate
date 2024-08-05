@@ -17,6 +17,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { ForumSearchResultComponent } from './search/forum-search-result/forum-search-result.component';
 import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
+import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
+import { ChatMessageComponent } from './chat/chat-message/chat-message.component';
+import { ChatUserComponent } from './chat/chat-user/chat-user.component';
+import { ChatModule } from './chat/chat.module';
 
 
 
@@ -28,7 +32,8 @@ import { PostSearchResultComponent } from './search/post-search-result/post-sear
     ProfilePageComponent,
     EditProfileComponent,
     ForumSearchResultComponent,
-    PostSearchResultComponent
+    PostSearchResultComponent,
+
   ],
   imports: [
     CommonModule,
@@ -36,7 +41,8 @@ import { PostSearchResultComponent } from './search/post-search-result/post-sear
     ForumsPageModule,
     SingleForumPageModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    ChatModule
   ],
   exports: [
     HomeComponent

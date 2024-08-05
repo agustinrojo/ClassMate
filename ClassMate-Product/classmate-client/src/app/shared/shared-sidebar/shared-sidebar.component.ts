@@ -62,6 +62,7 @@ export class SharedSidebarComponent implements OnInit {
             } else{
               console.warn(`Forum with ID ${forumId} not found.`);
             }
+
           },
           error: (err) => {
             console.error(`Error loading forum with ID ${forumId}`, err);

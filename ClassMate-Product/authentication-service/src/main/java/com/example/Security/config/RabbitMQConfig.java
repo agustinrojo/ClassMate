@@ -33,6 +33,15 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.delete-forum-subscription-queue}")
     private String deleteForumSubscriptionQueue;
 
+    @Value("${rabbitmq.queue.add-chatroom-queue}")
+    private String addChatroomQueue;
+
+    @Value("${rabbitmq.chat-exchange.routing-key}")
+    private String addChatroomRoutingKey;
+
+    @Value("${rabbitmq.chat-exchange.name}")
+    private String chatExchange;
+
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
 
@@ -85,8 +94,18 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue addChatroomQueue() {
+        return new Queue(addChatroomQueue, true);
+    }
+
+    @Bean
     public TopicExchange forumExchange() {
         return new TopicExchange(exchange);
+    }
+
+    @Bean
+    public TopicExchange chatExchange() {
+        return new TopicExchange(chatExchange);
     }
 
     @Bean
@@ -136,6 +155,15 @@ public class RabbitMQConfig {
                 .to(forumExchange())
                 .with(deleteForumSubscriptionRoutingKey);
     }
+    @Bean
+    public Binding addChatroomBinding() {
+        return BindingBuilder
+                .bind(addChatroomQueue())
+                .to(chatExchange())
+                .with(addChatroomRoutingKey);
+    }
+
+
 
     @Bean
     public MessageConverter converter() {

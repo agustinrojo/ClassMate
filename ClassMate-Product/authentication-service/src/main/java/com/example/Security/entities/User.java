@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -52,8 +53,14 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<JWTToken> tokens;
+
+    @ElementCollection
+    @CollectionTable(name = "chatroom_ids_in", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "chatroom_id_in")
+    private List<Long> chatroomIdsIn = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -142,5 +149,9 @@ public class User implements UserDetails {
 
     public void removeForumCreated(Long forumId){
         this.forumsCreated.removeIf(id -> id.equals(forumId));
+    }
+
+    public void addChatroom(Long chatroomId){
+        chatroomIdsIn.add(chatroomId);
     }
 }
