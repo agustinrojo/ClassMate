@@ -43,6 +43,7 @@ export class CreateForumComponent implements OnInit{
     this._forumService.saveForum(forum, userId)
       .subscribe((f) => {
         user.forumsSubscribed.push(f.id);
+        user.forumsCreated.push(f.id);
         localStorage.setItem("user", JSON.stringify(user));
         let forumData: ForumDataSidebar = {
           id: f.id,
