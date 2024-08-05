@@ -110,6 +110,8 @@ public class UserProfileService {
                 .build();
     }
 
+
+
     public void updateUserProfile(Long userId, UserProfileUpdateDTO userProfileUpdateDTO) throws IOException {
         User existingUser = userRepository.findById(userId)
                                 .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));

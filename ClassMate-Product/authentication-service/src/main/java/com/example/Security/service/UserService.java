@@ -36,6 +36,17 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public List<UserProfileSearchDTO> findMultipleUsers(List<Long> userIds){
+        return userIds.stream()
+                .map((Long userId) -> {
+                    User existingUser = userRepository.findById(userId)
+                            .orElseThrow();
+
+                    return mapUserToSearchDTO(existingUser);
+                })
+                .toList();
+    }
+
     private UserProfileSearchDTO mapUserToSearchDTO(User user){
         return UserProfileSearchDTO.builder()
                 .userId(user.getId())

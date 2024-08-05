@@ -75,6 +75,12 @@ public class UserProfileController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/search/findMultiple")
+    public ResponseEntity<List<UserProfileSearchDTO>> findMulitpleUsers(@RequestParam("userId") List<Long> userIds){
+        List<UserProfileSearchDTO> users = userService.findMultipleUsers(userIds);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateUserProfile(@PathVariable("userId") Long userId,
                                                   @ModelAttribute UserProfileUpdateDTO userProfileUpdateDTO){

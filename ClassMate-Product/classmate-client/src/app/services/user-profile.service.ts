@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { UserProfileRequestDTO } from './dto/user-profile/user-profile-request-dto.interface';
@@ -50,6 +50,13 @@ export class UserProfileService {
     return this.http.get<UserProfileSearchDTO[]>(`${this.baseUrl}/search/${nicknameSubstr}?page=${page}&size=${size}`);
   }
 
+  public findMultipleUsers(userIds: number[]): Observable<UserProfileSearchDTO[]> {
+    let params: HttpParams = new HttpParams();
+    userIds.forEach((userId: number) => {
+      params = params.append("userId", userId);
+    });
+    return this.http.get<UserProfileSearchDTO[]>(`${this.baseUrl}/search/findMultiple` , { params });
+  }
 
   private mapUserProfileReqToFormData(req: UserProfileRequestDTO): FormData{
     let formData: FormData = new FormData();

@@ -6,28 +6,38 @@
       </div>
 
       <div class="search-results mt-5" *ngIf="searchResults.length > 0">
-        <div  class="search-result-item" *ngFor="let result of searchResults">
+        <div  class="search-result-item" *ngFor="let user of searchResults" (click)="setSelectedUser(user)">
           <div class="result-content">
-            <span class="result-title">{{ result.nickname }}</span>
-            <span class="result-members" >{{ result.userId }}</span>
+            <span class="result-title">{{ user.nickname }}</span>
+            <span class="result-members" >{{ user.userId }}</span>
           </div>
         </div>
       </div>
       <div class="users-list-container">
-        <h2>Chats</h2>
+        <div *ngIf="knownUsers.length > 0">
+          <h2>Chats</h2>
+          <app-chat-user *ngFor="let user of knownUsers" [user]="user" (click)="setSelectedUser(user)"></app-chat-user>
+        </div>
       </div>
     </div>
     <div class="chat-area">
-      <div id="chat-messages" >
-          <!-- <app-message ></app-message> -->
+      <div *ngIf="selectedUser != undefined">
+        <div class="chat-header">
+          <h5 id="chat-header-text">{{ selectedUser.nickname }}</h5>
+      </div>
+      <br>
+        <div id="chat-messages" >
+            <app-chat-message *ngFor="let message of messagesList" [isSender]="message.senderId == loggedUser.id" [content]="message.content"></app-chat-message>
+        </div>
+
+        <form id="messageForm" name="messageForm" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
+            <div class="message-input">
+                <input autocomplete="off" type="text" id="message" placeholder="Type your message..." formControlName="messageInput">
+                <button type="submit">Send</button>
+            </div>
+        </form>
       </div>
 
-      <form id="messageForm" name="messageForm" >
-          <div class="message-input">
-              <input autocomplete="off" type="text" id="message" placeholder="Type your message...">
-              <button type="submit">Send</button>
-          </div>
-      </form>
 
     </div>
   </div>

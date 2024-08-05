@@ -27,7 +27,7 @@ public class ChatEventsPublisher {
     }
 
     public void publishAddChatroom(AddChatroomDTO addChatroomDTO){
-        LOGGER.info(String.format("Sending addChatroomEvent. userId: %d, chatId: %s", addChatroomDTO.getUserId(), addChatroomDTO.getChatId()));
+        LOGGER.info(String.format("Sending addChatroomEvent. userId: %d, chatId: %d", addChatroomDTO.getUserId(), addChatroomDTO.getChatroomId()));
         this.rabbitTemplate.convertAndSend(chatExchange, addChatroomRoutingKey, addChatroomDTO);
     }
 

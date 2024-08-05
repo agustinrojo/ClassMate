@@ -7,4 +7,5 @@ export interface User{
   email:string;
   forumsSubscribed: number[];
   forumsCreated: number[];
+  chatroomIdsIn: number[];
 }
