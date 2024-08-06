@@ -16,7 +16,7 @@
       <div class="users-list-container">
         <div *ngIf="knownUsers.length > 0">
           <h2>Chats</h2>
-          <app-chat-user *ngFor="let user of knownUsers" [user]="user" [isSelected]="user.userId == selectedUser?.userId" (click)="setSelectedUser(user)"></app-chat-user>
+          <app-chat-user *ngFor="let user of knownUsers" [user]="user" [isSelected]="user.userId == selectedUser?.userId" [hasNewMessage]="newMessagesUserIds.has(user.userId)" (click)="setSelectedUser(user)"></app-chat-user>
         </div>
       </div>
     </div>

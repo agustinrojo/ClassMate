@@ -11,6 +11,7 @@ export class ChatUserComponent implements OnInit{
 
   @Input() public user!: UserProfileSearchDTO;
   @Input() public isSelected!: boolean;
+  @Input() public hasNewMessage!: boolean;
   // public userProfilePhoto!: string;
 
   ngOnInit(): void {

@@ -61,15 +61,8 @@ export class ChatService {
     return this.messageSubject.asObservable();
   }
 
-  public loadMessages(senderId: number, receiverId: number) {
-    this.http.get<ChatMessageOutputDTO[]>(`${this.apiBaseUrl}/${senderId}/${receiverId}`).subscribe({
-      next: (chatMessages: ChatMessageOutputDTO[]) => {
-        this.messageSubject.next(chatMessages);
-      },
-      error: (e) => {
-        console.log(e);
-      }
-    })
+  public loadMessages(senderId: number, receiverId: number): Observable<ChatMessageOutputDTO[]> {
+    return this.http.get<ChatMessageOutputDTO[]>(`${this.apiBaseUrl}/${senderId}/${receiverId}`);
   }
 
   public getChatroomsBySender(): Observable<ChatRoomOutputDTO[]>{

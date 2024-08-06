@@ -21,6 +21,7 @@ export class ChatContainerComponent implements OnInit{
   public knownUsers: UserProfileSearchDTO[] = [];
   public messagesList: ChatMessageOutputDTO[] = [];
   public selectedUser: UserProfileSearchDTO | undefined;
+  public newMessagesUserIds: Set<number> = new Set();
   public chatroomIds: number[] = [];
   public messageForm!: FormGroup;
   public loggedUser!: User;
@@ -39,7 +40,6 @@ export class ChatContainerComponent implements OnInit{
     this.loggedUser = this._authService.getUser();
     this.initMessageForm();
     this.getChatrooms();
-
     this.listenMessages();
   }
 
@@ -86,17 +86,47 @@ export class ChatContainerComponent implements OnInit{
 
   public setSelectedUser(receiver: UserProfileSearchDTO){
     this.selectedUser = receiver;
+    this.readMessage(receiver.userId);
     this.searchQuery = "";
     this.searchResults = [];
-    this._chatService.loadMessages(this.loggedUser.id, receiver.userId);
+    this.getMessages(receiver.userId);
   }
 
   private listenMessages(){
     this._chatService.getMessageSubject().subscribe((messages: ChatMessageOutputDTO[]) => {
       console.log(messages);
       this.getUnknownUsers(messages);
-       this.messagesList = messages;
+
+
+      messages.forEach((message: ChatMessageOutputDTO) => {
+        if (!this.checkKnownUser(message.senderId) && message.senderId != this.loggedUser.id) {
+          this.getNewUser(message.senderId);
+        } else {
+          this.moveUserToTop(message.senderId);
+          this.addUserAsNewMessage(message.senderId);
+        }
+      });
+
+      this.messagesList = messages;
     })
+  }
+
+  private moveUserToTop(userId: number) {
+    const userIndex = this.knownUsers.findIndex(user => user.userId === userId);
+    if (userIndex > -1) {
+      const [user] = this.knownUsers.splice(userIndex, 1);
+      this.knownUsers.unshift(user);
+    }
+  }
+
+  private addUserAsNewMessage(userId: number) {
+    this.newMessagesUserIds.add(userId);
+  }
+
+  private readMessage(userId: number){
+    if(this.newMessagesUserIds.has(userId)){
+      this.newMessagesUserIds.delete(userId);
+    }
   }
 
   private getChatrooms(){
@@ -161,6 +191,15 @@ export class ChatContainerComponent implements OnInit{
     this.messageForm = this._fb.group({
       messageInput: ["", Validators.required, []]
 
+    })
+  }
+
+  private getMessages(receiverId: number){
+    this._chatService.loadMessages(this.loggedUser.id, receiverId).subscribe((messages: ChatMessageOutputDTO[]) => {
+      this.messagesList = messages;
+    },
+    err => {
+      console.log(err);
     })
   }
 
