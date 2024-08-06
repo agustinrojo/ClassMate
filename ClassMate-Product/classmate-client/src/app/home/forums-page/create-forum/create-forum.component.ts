@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { ForumRequestDTO } from '../../../services/dto/forum/create/forum-request-dto.interface';
 import { User } from '../../../auth/dto/user-dto.interface';
 import { delay } from 'rxjs';
+import { ForumData } from '../../interfaces/forum-data.interface';
+import { ForumDataSidebar } from '../../../services/dto/forum/forum-data-dto.interface';
+import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
 
 @Component({
   selector: 'app-create-forum',
@@ -18,7 +21,8 @@ export class CreateForumComponent implements OnInit{
 
   constructor(private _forumService: ForumService,
               private _fb: FormBuilder,
-              private _router: Router
+              private _router: Router,
+              private forumStateService: ForumStateService
   ) { }
 
   ngOnInit(): void {
@@ -37,8 +41,16 @@ export class CreateForumComponent implements OnInit{
     let user: User = JSON.parse(localStorage.getItem("user")!);
     let userId = user.id;
     this._forumService.saveForum(forum, userId)
-      .subscribe(() => {
-        this._router.navigate(["forums"]);
+      .subscribe((f) => {
+        user.forumsSubscribed.push(f.id);
+        user.forumsCreated.push(f.id);
+        localStorage.setItem("user", JSON.stringify(user));
+        let forumData: ForumDataSidebar = {
+          id: f.id,
+          title: f.title
+        }
+        this.forumStateService.setForumCreationEvent(forumData);
+        this._router.navigate([`forum/${f.id}`]);
       },
     async err => {
       this.showErr = true;

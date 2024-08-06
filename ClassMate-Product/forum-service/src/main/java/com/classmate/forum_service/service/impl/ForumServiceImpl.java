@@ -77,6 +77,15 @@ public class ForumServiceImpl implements IForumService {
         return responseDTO;
     }
 
+    @Override
+    public ForumSidebarDataDTO getForumSidebarDataById(Long id) {
+        LOGGER.info("Getting forum sidebar data by id...");
+        Forum forum = forumRepository.findById(id)
+                .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
+
+        return new ForumSidebarDataDTO(id, forum.getTitle());
+    }
+
     /**
      * {@inheritDoc}
      */
