@@ -11,12 +11,17 @@ export class ChatUserComponent implements OnInit{
 
   @Input() public user!: UserProfileResponseDTO;
   @Input() public isSelected!: boolean;
+  @Input() public hasNewMessage!: boolean;
+
   public userProfilePhotoUrl!: string;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private _userProfileService: UserProfileService
   ) {}
+
+
+
 
   ngOnInit(): void {
     if (this.user.profilePhoto) {

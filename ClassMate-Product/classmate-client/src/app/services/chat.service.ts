@@ -4,7 +4,7 @@ import { CompatClient, IMessage, Stomp } from '@stomp/stompjs';
 import { AuthServiceService } from '../auth/auth-service.service';
 import SockJS from 'sockjs-client';
 import { ChatMessageOutputDTO } from './dto/chat/chat-message/chat-message-output-dto.interface';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ChatMessageInputDTO } from './dto/chat/chat-message/chat-message-input-dto.interface';
 import { ChatRoomOutputDTO } from './dto/chat/chatroom/chatroom-output-dto.interface';
 import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response-dto.interface';
@@ -18,7 +18,7 @@ export class ChatService {
   private socket!: WebSocket;
   private stompClient!: CompatClient;
   private loggedUserId!: number;
-  private messageSubject: BehaviorSubject<ChatMessageOutputDTO[]> = new BehaviorSubject<ChatMessageOutputDTO[]>([]);
+  private messageSubject: Subject<ChatMessageOutputDTO> = new Subject<ChatMessageOutputDTO>();
 
   constructor(
     private http:HttpClient,
@@ -44,9 +44,7 @@ export class ChatService {
       this.stompClient.subscribe(`/user/${this.loggedUserId}/queue/messages`, (message: IMessage) => {
         const messageContent: ChatMessageOutputDTO = JSON.parse(message.body);
         console.log("messageContent", messageContent);
-        const currentMessages = this.messageSubject.getValue();
-        currentMessages.push(messageContent);
-        this.messageSubject.next(currentMessages);
+        this.messageSubject.next(messageContent);
       })
     })
   }
@@ -59,19 +57,12 @@ export class ChatService {
     );
   }
 
-  public getMessageSubject(): Observable<ChatMessageOutputDTO[]> {
+  public getMessageSubject(): Observable<ChatMessageOutputDTO> {
     return this.messageSubject.asObservable();
   }
 
-  public loadMessages(senderId: number, receiverId: number) {
-    this.http.get<ChatMessageOutputDTO[]>(`${this.apiBaseUrl}/${senderId}/${receiverId}`).subscribe({
-      next: (chatMessages: ChatMessageOutputDTO[]) => {
-        this.messageSubject.next(chatMessages);
-      },
-      error: (e) => {
-        console.log(e);
-      }
-    })
+  public loadMessages(senderId: number, receiverId: number): Observable<ChatMessageOutputDTO[]> {
+    return this.http.get<ChatMessageOutputDTO[]>(`${this.apiBaseUrl}/${senderId}/${receiverId}`);
   }
 
   public getChatroomsBySender(): Observable<ChatRoomOutputDTO[]>{
@@ -87,5 +78,9 @@ export class ChatService {
 
     return this.http.get<UserProfileResponseDTO[]>(url, { responseType: 'json' });
   }
+
+  // public clearMessages(){
+  //   this.messageSubject = new BehaviorSubject<ChatMessageOutputDTO[]>([]);
+  // }
 
 }

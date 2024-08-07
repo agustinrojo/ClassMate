@@ -21,6 +21,7 @@ export class ChatContainerComponent implements OnInit{
   public knownUsers: UserProfileResponseDTO[] = [];
   public messagesList: ChatMessageOutputDTO[] = [];
   public selectedUser: UserProfileResponseDTO | undefined;
+  public newMessagesUserIds: Set<number> = new Set();
   public chatroomIds: number[] = [];
   public messageForm!: FormGroup;
   public loggedUser!: User;
@@ -85,17 +86,44 @@ export class ChatContainerComponent implements OnInit{
 
   public setSelectedUser(receiver: UserProfileResponseDTO){
     this.selectedUser = receiver;
+    this.readMessage(receiver.userId);
     this.searchQuery = "";
     this.searchResults = [];
-    this._chatService.loadMessages(this.loggedUser.id, receiver.userId);
+    this.getMessages(receiver.userId);
   }
 
+
+
   private listenMessages(){
-    this._chatService.getMessageSubject().subscribe((messages: ChatMessageOutputDTO[]) => {
-      console.log(messages);
-      this.getUnknownUsers(messages);
-       this.messagesList = messages;
+    this._chatService.getMessageSubject().subscribe((message: ChatMessageOutputDTO) => {
+      console.log(message);
+      this.getUnknownUsers(message);
+      // this.getNewUser(message.senderId);
+      this.moveUserToTop(message.senderId);
+      this.addUserAsNewMessage(message.senderId);
+
+
+      this.messagesList.push(message);
+
     })
+  }
+
+  private moveUserToTop(userId: number) {
+    const userIndex = this.knownUsers.findIndex(user => user.userId === userId);
+    if (userIndex > -1) {
+      const [user] = this.knownUsers.splice(userIndex, 1);
+      this.knownUsers.unshift(user);
+    }
+  }
+
+  private addUserAsNewMessage(userId: number) {
+    this.newMessagesUserIds.add(userId);
+  }
+
+  private readMessage(userId: number){
+    if(this.newMessagesUserIds.has(userId)){
+      this.newMessagesUserIds.delete(userId);
+    }
   }
 
   private getChatrooms(){
@@ -107,17 +135,17 @@ export class ChatContainerComponent implements OnInit{
     })
   }
 
-  private getUnknownUsers(messages: ChatMessageOutputDTO[]){
-    let unknownUserIds: number[] = [];
+  private getUnknownUsers(message: ChatMessageOutputDTO){
+    let unknownUserIds: number | undefined = undefined;
 
-    messages.forEach((message: ChatMessageOutputDTO) => {
-      if( !this.checkKnownUser(message.senderId)  && message.senderId != this.loggedUser.id){
-        unknownUserIds.push(message.senderId);
-      }
-    })
+    if( !this.checkKnownUser(message.senderId)  && message.senderId != this.loggedUser.id){
+      console.log(message.senderId);
+      unknownUserIds = message.senderId;
+    }
 
-    if(unknownUserIds.length != 0){
-      this._userProfileService.findMultipleUsers(unknownUserIds).subscribe((users: UserProfileResponseDTO[]) => {
+    if(unknownUserIds != undefined){
+      this._userProfileService.findMultipleUsers([unknownUserIds]).subscribe((users: UserProfileResponseDTO[]) => {
+
         this.knownUsers.push(...users);
       },
       err => {
@@ -158,6 +186,16 @@ export class ChatContainerComponent implements OnInit{
     this.messageForm = this._fb.group({
       messageInput: ["", Validators.required, []]
 
+    })
+  }
+
+  private getMessages(receiverId: number){
+    this._chatService.loadMessages(this.loggedUser.id, receiverId).subscribe((messages: ChatMessageOutputDTO[]) => {
+      console.log(messages);
+      this.messagesList = messages;
+    },
+    err => {
+      console.log(err);
     })
   }
 

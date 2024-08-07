@@ -30,3 +30,9 @@
 .user-item span {
   font-weight: bold;
 }
+
+.new-message-indicator {
+  color: red;
+  font-weight: bold;
+  margin-left: 10px;
+}
