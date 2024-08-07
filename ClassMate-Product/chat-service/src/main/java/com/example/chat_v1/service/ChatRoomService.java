@@ -3,7 +3,7 @@ package com.example.chat_v1.service;
 import com.example.chat_v1.client.IChatClient;
 import com.example.chat_v1.dto.chatroom.ChatRoomOutputDTO;
 import com.example.chat_v1.dto.publisher.AddChatroomDTO;
-import com.example.chat_v1.dto.user.UserProfileSearchDTO;
+import com.example.chat_v1.dto.user.UserProfileResponseDTO;
 import com.example.chat_v1.entity.ChatRoom;
 import com.example.chat_v1.exception.ResourceNotFoundException;
 import com.example.chat_v1.repository.ChatRoomRepository;
@@ -75,7 +75,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public List<UserProfileSearchDTO> getUsersByChatrooms(List<Long> chatroomIds, String token){
+    public List<UserProfileResponseDTO> getUsersByChatrooms(List<Long> chatroomIds, String token){
         String bearerToken = "Bearer " + token;
         List<ChatRoom> chatRooms = chatRoomRepository.findByIdIn(chatroomIds);
         if (chatRooms.isEmpty()){
@@ -90,7 +90,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    private String createChatRoom(Long senderId, Long receiverId){
+    protected String createChatRoom(Long senderId, Long receiverId){
         String chatId = String.format("%d_%d", senderId, receiverId);
         ChatRoom senderReceiver = ChatRoom.builder()
                 .chatId(chatId)

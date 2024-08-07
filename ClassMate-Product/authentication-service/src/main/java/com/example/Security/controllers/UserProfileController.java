@@ -2,7 +2,6 @@ package com.example.Security.controllers;
 
 import com.example.Security.dto.user.profile.UserProfileRequestDTO;
 import com.example.Security.dto.user.profile.UserProfileResponseDTO;
-import com.example.Security.dto.user.profile.UserProfileSearchDTO;
 import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
@@ -25,6 +24,7 @@ import java.util.List;
 public class UserProfileController {
     private final UserProfileService service;
     private final UserService userService;
+    private final UserProfileService userProfileService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponseDTO> createUserProfile(@ModelAttribute UserProfileRequestDTO requestDTO) {
@@ -65,26 +65,26 @@ public class UserProfileController {
     }
 
     @GetMapping("/search/{nickname}")
-    public ResponseEntity<List<UserProfileSearchDTO>> searchUserByNickname(
+    public ResponseEntity<List<UserProfileResponseDTO>> searchUserByNickname(
             @PathVariable("nickname") String nickname,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        List<UserProfileSearchDTO> users = userService.searchUserByNickname(nickname, page, size);
+        List<UserProfileResponseDTO> users = userService.searchUserByNickname(nickname, page, size);
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/search/findMultiple")
-    public ResponseEntity<List<UserProfileSearchDTO>> findMulitpleUsers(@RequestParam("userId") List<Long> userIds){
-        List<UserProfileSearchDTO> users = userService.findMultipleUsers(userIds);
+    public ResponseEntity<List<UserProfileResponseDTO>> findMulitpleUsers(@RequestParam("userId") List<Long> userIds){
+        List<UserProfileResponseDTO> users = userService.findMultipleUsers(userIds);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/search/profileSearch/{userId}")
-    public ResponseEntity<UserProfileSearchDTO> findUserProfileSearchById(@PathVariable("userId") Long userId){
-        UserProfileSearchDTO userProfileSearchDTO = userService.findUserProfileSearchById(userId);
-        return new ResponseEntity<>(userProfileSearchDTO, HttpStatus.OK);
+    public ResponseEntity<UserProfileResponseDTO> findUserProfileSearchById(@PathVariable("userId") Long userId){
+        UserProfileResponseDTO userProfileResponseDTO = userService.findUserProfileSearchById(userId);
+        return new ResponseEntity<>(userProfileResponseDTO, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

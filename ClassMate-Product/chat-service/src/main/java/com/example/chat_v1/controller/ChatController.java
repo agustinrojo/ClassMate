@@ -3,7 +3,7 @@ package com.example.chat_v1.controller;
 import com.example.chat_v1.dto.chat.ChatMessageInputDTO;
 import com.example.chat_v1.dto.chat.ChatMessageOutputDTO;
 import com.example.chat_v1.dto.chatroom.ChatRoomOutputDTO;
-import com.example.chat_v1.dto.user.UserProfileSearchDTO;
+import com.example.chat_v1.dto.user.UserProfileResponseDTO;
 import com.example.chat_v1.service.ChatMessageService;
 import com.example.chat_v1.service.ChatRoomService;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:4300"})
 @Controller
 public class ChatController {
 
@@ -64,9 +65,9 @@ public class ChatController {
     }
 
     @GetMapping("/api/messages/chatrooms")
-    public ResponseEntity<List<UserProfileSearchDTO>> getChatroomsUsers(@RequestParam("chatroomId") List<Long> chatroomIds,
-                                                                        @RequestParam("token") String token){
-        List<UserProfileSearchDTO> users = chatRoomService.getUsersByChatrooms(chatroomIds, token);
-        return new ResponseEntity<List<UserProfileSearchDTO>>(users, HttpStatus.OK);
+    public ResponseEntity<List<UserProfileResponseDTO>> getChatroomsUsers(@RequestParam("chatroomId") List<Long> chatroomIds,
+                                                                          @RequestParam("token") String token){
+        List<UserProfileResponseDTO> users = chatRoomService.getUsersByChatrooms(chatroomIds, token);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

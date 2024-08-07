@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserProfileService {
@@ -67,6 +68,8 @@ public class UserProfileService {
 
         return getUserProfileResponseDTO(user, userProfile);
     }
+
+
 
     @Transactional(readOnly = true)
     public Attachment getProfilePhotoById(Long photoId) {

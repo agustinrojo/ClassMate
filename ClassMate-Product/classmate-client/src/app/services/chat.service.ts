@@ -7,7 +7,7 @@ import { ChatMessageOutputDTO } from './dto/chat/chat-message/chat-message-outpu
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ChatMessageInputDTO } from './dto/chat/chat-message/chat-message-input-dto.interface';
 import { ChatRoomOutputDTO } from './dto/chat/chatroom/chatroom-output-dto.interface';
-import { UserProfileSearchDTO } from './dto/user-profile/user-profile-search-dto.interface';
+import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response-dto.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,8 @@ export class ChatService {
     private _authService: AuthServiceService
   ) {
     this.loggedUserId = this._authService.getUserId();
+
+
     this.initWSConnection();
   }
 
@@ -73,19 +75,17 @@ export class ChatService {
   }
 
   public getChatroomsBySender(): Observable<ChatRoomOutputDTO[]>{
+    console.log(this.loggedUserId);
     return this.http.get<ChatRoomOutputDTO[]>(`${this.apiBaseUrl}/chatroom/${this.loggedUserId}`);
   }
 
-  public getKnownUsers(chatroomIds : number[] ): Observable<UserProfileSearchDTO[]> {
+  public getKnownUsers(chatroomIds : number[] ): Observable<UserProfileResponseDTO[]> {
     let accessToken : string = this._authService.getAccessToken();
-    let params: HttpParams = new HttpParams();
-    params = params.append("token", accessToken);
-    chatroomIds.forEach((chatroomId: number) => {
+    // let params: HttpParams = new HttpParams();
+    let chatroomIdsParam = chatroomIds.join(',');
+    let url = `${this.apiBaseUrl}/chatrooms?chatroomId=${chatroomIdsParam}&token=${accessToken}`;
 
-      params = params.append("chatroomId", chatroomId);
-    })
-    return this.http.get<UserProfileSearchDTO[]>(`${this.apiBaseUrl}/chatrooms`, { params });
-
+    return this.http.get<UserProfileResponseDTO[]>(url, { responseType: 'json' });
   }
 
 }

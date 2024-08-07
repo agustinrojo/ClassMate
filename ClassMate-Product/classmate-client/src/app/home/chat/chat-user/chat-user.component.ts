@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ChatUserDTO } from '../../../services/dto/chat/chat-user/chat-user-dto.interface';
-import { UserProfileSearchDTO } from '../../../services/dto/user-profile/user-profile-search-dto.interface';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { UserProfileResponseDTO } from '../../../services/dto/user-profile/user-profile-response-dto.interface';
+import { UserProfileService } from '../../../services/user-profile.service';
 
 @Component({
   selector: 'app-chat-user',
@@ -9,12 +9,29 @@ import { UserProfileSearchDTO } from '../../../services/dto/user-profile/user-pr
 })
 export class ChatUserComponent implements OnInit{
 
-  @Input() public user!: UserProfileSearchDTO;
+  @Input() public user!: UserProfileResponseDTO;
   @Input() public isSelected!: boolean;
-  // public userProfilePhoto!: string;
+  public userProfilePhotoUrl!: string;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private _userProfileService: UserProfileService
+  ) {}
 
   ngOnInit(): void {
-    // console.log(this.user.profilePhoto);
-    // this.userProfilePhoto = URL.createObjectURL(this.user.profilePhoto);
+    if (this.user.profilePhoto) {
+      this.getUserProfilePhoto(this.user.profilePhoto.photoId);
+    }
   }
+
+  private getUserProfilePhoto(photoId: number) {
+    this._userProfileService.getUserProfilePhoto(photoId).subscribe((resp: Blob) => {
+      this.userProfilePhotoUrl = URL.createObjectURL(resp);
+    },
+  err => {
+    console.log(err);
+  })
+  }
+
+
 }

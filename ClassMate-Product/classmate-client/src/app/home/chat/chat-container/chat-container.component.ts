@@ -1,7 +1,6 @@
 import { User } from './../../../auth/dto/user-dto.interface';
 import { Component, OnInit } from '@angular/core';
 import { UserProfileService } from '../../../services/user-profile.service';
-import { UserProfileSearchDTO } from '../../../services/dto/user-profile/user-profile-search-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { ChatService } from '../../../services/chat.service';
 import { ChatRoomOutputDTO } from '../../../services/dto/chat/chatroom/chatroom-output-dto.interface';
@@ -9,6 +8,7 @@ import { ChatMessageOutputDTO } from '../../../services/dto/chat/chat-message/ch
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChatMessageInputDTO } from '../../../services/dto/chat/chat-message/chat-message-input-dto.interface';
 import { delay } from 'rxjs';
+import { UserProfileResponseDTO } from '../../../services/dto/user-profile/user-profile-response-dto.interface';
 
 @Component({
   selector: 'app-chat-container',
@@ -17,10 +17,10 @@ import { delay } from 'rxjs';
 })
 export class ChatContainerComponent implements OnInit{
   public searchQuery: string = "";
-  public searchResults: UserProfileSearchDTO[] = [];
-  public knownUsers: UserProfileSearchDTO[] = [];
+  public searchResults: UserProfileResponseDTO[] = [];
+  public knownUsers: UserProfileResponseDTO[] = [];
   public messagesList: ChatMessageOutputDTO[] = [];
-  public selectedUser: UserProfileSearchDTO | undefined;
+  public selectedUser: UserProfileResponseDTO | undefined;
   public chatroomIds: number[] = [];
   public messageForm!: FormGroup;
   public loggedUser!: User;
@@ -39,7 +39,6 @@ export class ChatContainerComponent implements OnInit{
     this.loggedUser = this._authService.getUser();
     this.initMessageForm();
     this.getChatrooms();
-
     this.listenMessages();
   }
 
@@ -47,10 +46,10 @@ export class ChatContainerComponent implements OnInit{
     const target = $event.target as HTMLInputElement;
     this.searchQuery = target ? target.value : '';
     if(this.searchQuery.length > 2){
-      this._userProfileService.searchChatUserByNickname(this.searchQuery).subscribe((resp: UserProfileSearchDTO[]) => {
+      this._userProfileService.searchChatUserByNickname(this.searchQuery).subscribe((resp: UserProfileResponseDTO[]) => {
         console.log(resp);
         this.searchResults = resp;
-        this.searchResults = this.searchResults.filter((u: UserProfileSearchDTO) => u.userId != this.loggedUser.id);
+        this.searchResults = this.searchResults.filter((u: UserProfileResponseDTO) => u.userId != this.loggedUser.id);
       })
     } else {
       this.searchResults = [];
@@ -84,7 +83,7 @@ export class ChatContainerComponent implements OnInit{
 
 
 
-  public setSelectedUser(receiver: UserProfileSearchDTO){
+  public setSelectedUser(receiver: UserProfileResponseDTO){
     this.selectedUser = receiver;
     this.searchQuery = "";
     this.searchResults = [];
@@ -113,13 +112,12 @@ export class ChatContainerComponent implements OnInit{
 
     messages.forEach((message: ChatMessageOutputDTO) => {
       if( !this.checkKnownUser(message.senderId)  && message.senderId != this.loggedUser.id){
-        console.log(message.senderId);
         unknownUserIds.push(message.senderId);
       }
     })
 
     if(unknownUserIds.length != 0){
-      this._userProfileService.findMultipleUsers(unknownUserIds).subscribe((users: UserProfileSearchDTO[]) => {
+      this._userProfileService.findMultipleUsers(unknownUserIds).subscribe((users: UserProfileResponseDTO[]) => {
         this.knownUsers.push(...users);
       },
       err => {
@@ -129,25 +127,24 @@ export class ChatContainerComponent implements OnInit{
   }
 
   private checkKnownUser(userId: number): boolean {
-    return this.knownUsers.some((user: UserProfileSearchDTO) => user.userId === userId);
+    return this.knownUsers.some((user: UserProfileResponseDTO) => user.userId === userId);
   }
 
   private getKnownUsers() {
-    console.log("entro a getKnownUsers()", this.chatroomIds.length)
-    if(this.chatroomIds.length > 0){
+    if (this.chatroomIds.length > 0) {
+      this._chatService.getKnownUsers(this.chatroomIds).subscribe((userProfiles: UserProfileResponseDTO[]) => {
 
-      this._chatService.getKnownUsers(this.chatroomIds).subscribe((userProfiles :  UserProfileSearchDTO[]) => {
-        console.log(userProfiles);
         this.knownUsers = userProfiles;
-      },
-    err => {
-      console.log(err);
-    });
+      }, err => {
+        console.log(err);
+      });
     }
   }
 
+
+
   private getNewUser(userId: number){
-    this._userProfileService.findUserProfileSearchById(userId).subscribe((u: UserProfileSearchDTO) => {
+    this._userProfileService.findUserProfileSearchById(userId).subscribe((u: UserProfileResponseDTO) => {
       console.log(u);
       this.knownUsers.unshift(u);
       this.setSelectedUser(u);
