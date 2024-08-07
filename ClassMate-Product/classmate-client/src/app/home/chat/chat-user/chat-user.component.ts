@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UserProfileResponseDTO } from '../../../services/dto/user-profile/user-profile-response-dto.interface';
 import { UserProfileService } from '../../../services/user-profile.service';
 
@@ -16,10 +16,9 @@ export class ChatUserComponent implements OnInit{
   public userProfilePhotoUrl!: string;
 
   constructor(
+
     private _userProfileService: UserProfileService
   ) {}
-
-
 
 
   ngOnInit(): void {

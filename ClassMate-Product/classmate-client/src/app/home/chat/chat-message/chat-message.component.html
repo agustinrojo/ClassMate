@@ -1,6 +1,8 @@
-<!-- <div [ngClass]="isSender ? 'message sender' : 'message receiver'">
-  <p>{{ content }}</p>
-</div> -->
-<div [ngClass]="{'message sent': isSender, 'message received': !isSender}">
-  <p>{{ content }}</p>
+<div class="message-container" [ngClass]="{'sent': isSender}">
+  <div class="message" [ngClass]="{'sent': isSender, 'received': !isSender}">
+    <p class="message-content">
+      {{ content }}
+      <span class="timestamp">{{ timestamp | date:'HH:mm' }}</span>
+    </p>
+  </div>
 </div>

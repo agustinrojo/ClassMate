@@ -4,17 +4,15 @@
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  border: 1px solid transparent;
+  transition: background-color 0.2s, border-color 0.2s;
+  /* border: 1px solid transparent; */
+
 }
 
+.user-item:hover,
 .user-item.active {
   background-color: #2f2f2f;
   border-color: #0078d4;
-}
-
-.user-item:hover {
-  background-color: #1e1e1e;
 }
 
 .user-item img {
@@ -22,6 +20,7 @@
   height: 40px;
   border-radius: 50%;
   margin-right: 10px;
+  transition: none; /* Prevent any unintended scaling */
 }
 
 .user-item span {

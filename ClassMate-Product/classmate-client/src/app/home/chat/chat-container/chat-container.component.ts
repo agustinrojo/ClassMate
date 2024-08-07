@@ -69,6 +69,11 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
   }
 
   public sendMessage() {
+    const messageContent = this.messageForm.get("messageInput")!.value.trim();
+    if (!messageContent) {
+      return; // Do not send the message if it is empty or contains only spaces
+    }
+
     let newMessage: ChatMessageInputDTO = {
       senderId: this.loggedUser.id,
       receiverId: this.selectedUser!.userId,
@@ -92,6 +97,9 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
   }
 
   public setSelectedUser(receiver: UserProfileResponseDTO) {
+    if (this.selectedUser && this.selectedUser.userId === receiver.userId) {
+      return; // Don't reload the chat if already in the chat with this user
+    }
     this.selectedUser = receiver;
     this.readMessage(receiver.userId);
     this.searchQuery = "";
@@ -104,8 +112,11 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
       console.log(message);
       this.getUnknownUsers(message);
       this.moveUserToTop(message.senderId);
-      this.addUserAsNewMessage(message.senderId);
-      this.messagesList.push(message);
+      if (this.selectedUser && this.selectedUser.userId === message.senderId) {
+        this.messagesList.push(message);
+      } else {
+        this.addUserAsNewMessage(message.senderId);
+      }
     });
   }
 

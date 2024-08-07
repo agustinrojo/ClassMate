@@ -4,4 +4,6 @@ export interface ChatMessageOutputDTO {
   chatId: string;
   content: string;
   timeStamp: Date;
+  showDate?: boolean;
+  dateLabel?: string;
 }

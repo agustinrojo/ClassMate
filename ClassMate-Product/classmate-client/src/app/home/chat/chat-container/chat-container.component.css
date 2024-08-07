@@ -27,10 +27,16 @@ body {
 }
 
 .app-badge {
-  padding: 15px;
+  padding: 9px 15px 5px; /* Adjust the padding to move it a bit higher */
   background-color: #2a2a2a;
   border-bottom: 1px solid #3a3a3a;
   text-align: center;
+}
+
+
+
+.app-chat-user {
+  margin-bottom: 10px;
 }
 
 .users-list {
@@ -39,7 +45,7 @@ body {
   position: relative;
 }
 
-/* Estilo personalizado para la scrollbar en users-list */
+/* Custom scrollbar for users-list */
 .users-list::-webkit-scrollbar {
   width: 12px;
 }
@@ -58,6 +64,57 @@ body {
 .users-list::-webkit-scrollbar-thumb:hover {
   background-color: #5a5a5a;
 }
+
+/* Ensure the search results appear directly below the search bar */
+.search-results {
+  position: absolute;
+  top: 50px; /* Adjust this value based on your design */
+  left: 0;
+  right: 0;
+  background-color: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+/* Style individual search result items */
+.search-result-item {
+  padding: 10px 15px;
+  border-bottom: 1px solid #3a3a3a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover {
+  background-color: #3a3a3a;
+}
+
+.search-result-item .result-title {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.search-result-item .result-members {
+  margin-left: auto;
+  color: #bbbbbb;
+}
+
+.input-group .form-control {
+  border-radius: 0; /* Remove the rounded corners */
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border: none;
+}
+
+.input-group .form-control:focus {
+  outline: none; /* Remove the blue outline when focused */
+}
+
 
 .user, .search-result-item {
   display: flex;
@@ -78,9 +135,6 @@ body {
   margin: 0;
 }
 
-.user:hover, .search-result-item:hover {
-  background-color: #3a3a3a;
-}
 
 .chat-section {
   width: 70%;
@@ -124,7 +178,7 @@ body {
   position: relative;
 }
 
-/* Estilo personalizado para la scrollbar en chat-messages */
+/* Custom scrollbar for chat-messages */
 .chat-messages::-webkit-scrollbar {
   width: 12px;
 }
@@ -175,6 +229,7 @@ body {
   border-radius: 5px;
   background-color: #3a3a3a;
   color: #ffffff;
+  outline: none; /* Remove the blue outline */
 }
 
 .message-input button {
@@ -190,3 +245,15 @@ body {
 .message-input button:hover {
   background-color: #5a5a5a;
 }
+
+.input-group .form-control {
+  border-radius: 0; /* Remove the rounded corners */
+  background-color: #3a3a3a;
+  color: #ffffff;
+  border: none;
+}
+
+.input-group .form-control:focus {
+  outline: none; /* Remove the blue outline when focused */
+}
+

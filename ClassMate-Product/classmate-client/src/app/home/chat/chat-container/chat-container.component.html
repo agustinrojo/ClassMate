@@ -1,47 +1,3 @@
-<!-- <body>
-  <div class="chat-container">
-    <div class="users-list">
-      <div class="input-group mb-3" data-bs-theme="dark">
-        <input type="text" (input)="onSearchChange($event)" [(ngModel)]="searchQuery" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" >
-      </div>
-
-      <div class="search-results mt-5" *ngIf="searchResults.length > 0">
-        <div  class="search-result-item" *ngFor="let user of searchResults" (click)="setSelectedUser(user)">
-          <div class="result-content">
-            <span class="result-title">{{ user.nickname }}</span>
-            <span class="result-members" >{{ user.userId }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="users-list-container">
-        <div *ngIf="knownUsers.length > 0">
-          <h2>Chats</h2>
-          <app-chat-user *ngFor="let user of knownUsers" [user]="user" [isSelected]="user.userId == selectedUser?.userId" [hasNewMessage]="newMessagesUserIds.has(user.userId)" (click)="setSelectedUser(user)"></app-chat-user>
-        </div>
-      </div>
-    </div>
-    <div class="chat-area">
-      <div *ngIf="selectedUser != undefined">
-        <div class="chat-header">
-          <h5 id="chat-header-text">{{ selectedUser.nickname }}</h5>
-        </div>
-        <br>
-        <div id="chat-messages" >
-            <app-chat-message *ngFor="let message of messagesList" [isSender]="message.senderId == loggedUser.id" [content]="message.content"></app-chat-message>
-        </div>
-
-      </div>
-      <form id="messageForm" name="messageForm" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
-        <div class="message-input">
-            <input autocomplete="off" type="text" id="message" placeholder="Type your message..." formControlName="messageInput">
-            <button type="submit">Send</button>
-        </div>
-      </form>
-
-    </div>
-
-  </div>
-</body> -->
 <body>
   <div class="chat-container">
     <div class="sidebar">
@@ -50,10 +6,9 @@
       </div>
       <div class="users-list">
         <div class="input-group mb-3" data-bs-theme="dark">
-          <input type="text" (input)="onSearchChange($event)" [(ngModel)]="searchQuery" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+          <input type="text" (input)="onSearchChange($event)" [(ngModel)]="searchQuery" class="form-control" placeholder="Buscar Usuarios..." aria-label="Username" aria-describedby="basic-addon1">
         </div>
-
-        <div class="search-results mt-5" *ngIf="searchResults.length > 0">
+        <div class="search-results" *ngIf="searchResults.length > 0">
           <div class="search-result-item" *ngFor="let user of searchResults" (click)="setSelectedUser(user)">
             <div class="result-content">
               <span class="result-title">{{ user.nickname }}</span>
@@ -63,7 +18,7 @@
         </div>
         <div class="users-list-container">
           <div *ngIf="knownUsers.length > 0">
-            <h2>Chats</h2>
+            <!-- <h2>Chats</h2> -->
             <app-chat-user *ngFor="let user of knownUsers" [user]="user" [isSelected]="user.userId == selectedUser?.userId" [hasNewMessage]="newMessagesUserIds.has(user.userId)" (click)="setSelectedUser(user)"></app-chat-user>
           </div>
         </div>
@@ -72,12 +27,15 @@
     <div class="chat-section">
       <div *ngIf="selectedUser" class="chat-header">
         <div class="header-content">
-          <img [src]="selectedUser.profilePhoto" alt="{{ selectedUser.nickname }}">
           <h5 id="chat-header-text">{{ selectedUser.nickname }}</h5>
         </div>
       </div>
       <div id="chat-messages" #chatMessages class="chat-messages">
-        <app-chat-message *ngFor="let message of messagesList" [isSender]="message.senderId == loggedUser.id" [content]="message.content"></app-chat-message>
+        <app-chat-message *ngFor="let message of messagesList"
+                  [isSender]="message.senderId == loggedUser.id"
+                  [content]="message.content"
+                  [timestamp]="message.timeStamp">
+</app-chat-message>
       </div>
       <form id="messageForm" name="messageForm" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
         <div class="message-input">
