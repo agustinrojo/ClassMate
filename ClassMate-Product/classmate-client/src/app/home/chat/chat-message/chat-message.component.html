@@ -1,3 +1,6 @@
-<div [ngClass]="isSender ? 'message sender' : 'message receiver'">
+<!-- <div [ngClass]="isSender ? 'message sender' : 'message receiver'">
+  <p>{{ content }}</p>
+</div> -->
+<div [ngClass]="{'message sent': isSender, 'message received': !isSender}">
   <p>{{ content }}</p>
 </div>

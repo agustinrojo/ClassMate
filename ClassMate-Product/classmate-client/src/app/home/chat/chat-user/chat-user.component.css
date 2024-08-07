@@ -1,21 +1,20 @@
 .user-item {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 10px;
   cursor: pointer;
-  padding: 10px; /* Ensure consistent padding */
-  border-radius: 10px; /* Ensure consistent border-radius */
-  transition: background-color 0.3s ease; /* Smooth transition for background color */
+  transition: background-color 0.2s;
+  border: 1px solid transparent;
 }
 
 .user-item.active {
-  background-color: #333;
-  color: #e0e0e0;
+  background-color: #2f2f2f;
+  border-color: #0078d4;
 }
 
 .user-item:hover {
-  background-color: #333;
-  color: #e0e0e0;
+  background-color: #1e1e1e;
 }
 
 .user-item img {
@@ -26,11 +25,14 @@
 }
 
 .user-item span {
-  font-weight: bold;
+  margin: 0 5px;
 }
 
 .new-message-indicator {
-  color: red;
-  font-weight: bold;
-  margin-left: 10px;
+  background-color: #0078d4;
+  color: white;
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 12px;
+  margin-left: auto;
 }

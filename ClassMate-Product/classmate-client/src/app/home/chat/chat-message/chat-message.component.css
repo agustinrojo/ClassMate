@@ -1,4 +1,4 @@
-.message {
+/* .message {
   margin-bottom: 10px;
   margin-left: 1em;
   margin-right: 1em;
@@ -23,4 +23,24 @@
   color: #e0e0e0;
   align-self: flex-start;
   border-radius: 15px 15px 15px 0;
+} */
+.message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 60%;
+}
+
+.message.received {
+  background-color: #2a2a2a;
+  align-self: flex-start;
+}
+
+.message.sent {
+  background-color: #4a4a4a;
+  align-self: flex-end;
+}
+
+.message p {
+  margin: 0;
 }

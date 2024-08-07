@@ -1,4 +1,9 @@
-<li [ngClass]="isSelected ? 'user-item active' : 'user-item'">
+<!-- <li [ngClass]="isSelected ? 'user-item active' : 'user-item'">
+  <img [src]="userProfilePhotoUrl" alt="User Photo">
+  <span>{{ user.nickname }}</span>
+  <span *ngIf="hasNewMessage" class="new-message-indicator">New</span>
+</li> -->
+<li [ngClass]="{'user-item active': isSelected, 'user-item': !isSelected}">
   <img [src]="userProfilePhotoUrl" alt="User Photo">
   <span>{{ user.nickname }}</span>
   <span *ngIf="hasNewMessage" class="new-message-indicator">New</span>
