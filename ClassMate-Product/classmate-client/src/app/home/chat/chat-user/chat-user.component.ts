@@ -16,7 +16,6 @@ export class ChatUserComponent implements OnInit{
   public userProfilePhotoUrl!: string;
 
   constructor(
-    private cdr: ChangeDetectorRef,
     private _userProfileService: UserProfileService
   ) {}
 

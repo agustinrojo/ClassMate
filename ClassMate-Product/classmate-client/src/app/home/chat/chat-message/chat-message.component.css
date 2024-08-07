@@ -4,6 +4,7 @@
   margin-right: 1em;
   border-radius: 5px;
   padding: 10px;
+  z-index: 1;
 }
 
 .message p {

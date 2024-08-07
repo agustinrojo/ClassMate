@@ -9,22 +9,22 @@ body {
   justify-content: center;
   height: 100vh;
   flex-direction: column;
-  overflow: hidden; /* Oculta scrollbars en el body */
+  overflow: hidden;
 }
 
 .chat-container {
   display: flex;
-  max-width: 1000px; /* Aumenta el ancho máximo del contenedor del chat */
-  min-width: 1000px; /* Aumenta el ancho mínimo del contenedor del chat */
+  max-width: 1000px;
+  min-width: 1000px;
   min-height: 600px;
   max-height: 600px;
   margin: 20px;
   border: 1px solid #1a1a1a;
   background-color: #2c2c2c;
-  overflow: hidden; /* Oculta scrollbars dentro del contenedor */
+  overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   border-radius: 8px;
-  position: relative; /* Necesario para que el formulario de mensajes se ajuste correctamente */
+  position: relative;
 }
 
 .users-list {
@@ -39,12 +39,12 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow: hidden; /* Oculta la scrollbar vertical */
+  overflow: hidden;
 }
 
 .users-list-container {
-  height: calc(100% - 40px); /* Ajusta la altura para evitar scrollbars */
-  overflow-y: auto; /* Permite el desplazamiento vertical */
+  height: calc(100% - 40px);
+  overflow-y: auto;
 }
 
 .users-list h2 {
@@ -65,11 +65,11 @@ body {
   cursor: pointer;
 }
 
-.user-item.active {
+.user-item.active, .user-item:hover {
   background-color: #333;
   color: #e0e0e0;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 10px; /* Increase the curve of the edges */
 }
 
 .user-item img {
@@ -82,6 +82,7 @@ body {
 .user-item span {
   font-weight: bold;
 }
+
 
 .separator {
   height: 1px;
@@ -97,15 +98,16 @@ body {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
   background-color: #2c2c2c;
-  overflow: hidden; /* Oculta la scrollbar dentro del área de chat */
-  position: relative; /* Necesario para que el formulario de mensajes se ajuste correctamente */
+  overflow: hidden;
+  position: relative;
 }
 
 #chat-messages {
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Permite el desplazamiento vertical */
-  max-height: calc(100% - 60px); /* Ajusta la altura para evitar el desbordamiento */
+  overflow-y: auto;
+  max-height: calc(100% - 50px - 40px); /* Adjust to ensure messages end above the SEND part, considering padding and margin */
+  padding-bottom: 20px; /* Add padding to avoid overlap with the input */
 }
 
 .message {
@@ -139,10 +141,11 @@ body {
   border-top: 1px solid #333;
   padding: 10px;
   background-color: #2c2c2c;
-  position: absolute; /* Fija el formulario en la parte inferior */
+  position: absolute;
   bottom: 0;
-  width: calc(100% - 40px); /* Asegura que el formulario no sobresalga del contenedor */
-  box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+  width: calc(100% - 40px);
+  box-sizing: border-box;
+  z-index: 1;
 }
 
 .message-input input {
@@ -162,150 +165,5 @@ body {
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
-  white-space: nowrap; /* Evita que el texto se rompa */
-}
-
-.nav__search {
-  padding: 3px;
-  position: relative;
-  text-align: center;
-  width: 100%;
-  max-width: 1300px;
-}
-
-.search-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
-}
-
-.nav__search-input {
-  width: 100%;
-  padding: 10px 20px; /* Increased padding for more height */
-  padding-left: 20px; /* Adjusted padding calculation */
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  font-size: 14px; /* Increased font size */
-  background-color: #2e2e2e;
-  color: #fff;
-  box-sizing: border-box;
-  outline: none;
-  transition: padding-left 0.3s ease;
-}
-
-.nav__search-input.has-tag {
-  padding-left: calc(20px + 150px); /* Adjusted based on tag width */
-}
-
-.nav__search-input:focus {
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-}
-
-.nav__search-input::placeholder {
-  color: #cccccc;
-}
-
-.forum-tag {
-  display: flex;
-  align-items: center;
-  background-color: #3a3a3a;
-  color: #ffffff;
-  padding: 4px 8px; /* Reduced padding */
-  border-radius: 12px;
-  position: absolute;
-  left: 10px;
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.forum-tag span {
-  font-size: 12px;
-  margin-right: 5px; /* Space between text and button */
-}
-
-.forum-tag button {
-  position: relative;
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  font-size: 12px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.forum-tag button:hover::before {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.search-results {
-  position: absolute;
-  background-color: #1a1a1a;
-  border: 1px solid #ccc;
-  width: 100%;
-  max-width: 800px;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-  margin-top: 8px;
-  border-radius: 4px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.search-result-item {
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  color: #fff;
-}
-
-.result-content {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.result-title {
-  font-size: 1em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.result-members {
-  font-size: 0.8em;
-  color: #aaaaaa;
-  margin-top: 4px;
-}
-
-.chat-header {
-  background-color: #1a1a1a; /* Color más oscuro para el encabezado */
-  color: #e0e0e0;
-  padding: 25px;
-  text-align: center;
-
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-
-#chat-header-text {
-  margin: 0;
 }

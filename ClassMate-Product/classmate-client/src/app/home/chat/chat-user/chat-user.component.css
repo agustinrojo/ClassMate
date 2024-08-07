@@ -3,22 +3,20 @@
   align-items: center;
   margin-bottom: 8px;
   cursor: pointer;
-}
-
-:hover {
-  background-color: #333;
-  color: #e0e0e0;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 10px; /* Ensure consistent padding */
+  border-radius: 10px; /* Ensure consistent border-radius */
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
 }
 
 .user-item.active {
   background-color: #333;
   color: #e0e0e0;
-  padding: 10px;
-  border-radius: 5px;
 }
 
+.user-item:hover {
+  background-color: #333;
+  color: #e0e0e0;
+}
 
 .user-item img {
   width: 40px;

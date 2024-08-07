@@ -29,16 +29,17 @@
         <div id="chat-messages" >
             <app-chat-message *ngFor="let message of messagesList" [isSender]="message.senderId == loggedUser.id" [content]="message.content"></app-chat-message>
         </div>
-
         <form id="messageForm" name="messageForm" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
-            <div class="message-input">
-                <input autocomplete="off" type="text" id="message" placeholder="Type your message..." formControlName="messageInput">
-                <button type="submit">Send</button>
-            </div>
-        </form>
+          <div class="message-input">
+              <input autocomplete="off" type="text" id="message" placeholder="Type your message..." formControlName="messageInput">
+              <button type="submit">Send</button>
+          </div>
+      </form>
+
       </div>
 
 
     </div>
+
   </div>
 </body>
