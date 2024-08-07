@@ -92,22 +92,19 @@ export class ChatContainerComponent implements OnInit{
     this.getMessages(receiver.userId);
   }
 
+
+
   private listenMessages(){
-    this._chatService.getMessageSubject().subscribe((messages: ChatMessageOutputDTO[]) => {
-      console.log(messages);
-      this.getUnknownUsers(messages);
+    this._chatService.getMessageSubject().subscribe((message: ChatMessageOutputDTO) => {
+      console.log(message);
+      this.getUnknownUsers(message);
+      // this.getNewUser(message.senderId);
+      this.moveUserToTop(message.senderId);
+      this.addUserAsNewMessage(message.senderId);
 
 
-      messages.forEach((message: ChatMessageOutputDTO) => {
-        if (!this.checkKnownUser(message.senderId) && message.senderId != this.loggedUser.id) {
-          this.getNewUser(message.senderId);
-        } else {
-          this.moveUserToTop(message.senderId);
-          this.addUserAsNewMessage(message.senderId);
-        }
-      });
+      this.messagesList.push(message);
 
-      this.messagesList = messages;
     })
   }
 
@@ -138,18 +135,17 @@ export class ChatContainerComponent implements OnInit{
     })
   }
 
-  private getUnknownUsers(messages: ChatMessageOutputDTO[]){
-    let unknownUserIds: number[] = [];
+  private getUnknownUsers(message: ChatMessageOutputDTO){
+    let unknownUserIds: number | undefined = undefined;
 
-    messages.forEach((message: ChatMessageOutputDTO) => {
-      if( !this.checkKnownUser(message.senderId)  && message.senderId != this.loggedUser.id){
-        console.log(message.senderId);
-        unknownUserIds.push(message.senderId);
-      }
-    })
+    if( !this.checkKnownUser(message.senderId)  && message.senderId != this.loggedUser.id){
+      console.log(message.senderId);
+      unknownUserIds = message.senderId;
+    }
 
-    if(unknownUserIds.length != 0){
-      this._userProfileService.findMultipleUsers(unknownUserIds).subscribe((users: UserProfileSearchDTO[]) => {
+
+    if(unknownUserIds != undefined){
+      this._userProfileService.findMultipleUsers([unknownUserIds]).subscribe((users: UserProfileSearchDTO[]) => {
         this.knownUsers.push(...users);
       },
       err => {
@@ -196,6 +192,7 @@ export class ChatContainerComponent implements OnInit{
 
   private getMessages(receiverId: number){
     this._chatService.loadMessages(this.loggedUser.id, receiverId).subscribe((messages: ChatMessageOutputDTO[]) => {
+      console.log(messages);
       this.messagesList = messages;
     },
     err => {
