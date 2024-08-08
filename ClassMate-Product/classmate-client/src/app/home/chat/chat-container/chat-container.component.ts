@@ -98,6 +98,8 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
 
   public setSelectedUser(receiver: UserProfileResponseDTO) {
     if (this.selectedUser && this.selectedUser.userId === receiver.userId) {
+      this.searchQuery = "";
+      this.searchResults = [];
       return; // Don't reload the chat if already in the chat with this user
     }
     this.selectedUser = receiver;
@@ -105,6 +107,26 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     this.searchQuery = "";
     this.searchResults = [];
     this.getMessages(receiver.userId);
+  }
+
+  public checkIfShowDate(messageIndex: number): boolean{
+    if(messageIndex == 0){
+      return true;
+    }
+    let currentMessageDate: Date = this.messagesList[messageIndex].timeStamp;
+    let previousMessageDate: Date = this.messagesList[messageIndex - 1].timeStamp;
+
+    return this.isPreviousDate(currentMessageDate, previousMessageDate);
+  }
+
+  private isPreviousDate(d1: Date, d2: Date): boolean{
+    const currentMessageDate = new Date(d1);
+    const previousMessageDate = new Date(d2);
+
+    currentMessageDate.setHours(0, 0, 0, 0);
+    previousMessageDate.setHours(0, 0, 0, 0);
+
+    return previousMessageDate.getTime() < currentMessageDate.getTime();
   }
 
   private listenMessages() {

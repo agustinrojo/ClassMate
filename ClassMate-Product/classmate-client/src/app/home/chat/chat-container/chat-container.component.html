@@ -24,18 +24,20 @@
         </div>
       </div>
     </div>
-    <div class="chat-section">
+    <div class="chat-section" *ngIf="selectedUser != undefined">
       <div *ngIf="selectedUser" class="chat-header">
         <div class="header-content">
           <h5 id="chat-header-text">{{ selectedUser.nickname }}</h5>
         </div>
       </div>
       <div id="chat-messages" #chatMessages class="chat-messages">
-        <app-chat-message *ngFor="let message of messagesList"
+
+        <app-chat-message *ngFor="let message of messagesList; let i = index;"
                   [isSender]="message.senderId == loggedUser.id"
                   [content]="message.content"
-                  [timestamp]="message.timeStamp">
-</app-chat-message>
+                  [timestamp]="message.timeStamp"
+                  [showDate]="checkIfShowDate(i)">
+        </app-chat-message>
       </div>
       <form id="messageForm" name="messageForm" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
         <div class="message-input">
