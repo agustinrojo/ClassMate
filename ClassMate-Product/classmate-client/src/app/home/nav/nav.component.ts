@@ -11,7 +11,6 @@ import { UserProfileResponseDTO } from '../../services/dto/user-profile/user-pro
   styleUrl: './nav.component.css'
 })
 export class NavComponent implements OnInit{
-
   public userProfile!: UserProfileResponseDTO;
   public userProfilePhoto!: string | null;
   public userId!: number;
@@ -45,6 +44,9 @@ export class NavComponent implements OnInit{
     this._router.navigate([`profile/${this._authService.getUserId()}`])
   }
 
+  public navigateToChat() {
+    this._router.navigate(["chat"])
+  }
 
   private getUserProfile(){
     this._userProfileService.getUserProfile(this.userId.toString()).subscribe((resp: UserProfileResponseDTO) => {
@@ -65,4 +67,6 @@ export class NavComponent implements OnInit{
     console.log(err);
   })
   }
+
+
 }
