@@ -240,10 +240,18 @@ body {
   background-color: #4a4a4a;
   color: #ffffff;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 
 .message-input button:hover {
   background-color: #5a5a5a;
+}
+
+.message-input button:disabled {
+  background-color: #3d3d3d; /* Un tono ligeramente más claro que el fondo original */
+  color: #cccccc; /* Un color de texto un poco más claro */
+  cursor: default; /* Deja el cursor en su estado predeterminado */
+  opacity: 0.8; /* Un cambio leve en la opacidad para mostrar que está deshabilitado */
 }
 
 .input-group .form-control {

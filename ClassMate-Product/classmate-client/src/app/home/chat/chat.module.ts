@@ -5,6 +5,7 @@ import { ChatMessageComponent } from './chat-message/chat-message.component';
 import { ChatUserComponent } from './chat-user/chat-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateMarkerComponent } from './date-marker/date-marker.component';
+import { SharedModule } from '../../shared/shared.module';
 
 
 
@@ -18,7 +19,8 @@ import { DateMarkerComponent } from './date-marker/date-marker.component';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class ChatModule { }

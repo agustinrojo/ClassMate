@@ -1,9 +1,8 @@
 <app-date-marker *ngIf="showDate" [date]="timestamp"></app-date-marker>
 <div class="message-container" [ngClass]="{'sent': isSender}">
   <div class="message" [ngClass]="{'sent': isSender, 'received': !isSender}">
-    <p class="message-content">
-      {{ content }}
-      <span class="timestamp">{{ timestamp | date:'HH:mm' }}</span>
+    <p class="message-content" [innerHTML]="content | linkify">
+      <!-- <span class="timestamp">{{ timestamp | date:'HH:mm' }}</span> -->
     </p>
   </div>
 </div>
