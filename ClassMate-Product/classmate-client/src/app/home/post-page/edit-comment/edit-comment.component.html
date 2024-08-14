@@ -1,6 +1,9 @@
 <form  class="comment-form mb-3" [formGroup]="editCommentForm" >
   <label for="comment" class="mb-2">Editar comentario</label>
-    <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
+  <app-tagging [textAreaControl]="bodyControl" (contentChange)="editCommentForm.get('body')!.setValue($event)"></app-tagging>
+
+  <!-- The textarea remains linked to the FormControl -->
+  <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
 
     <!-- <div class="row">
       <div class="col-6">

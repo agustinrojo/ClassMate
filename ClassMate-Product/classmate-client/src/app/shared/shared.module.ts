@@ -6,9 +6,10 @@ import { FileSizePipe } from './pipes/file-size.pipe';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { ValorationComponent } from './valoration/valoration.component';
 import { LinkifyPipe } from './pipes/linkify.pipe';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchComponent } from './search/search.component';
 import { SharedSidebarComponent } from './shared-sidebar/shared-sidebar.component';
+import { TaggingComponent } from './tagging/tagging.component';
 
 
 
@@ -22,12 +23,14 @@ import { SharedSidebarComponent } from './shared-sidebar/shared-sidebar.componen
     ValorationComponent,
     LinkifyPipe,
     SearchComponent,
-    SharedSidebarComponent
+    SharedSidebarComponent,
+    TaggingComponent
 
   ],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     FileBadgeComponent,
@@ -37,7 +40,8 @@ import { SharedSidebarComponent } from './shared-sidebar/shared-sidebar.componen
     TruncatePipe,
     LinkifyPipe,
     SearchComponent,
-    SharedSidebarComponent
+    SharedSidebarComponent,
+    TaggingComponent
 
   ]
 })

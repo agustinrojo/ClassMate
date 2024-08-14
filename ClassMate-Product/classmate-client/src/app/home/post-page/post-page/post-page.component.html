@@ -36,6 +36,10 @@
     </div>
     <form [formGroup]="bodyForm" class="comment-form mb-3" (ngSubmit)="submit()" >
       <label for="comment" class="mb-2">Agregar un comentario</label>
+          <!-- Integrate TaggingComponent with the textarea -->
+        <app-tagging [textAreaControl]="bodyControl" (contentChange)="bodyForm.get('body')!.setValue($event)"></app-tagging>
+
+        <!-- Keep the textarea as it is -->
         <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
         <label for="file-upload" class="file-upload-label" >Seleccionar archivos</label>
         <input type="file" (change)="onFileChange($event)" id="file-upload" class="file-upload-input" accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="selectedFiles.length >= 3">
