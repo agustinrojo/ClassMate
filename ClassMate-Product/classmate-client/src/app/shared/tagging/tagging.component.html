@@ -1,0 +1,20 @@
+<div class="tagging-container" *ngIf="showSuggestions">
+  <ul class="suggestions-list">
+    <li
+      class="suggestion-item"
+      *ngFor="let suggestion of userSuggestions; let i = index"
+      (click)="insertTag(suggestion.nickname, suggestion.userId, 'user')"
+      [class.selected]="isSelected(i)"
+    >
+      {{ suggestion.nickname }}
+    </li>
+    <li
+      class="suggestion-item"
+      *ngFor="let suggestion of forumSuggestions; let i = index"
+      (click)="insertTag(suggestion.title, suggestion.id, 'forum')"
+      [class.selected]="isSelected(i)"
+    >
+      {{ suggestion.title }}
+    </li>
+  </ul>
+</div>

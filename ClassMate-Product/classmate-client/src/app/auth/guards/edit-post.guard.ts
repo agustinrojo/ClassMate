@@ -12,7 +12,7 @@ export const CanActivateEditPost: CanActivateFn = (
   state: RouterStateSnapshot
   ) => {
     const postId: number = parseInt(route.paramMap.get("id")!);
-
+    console.log("Post ID in guard:", postId);
     return checkPostAuthor(postId);
 }
 
@@ -22,8 +22,8 @@ export const CanMatchEditPost: CanMatchFn = (
   route: Route,
   segments: UrlSegment[]
 ) => {
-  const idSegment = segments.find(segment => segment.path.match(/^\d+$/));
-  const postId = idSegment ? parseInt(idSegment.path) : 0;
+  const postIdSegment = segments[4];
+  const postId = postIdSegment ? parseInt(postIdSegment.path) : 0;
 
   return checkPostAuthor(postId);
 }
@@ -37,6 +37,7 @@ function checkPostAuthor(postId: number) : Observable<boolean>{
   const userId: number = _authService.getUserId();
   return _postService.isPostAuthor(postId, userId).pipe(
     map((resp: IsPostAuthor) => {
+      console.log("Post ID when hitting api:", postId);
       if(resp.author){
         return true;
       } else {

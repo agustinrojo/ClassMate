@@ -42,7 +42,6 @@ export class CommentComponent implements OnInit{
   }
 
   public deleteComment(){
-    console.log("llego aca")
     this.deleteEvent.emit(this.comment?.id);
   }
 

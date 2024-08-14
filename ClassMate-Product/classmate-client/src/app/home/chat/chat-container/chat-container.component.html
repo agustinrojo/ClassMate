@@ -42,7 +42,9 @@
       </div>
       <form id="messageForm" name="messageForm" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
         <div class="message-input">
-          <input autocomplete="off" type="text" id="message" placeholder="Type your message..." formControlName="messageInput">
+          <app-tagging [textAreaControl]="messageInputControl"
+                 (contentChange)="messageForm.get('messageInput')!.setValue($event)"></app-tagging>
+            <input type="text" id="message" placeholder="Type your message..." formControlName="messageInput" autocomplete="off">
           <button type="submit">Send</button>
         </div>
       </form>

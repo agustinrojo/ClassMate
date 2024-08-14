@@ -5,16 +5,15 @@ import { Router } from '@angular/router';
 import { ForumRequestDTO } from '../../../services/dto/forum/create/forum-request-dto.interface';
 import { User } from '../../../auth/dto/user-dto.interface';
 import { delay } from 'rxjs';
-import { ForumData } from '../../interfaces/forum-data.interface';
 import { ForumDataSidebar } from '../../../services/dto/forum/forum-data-dto.interface';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
 
 @Component({
   selector: 'app-create-forum',
   templateUrl: './create-forum.component.html',
-  styleUrl: './create-forum.component.css'
+  styleUrls: ['./create-forum.component.css']
 })
-export class CreateForumComponent implements OnInit{
+export class CreateForumComponent implements OnInit {
   public createForumForm!: FormGroup;
   public btnDisable: boolean = false;
   public showErr: boolean = false;
@@ -22,22 +21,28 @@ export class CreateForumComponent implements OnInit{
   constructor(private _forumService: ForumService,
               private _fb: FormBuilder,
               private _router: Router,
-              private forumStateService: ForumStateService
-  ) { }
+              private forumStateService: ForumStateService) { }
 
   ngOnInit(): void {
     this.createForumForm = this._fb.group({
-      title: ["", Validators.required, []],
-      description: ["", Validators.required, []]
-    })
+      title: ["", [
+        Validators.required,
+        Validators.maxLength(19),
+        Validators.pattern('^[a-zA-Z0-9 _-]*$')
+      ]],
+      description: ["", [Validators.required, Validators.maxLength(300)]]
+    });
   }
 
-  public createForum(){
+  public createForum() {
+    if (this.createForumForm.invalid) {
+      return; // Prevent form submission if validation fails
+    }
     this.btnDisable = true;
     let forum: ForumRequestDTO = {
       title: this.createForumForm.get("title")?.value,
       description: this.createForumForm.get("description")?.value
-    }
+    };
     let user: User = JSON.parse(localStorage.getItem("user")!);
     let userId = user.id;
     this._forumService.saveForum(forum, userId)
@@ -48,7 +53,7 @@ export class CreateForumComponent implements OnInit{
         let forumData: ForumDataSidebar = {
           id: f.id,
           title: f.title
-        }
+        };
         this.forumStateService.setForumCreationEvent(forumData);
         this._router.navigate([`forum/${f.id}`]);
       },
@@ -56,13 +61,10 @@ export class CreateForumComponent implements OnInit{
       this.showErr = true;
       await delay(3000);
       this._router.navigate(["forums"]);
-    } )
+    });
   }
 
-  public goBack(){
+  public goBack() {
     this._router.navigate(["forums"]);
   }
-
-
-
 }
