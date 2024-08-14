@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ChatMessageInputDTO } from './dto/chat/chat-message/chat-message-input-dto.interface';
 import { ChatRoomOutputDTO } from './dto/chat/chatroom/chatroom-output-dto.interface';
 import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response-dto.interface';
+import { FileService } from './file.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,8 @@ export class ChatService {
 
   constructor(
     private http:HttpClient,
-    private _authService: AuthServiceService
+    private _authService: AuthServiceService,
+    private _fileService: FileService
   ) {
     this.loggedUserId = this._authService.getUserId();
 

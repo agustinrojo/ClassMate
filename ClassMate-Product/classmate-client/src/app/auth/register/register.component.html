@@ -1,6 +1,6 @@
 <body>
   <div class="login-container">
-      <h1>UTN ClassMate</h1>
+      <img src="assets/32x32.svg" class="logo" alt="">
       <h2>Registrarse</h2>
       <form [formGroup]="registerForm" action="/register" method="POST" (ngSubmit)="onSubmit()">
 
@@ -80,7 +80,7 @@
 
           <div class="row mx-1 mb-2">
             <div class="col-12">
-              <button type="submit" class="btn mb-3" [disabled]="!registerForm.valid">Registrarse</button>
+              <button type="submit" class="mb-3" [disabled]="!registerForm.valid">Registrarse</button>
 
               <div class="col-12">
                 ¿Ya tenés cuenta? <a class="link-underline-secondary" [routerLink]="['/login']" routerLinkActive="router-link-active"    >Log In</a>

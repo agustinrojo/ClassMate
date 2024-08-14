@@ -2,7 +2,9 @@ package com.example.chat_v1.service;
 
 import com.example.chat_v1.dto.chat.ChatMessageInputDTO;
 import com.example.chat_v1.dto.chat.ChatMessageOutputDTO;
+import com.example.chat_v1.entity.Attachment;
 import com.example.chat_v1.entity.ChatMessage;
+import com.example.chat_v1.repository.AttachmentRepository;
 import com.example.chat_v1.repository.ChatMessageRepository;
 import com.example.chat_v1.service.mapper.ChatMessageMapper;
 import jakarta.transaction.Transactional;
@@ -18,11 +20,16 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
     private final ChatMessageMapper chatMessageMapper;
+    private final AttachmentRepository attachmentRepository;
 
-    public ChatMessageService(ChatMessageRepository chatMessageRepository, ChatRoomService chatRoomService, ChatMessageMapper chatMessageMapper) {
+    public ChatMessageService(ChatMessageRepository chatMessageRepository,
+                              ChatRoomService chatRoomService,
+                              ChatMessageMapper chatMessageMapper,
+                              AttachmentRepository attachmentRepository) {
         this.chatMessageRepository = chatMessageRepository;
         this.chatRoomService = chatRoomService;
         this.chatMessageMapper = chatMessageMapper;
+        this.attachmentRepository = attachmentRepository;
     }
 
     @Transactional
@@ -35,6 +42,10 @@ public class ChatMessageService {
         ).orElseThrow();
         newChatMessage.setChatId(chatId);
         newChatMessage.setTimeStamp(new Date());
+        Attachment attachment = newChatMessage.getAttachment();
+        if(attachment != null){
+            attachmentRepository.save(attachment);
+        }
         return chatMessageMapper.mapChatMessageToOutputDTO(chatMessageRepository.save(newChatMessage));
     }
 

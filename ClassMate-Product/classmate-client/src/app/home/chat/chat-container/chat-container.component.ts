@@ -9,6 +9,9 @@ import { ChatRoomOutputDTO } from '../../../services/dto/chat/chatroom/chatroom-
 import { ChatMessageOutputDTO } from '../../../services/dto/chat/chat-message/chat-message-output-dto.interface';
 import { ChatMessageInputDTO } from '../../../services/dto/chat/chat-message/chat-message-input-dto.interface';
 import { UserProfileResponseDTO } from '../../../services/dto/user-profile/user-profile-response-dto.interface';
+import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
+import { FileService } from '../../../services/file.service';
+import { FileResponseDTO } from '../../../services/dto/attachment/file-response-dto.interface';
 
 @Component({
   selector: 'app-chat-container',
@@ -24,6 +27,7 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
   public newMessagesUserIds: Set<number> = new Set();
   public chatroomIds: number[] = [];
   public messageForm!: FormGroup;
+  public selectedFile: File | undefined;
   public loggedUser!: User;
 
   @ViewChild('chatMessages') private chatMessagesContainer!: ElementRef;
@@ -32,6 +36,7 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     private _userProfileService: UserProfileService,
     private _authService: AuthServiceService,
     private _chatService: ChatService,
+    private _fileService: FileService,
     private _fb: FormBuilder
   ) {}
 
@@ -68,7 +73,7 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  public sendMessage() {
+  public async sendMessage() {
     const messageContent = this.messageForm.get("messageInput")!.value.trim();
     if (!messageContent) {
       return; // Do not send the message if it is empty or contains only spaces
@@ -79,19 +84,40 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
       receiverId: this.selectedUser!.userId,
       content: this.messageForm.get("messageInput")!.value
     };
-    this.messagesList.push({
+
+    if(this.selectedFile != undefined){
+      let fileId = await this.uploadFile(this.selectedFile!);
+      console.log(fileId);
+      if(fileId != -1){
+        let fileDTO : FileDTO = {
+          id: fileId,
+          originalFilename: this.selectedFile.name,
+          size: this.selectedFile.size,
+          contentType: this.selectedFile.type
+        }
+        console.log("llego aca");
+        newMessage.attachment = fileDTO;
+        console.log(newMessage);
+      }
+    }
+
+    let messageOutput: ChatMessageOutputDTO = {
       senderId: newMessage.senderId,
       receiverId: newMessage.receiverId,
       chatId: "",
       content: newMessage.content,
       timeStamp: new Date()
-    });
+    }
 
+    if(newMessage.attachment){
+      messageOutput.attachment = newMessage.attachment;
+    }
+    this.removeFile();
+    this.messagesList.push(messageOutput);
     this._chatService.sendMessage(newMessage);
     this.messageForm.get("messageInput")!.reset();
     if (!this.checkKnownUser(newMessage.receiverId)) {
       this.getNewUser(newMessage.receiverId);
-      delay(3000);
       this.refreshChatrooms();
     }
   }
@@ -117,6 +143,32 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     let previousMessageDate: Date = this.messagesList[messageIndex - 1].timeStamp;
 
     return this.isPreviousDate(currentMessageDate, previousMessageDate);
+  }
+
+  public onFileChange(event: any) {
+    if (event.target.files.length > 0) {
+      const files = event.target.files;
+      for (let i = 0; i < files.length; i++) {
+        this.selectedFile = files[i];
+
+      }
+
+    }
+  }
+
+  public mapFileToFIleDTO(file: File): FileDTO{
+    let fileDTO: FileDTO = {
+      id: 0,
+      originalFilename: file.name,
+      contentType: file.type,
+      size: file.size
+    }
+
+    return fileDTO;
+  }
+
+  public removeFile(){
+    this.selectedFile = undefined;
   }
 
   private isPreviousDate(d1: Date, d2: Date): boolean{
@@ -233,6 +285,21 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
       });
       console.log(chatroomIds);
       this._authService.setNewChatroomIds(chatroomIds);
+    });
+  }
+
+  private uploadFile(file: File): Promise<number>{
+    return new Promise<number>((resolve, reject) => {
+      this._fileService.uploadFile(file).subscribe(
+        (fileResponseDTO: FileResponseDTO) => {
+          console.log(fileResponseDTO);
+          resolve(fileResponseDTO.fileId);
+        },
+        err => {
+          console.log(err);
+          reject(-1);
+        }
+      );
     });
   }
 }

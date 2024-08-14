@@ -1,8 +1,10 @@
-<app-date-marker *ngIf="showDate" [date]="timestamp"></app-date-marker>
+<app-date-marker *ngIf="showDate" [date]="message.timeStamp"></app-date-marker>
 <div class="message-container" [ngClass]="{'sent': isSender}">
   <div class="message" [ngClass]="{'sent': isSender, 'received': !isSender}">
-    <p class="message-content" [innerHTML]="content | linkify">
+    <p class="message-content" [innerHTML]="message.content| linkify">
       <!-- <span class="timestamp">{{ timestamp | date:'HH:mm' }}</span> -->
     </p>
+    <br>
+    <app-file-badge *ngIf="message.attachment != undefined" [file]="message.attachment" (downloadFileEvent)="downloadFile($event)"></app-file-badge>
   </div>
 </div>

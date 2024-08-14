@@ -1,6 +1,6 @@
 <body>
   <div class="login-container">
-      <h1>UTN ClassMate</h1>
+      <img src="assets/140x45-Blanco.svg" class="logo" alt="ClassMate">
       <h2>Iniciar Sesión</h2>
       <h5 *ngIf="credencialesIncorrectas && !loginForm.touched"><span class="badge badge-primary text-danger">Mail y/o contraseña incorrectos</span></h5>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">

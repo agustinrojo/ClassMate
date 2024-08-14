@@ -217,23 +217,25 @@ body {
 
 .message-input {
   display: flex;
+  align-items: center; /* Alinea verticalmente todos los elementos */
   padding: 15px;
   background-color: #2a2a2a;
   border-top: 1px solid #3a3a3a;
+  gap: 10px; /* Espaciado uniforme entre los elementos */
 }
 
-.message-input input {
+.message-input input[type="text"] {
   flex-grow: 1;
   padding: 10px;
   border: none;
   border-radius: 5px;
   background-color: #3a3a3a;
   color: #ffffff;
-  outline: none; /* Remove the blue outline */
+  outline: none;
+  height: 100%; /* Asegura que el input tenga el 100% de la altura del contenedor */
 }
 
 .message-input button {
-  margin-left: 10px;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -241,6 +243,7 @@ body {
   color: #ffffff;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+  height: 100%; /* Mantiene la altura consistente con otros elementos */
 }
 
 .message-input button:hover {
@@ -248,10 +251,10 @@ body {
 }
 
 .message-input button:disabled {
-  background-color: #3d3d3d; /* Un tono ligeramente más claro que el fondo original */
-  color: #cccccc; /* Un color de texto un poco más claro */
-  cursor: default; /* Deja el cursor en su estado predeterminado */
-  opacity: 0.8; /* Un cambio leve en la opacidad para mostrar que está deshabilitado */
+  background-color: #3d3d3d;
+  color: #cccccc;
+  cursor: default;
+  opacity: 0.8;
 }
 
 .input-group .form-control {
@@ -265,3 +268,32 @@ body {
   outline: none; /* Remove the blue outline when focused */
 }
 
+.file-upload-label {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centra el contenido dentro del label */
+  padding: 10px;
+  background-color: #fe6601;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 100%; /* Asegura que tenga la misma altura que el input */
+}
+
+.file-upload-input {
+  display: none; /* Oculta el input de archivo real */
+}
+
+.file-upload-label:hover {
+  background-color: #fc7f00; /* Color del botón al pasar el cursor */
+}
+
+
+.file-section{
+  display: flex;
+  align-items: center; /* Alinea verticalmente todos los elementos */
+  padding: 15px;
+  background-color: #2a2a2a;
+  border-top: 1px solid #3a3a3a; /* Espaciado uniforme entre los elementos */
+}

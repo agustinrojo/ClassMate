@@ -1,5 +1,6 @@
 package com.example.chat_v1.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +25,7 @@ public class ChatMessage {
     private Long receiverId;
     private String content;
     private Date timeStamp;
-
+    @Nullable
+    @OneToOne
+    private Attachment attachment;
 }

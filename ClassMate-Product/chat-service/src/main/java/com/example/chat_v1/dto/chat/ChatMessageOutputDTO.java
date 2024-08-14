@@ -1,5 +1,7 @@
 package com.example.chat_v1.dto.chat;
 
+import com.example.chat_v1.dto.file.FileDTO;
+import jakarta.annotation.Nullable;
 import lombok.*;
 import java.util.Date;
 
@@ -15,4 +17,5 @@ public class ChatMessageOutputDTO {
     private String chatId;
     private String content;
     private Date timeStamp;
+    private FileDTO attachment;
 }

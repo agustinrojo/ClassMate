@@ -31,7 +31,7 @@ h1 {
 h2 {
   margin-bottom: 1em;
   font-size: 1.5em;
-  color: #b07a57; /* Tono cálido */
+  color: #fc7f00; /* Tono cálido */
 }
 
 form {
@@ -67,7 +67,7 @@ input[type="text"]:focus, input[type="text"]:valid {
 
 button {
   padding: 10px;
-  background-color: #8c6e48; /* Fondo del botón */
+  background-color: #fe6601; /* Fondo del botón */
   color: white;
   border: none;
   border-radius: 5px;
@@ -79,12 +79,16 @@ button {
 }
 
 button:hover {
-  background-color: #725a3d; /* Color del botón al pasar el cursor */
+  background-color: #fc7f00; /* Color del botón al pasar el cursor */
+}
+
+.logo {
+  width: 280px;
+  height: 90px;
 }
 
 button:disabled,
 .button-disabled {
-  background-color: #b48c61; /* Color de fondo cuando el botón está deshabilitado */
   cursor: not-allowed; /* Cambia el cursor a no permitido */
 }
 
