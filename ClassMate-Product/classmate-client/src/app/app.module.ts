@@ -28,7 +28,8 @@ import { CreateProfileModule } from './create-profile/create-profile.module';
     AuthModule,
     RouterModule,
     HomeModule,
-    CreateProfileModule
+    CreateProfileModule,
+
   ],
   providers: [
     AuthServiceService,

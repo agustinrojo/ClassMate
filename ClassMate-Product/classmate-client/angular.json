@@ -96,7 +96,9 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/@fullcalendar/core/main.css",
+              "node_modules/@fullcalendar/daygrid/main.css"
             ],
             "scripts": []
           }
