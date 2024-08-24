@@ -1,4 +1,41 @@
+/* @import "../../../../../node_modules/bootswatch/dist/darkly/bootstrap.min.css"; */
+
 .fc { /* the calendar root */
   max-width: 1100px;
   margin: 0 auto;
+  overflow: hidden;
+}
+
+.table-bordered > :not(caption) > * > * {
+  border-width: 0
+}
+
+.fc .fc-cell-shaded, .fc .fc-day-disabled {
+  background-color: #3e4144;
+}
+
+
+.fc-theme-bootstrap .fc-toolbar.fc-header-toolbar {
+  background-color: #343a40; /* Darker background for the toolbar */
+  color: #ffffff; /* White text color */
+}
+
+.fc-theme-bootstrap .fc-button {
+  background-color: #495057; /* Button background color */
+  color: #ffffff; /* Button text color */
+  border-color: #495057; /* Button border color */
+}
+
+.fc-theme-bootstrap .fc-button:hover {
+  background-color: #6c757d; /* Button hover color */
+  color: #ffffff; /* Button text color on hover */
+  border-color: #6c757d; /* Button border color on hover */
+}
+
+.fc-theme-bootstrap td, .fc-theme-bootstrap th {
+  background-color: #343a40; /* Background for table cells */
+  color: #ffffff; /* Text color for table cells */
+}
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0;
 }

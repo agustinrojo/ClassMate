@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { CalendarOptions, Calendar } from '@fullcalendar/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { CalendarOptions } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { FullCalendarComponent } from '@fullcalendar/angular';
+import bootstrapPlugin from '@fullcalendar/bootstrap'
+import esLocale from '@fullcalendar/core/locales/es';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class CalendarComponent implements OnInit {
 
@@ -19,14 +21,17 @@ export class CalendarComponent implements OnInit {
       initialView: 'dayGridMonth',
       plugins: [
         dayGridPlugin,
-        interactionPlugin
+        interactionPlugin,
+        bootstrapPlugin
       ],
       headerToolbar: {
         left: 'prev, next today',
         center: 'title',
         right: ''
       },
-      themeSystem: 'standard',
+      themeSystem: 'bootstrap',
+      locales: [esLocale],
+      locale: 'es',
       height: 'auto',
       dateClick: this.handleDateClick.bind(this),
       events: '/api/events', // TODO: Traer eventos del back
