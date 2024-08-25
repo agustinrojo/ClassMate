@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommentService } from '../../../services/comment.service';
 import { CommentUpdateDTO } from '../../../services/dto/comment/comment-update-dto.interface';
 import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
@@ -91,6 +91,8 @@ export class EditCommentComponent implements OnInit{
     this.filesToAdd.splice(fileIndex, 1);
   }
 
-
+  get bodyControl(): FormControl {
+    return this.editCommentForm.get('body') as FormControl;
+  }
 
 }

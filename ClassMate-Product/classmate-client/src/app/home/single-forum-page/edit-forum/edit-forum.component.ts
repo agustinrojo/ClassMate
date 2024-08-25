@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ForumService } from '../../../services/forum.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Title } from '@angular/platform-browser';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
 import { ForumData } from '../../interfaces/forum-data.interface';
 import { ForumRequestDTO } from '../../../services/dto/forum/create/forum-request-dto.interface';
@@ -11,9 +10,9 @@ import { debounceTime, delay } from 'rxjs';
 @Component({
   selector: 'app-edit-forum',
   templateUrl: './edit-forum.component.html',
-  styleUrl: './edit-forum.component.css'
+  styleUrls: ['./edit-forum.component.css']
 })
-export class EditForumComponent implements OnInit{
+export class EditForumComponent implements OnInit {
   public forumId!: number;
   public editForumForm!: FormGroup;
   public disableBtn: boolean = false;
@@ -32,20 +31,31 @@ export class EditForumComponent implements OnInit{
     this._forumStateService.getForumData().subscribe((forumData: ForumData | null) => {
       if(forumData){
         this.editForumForm = this._fb.group({
-          title: [forumData.title, Validators.required , []],
-          description: [forumData.description, Validators.required, []]
+          title: [forumData.title, [
+            Validators.required,
+            Validators.maxLength(19),
+            Validators.pattern('^[a-zA-Z0-9 _-]*$') // Allows letters, numbers, spaces, hyphens, and underscores
+          ]],
+          description: [forumData.description, [Validators.required, Validators.maxLength(300)]]
         })
       } else {
         this.editForumForm = this._fb.group({
-          title: ["", Validators.required , []],
-          description: ["", Validators.required, []]
+          title: ["", [
+            Validators.required,
+            Validators.maxLength(100),
+            Validators.pattern('^[a-zA-Z0-9 _-]*$')
+          ]],
+          description: ["", [Validators.required, Validators.maxLength(300)]]
         })
       }
     })
-
   }
 
-  public editForum(){
+  public editForum() {
+    if (this.editForumForm.invalid) {
+      return; // Prevent form submission if validation fails
+    }
+    this.disableBtn = true;
     let forumUpdate: ForumRequestDTO = {
       title: this.editForumForm.get("title")!.value,
       description: this.editForumForm.get("description")!.value
@@ -61,11 +71,7 @@ export class EditForumComponent implements OnInit{
     })
   }
 
-
-
-  public goBack(){
+  public goBack() {
     this._router.navigate([`forum/${this.forumId}`]);
   }
-
-
 }

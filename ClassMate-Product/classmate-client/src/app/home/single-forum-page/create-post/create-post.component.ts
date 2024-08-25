@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { PostService } from '../../../services/post.service';
 import { PostRequestDTO } from '../../../services/dto/post/post-request-dto.interface';
@@ -80,6 +80,13 @@ export class CreatePostComponent implements OnInit{
   }
 
 
+  public updatePostBody(newContent: string) {
+    this.createPostForm.get("body")!.setValue(newContent);
+  }
+
+  get bodyControl(): FormControl {
+    return this.createPostForm.get('body') as FormControl;
+  }
 
 
 }

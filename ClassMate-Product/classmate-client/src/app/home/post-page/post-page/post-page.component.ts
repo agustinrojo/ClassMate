@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostAPIResponseDTO } from '../../../services/dto/post/post-api-response-dto';
 import { PostService } from '../../../services/post.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommentDTORequest } from '../../../services/dto/comment/comment-request-dto.interface';
 import { LoginResponse } from '../../../auth/dto/login-response.interface';
 import { CommentService } from '../../../services/comment.service';
@@ -148,6 +148,7 @@ export class PostPageComponent implements OnInit{
       body : this.post!.body,
       files: this.post.files
     }
+
     this._postStateService.setPostData(postData);
     this._router.navigate([`forum/${this.post.forumId}/post/edit/${this.post?.id}`]);
   }
@@ -194,6 +195,8 @@ export class PostPageComponent implements OnInit{
     return fileDTO;
   }
 
-
+  get bodyControl(): FormControl {
+    return this.bodyForm.get('body') as FormControl;
+  }
 
 }

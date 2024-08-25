@@ -40,6 +40,7 @@ public class ChatMessageService {
                 chatMessage.getReceiverId(),
                 true
         ).orElseThrow();
+
         newChatMessage.setChatId(chatId);
         newChatMessage.setTimeStamp(new Date());
         Attachment attachment = newChatMessage.getAttachment();

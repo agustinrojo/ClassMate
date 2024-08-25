@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { delay } from 'rxjs';
 import { User } from './../../../auth/dto/user-dto.interface';
 import { UserProfileService } from '../../../services/user-profile.service';
@@ -264,7 +264,7 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
 
   private initMessageForm() {
     this.messageForm = this._fb.group({
-      messageInput: ["", Validators.required, []]
+      messageInput: new FormControl("", Validators.required)
     });
   }
 
@@ -301,5 +301,10 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
         }
       );
     });
+
+  get messageInputControl(): FormControl {
+    return this.messageForm.get('messageInput') as FormControl;
+
   }
+}
 }
