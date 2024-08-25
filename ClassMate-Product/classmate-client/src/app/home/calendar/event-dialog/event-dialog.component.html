@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Nuevo Evento</h1>
+<div mat-dialog-content>
+  <p>Título</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.title">
+  </mat-form-field>
+  <p>Inicio</p>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="data.start">
+  </mat-form-field>
+  <p>Fin</p>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="data.end">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="data">Aceptar</button>
+</div>

@@ -1,10 +1,13 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { CalendarOptions, EventInput } from '@fullcalendar/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CalendarOptions, DateSelectArg, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import bootstrapPlugin from '@fullcalendar/bootstrap'
 import esLocale from '@fullcalendar/core/locales/es';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { MatDialog } from '@angular/material/dialog';
+import { EventDialogComponent } from '../event-dialog/event-dialog.component';
+import { EventData } from '../../interfaces/calendar/event-dialog/event-data.interface';
 
 @Component({
   selector: 'app-calendar',
@@ -13,7 +16,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
   encapsulation: ViewEncapsulation.None
 })
 export class CalendarComponent implements OnInit {
-
+  @ViewChild('calendar', { static: false }) fullCalendar!: FullCalendarComponent;
   calendarOptions?: CalendarOptions;
   selectedEvent: any = { id: '', title: '', start: '', end: '' }; // Event object to bind with modal inputs
   eventsArray: EventInput[] = [ // Explicitly define events as an array
@@ -24,6 +27,10 @@ export class CalendarComponent implements OnInit {
       end: '2024-08-27'
     }
   ];
+
+  constructor(
+    public dialog: MatDialog
+  ){}
 
 
   ngOnInit(): void {
@@ -49,48 +56,46 @@ export class CalendarComponent implements OnInit {
       editable: true,
       selectable: true,
       select: this.handleDateSelect.bind(this),
-      dateClick: this.handleDateClick.bind(this),
+      // dateClick: this.handleDateClick.bind(this),
       progressiveEventRendering: true
     }
   }
 
 
-  handleDateSelect(selectInfo: any) {
-    this.selectedEvent = {
-      id: '',
-      title: '',
-      start: selectInfo.startStr,
-      end: selectInfo.endStr
-    };
-    // Open modal
-    this.openEventModal();
-  }
-
-  openEventModal(): void {
-    const modal = document.getElementById('eventModal');
-    if (modal) {
-      modal.style.display = 'block'; // Show modal
+  private handleDateSelect(selectInfo: DateSelectArg) {
+    if (selectInfo.view.type !== 'dayGridMonth') {
+      return; // Solo actuar si no es un clic en 'dayGridMonth'
     }
+    // // Open modal
+    this.openEventDialogAfterSelect(selectInfo);
+    console.log(selectInfo);
   }
 
-  closeEventModal(): void {
-    const modal = document.getElementById('eventModal');
-    if (modal) {
-      modal.style.display = 'none'; // Hide modal
-    }
+
+  private openEventDialogAfterSelect(selectInfo: DateSelectArg){
+    const dialogRef = this.dialog.open(EventDialogComponent, {
+      width: '250px',
+      height: '500px',
+      data: {
+        title: "",
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((data: EventData) => {
+      this.closeDialogEvent(data);
+    });
   }
 
-  saveEvent(): void {
-    if (this.calendarOptions && this.calendarOptions.events) {
-      this.eventsArray.push({...this.selectedEvent})
-      console.log(this.eventsArray);
-
-    }
-    this.closeEventModal();
+  private closeDialogEvent(data: EventData){
+    this.fullCalendar.getApi().addEvent({
+      id: "",
+      title: data.title,
+      start: data.start,
+      end: data.end
+    });
+    console.log(data);
   }
 
-  handleDateClick(arg: any): void {
-    console.log('Date clicked:', arg.dateStr);
-    // Logic to add events
-  }
 }

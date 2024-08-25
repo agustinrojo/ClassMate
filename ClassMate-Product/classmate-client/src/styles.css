@@ -21,3 +21,6 @@ body {
   background-repeat: no-repeat; /* Evita que la imagen se repita */
 }
 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

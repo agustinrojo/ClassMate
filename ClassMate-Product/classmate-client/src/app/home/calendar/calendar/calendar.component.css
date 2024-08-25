@@ -1,9 +1,16 @@
 /* @import "../../../../../node_modules/bootswatch/dist/darkly/bootstrap.min.css"; */
+.fullCalendar {
+
+}
+
 
 .fc { /* the calendar root */
   max-width: 1100px;
   margin: 0 auto;
   overflow: hidden;
+  margin-right: 10%;
+  border-radius: 20px;
+  z-index: 1000;
 }
 
 .table-bordered > :not(caption) > * > * {
@@ -13,9 +20,15 @@
 
 
 .fc-theme-bootstrap .fc-toolbar.fc-header-toolbar {
-  background-color: #343a40; /* Darker background for the toolbar */
+  background-color: #2c3035; /* Darker background for the toolbar */
   color: #ffffff; /* White text color */
+  padding: 2%;
+  margin-top: 10%;
+  box-shadow: 2px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
+
 
 .fc-theme-bootstrap .fc-button {
   background-color: #495057; /* Button background color */
