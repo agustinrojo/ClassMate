@@ -1,1 +1,25 @@
 <full-calendar class="fullCalendar" [options]="calendarOptions"></full-calendar>
+
+
+<!-- Event Modal -->
+<div id="eventModal" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeEventModal()">&times;</span>
+    <h2>Create Event</h2>
+    <form (submit)="saveEvent()">
+      <div class="form-group">
+        <label for="eventTitle">Event Title:</label>
+        <input type="text" id="eventTitle" [(ngModel)]="selectedEvent.title" name="title" required>
+      </div>
+      <div class="form-group">
+        <label for="eventStart">Start Date:</label>
+        <input type="text" id="eventStart" [(ngModel)]="selectedEvent.start" name="start" readonly>
+      </div>
+      <div class="form-group">
+        <label for="eventEnd">End Date:</label>
+        <input type="text" id="eventEnd" [(ngModel)]="selectedEvent.end" name="end" readonly>
+      </div>
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>
