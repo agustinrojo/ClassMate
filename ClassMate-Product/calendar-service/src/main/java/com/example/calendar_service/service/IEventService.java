@@ -13,4 +13,6 @@ public interface IEventService {
     EventResponseDTO saveEvent(EventRequestDTO eventRequestDTO);
 
     void updateEvent(Long eventId, EventUpdateDTO eventUpdateDTO);
+
+    void deleteEvent(Long eventId, Long userId);
 }

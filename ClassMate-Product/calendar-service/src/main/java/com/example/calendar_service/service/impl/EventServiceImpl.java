@@ -4,6 +4,8 @@ import com.example.calendar_service.dto.EventRequestDTO;
 import com.example.calendar_service.dto.EventResponseDTO;
 import com.example.calendar_service.dto.EventUpdateDTO;
 import com.example.calendar_service.entity.Event;
+import com.example.calendar_service.exception.EventNotFoundException;
+import com.example.calendar_service.exception.UnauthorizedActionException;
 import com.example.calendar_service.mapper.IEventMapper;
 import com.example.calendar_service.repository.IEventRepository;
 import com.example.calendar_service.service.IEventService;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,10 @@ public class EventServiceImpl implements IEventService {
         LOGGER.info("Getting events by user with id: {}", userId);
         List<Event> events = eventRepository.findEventsByUserId(userId);
 
+        if (events == null || events.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         return events.stream().map(eventMapper::mapToResponseEventDTO).collect(Collectors.toList());
     }
 
@@ -49,7 +56,7 @@ public class EventServiceImpl implements IEventService {
         LOGGER.info("Updating event with id: {}", eventId);
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found with id: " + eventId));
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
 
         event.setTitle(eventUpdateDTO.getTitle());
         event.setDescription(eventUpdateDTO.getDescription());
@@ -57,5 +64,17 @@ public class EventServiceImpl implements IEventService {
         event.setEndDate(eventUpdateDTO.getEndDate());
 
         eventRepository.save(event);
+    }
+
+    @Override
+    public void deleteEvent(Long eventId, Long userId) {
+        LOGGER.info("Deleting event with id: {}", eventId);
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+        if (!event.getUserId().equals(userId)) {
+            throw new UnauthorizedActionException("User not authorized to delete this comment");
+        }
+
+        eventRepository.delete(event);
     }
 }
