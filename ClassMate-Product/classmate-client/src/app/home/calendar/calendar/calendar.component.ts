@@ -15,6 +15,7 @@ import { AuthServiceService } from '../../../auth/auth-service.service';
 import { EventImpl } from '@fullcalendar/core/internal';
 import { EventUpdateDTO } from '../../../services/dto/calendar/event-update-dto.interface';
 import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
+import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 
 @Component({
   selector: 'app-calendar',
@@ -130,7 +131,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   private handleEventClick(eventInfo: EventClickArg) {
     let event = eventInfo.event;
     // // Open modal
-    this.openEventDialogAfterEventClick(event);
+    // this.openEventDialogAfterEventClick(event);
+    this.openDetailDialog(event)
   }
 
   private handleEventDrop(eventInfo: EventDropArg) {
@@ -193,6 +195,58 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   private closeDialogEvent(data: EventData){
     this.saveEvent(data);
+  }
+
+  private openDetailDialog(eventInfo: EventImpl){
+    console.log(eventInfo);
+    const dialogRef = this.dialog.open(DetailDialogComponent, {
+      data: {
+        id: eventInfo.id,
+        title: eventInfo.title,
+        description: eventInfo.extendedProps['description'],
+        start: eventInfo.start,
+        end: eventInfo.end
+      }
+    })
+    dialogRef.afterClosed().subscribe((result:EventDataResult) => {
+      // Aquí puedes manejar lo que suceda después de cerrar el diálogo
+      if(!result){
+        return;
+      } else if(result.edit) {
+        this.openEditEventDialog(eventInfo);
+      } else if(result.delete) {
+        this.deleteEvent(result.eventId!)
+      }
+    });
+  }
+
+  private openEditEventDialog(eventInfo: EventImpl){
+    const dialogRef = this.dialog.open(EventDialogComponent, {
+      width: '250px',
+      height: '500px',
+      data: {
+        id: eventInfo.id,
+        title: eventInfo.title,
+        description: eventInfo.extendedProps['description'],
+        start: eventInfo.startStr,
+        end: eventInfo.endStr,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: EventDataResult) => {
+      if (!result) {
+        // No action was taken; simply close the dialog
+        return;
+      }
+      if (result.delete) {
+        // Handle event deletion
+        this.deleteEvent(result.eventId!);
+      } else if (result.title && (result.start || result.end)) {
+        // Handle event update
+        this.updateEvent(Number(eventInfo.id), result);
+      }
+      // If neither delete nor update, no action is required.
+    })
   }
 
   private saveEvent( data: EventData ): void {

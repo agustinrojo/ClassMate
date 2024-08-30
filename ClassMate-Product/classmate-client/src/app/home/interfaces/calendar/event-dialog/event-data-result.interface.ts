@@ -5,4 +5,5 @@ export interface EventDataResult {
   description?: string;
   start?: string;   // Updated start date of the event
   end?: string;     // Updated end date of the event
+  edit?: boolean; // Indicates if the edit button was clicked
 }

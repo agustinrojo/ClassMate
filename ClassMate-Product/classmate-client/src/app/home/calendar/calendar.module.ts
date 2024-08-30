@@ -7,12 +7,15 @@ import { EventDialogComponent } from './event-dialog/event-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import {MatMenuModule} from '@angular/material/menu';
+import { DetailDialogComponent } from './detail-dialog/detail-dialog.component';
 
 
 @NgModule({
   declarations: [
     CalendarComponent,
-    EventDialogComponent
+    EventDialogComponent,
+    DetailDialogComponent
   ],
   imports: [
     CommonModule,
@@ -21,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
     MatDialogModule,
     MatButtonModule,
     MatInputModule,
+    MatMenuModule
   ],
   exports: [
     CalendarComponent
