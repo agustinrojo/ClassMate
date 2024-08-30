@@ -5,6 +5,7 @@ import com.example.calendar_service.dto.EventResponseDTO;
 import com.example.calendar_service.entity.Event;
 import org.mapstruct.Mapper;
 
+
 @Mapper(componentModel = "spring")
 public interface IEventMapper {
 

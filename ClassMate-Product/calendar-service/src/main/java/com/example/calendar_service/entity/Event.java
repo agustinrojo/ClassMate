@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -30,9 +31,9 @@ public class Event {
     private String description;
 
     @Column
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column
-    private Date endDate;
+    private LocalDate endDate;
 
 }

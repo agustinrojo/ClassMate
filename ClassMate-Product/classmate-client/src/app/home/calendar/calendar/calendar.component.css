@@ -1,7 +1,7 @@
 /* @import "../../../../../node_modules/bootswatch/dist/darkly/bootstrap.min.css"; */
-.fullCalendar {
+/* .fullCalendar {
 
-}
+} */
 
 
 .fc { /* the calendar root */
@@ -85,4 +85,19 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+.fc .fc-daygrid-day-frame {
+  min-height: 100%;
+  position: relative;
+  width: 150px;
+  height: 100px;
+}
+
+.fc .fc-daygrid-day-number {
+  padding: 4px;
+  /* right: 50%; */
+  position: relative;
+  z-index: 4;
+  font-size: small;
 }

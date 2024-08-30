@@ -1,6 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
 import { EventData } from '../../interfaces/calendar/event-dialog/event-data.interface';
+import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
+
+
 
 @Component({
   selector: 'app-event-dialog',
@@ -8,6 +11,7 @@ import { EventData } from '../../interfaces/calendar/event-dialog/event-data.int
   styleUrl: './event-dialog.component.css'
 })
 export class EventDialogComponent {
+
 
   constructor(
     public dialogRef: MatDialogRef<EventDialogComponent>,
@@ -17,4 +21,12 @@ export class EventDialogComponent {
   public onNoClick(): void {
     this.dialogRef.close();
   }
+
+  public deleteEvent() {
+    const result: EventDataResult = {
+      delete: true,
+      eventId: this.data.id!,
+  };
+  this.dialogRef.close(result);
+    }
 }
