@@ -48,6 +48,10 @@ export class NavComponent implements OnInit{
     this._router.navigate(["chat"])
   }
 
+  public navigateToCalendar() {
+    this._router.navigate(["calendar"])
+  }
+
   private getUserProfile(){
     this._userProfileService.getUserProfile(this.userId.toString()).subscribe((resp: UserProfileResponseDTO) => {
       this.userProfile = resp;
