@@ -20,5 +20,4 @@ export class FileService {
     formData.append("file", file);
     return this.http.post<FileResponseDTO>(`${this.baseUrl}`, formData);
   }
-
 }

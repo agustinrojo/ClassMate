@@ -295,16 +295,20 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
           console.log(fileResponseDTO);
           resolve(fileResponseDTO.fileId);
         },
-        err => {
+        (err) => {
+
           console.log(err);
           reject(-1);
         }
       );
     });
 
+
+  }
+
   get messageInputControl(): FormControl {
     return this.messageForm.get('messageInput') as FormControl;
 
   }
 }
-}
+

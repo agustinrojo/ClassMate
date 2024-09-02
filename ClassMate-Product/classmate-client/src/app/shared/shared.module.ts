@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchComponent } from './search/search.component';
 import { SharedSidebarComponent } from './shared-sidebar/shared-sidebar.component';
 import { TaggingComponent } from './tagging/tagging.component';
+import { CalendarModule } from "../home/calendar/calendar.module";
 
 
 
@@ -30,8 +31,9 @@ import { TaggingComponent } from './tagging/tagging.component';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    CalendarModule
+],
   exports: [
     FileBadgeComponent,
     ValorationComponent,

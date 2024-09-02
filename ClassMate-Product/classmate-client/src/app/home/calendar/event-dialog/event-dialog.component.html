@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>{{ data.id ? 'Editar Evento' : 'Nuevo Evento' }}</h1>
+<div mat-dialog-content>
+  <p>Title</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.title" maxlength="30">
+    <mat-hint align="end">{{ data.title.length || 0 }}/30</mat-hint>
+  </mat-form-field>
+  <p>Description</p>
+  <mat-form-field>
+    <textarea matInput [(ngModel)]="data.description" maxlength="100"></textarea>
+    <mat-hint align="end">{{ data.description.length || 0 }}/100</mat-hint>
+  </mat-form-field>
+  <p>Start</p>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="data.start">
+  </mat-form-field>
+  <p>End</p>
+  <mat-form-field>
+    <input type="date" matInput [(ngModel)]="data.end">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data" [disabled]="!data.title || data.title.trim().length === 0 || data.title.length > 30">Accept</button>
+  <button *ngIf="data.id" mat-button color="warn" (click)="deleteEvent()">Delete</button>
+</div>

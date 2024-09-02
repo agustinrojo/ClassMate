@@ -15,6 +15,7 @@ import { TruncatePipe } from './shared/pipes/truncate.pipe';
 import { FileSizePipe } from './shared/pipes/file-size.pipe';
 import { CreateProfileComponent } from './create-profile/create-profile.component';
 import { CreateProfileModule } from './create-profile/create-profile.module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 
 
@@ -28,7 +29,8 @@ import { CreateProfileModule } from './create-profile/create-profile.module';
     AuthModule,
     RouterModule,
     HomeModule,
-    CreateProfileModule
+    CreateProfileModule,
+
   ],
   providers: [
     AuthServiceService,
@@ -36,7 +38,8 @@ import { CreateProfileModule } from './create-profile/create-profile.module';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,
       multi: true
-    }
+    },
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

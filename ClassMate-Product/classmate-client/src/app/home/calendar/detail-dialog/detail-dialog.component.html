@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+
+<div mat-dialog-content class="event-details-container">
+  <!-- Event Description -->
+  <div class="event-description">
+    <p>{{ data.description }}</p>
+  </div>
+
+  <!-- Event Date and Time -->
+  <div class="event-dates">
+    <div class="date-label">Inicio: </div>
+    <div class="date-value">{{ data.start | date }}</div>
+    <div class="date-label">Fin: </div>
+    <div class="date-value">{{ data.end | date }}</div>
+  </div>
+
+  <!-- Actions -->
+  <div class="event-actions">
+    <button mat-button color="primary" (click)="onEdit()">Edit</button>
+    <button mat-button color="warn" (click)="onDelete()">Delete</button>
+  </div>
+</div>

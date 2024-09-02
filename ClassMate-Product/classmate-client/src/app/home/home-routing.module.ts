@@ -17,6 +17,7 @@ import { EditProfileComponent } from './profile-page/edit-profile/edit-profile.c
 import { ForumSearchResultComponent } from './search/forum-search-result/forum-search-result.component';
 import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
 import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
+import { CalendarComponent } from './calendar/calendar/calendar.component';
 
 
 export const routes: Routes = [
@@ -86,6 +87,10 @@ export const routes: Routes = [
       {
         path       : "chat",
         component  : ChatContainerComponent
+      },
+      {
+        path: "calendar",
+        component: CalendarComponent
       }
     ]
   }

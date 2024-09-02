@@ -1,0 +1,40 @@
+.event-details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+}
+
+.event-description {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.event-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.date-label {
+  font-weight: bold;
+  color: #444;
+}
+
+.date-value {
+  margin-left: 10px;
+  color: #555;
+}
+
+.event-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+button[mat-button] {
+  font-weight: bold;
+}

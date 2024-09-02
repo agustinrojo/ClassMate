@@ -1,3 +1,8 @@
+/* styles.css or styles.scss */
+/* @import "../node_modules/bootstrap/dist/css/bootstrap.min.css"; */
+/* @import "../node_modules/bootswatch/dist/darkly/bootstrap.min.css"; */
+
+
 body {
   background-color: #1b1b1b; /* Fondo oscuro (negro) */
   margin: 0;
@@ -16,3 +21,6 @@ body {
   background-repeat: no-repeat; /* Evita que la imagen se repita */
 }
 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
