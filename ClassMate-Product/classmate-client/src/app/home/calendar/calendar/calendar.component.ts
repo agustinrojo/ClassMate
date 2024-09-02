@@ -306,6 +306,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
       if (event) {
         event.setProp('title', result.title); // Update title
+        event.setExtendedProp('description', result.description);
         event.setStart(result.start!); // Update start date
         event.setEnd(result.end!); // Update end date
       } else {
