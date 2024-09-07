@@ -20,5 +20,57 @@
               </div>
           </div>
       </div>
+
+
+
+  <!-- Notification Preferences -->
+  <div class="notification-preferences">
+    <h3>Notificaciones</h3>
+    <hr>
+    <div class="preference-item">
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="preferences.commentNotificationEnabled"
+          (change)="updatePreferences()"
+        />
+        Comentarios en Post Propio
+      </label>
+    </div>
+
+    <div class="preference-item">
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="preferences.likeNotificationEnabled"
+          (change)="updatePreferences()"
+        />
+        Likes
+      </label>
+    </div>
+
+    <div class="preference-item">
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="preferences.messageNotificationEnabled"
+          (change)="updatePreferences()"
+        />
+        Mensajes
+      </label>
+    </div>
+
+    <div class="preference-item">
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="preferences.eventNotificationEnabled"
+          (change)="updatePreferences()"
+        />
+        Eventos
+      </label>
+    </div>
   </div>
-</body>
+
+
+

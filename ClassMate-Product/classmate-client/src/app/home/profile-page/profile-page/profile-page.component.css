@@ -132,3 +132,60 @@ h2 {
       font-size: 1.2em;
   }
 }
+
+
+/* Style the preference section */
+.notification-preferences {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.preference-item {
+  margin-bottom: 10px;
+}
+
+/* Style the labels */
+.preference-item label {
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+  color: #f5f5f5;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.preference-item label:hover {
+  color: #d4a373; /* Warm hover color */
+}
+
+/* Style the checkboxes */
+.preference-item input[type="checkbox"] {
+  appearance: none;
+  background-color: #292929;
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 2px solid #d4a373; /* Outline color */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.preference-item input[type="checkbox"]:checked {
+  background-color: #d4a373; /* Checked color */
+  border-color: #f5f5f5; /* Outline color when checked */
+}
+
+.preference-item input[type="checkbox"]:checked::after {
+  content: '✓';
+  display: block;
+  color: #121212; /* Checkmark color */
+  font-size: 1em;
+  text-align: center;
+  line-height: 18px; /* Align checkmark vertically */
+}
+
+/* Add transition effects */
+.preference-item input[type="checkbox"]:hover {
+  border-color: #f5f5f5;
+}
