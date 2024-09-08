@@ -25,4 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE LOWER(u.userProfile.nickname) LIKE LOWER(CONCAT('%', :nickname, '%'))") // Modificado para ignoreCase
     Page<User> findByUserProfileNicknameContaining(@Param("nickname") String nickname, Pageable pageable);
+
+    @Query("SELECT u FROM User u JOIN FETCH u.userProfile WHERE u.id = :id")
+    Optional<User> findByIdWithUserProfile(@Param("id") Long id);
 }

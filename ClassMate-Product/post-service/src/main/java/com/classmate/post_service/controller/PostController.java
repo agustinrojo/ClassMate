@@ -93,12 +93,12 @@ public class PostController {
 
     /**
      * Create a new post.
-     * @param postRequestDTO the post to create
+     * @param postSaveDTO the post to create
      * @return the created post
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<PostResponseDTO> savePost(@ModelAttribute PostRequestDTO postRequestDTO) {
-        PostResponseDTO savedPost = postService.savePost(postRequestDTO);
+    public ResponseEntity<PostResponseDTO> savePost(@ModelAttribute PostSaveDTO postSaveDTO) {
+        PostResponseDTO savedPost = postService.savePost(postSaveDTO);
         return new ResponseEntity<>(savedPost, HttpStatus.CREATED);
     }
 

@@ -13,7 +13,7 @@ import { PostPageModule } from './post-page/post-page.module';
 import { FileBadgeComponent } from '../shared/file-badge/file-badge.component';
 import { ProfilePageComponent } from './profile-page/profile-page/profile-page.component';
 import { EditProfileComponent } from './profile-page/edit-profile/edit-profile.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { ForumSearchResultComponent } from './search/forum-search-result/forum-search-result.component';
 import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
@@ -42,7 +42,8 @@ import { ChatModule } from './chat/chat.module';
     SingleForumPageModule,
     ReactiveFormsModule,
     SharedModule,
-    ChatModule
+    ChatModule,
+    FormsModule
   ],
   exports: [
     HomeComponent

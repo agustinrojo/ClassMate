@@ -63,6 +63,19 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.delete-forum-subscription-routing-key}")
     private String deleteForumSubscriptionRoutingKey;
 
+    // Chat Messages
+    @Value("${rabbitmq.exchange.notifications}")
+    private String notificationsExchange;
+    @Value("${rabbitmq.queue.notifications.message-sender-request-queue}")
+    private String messageSenderNameRequestQueue;
+    @Value("${rabbitmq.queue.notifications.message-sender-response-queue}")
+    private String messageSenderNameResponseQueue;
+    @Value("${rabbitmq.notifications.message-sender-request.routing-key}")
+    private String messageSenderNameRequestRoutingKey;
+    @Value("${rabbitmq.notifications.message-sender-response.routing-key}")
+    private String messageSenderNameResponseRoutingKey;
+
+
     @Bean
     public Queue subscriptionQueue() {
         return new Queue(subscriptionQueue, true);
@@ -163,6 +176,37 @@ public class RabbitMQConfig {
                 .with(addChatroomRoutingKey);
     }
 
+    // Chat Messages
+    @Bean
+    public TopicExchange notificationsExchange() {
+        return new TopicExchange(notificationsExchange);
+    }
+
+    @Bean
+    public Queue messageSenderRequestQueue() {
+        return new Queue(messageSenderNameRequestQueue, true);
+    }
+
+    @Bean
+    public Queue messageSenderResponseQueue() {
+        return new Queue(messageSenderNameResponseQueue, true);
+    }
+
+    @Bean
+    public Binding messageSenderRequestBinding() {
+        return BindingBuilder
+                .bind(messageSenderRequestQueue())
+                .to(notificationsExchange())
+                .with(messageSenderNameRequestRoutingKey);
+    }
+
+    @Bean
+    public Binding messageSenderResponseBinding() {
+        return BindingBuilder
+                .bind(messageSenderResponseQueue())
+                .to(notificationsExchange())
+                .with(messageSenderNameResponseRoutingKey);
+    }
 
 
     @Bean

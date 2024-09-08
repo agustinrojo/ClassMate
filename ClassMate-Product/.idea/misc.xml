@@ -15,6 +15,7 @@
         <option value="$PROJECT_DIR$/chat_service/pom.xml" />
         <option value="$PROJECT_DIR$/chat-service/pom.xml" />
         <option value="$PROJECT_DIR$/calendar-service/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-service/pom.xml" />
       </list>
     </option>
   </component>

@@ -39,6 +39,13 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.delete-comment.routing-key}")
     private String deleteCommentRoutingKey;
 
+    // COMMENT NOTIFICATIONS
+    @Value("${rabbitmq.queue.notifications.comment-queue}")
+    private String commentNotificationQueue;
+    @Value("${rabbitmq.exchange.notifications}")
+    private String notificationsExchange;
+    @Value("${rabbitmq.notifications-comment.routing-key}")
+    private String commentNotificationRoutingKey;
 
 
     @Bean
@@ -89,6 +96,27 @@ public class RabbitMQConfig {
                 .to(fileExchange())
                 .with(deleteCommentRoutingKey);
     }
+
+    // COMMENT NOTIFICATIONS
+
+    @Bean
+    public Queue commentNotificationQueue() {
+        return new Queue(commentNotificationQueue, true);
+    }
+
+    @Bean
+    public TopicExchange notificationsExchange() {
+        return new TopicExchange(notificationsExchange);
+    }
+
+    @Bean
+    public Binding commentNotificationsBinding() {
+        return BindingBuilder
+                .bind(commentNotificationQueue())
+                .to(notificationsExchange())
+                .with(commentNotificationRoutingKey);
+    }
+
 
     @Bean
     public MessageConverter converter() {

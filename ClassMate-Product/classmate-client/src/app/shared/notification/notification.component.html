@@ -1,0 +1,32 @@
+<!-- Notification Bell Icon with Notification List -->
+<div class="notification-bell" (click)="toggleNotificationPanel()">
+  <i class="fa fa-bell"></i>
+  <span class="notification-dot" *ngIf="hasUnreadNotifications()"></span>
+</div>
+
+<!-- Notification Dropdown Panel -->
+<div class="notification-panel" *ngIf="showNotifications">
+  <div class="notification-header">
+    Notificaciones
+  </div>
+
+  <!-- If no notifications are available -->
+  <div class="no-notifications" *ngIf="notifications.length === 0">
+    No tenés notificaciones
+  </div>
+
+  <!-- Loop through notifications -->
+  <ul class="notification-list" *ngIf="notifications.length > 0">
+    <li *ngFor="let notification of notifications; trackBy: trackByNotificationId" (click)="goToNotification(notification)">
+      <div class="notification-item">
+        <span class="notification-type">{{ notification.type }}</span>
+        <p class="notification-text">{{ getNotificationText(notification) }}</p>
+      </div>
+    </li>
+  </ul>
+
+  <!-- Loader for when new notifications are being fetched -->
+  <div class="loader" *ngIf="isLoading">
+    <i class="fa fa-spinner fa-spin"></i> Loading...
+  </div>
+</div>

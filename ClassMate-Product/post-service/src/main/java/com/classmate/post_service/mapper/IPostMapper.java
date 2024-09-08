@@ -1,9 +1,6 @@
 package com.classmate.post_service.mapper;
 
-import com.classmate.post_service.dto.APIResponseDTO;
-import com.classmate.post_service.dto.PostDTO;
-import com.classmate.post_service.dto.PostRequestDTO;
-import com.classmate.post_service.dto.PostResponseDTO;
+import com.classmate.post_service.dto.*;
 import com.classmate.post_service.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,7 +14,9 @@ public interface IPostMapper {
 
     PostDTO convertToPostDTO(Post post);
 
-    Post mapToPost(PostRequestDTO postRequestDTO);
+//    Post mapToPost(PostRequestDTO postRequestDTO);
+
+    Post mapToPost(PostSaveDTO postSaveDTO);
 
     @Mapping(source = "attachments", target = "files")
     APIResponseDTO convertToAPIResponseDTO(Post post);
