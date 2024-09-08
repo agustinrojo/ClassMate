@@ -36,6 +36,7 @@ public class PostAuthorResponseConsumer {
             notification.setPostId(event.getPostId());
             notification.setCommentId(event.getCommentId());
             notification.setForumId(event.getForumId());
+            notification.setTitle(event.getTitle());
             notificationRepository.save(notification);
 
             // Convert to DTO and send via WebSocket

@@ -20,5 +20,4 @@ public class MessageNotificationResponseDTO extends NotificationDTO {
         this.senderId = senderId;
         this.senderName = senderName;
     }
-
 }

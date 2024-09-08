@@ -57,6 +57,12 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications-post-author-response.routing-key}")
     private String postAuthorResponseRoutingKey;
 
+    // MILESTONE NOTIFICATIONS
+    @Value("${rabbitmq.queue.notifications.milestone-queue}")
+    private String milestoneNotificationQueue;
+    @Value("${rabbitmq.notifications.milestone.routing-key}")
+    private String milestoneNotificationRoutingKey;
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -103,6 +109,11 @@ public class RabbitMQConfig {
         return new TopicExchange(notificationsExchange);
     }
 
+    // MILESTONE NOTIFICATIONS
+    @Bean
+    public Queue milestoneNotificationQueue() {
+        return new Queue(milestoneNotificationQueue, true);
+    }
 
     @Bean
     public Binding deletePostBinding() {
@@ -153,6 +164,16 @@ public class RabbitMQConfig {
                 .to(notificationsExchange())
                 .with(postAuthorResponseRoutingKey);
     }
+
+    // MILESTONE NOTIFICATIONS
+    @Bean
+    public Binding milestoneNotificationBinding() {
+        return BindingBuilder
+                .bind(milestoneNotificationQueue())
+                .to(notificationsExchange())
+                .with(milestoneNotificationRoutingKey);
+    }
+
 
     @Bean
     public MessageConverter converter() {

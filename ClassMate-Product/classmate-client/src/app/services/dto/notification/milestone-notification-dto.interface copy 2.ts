@@ -1,8 +1,8 @@
 import { NotificationDTO } from "./notification-dto.interface";
 
-export interface CommentNotificationDTO extends NotificationDTO {
+export interface MilestoneNotificationDTO extends NotificationDTO {
   postId: number;
-  commentId: number;
   forumId: number;
+  milestone: number;
   title: string;
 }

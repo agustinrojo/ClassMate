@@ -90,3 +90,15 @@
   background-color: #444;
   border-radius: 10px;
 }
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.loader i {
+  font-size: 24px;
+  color: #000;
+}

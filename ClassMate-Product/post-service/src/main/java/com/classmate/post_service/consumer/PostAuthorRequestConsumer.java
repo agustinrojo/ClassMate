@@ -26,17 +26,21 @@ public class PostAuthorRequestConsumer {
 
     @RabbitListener(queues = "${rabbitmq.queue.notifications.post-author-request-queue}")
     public void handlePostAuthorRequest(PostAuthorRequestEventDTO event) {
-        List<Object[]> result = postRepository.findAuthorIdAndForumIdById(event.getPostId());
+        List<Object[]> result = postRepository.findAuthorIdAndForumIdAndTitleById(event.getPostId());
+
         if (result != null && !result.isEmpty()) {
-            Object[] authorIdAndForumId = result.get(0); // Get the first (and presumably only) result
-            Long postAuthorId = (Long) authorIdAndForumId[0];
-            Long forumId = (Long) authorIdAndForumId[1];
+            Object[] authorIdAndForumIdAndTitle = result.get(0); // Get the first (and presumably only) result
+            Long postAuthorId = (Long) authorIdAndForumIdAndTitle[0];
+            Long forumId = (Long) authorIdAndForumIdAndTitle[1];
+            String title = (String) authorIdAndForumIdAndTitle[2];
+
 
             PostAuthorResponseEventDTO responseEvent = new PostAuthorResponseEventDTO(
                     event.getPostId(),
                     event.getCommentId(),
                     postAuthorId,
-                    forumId
+                    forumId,
+                    title
             );
             postPublisher.publishPostAuthorResponseEvent(responseEvent);
         } else {

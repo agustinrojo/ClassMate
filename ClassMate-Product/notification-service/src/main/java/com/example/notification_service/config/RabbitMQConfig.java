@@ -44,6 +44,12 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications.message-sender-response.routing-key}")
     private String messageSenderNameResponseRoutingKey;
 
+    // MILESTONE NOTIFICATIONS
+    @Value("${rabbitmq.queue.notifications.milestone-queue}")
+    private String milestoneNotificationQueue;
+    @Value("${rabbitmq.notifications.milestone.routing-key}")
+    private String milestoneNotificationRoutingKey;
+
 
     @Bean
     public Queue commentNotificationQueue() {
@@ -64,6 +70,8 @@ public class RabbitMQConfig {
     public TopicExchange notificationsExchange() {
         return new TopicExchange(notificationsExchange);
     }
+
+
 
     @Bean
     public Binding commentNotificationsBinding() {
@@ -88,6 +96,8 @@ public class RabbitMQConfig {
                 .to(notificationsExchange())
                 .with(postAuthorResponseRoutingKey);
     }
+
+
 
     // Chat Messages
     @Bean
@@ -127,6 +137,22 @@ public class RabbitMQConfig {
                 .bind(messageNotificationQueue())
                 .to(notificationsExchange())
                 .with(messageNotificationRoutingKey);
+    }
+
+    // MILESTONE NOTIFICATIONS
+    @Bean
+    public Queue milestoneNotificationQueue() {
+        return new Queue(milestoneNotificationQueue, true);
+    }
+
+
+    // MILESTONE NOTIFICATIONS
+    @Bean
+    public Binding milestoneNotificationBinding() {
+        return BindingBuilder
+                .bind(milestoneNotificationQueue())
+                .to(notificationsExchange())
+                .with(milestoneNotificationRoutingKey);
     }
 
     @Bean

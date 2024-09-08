@@ -37,6 +37,6 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByForumIdInOrderByCreationDateDesc(List<Long> forumIds, Pageable pageable);
 
-    @Query("SELECT p.authorId, p.forumId FROM Post p WHERE p.id = :postId")
-    List<Object[]> findAuthorIdAndForumIdById(@Param("postId") Long postId);
+    @Query("SELECT p.authorId, p.forumId, p.title FROM Post p WHERE p.id = :postId")
+    List<Object[]> findAuthorIdAndForumIdAndTitleById(@Param("postId") Long postId);
 }

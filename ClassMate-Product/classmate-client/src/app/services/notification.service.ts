@@ -1,6 +1,6 @@
 import { AuthServiceService } from '../auth/auth-service.service';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { NotificationDTO } from './dto/notification/notification-dto.interface';
@@ -21,6 +21,7 @@ export class NotificationService {
   constructor(
     private http: HttpClient,
     private authService: AuthServiceService,
+
   ) {
     this.loggedUserId = this.authService.getUserId();
     this.initWSConnection();
@@ -52,9 +53,10 @@ export class NotificationService {
   }
 
   // HTTP: Fetch all notifications for the logged-in user
-  public loadNotifications(): Observable<NotificationDTO[]> {
-    return this.http.get<NotificationDTO[]>(`${this.apiBaseUrl}/user/${this.loggedUserId}`);
+  public loadNotifications(page: number, size: number): Observable<any> {
+    return this.http.get<any>(`${this.apiBaseUrl}/user/${this.loggedUserId}?page=${page}&size=${size}`);
   }
+
 
   // HTTP: Mark notification as seen
   public updateNotification(notificationUpdate: NotificationUpdateDTO): Observable<void> {

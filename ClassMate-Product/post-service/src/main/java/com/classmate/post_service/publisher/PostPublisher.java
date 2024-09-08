@@ -3,6 +3,7 @@ package com.classmate.post_service.publisher;
 import com.classmate.post_service.dto.PostDeletionDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
+import com.classmate.post_service.dto.notification.MilestoneReachedEventDTO;
 import com.classmate.post_service.dto.notification.PostAuthorResponseEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,10 @@ public class PostPublisher {
 
     @Value("${rabbitmq.notifications-post-author-response.routing-key}")
     private String postAuthorResponseRoutingKey;
+
+    // MILESTONE NOTIFICATIONS
+    @Value("${rabbitmq.notifications.milestone.routing-key}")
+    private String milestoneNotificationRoutingKey;
 
     public PostPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -73,4 +78,11 @@ public class PostPublisher {
     public void publishPostAuthorResponseEvent(PostAuthorResponseEventDTO event) {
         rabbitTemplate.convertAndSend(notificationsExchange, postAuthorResponseRoutingKey, event);
     }
+
+    // VALORATIONS
+
+    public void publishMilestoneReachedEvent(MilestoneReachedEventDTO event) {
+        rabbitTemplate.convertAndSend(notificationsExchange, milestoneNotificationRoutingKey, event);
+    }
+
 }

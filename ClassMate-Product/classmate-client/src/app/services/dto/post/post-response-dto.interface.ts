@@ -6,6 +6,7 @@ export interface PostResponseDTO{
   authorId: number;
   title: string;
   body: string;
+  lastMilestone: number;
   creationDate: Date;
   files: FileDTO[];
   hasBeenEdited: boolean;

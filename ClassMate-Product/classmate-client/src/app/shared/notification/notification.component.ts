@@ -5,6 +5,7 @@ import { NotificationService } from '../../services/notification.service';
 import { CommentNotificationDTO } from '../../services/dto/notification/comment-notification-dto.interface copy';
 import { Router } from '@angular/router';
 import { MessageNotificationDTO } from '../../services/dto/notification/message-notification-dto.interface';
+import { MilestoneNotificationDTO } from '../../services/dto/notification/milestone-notification-dto.interface copy 2';
 
 @Component({
   selector: 'app-notification',
@@ -15,7 +16,12 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
   notifications: NotificationDTO[] = [];
   private notificationSubscription!: Subscription;
+  private currentPage: number = 0;
+  private pageSize: number = 10;
+  private totalPages: number = 0;
+  public isLoading: boolean = false; // Track if data is being loaded
   public showNotifications: boolean = false;
+
 
   constructor(
     private _notificationService: NotificationService,
@@ -29,14 +35,30 @@ export class NotificationComponent implements OnInit, OnDestroy {
       this.handleNotification(notification);
     });
 
-    this._notificationService.loadNotifications().subscribe((notifications: NotificationDTO[]) => {
-      this.notifications = notifications;
-    }, (error) => {
-      console.error("Failed to load notifications", error);
-      this.showNotifications = false;
-    }
-  );
+   // Load initial notifications
+    this.loadNotifications(this.currentPage);
 
+  }
+
+  loadNotifications(page: number): void {
+    this.isLoading = true;
+    this._notificationService.loadNotifications(page, this.pageSize).subscribe(response => {
+      this.notifications = [...this.notifications, ...response.content]; // Append new notifications
+      this.totalPages = response.totalPages;
+      this.isLoading = false; // Reset loading flag
+      this.cdRef.markForCheck(); // Trigger change detection
+    }, error => {
+      console.error("Failed to load notifications", error);
+      this.isLoading = false;
+      this.showNotifications = false;
+    });
+  }
+
+  loadMore(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.loadNotifications(this.currentPage);
+    }
   }
 
   ngOnDestroy(): void {
@@ -79,11 +101,19 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
   getNotificationText(notification: NotificationDTO): string {
     if (notification.type === "COMMENT") {
-      return 'Alguien comentó en tu post!';
+      const commentNotification = notification as CommentNotificationDTO;
+      const truncatedTitle = commentNotification.title.length > 40
+      ? commentNotification.title.substring(0, 40) + "..."
+      : commentNotification.title;
+      return `Recibiste un comentario en tu post "${truncatedTitle}"`;
     }
     if (notification.type === "MESSAGE") {
       const messageNotification = notification as MessageNotificationDTO;
       return `Recibiste un mensaje de ${messageNotification.senderName}!`;
+    }
+    if (notification.type === "MILESTONE") {
+      const milestoneNotification = notification as MilestoneNotificationDTO;
+      return `¡Tu post alcanzó ${milestoneNotification.milestone} valoraciones positivas!`;
     }
     return 'New notification';
   }
@@ -95,6 +125,9 @@ export class NotificationComponent implements OnInit, OnDestroy {
     } else if (notification.type === "MESSAGE") {
       const messageNotification = notification as MessageNotificationDTO;
       this._router.navigate(['/chat']);
+    } else if (notification.type === "MILESTONE") {
+      const milestoneNotification = notification as MilestoneNotificationDTO;
+      this._router.navigate([`/forum/${milestoneNotification.forumId}/post/${milestoneNotification.postId}`]);
     }
   }
 
@@ -103,18 +136,20 @@ export class NotificationComponent implements OnInit, OnDestroy {
     switch (notification.type) {
       case "COMMENT":
         const commentNotification = notification as CommentNotificationDTO;
-        // console.log("Comment notification received", commentNotification);
-        this.notifications.push(commentNotification);
+        this.notifications.unshift(commentNotification);
         break;
       case "MESSAGE":
         const messageNotification = notification as MessageNotificationDTO;
-        this.notifications.push(messageNotification);
+        this.notifications.unshift(messageNotification);
         break;
-        //TODO: Otros case
-        default:
+      case "MILESTONE":
+        const milestoneNotification = notification as MilestoneNotificationDTO;
+        this.notifications.unshift(milestoneNotification);
+        break;
+      default:
           console.warn("Unknown notification type", notification);
     }
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
   }
 
   // Hide the panel when clicked outside
@@ -125,8 +160,21 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
     if (!clickedInside && !clickedBell) {
       this.showNotifications = false;
+      this.markNotificationsAsSeen();
     }
   }
+
+    // Infinite scroll logic, don't ask
+    @HostListener('window:scroll', [])
+    onScroll(): void {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !this.isLoading) {
+        // When the user has scrolled to the bottom of the page
+        if (this.currentPage < this.totalPages - 1) {
+          this.currentPage++;
+          this.loadNotifications(this.currentPage);
+        }
+      }
+    }
 
   trackByNotificationId(index: number, notification: NotificationDTO): number {
     return notification.id;

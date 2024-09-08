@@ -125,19 +125,19 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {
+    public PostResponseDTO savePost(PostSaveDTO postSaveDTO) {
         LOGGER.info("Saving post...");
-        validatePost(postRequestDTO.getTitle(), postRequestDTO.getBody());
-        if (postRequestDTO.getFiles() != null && !postRequestDTO.getFiles().isEmpty()) {
-            validateAttachments(postRequestDTO.getFiles());
+        validatePost(postSaveDTO.getTitle(), postSaveDTO.getBody());
+        if (postSaveDTO.getFiles() != null && !postSaveDTO.getFiles().isEmpty()) {
+            validateAttachments(postSaveDTO.getFiles());
         }
 
-        List<Attachment> attachments = uploadFiles(postRequestDTO.getFiles());
+        List<Attachment> attachments = uploadFiles(postSaveDTO.getFiles());
 
-        Post post = postMapper.mapToPost(postRequestDTO);
+        Post post = postMapper.mapToPost(postSaveDTO);
         post.setCreationDate(LocalDateTime.now());
         post.setAttachments(attachments);
-        post.addUpvote(postRequestDTO.getAuthorId());
+        post.addUpvote(postSaveDTO.getAuthorId());
         Post savedPost = postRepository.save(post);
         PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
         postResponseDTO.setLikedByUser(true);

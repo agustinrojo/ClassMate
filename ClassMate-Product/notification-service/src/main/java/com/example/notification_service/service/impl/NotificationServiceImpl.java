@@ -3,26 +3,24 @@ package com.example.notification_service.service.impl;
 import com.example.notification_service.dto.NotificationDTO;
 import com.example.notification_service.dto.NotificationUpdateDTO;
 import com.example.notification_service.dto.comment.CommentNotificationResponseDTO;
+import com.example.notification_service.dto.event.valoration.MilestoneReachedEventDTO;
 import com.example.notification_service.dto.message.MessageNotificationResponseDTO;
-import com.example.notification_service.entity.notification.CommentNotification;
+import com.example.notification_service.dto.milestone.MilestoneNotificationResponseDTO;
+import com.example.notification_service.entity.notification.*;
 
-import com.example.notification_service.entity.notification.MessageNotification;
-import com.example.notification_service.entity.notification.Notification;
-import com.example.notification_service.entity.notification.NotificationPreference;
 import com.example.notification_service.repository.NotificationPreferenceRepository;
 import com.example.notification_service.repository.NotificationRepository;
 import com.example.notification_service.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
-    Logger LOGGER = LoggerFactory.getLogger(NotificationServiceImpl.class);
     private final NotificationRepository notificationRepository;
     private final NotificationPreferenceRepository preferenceRepository;
 
@@ -34,14 +32,12 @@ public class NotificationServiceImpl implements NotificationService {
 
     // Get notifications by userId
     @Override
-    public List<NotificationDTO> getUserNotifications(Long userId) {
-        List<Notification> notifications= notificationRepository.findByUserIdOrderByCreationDateDesc(userId);
+    public Page<NotificationDTO> getUserNotifications(Long userId, Pageable pageable) {
+        Page<Notification> notifications = notificationRepository.findByUserIdOrderByCreationDateDesc(userId, pageable);
 
-        // Convert notifications to DTOs based on their type using polymorphism
-        return notifications.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+        return notifications.map(this::convertToDTO); // Convert to DTO with map()
     }
+
 
     // Before sending a notification, check the user’s preferences
     @Override
@@ -52,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
         switch (notificationType) {
             case "COMMENT":
                 return preference.getCommentNotificationEnabled();
-            case "LIKE":
+            case "MILESTONE":
                 return preference.getLikeNotificationEnabled();
             case "MESSAGE":
                 return preference.getMessageNotificationEnabled();
@@ -79,6 +75,8 @@ public class NotificationServiceImpl implements NotificationService {
             return getCommentNotificationResponseDTO(notification);
         } else if (notification instanceof MessageNotification) {
             return getMessageNotificationResponseDTO(notification);
+        } else if (notification instanceof  MilestoneNotification) {
+            return getMilestoneNotificationResponseDTO(notification);
         }
 
         throw new IllegalArgumentException("Unknown notification type: " + notification.getClass().getSimpleName());
@@ -92,7 +90,8 @@ public class NotificationServiceImpl implements NotificationService {
                 notification.getCreationDate(),
                 ((CommentNotification) notification).getPostId(),
                 ((CommentNotification) notification).getCommentId(),
-                ((CommentNotification) notification).getForumId()
+                ((CommentNotification) notification).getForumId(),
+                ((CommentNotification) notification).getTitle()
         );
     }
 
@@ -107,11 +106,25 @@ public class NotificationServiceImpl implements NotificationService {
         );
     }
 
+    private MilestoneNotificationResponseDTO getMilestoneNotificationResponseDTO(Notification notification) {
+        return new MilestoneNotificationResponseDTO(
+                notification.getId(),
+                notification.getUserId(),
+                notification.getIsSeen(),
+                notification.getCreationDate(),
+                ((MilestoneNotification) notification).getMilestone(),
+                ((MilestoneNotification) notification).getPostId(),
+                ((MilestoneNotification) notification).getForumId(),
+                ((MilestoneNotification) notification).getTitle()
+        );
+    }
+
     @Override
     public void updateNotification(NotificationUpdateDTO notificationUpdateDTO) {
         Notification notification = notificationRepository.findById(notificationUpdateDTO.getId()).orElseThrow(); //TODO: Exception handling
         notification.setIsSeen(notificationUpdateDTO.getIsSeen());
         notificationRepository.save(notification);
     }
+
 
 }

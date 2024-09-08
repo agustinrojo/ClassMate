@@ -16,4 +16,5 @@ public class PostAuthorResponseEventDTO {
     private Long commentId;
     private Long postAuthorId;
     private Long forumId; // Post's forumId, for forming the URL in the front end (e.g. http://localhost:4200/forum/658/post/909)
+    private String title;
 }
