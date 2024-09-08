@@ -1,0 +1,92 @@
+/* Notification Bell Icon */
+.notification-bell {
+  position: relative;
+  cursor: pointer;
+  font-size: 24px;
+  color: #f5f5f5;
+}
+
+.notification-bell i {
+  font-size: 24px;
+  color: #f5f5f5;
+}
+
+/* Red dot for unread notifications */
+.notification-dot {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #1e1e1e;
+}
+
+/* Notification Dropdown Panel */
+.notification-panel {
+  position: absolute;
+  top: 60px;
+  right: 45px;
+  width: 300px;
+  max-height: 400px;
+  background-color: #292929;
+  color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  z-index: 10;
+}
+
+/* Notification Header */
+.notification-header {
+  background-color: #1e1e1e;
+  padding: 10px;
+  font-size: 18px;
+  border-bottom: 1px solid #444;
+  text-align: center;
+}
+
+/* No Notifications Message */
+.no-notifications {
+  padding: 20px;
+  text-align: center;
+  color: #999;
+}
+
+/* Notification List */
+.notification-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each Notification Item */
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
+}
+
+.notification-item:hover {
+  background-color: #383838;
+}
+
+.notification-type {
+  font-weight: bold;
+}
+
+.notification-text {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+/* Scrollable Notification Panel */
+.notification-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-panel::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 10px;
+}

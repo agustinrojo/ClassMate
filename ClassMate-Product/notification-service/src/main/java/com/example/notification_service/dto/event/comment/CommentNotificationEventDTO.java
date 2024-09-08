@@ -1,4 +1,4 @@
-package com.example.notification_service.dto;
+package com.example.notification_service.dto.event.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

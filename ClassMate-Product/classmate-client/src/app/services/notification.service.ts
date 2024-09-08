@@ -20,7 +20,7 @@ export class NotificationService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
   ) {
     this.loggedUserId = this.authService.getUserId();
     this.initWSConnection();

@@ -6,6 +6,7 @@ import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.dto.CommentDeletionDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
+import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
 import com.classmate.comment_service.exception.CommentNotFoundException;
@@ -80,11 +81,22 @@ public class CommentServiceImpl implements ICommentService {
         Comment comment = commentMapper.mapToComment(commentRequestDTO);
         comment.setAttachments(attachments);
         comment.addUpvote(commentRequestDTO.getAuthorId());
+
         Comment savedComment = commentRepository.save(comment);
+
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(savedComment);
         commentDTOResponse.setLikedByUser(true);
         commentDTOResponse.setDislikedByUser(false);
         commentDTOResponse.setValoration(1);
+
+        // Publish notification event to notify post author
+        CommentNotificationEventDTO commentNotificationEventDTO = new CommentNotificationEventDTO(
+                savedComment.getPostId(),
+                savedComment.getId(),
+                savedComment.getAuthorId()
+        );
+        commentPublisher.publishCommentNotificationEvent(commentNotificationEventDTO);
+
         return commentDTOResponse;
     }
 

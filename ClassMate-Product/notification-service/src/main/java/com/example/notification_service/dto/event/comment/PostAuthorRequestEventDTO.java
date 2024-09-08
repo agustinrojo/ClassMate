@@ -1,4 +1,4 @@
-package com.example.notification_service.dto;
+package com.example.notification_service.dto.event.comment;
 
 
 import lombok.AllArgsConstructor;
@@ -10,9 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostAuthorResponseEventDTO {
+public class PostAuthorRequestEventDTO {
 
     private Long postId;
     private Long commentId;
-    private Long postAuthorId;
 }

@@ -1,5 +1,4 @@
-package com.example.notification_service.dto;
-
+package com.example.chat_v1.dto.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostAuthorRequestEventDTO {
-
-    private Long postId;
-    private Long commentId;
+public class MessageNotificationEventDTO {
+    private Long receiverId;
+    private Long senderId;
 }

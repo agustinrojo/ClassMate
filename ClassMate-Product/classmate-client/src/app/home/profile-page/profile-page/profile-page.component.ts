@@ -24,7 +24,9 @@ export class ProfilePageComponent implements OnInit {
   public userData!: UserData;
   public userId!: string;
   public loggedUserId!: string;
+
   private preferenceUpdateSubject: Subject<void> = new Subject<void>();
+
   // Notification preferences
   public preferences: NotificationPreferenceUpdateDTO = {
     commentNotificationEnabled: false,
@@ -51,7 +53,7 @@ export class ProfilePageComponent implements OnInit {
     this.getUserProfile();
 
     // Debounce preference updates to avoid spamming the backend
-    this.preferenceUpdateSubject.pipe(debounceTime(250)).subscribe(() => {
+    this.preferenceUpdateSubject.pipe(debounceTime(150)).subscribe(() => {
       this.savePreferences();
     });
 

@@ -1,4 +1,4 @@
-package com.example.notification_service.dto;
+package com.classmate.post_service.dto.notification;
 
 
 import lombok.AllArgsConstructor;

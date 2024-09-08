@@ -19,7 +19,7 @@ export class ValorationComponent implements OnInit{
   ngOnInit(): void {
 
     this.likeSubscription = this.likeAction.pipe(
-      debounceTime(3000) // Ajusta el tiempo de debounce según tus necesidades (en milisegundos)
+      debounceTime(150) // Ajusta el tiempo de debounce según tus necesidades (en milisegundos)
     ).subscribe((action) => {
       this.emitValorationEvent(action);
     });
@@ -74,7 +74,6 @@ export class ValorationComponent implements OnInit{
   }
 
 
-  // Usa la función delay en tu método
   public async emitValorationEvent(action: ValorationType){
 
     switch (action) {

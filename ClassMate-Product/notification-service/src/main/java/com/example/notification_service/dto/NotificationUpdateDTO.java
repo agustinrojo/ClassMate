@@ -1,4 +1,4 @@
-package com.example.notification_service.dto.comment;
+package com.example.notification_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentNotificationUpdateDTO {
+public class NotificationUpdateDTO {
     private Long id;
     private Boolean isSeen; // Mark notification as seen/unseen
 }

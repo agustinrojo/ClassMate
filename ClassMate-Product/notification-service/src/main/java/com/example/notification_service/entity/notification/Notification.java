@@ -1,4 +1,4 @@
-package com.example.notification_service.entity;
+package com.example.notification_service.entity.notification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,11 +26,11 @@ public abstract class Notification {
     private Long userId;
 
     @Column(nullable = false)
-    private Boolean isRead = false;
+    private Boolean isSeen = false;
 
     @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime creationDate;
 
-    public abstract String getNotificationMessage();
+    public abstract String getType();
 }

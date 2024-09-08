@@ -3,6 +3,7 @@ package com.classmate.post_service.publisher;
 import com.classmate.post_service.dto.PostDeletionDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
+import com.classmate.post_service.dto.notification.PostAuthorResponseEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -29,6 +30,13 @@ public class PostPublisher {
 
     @Value("${rabbitmq.exchange.delete-post-all-file.routing-key}")
     private String deletePostAllFileRoutingKey;
+
+    // NOTIFICATIONS
+    @Value("${rabbitmq.exchange.notifications}")
+    private String notificationsExchange;
+
+    @Value("${rabbitmq.notifications-post-author-response.routing-key}")
+    private String postAuthorResponseRoutingKey;
 
     public PostPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -59,5 +67,10 @@ public class PostPublisher {
         } else {
             LOGGER.error("FileDeletionDTO is null, skipping event publication");
         }
+    }
+
+    // NOTIFICATIONS
+    public void publishPostAuthorResponseEvent(PostAuthorResponseEventDTO event) {
+        rabbitTemplate.convertAndSend(notificationsExchange, postAuthorResponseRoutingKey, event);
     }
 }

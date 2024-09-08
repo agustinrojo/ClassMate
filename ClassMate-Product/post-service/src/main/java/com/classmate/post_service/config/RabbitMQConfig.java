@@ -45,6 +45,18 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.delete-post-all-file.routing-key}")
     private String deletePostAllFileRoutingKey;
 
+    // NOTIFICATIONS
+    @Value("${rabbitmq.queue.notifications.post-author-request-queue}")
+    private String postAuthorRequestQueue;
+    @Value("${rabbitmq.queue.notifications.post-author-response-queue}")
+    private String postAuthorResponseQueue;
+    @Value("${rabbitmq.exchange.notifications}")
+    private String notificationsExchange;
+    @Value("${rabbitmq.notifications-post-author-request.routing-key}")
+    private String postAuthorRequestRoutingKey;
+    @Value("${rabbitmq.notifications-post-author-response.routing-key}")
+    private String postAuthorResponseRoutingKey;
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -74,6 +86,23 @@ public class RabbitMQConfig {
     public TopicExchange fileExchange() {
         return new TopicExchange(fileExchange);
     }
+
+    // NOTIFICATIONS
+    @Bean
+    public Queue postAuthorRequestQueue() {
+        return new Queue(postAuthorRequestQueue, true);
+    }
+
+    @Bean
+    public Queue postAuthorResponseQueue() {
+        return new Queue(postAuthorResponseQueue, true);
+    }
+
+    @Bean
+    public TopicExchange notificationsExchange() {
+        return new TopicExchange(notificationsExchange);
+    }
+
 
     @Bean
     public Binding deletePostBinding() {
@@ -105,6 +134,24 @@ public class RabbitMQConfig {
                 .bind(deletePostAllFileQueue())
                 .to(fileExchange())
                 .with(deletePostAllFileRoutingKey);
+    }
+
+
+    // NOTIFICATIONS
+    @Bean
+    public Binding postAuthorRequestBinding() {
+        return BindingBuilder
+                .bind(postAuthorRequestQueue())
+                .to(notificationsExchange())
+                .with(postAuthorRequestRoutingKey);
+    }
+
+    @Bean
+    public Binding postAuthorResponseBinding() {
+        return BindingBuilder
+                .bind(postAuthorResponseQueue())
+                .to(notificationsExchange())
+                .with(postAuthorResponseRoutingKey);
     }
 
     @Bean
