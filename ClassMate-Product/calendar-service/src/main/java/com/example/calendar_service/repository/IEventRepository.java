@@ -1,6 +1,6 @@
 package com.example.calendar_service.repository;
 
-import com.example.calendar_service.entity.Event;
+import com.example.calendar_service.entity.calendar.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

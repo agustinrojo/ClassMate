@@ -1,4 +1,4 @@
-package com.example.calendar_service.entity;
+package com.example.calendar_service.entity.calendar;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

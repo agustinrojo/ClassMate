@@ -3,7 +3,7 @@ package com.example.calendar_service.service.impl;
 import com.example.calendar_service.dto.EventRequestDTO;
 import com.example.calendar_service.dto.EventResponseDTO;
 import com.example.calendar_service.dto.EventUpdateDTO;
-import com.example.calendar_service.entity.Event;
+import com.example.calendar_service.entity.calendar.Event;
 import com.example.calendar_service.exception.EventNotFoundException;
 import com.example.calendar_service.exception.UnauthorizedActionException;
 import com.example.calendar_service.mapper.IEventMapper;

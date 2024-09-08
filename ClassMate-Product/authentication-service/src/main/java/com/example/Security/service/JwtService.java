@@ -47,12 +47,12 @@ public class JwtService {
 //        return generateAccessToken(new HashMap<>(), userDetails);
 //    }
 
-    public String generateAccessToken(UserDetails userDetails){
+    public String generateAccessToken(User userDetails){
 
         return generateToken(userDetails,  accessTokenExpire);
     }
 
-    public String generateRefreshToken(UserDetails userDetails){
+    public String generateRefreshToken(User userDetails){
 
         return generateToken(userDetails, refreshTokenExpire);
     }
@@ -107,8 +107,9 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private String generateToken(UserDetails user, long expirationTime){
+    private String generateToken(User user, long expirationTime){
         HashMap<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", user.getId());
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

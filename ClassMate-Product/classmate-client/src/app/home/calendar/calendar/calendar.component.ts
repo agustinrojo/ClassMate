@@ -16,6 +16,7 @@ import { EventImpl } from '@fullcalendar/core/internal';
 import { EventUpdateDTO } from '../../../services/dto/calendar/event-update-dto.interface';
 import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
+import { OAuth2Service } from '../../../services/oauth2-service';
 
 @Component({
   selector: 'app-calendar',
@@ -34,12 +35,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   constructor(
     public dialog: MatDialog,
     private _calendarService: CalendarService,
-    private _authService: AuthServiceService
+    private _authService: AuthServiceService,
+    private _oauth2Service: OAuth2Service
   ){
-    this.loggedUserId = _authService.getUserId();
+    this.loggedUserId = this._authService.getUserId();
   }
-
-
 
   ngOnInit(): void {
 
@@ -315,6 +315,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }, (error) => {
       console.error('Error updating event:', error);
     });
+  }
+
+  public connectToGoogle(){
+    console.log("conectando")
+    this._oauth2Service.connectToGoogle();
   }
 
   private deleteEvent(eventId: number): void {
