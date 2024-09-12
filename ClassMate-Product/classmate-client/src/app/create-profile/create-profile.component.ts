@@ -33,9 +33,9 @@ export class CreateProfileComponent implements OnInit{
     })
   }
 
-  public onFileChange(event: any) {
-    if (event.target.files.length > 0) {
-      const files = event.target.files;
+  public onFileChange(eventEntity: any) {
+    if (eventEntity.target.files.length > 0) {
+      const files = eventEntity.target.files;
         this.selectedPhoto = files[0];
         this.selectedPhotoDTO = mapFileToFIleDTO(files[0]);
     }

@@ -14,7 +14,7 @@
       <label for="file-upload" class="custom-file-upload">
         Subir Foto de Perfil
       </label>
-      <input id="file-upload" formControlName="profilePhoto" (change)="onFileChange($event)" accept=".jpg, .jpeg, .png" type="file"/>
+      <input id="file-upload" formControlName="profilePhoto" (change)="onFileChange($eventEntity)" accept=".jpg, .jpeg, .png" type="file"/>
       <app-file-badge *ngIf="currentProfilePhotoDTO" [file]="currentProfilePhotoDTO" [canModify]="true" (removeEvent)="removePhoto()"></app-file-badge>
       <div class="row" *ngIf="editProfileForm.controls['profilePhoto'].errors?.['required'] && editProfileForm.controls['profilePhoto'].touched">
         <div class="col-6">

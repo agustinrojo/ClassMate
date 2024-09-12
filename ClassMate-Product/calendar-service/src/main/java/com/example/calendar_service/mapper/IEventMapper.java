@@ -11,5 +11,5 @@ public interface IEventMapper {
 
     Event mapToEvent(EventRequestDTO eventRequestDTO);
 
-    EventResponseDTO mapToResponseEventDTO(Event event);
+    EventResponseDTO mapToResponseEventDTO(Event eventEntity);
 }

@@ -14,7 +14,7 @@
 
   <p [innerHTML]="comment.body | linkify"></p>
 
-  <app-file-badge  *ngFor="let file of comment.files" [file]="file"  (downloadFileEvent)="downloadFile($event)" [canModify]="false" ></app-file-badge>
+  <app-file-badge  *ngFor="let file of comment.files" [file]="file"  (downloadFileEvent)="downloadFile($eventEntity)" [canModify]="false" ></app-file-badge>
   <br>
   <div class="row">
     <div class="col-6">
@@ -28,4 +28,4 @@
     <app-valoration [valoration]="commentValoration" (likeEvent)="upvoteComment()" (dislikeEvent)="downvoteComment()" (removeEvent)="removeCommentVote()"></app-valoration>
   </div>
 </div>
-<app-edit-comment (cancelEditing)="cancelEdition()" (editComment)="editComment($event)"  [body]="comment.body" [files]="comment.files" *ngIf="editing"></app-edit-comment>
+<app-edit-comment (cancelEditing)="cancelEdition()" (editComment)="editComment($eventEntity)"  [body]="comment.body" [files]="comment.files" *ngIf="editing"></app-edit-comment>

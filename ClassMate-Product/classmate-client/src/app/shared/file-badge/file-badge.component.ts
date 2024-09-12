@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FileDTO } from '../../services/dto/attachment/file-dto.interface';
-import { FileDownloadEvent } from '../../home/interfaces/file-download-event.interface';
+import { FileDownloadEvent } from '../../home/interfaces/file-download-eventEntity.interface';
 
 @Component({
   selector: 'app-file-badge',

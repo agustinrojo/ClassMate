@@ -59,8 +59,8 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  public onSearchChange($event: Event) {
-    const target = $event.target as HTMLInputElement;
+  public onSearchChange($eventEntity: Event) {
+    const target = $eventEntity.target as HTMLInputElement;
     this.searchQuery = target ? target.value : '';
     if (this.searchQuery.length > 2) {
       this._userProfileService.searchChatUserByNickname(this.searchQuery).subscribe((resp: UserProfileResponseDTO[]) => {
@@ -145,9 +145,9 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     return this.isPreviousDate(currentMessageDate, previousMessageDate);
   }
 
-  public onFileChange(event: any) {
-    if (event.target.files.length > 0) {
-      const files = event.target.files;
+  public onFileChange(eventEntity: any) {
+    if (eventEntity.target.files.length > 0) {
+      const files = eventEntity.target.files;
       for (let i = 0; i < files.length; i++) {
         this.selectedFile = files[i];
 

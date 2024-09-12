@@ -2,6 +2,8 @@ package com.example.calendar_service.service.impl;
 
 import com.example.calendar_service.client.GoogleOAuth2APIClient;
 import com.example.calendar_service.entity.auth.Token;
+import com.example.calendar_service.publisher.SyncPublisher;
+import com.example.calendar_service.service.IGoogleCalendarService;
 import com.example.calendar_service.service.IGoogleOAuth2Service;
 import com.example.calendar_service.service.ITokenService;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,13 +27,17 @@ public class GoogleOAuth2ServiceImpl implements IGoogleOAuth2Service {
 
     private final ITokenService tokenService;
 
-    public GoogleOAuth2ServiceImpl(GoogleOAuth2APIClient googleOAuth2APIClient, ITokenService tokenService) {
+    private final SyncPublisher syncPublisher;
+
+
+    public GoogleOAuth2ServiceImpl(GoogleOAuth2APIClient googleOAuth2APIClient, ITokenService tokenService, SyncPublisher syncPublisher) {
         this.googleOAuth2APIClient = googleOAuth2APIClient;
         this.tokenService = tokenService;
+        this.syncPublisher = syncPublisher;
     }
 
     @Override
-    public void getAccessToken(String code, Long userId) {
+    public void getAccessToken(String code, Long userId, boolean isSynced) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("client_id", clientId);
@@ -53,6 +59,11 @@ public class GoogleOAuth2ServiceImpl implements IGoogleOAuth2Service {
         Long expiresIn = Long.valueOf(tokenData.get("expires_in"));
 
         tokenService.saveToken(accessToken, refreshToken, expiresIn, userId);
+
+        if(!isSynced){
+            syncPublisher.publishSyncGoogle(userId, true);
+        }
+
     }
 
     @Override

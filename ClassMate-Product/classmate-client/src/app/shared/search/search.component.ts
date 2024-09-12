@@ -38,11 +38,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateForumContext(currentForumData);
     });
 
-    this.navigationSubscription = this._router.events.pipe(
-    ).subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.isSearchPage = event.urlAfterRedirects.includes('/search');
-        this.checkAndResetForumContext(event.urlAfterRedirects);
+    this.navigationSubscription = this._router.eventEntities.pipe(
+    ).subscribe((eventEntity) => {
+      if (eventEntity instanceof NavigationEnd) {
+        this.isSearchPage = eventEntity.urlAfterRedirects.includes('/search');
+        this.checkAndResetForumContext(eventEntity.urlAfterRedirects);
       }
     });
   }
@@ -80,9 +80,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.adjustPadding();
   }
 
-  onSearchChange(event: Event): void {
+  onSearchChange(eventEntity: Event): void {
     if (!this.isPostSearch) {
-      const target = event.target as HTMLInputElement;
+      const target = eventEntity.target as HTMLInputElement;
       this.searchQuery = target ? target.value : '';
 
       if (this.searchQuery.length > 2) {
@@ -125,9 +125,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showResults = false;
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    if (!this._elementRef.nativeElement.contains(event.target)) {
+  @HostListener('document:click', ['$eventEntity'])
+  onDocumentClick(eventEntity: Event): void {
+    if (!this._elementRef.nativeElement.contains(eventEntity.target)) {
       this.showResults = false;
     }
   }

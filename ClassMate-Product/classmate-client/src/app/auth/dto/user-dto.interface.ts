@@ -8,4 +8,5 @@ export interface User{
   forumsSubscribed: number[];
   forumsCreated: number[];
   chatroomIdsIn: number[];
+  synced: boolean;
 }

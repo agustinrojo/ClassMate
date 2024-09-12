@@ -108,9 +108,9 @@ export class EditPostComponent implements OnInit {
     }
   }
 
-  public onFileAdded(event: any) {
-    if (event.target.files.length > 0) {
-      const files = event.target.files;
+  public onFileAdded(eventEntity: any) {
+    if (eventEntity.target.files.length > 0) {
+      const files = eventEntity.target.files;
       for (let i = 0; i < files.length; i++) {
         this.filesToAdd.push(files[i]);
         this.fileDTOsToAdd.push(mapFileToFIleDTO(files[i]));

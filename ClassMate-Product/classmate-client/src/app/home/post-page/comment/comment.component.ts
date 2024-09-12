@@ -5,7 +5,7 @@ import { CommentDTOResponse } from '../../../services/dto/comment/comment-respon
 import { CommentService } from '../../../services/comment.service';
 import { CommentUpdateDTO } from '../../../services/dto/comment/comment-update-dto.interface';
 import { FileService } from '../../../services/file.service';
-import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+import { FileDownloadEvent } from '../../interfaces/file-download-eventEntity.interface';
 import { Valoration } from '../../interfaces/valoration.interface';
 
 @Component({

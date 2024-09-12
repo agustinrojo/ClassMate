@@ -1,10 +1,7 @@
 package com.example.calendar_service.entity.calendar;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -14,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "events")
 public class Event {
 
@@ -35,5 +33,8 @@ public class Event {
 
     @Column
     private LocalDate endDate;
+
+    @Column
+    private String googleId;
 
 }

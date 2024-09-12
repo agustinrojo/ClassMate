@@ -8,7 +8,7 @@
       </div>
       <div class="form-group">
         <label for="post-content">Contenido del Post</label>
-        <app-tagging [textAreaControl]="bodyControl" (contentChange)="editPostForm.get('body')!.setValue($event)"></app-tagging>
+        <app-tagging [textAreaControl]="bodyControl" (contentChange)="editPostForm.get('body')!.setValue($eventEntity)"></app-tagging>
         <textarea id="post-content" class="bg-dark" name="content" rows="10" formControlName="body" maxlength="5000"></textarea>
       </div>
       <div class="row align-items-center" *ngFor="let file of postData.files; let i = index;">
@@ -40,7 +40,7 @@
       <br>
 
       <label for="add-file" class="add-file-label" >Seleccionar archivos</label>
-      <input type="file" (change)="onFileAdded($event)" id="add-file" class="add-file-input mb-3" formControlName="files" accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="(postData.files.length + filesToAdd.length) >= 3">
+      <input type="file" (change)="onFileAdded($eventEntity)" id="add-file" class="add-file-input mb-3" formControlName="files" accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="(postData.files.length + filesToAdd.length) >= 3">
       <div class="row">
         <div class="col-6">
           <button type="submit" class="edit-post-btn" [disabled]="!editPostForm.valid || disableBtn">Publicar</button>

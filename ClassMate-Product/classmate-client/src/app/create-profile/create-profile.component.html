@@ -14,7 +14,7 @@
       <label for="file-upload" class="custom-file-upload">
         Foto de Perfil
       </label>
-      <input id="file-upload" formControlName="profilePhoto" (change)="onFileChange($event)" accept=".jpg, .jpeg, .png" type="file"/>
+      <input id="file-upload" formControlName="profilePhoto" (change)="onFileChange($eventEntity)" accept=".jpg, .jpeg, .png" type="file"/>
       <div class="row" *ngIf="createProfileForm.controls['profilePhoto'].errors?.['required'] && createProfileForm.controls['profilePhoto'].touched">
         <div class="col-6">
           <p class="text-danger">Este campo es obligatorio</p>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { HttpClient } from '@angular/common/http';
+import { User } from '../auth/dto/user-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class OAuth2Service {
@@ -15,6 +16,10 @@ export class OAuth2Service {
   }
 
   public connectToGoogle(){
-    window.location.href = `http://localhost:8085/oauth2/connect/google?userId=${this.userId}`;
+    let user: User = this._authService.getUser();
+    let isSynced: boolean = user.synced;
+    console.log(isSynced);
+
+    window.location.href = `http://localhost:8085/oauth2/connect/google?userId=${this.userId}&isSynced=${isSynced}`;
   }
 }

@@ -9,7 +9,7 @@
       class="nav__search-input"
       [placeholder]="searchPlaceholder"
       [(ngModel)]="searchQuery"
-      (input)="onSearchChange($event)"
+      (input)="onSearchChange($eventEntity)"
       (keyup.enter)="onEnter()"
       #searchInput>
   </div>

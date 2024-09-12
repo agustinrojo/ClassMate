@@ -8,7 +8,7 @@ import { PostData } from '../../interfaces/post-data.interface';
 import { state } from '@angular/animations';
 import { PostStateService } from '../../../services/dto/state-services/post-state.service';
 import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
-import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+import { FileDownloadEvent } from '../../interfaces/file-download-eventEntity.interface';
 import { FileService } from '../../../services/file.service';
 import { Valoration } from '../../interfaces/valoration.interface';
 import { PostService } from '../../../services/post.service';

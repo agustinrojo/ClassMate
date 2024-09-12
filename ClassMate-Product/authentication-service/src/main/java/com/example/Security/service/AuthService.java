@@ -286,6 +286,7 @@ public class AuthService {
                 .forumsSubscribed(user.getForumsSubscribed())
                 .forumsCreated(user.getForumsCreated())
                 .chatroomIdsIn(user.getChatroomIdsIn())
+                .isSynced(user.isGoogleSynced())
                 .build();
     }
 

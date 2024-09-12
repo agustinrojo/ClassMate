@@ -90,17 +90,17 @@ export class TaggingComponent implements OnInit {
 
   }
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyDown(event: KeyboardEvent) {
+  @HostListener('document:keydown', ['$eventEntity'])
+  handleKeyDown(eventEntity: KeyboardEvent) {
     if (this.showSuggestions) {
-      if (event.key === 'ArrowDown') {
-        event.preventDefault();
+      if (eventEntity.key === 'ArrowDown') {
+        eventEntity.preventDefault();
         this.selectedIndex = (this.selectedIndex + 1) % (this.userSuggestions.length + this.forumSuggestions.length);
-      } else if (event.key === 'ArrowUp') {
-        event.preventDefault();
+      } else if (eventEntity.key === 'ArrowUp') {
+        eventEntity.preventDefault();
         this.selectedIndex = (this.selectedIndex - 1 + this.userSuggestions.length + this.forumSuggestions.length) % (this.userSuggestions.length + this.forumSuggestions.length);
-      } else if (event.key === 'Enter' || event.key === 'Tab') {
-        event.preventDefault();
+      } else if (eventEntity.key === 'Enter' || eventEntity.key === 'Tab') {
+        eventEntity.preventDefault();
         if (this.selectedIndex < this.userSuggestions.length) {
           const selectedSuggestion = this.userSuggestions[this.selectedIndex];
           this.insertTag(selectedSuggestion.nickname, selectedSuggestion.userId, 'user');

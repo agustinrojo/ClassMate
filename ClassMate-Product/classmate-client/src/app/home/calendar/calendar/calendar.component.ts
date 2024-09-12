@@ -6,15 +6,15 @@ import bootstrapPlugin from '@fullcalendar/bootstrap'
 import esLocale from '@fullcalendar/core/locales/es';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { MatDialog } from '@angular/material/dialog';
-import { EventDialogComponent } from '../event-dialog/event-dialog.component';
-import { EventData } from '../../interfaces/calendar/event-dialog/event-data.interface';
+import { EventDialogComponent } from '../eventEntity-dialog/eventEntity-dialog.component';
+import { EventData } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data.interface';
 import { CalendarService } from '../../../services/calendar.service';
-import { EventResponseDTO } from '../../../services/dto/calendar/event-response-dto.interface';
-import { EventRequestDTO } from '../../../services/dto/calendar/event-request-dto.interface';
+import { EventResponseDTO } from '../../../services/dto/calendar/eventEntity-response-dto.interface';
+import { EventRequestDTO } from '../../../services/dto/calendar/eventEntity-request-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { EventImpl } from '@fullcalendar/core/internal';
-import { EventUpdateDTO } from '../../../services/dto/calendar/event-update-dto.interface';
-import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
+import { EventUpdateDTO } from '../../../services/dto/calendar/eventEntity-update-dto.interface';
+import { EventDataResult } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data-result.interface';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 import { OAuth2Service } from '../../../services/oauth2-service';
 
@@ -61,12 +61,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       locales: [esLocale],
       locale: 'es',
       height: 'auto',
-      events: this.eventsArray,
+      eventEntities: this.eventsArray,
       editable: true,
       selectable: true,
+      //dateClick: (arg) => this.handleDateClick(arg),
       select: this.handleDateSelect.bind(this),
       eventClick: this.handleEventClick.bind(this),
-      eventDrop: this.handleEventDrop.bind(this), // Handle drag/drop events
+      eventDrop: this.handleEventDrop.bind(this), // Handle drag/drop eventEntities
       eventResize: this.handleEventResize.bind(this),
       progressiveEventRendering: true,
       dayMaxEvents: 3
@@ -86,7 +87,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 // as
   private mapEventResponseDTOToEventInput( eventList:EventResponseDTO[] ):EventInput[]  {
-    let events: EventInput[] = [];
+    let eventEntities: EventInput[] = [];
     eventList.forEach((e:EventResponseDTO) => {
       let eventInput: EventInput = {
         id: e.id.toString(),
@@ -97,9 +98,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         start: e.startDate,
         end: e.endDate
       }
-      events.push(eventInput);
+      eventEntities.push(eventInput);
     });
-    return events;
+    return eventEntities;
   }
 
 
@@ -107,8 +108,30 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     if (selectInfo.view.type !== 'dayGridMonth') {
       return; // Solo actuar si no es un clic en 'dayGridMonth'
     }
-    // // Open modal
+    console.log(selectInfo);// // Open modal
     this.openEventDialogAfterSelect(selectInfo);
+  }
+
+  private handleDateClick(clickInfo: DateClickArg){
+    console.log(clickInfo);
+    this.openEventDialogAfterClick(clickInfo);
+  }
+
+  private openEventDialogAfterClick(clickInfo: DateClickArg){
+    const dialogRef = this.dialog.open(EventDialogComponent, {
+      width: '250px',
+      height: '500px',
+      data: {
+        title: "",
+        description: '',
+        start: clickInfo.dateStr,
+        end: clickInfo.dateStr,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((data: EventData) => {
+      this.closeDialogEvent(data);
+    });
   }
 
   private openEventDialogAfterSelect(selectInfo: DateSelectArg){
@@ -129,31 +152,33 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   private handleEventClick(eventInfo: EventClickArg) {
-    let event = eventInfo.event;
+    let eventEntity = eventInfo.eventEntity;
+
+    console.log(eventEntity);
     // // Open modal
-    // this.openEventDialogAfterEventClick(event);
-    this.openDetailDialog(event)
+    // this.openEventDialogAfterEventClick(eventEntity);
+    this.openDetailDialog(eventEntity)
   }
 
   private handleEventDrop(eventInfo: EventDropArg) {
-    const { event } = eventInfo;
+    const { eventEntity } = eventInfo;
     const result: EventDataResult = {
-      eventId: Number(event.id),
-      title: event.title,
-      start: event.startStr,
-      end: event.endStr
+      eventId: Number(eventEntity.id),
+      title: eventEntity.title,
+      start: eventEntity.startStr,
+      end: eventEntity.endStr
     };
 
     this.updateEvent(result.eventId!, result);
   }
 
   private handleEventResize(eventInfo: EventResizeDoneArg) {
-    const { event } = eventInfo;
+    const { eventEntity } = eventInfo;
     const result: EventDataResult = {
-      eventId: Number(event.id),
-      title: event.title,
-      start: event.start!.toISOString(),
-      end: event.end!.toISOString()
+      eventId: Number(eventEntity.id),
+      title: eventEntity.title,
+      start: eventEntity.start!.toISOString(),
+      end: eventEntity.end!.toISOString()
     };
 
     this.updateEvent(result.eventId!, result);
@@ -181,10 +206,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       }
 
       if (result.delete) {
-        // Handle event deletion
+        // Handle eventEntity deletion
         this.deleteEvent(result.eventId!);
       } else if (result.title && (result.start || result.end)) {
-        // Handle event update
+        // Handle eventEntity update
         this.updateEvent(Number(eventInfo.id), result);
       }
       // If neither delete nor update, no action is required.
@@ -239,10 +264,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         return;
       }
       if (result.delete) {
-        // Handle event deletion
+        // Handle eventEntity deletion
         this.deleteEvent(result.eventId!);
       } else if (result.title && (result.start || result.end)) {
-        // Handle event update
+        // Handle eventEntity update
         this.updateEvent(Number(eventInfo.id), result);
       }
       // If neither delete nor update, no action is required.
@@ -255,18 +280,18 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     return; // Exit early if title is not valid
   }
 
-    let event: EventRequestDTO = {
+    let eventEntity: EventRequestDTO = {
       userId: this.loggedUserId,
       title: data.title,
       description: data.description,
       startDate: data.start,
       endDate: data.end
     }
-    this._calendarService.saveEvent(event).subscribe((resp: EventResponseDTO) => {
+    this._calendarService.saveEvent(eventEntity).subscribe((resp: EventResponseDTO) => {
       console.log('Event saved: ', resp);
 
 
-      // Add a new event to the calendar using the backend-generated ID
+      // Add a new eventEntity to the calendar using the backend-generated ID
       this.calendarApi.addEvent({
         id: resp.id.toString(),
         title: resp.title,
@@ -274,7 +299,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           description: resp.description
         },
         start: resp.startDate,
-        end: resp.endDate
+        end: resp.endDate,
+        allDay: true
     });
 
     }, (err) => {
@@ -293,6 +319,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     const startDate = new Date(result.start!);
     const endDate = result.end ? new Date(result.end) : null;
 
+    console.log("end", endDate)
+
     let eventUpdateDTO: EventUpdateDTO = {
       title: result.title!,
       description: result.description!,
@@ -301,24 +329,23 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
     this._calendarService.updateEvent(id, eventUpdateDTO).subscribe(() => {
       console.log(`Event with ID ${id} updated successfully`);
-      // Update event in Calendar View
-      const event = this.calendarApi.getEventById(id.toString());
+      // Update eventEntity in Calendar View
+      const eventEntity = this.calendarApi.getEventById(id.toString());
 
-      if (event) {
-        event.setProp('title', result.title); // Update title
-        event.setExtendedProp('description', result.description);
-        event.setStart(result.start!); // Update start date
-        event.setEnd(result.end!); // Update end date
+      if (eventEntity) {
+        eventEntity.setProp('title', result.title); // Update title
+        eventEntity.setExtendedProp('description', result.description);
+        eventEntity.setStart(result.start!); // Update start date
+        eventEntity.setEnd(result.end!); // Update end date
       } else {
         console.warn(`Event with ID ${id} not found in calendar`);
       }
     }, (error) => {
-      console.error('Error updating event:', error);
+      console.error('Error updating eventEntity:', error);
     });
   }
 
   public connectToGoogle(){
-    console.log("conectando")
     this._oauth2Service.connectToGoogle();
   }
 
@@ -327,16 +354,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       console.log(`Event with ID ${eventId} deleted successfully`);
       this.removeEventFromCalendar(eventId);
     }, (error) => {
-      console.error('Error deleting event:', error);
+      console.error('Error deleting eventEntity:', error);
     });
   }
 
   private removeEventFromCalendar(eventId: number): void {
-    // Find the event by ID
-    const event = this.calendarApi.getEventById(eventId.toString());
+    // Find the eventEntity by ID
+    const eventEntity = this.calendarApi.getEventById(eventId.toString());
 
-    if (event) {
-        event.remove(); // Remove the event from the calendar view
+    if (eventEntity) {
+        eventEntity.remove(); // Remove the eventEntity from the calendar view
     } else {
         console.warn(`Event with ID ${eventId} not found in calendar`);
     }

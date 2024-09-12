@@ -18,7 +18,7 @@
 
         <p [innerHTML]="post.body | linkify"></p>
         <div class="row">
-          <app-file-badge *ngFor="let file of post.files" [file]="file" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
+          <app-file-badge *ngFor="let file of post.files" [file]="file" (downloadFileEvent)="downloadPostFile($eventEntity)"></app-file-badge>
         </div>
 
 
@@ -37,12 +37,12 @@
     <form [formGroup]="bodyForm" class="comment-form mb-3" (ngSubmit)="submit()" >
       <label for="comment" class="mb-2">Agregar un comentario</label>
           <!-- Integrate TaggingComponent with the textarea -->
-        <app-tagging [textAreaControl]="bodyControl" (contentChange)="bodyForm.get('body')!.setValue($event)"></app-tagging>
+        <app-tagging [textAreaControl]="bodyControl" (contentChange)="bodyForm.get('body')!.setValue($eventEntity)"></app-tagging>
 
         <!-- Keep the textarea as it is -->
         <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
         <label for="file-upload" class="file-upload-label" >Seleccionar archivos</label>
-        <input type="file" (change)="onFileChange($event)" id="file-upload" class="file-upload-input" accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="selectedFiles.length >= 3">
+        <input type="file" (change)="onFileChange($eventEntity)" id="file-upload" class="file-upload-input" accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="selectedFiles.length >= 3">
 
         <app-file-badge *ngFor="let file of selectedFiles; let i = index" [file]="fileDTOs[i]" [canModify]="true" (removeEvent)="removeFile(i)"></app-file-badge>
         <p><i>Sólo se pueden subir hasta 3 archivos</i></p>
@@ -52,7 +52,7 @@
     <hr>
     <div class="comments-section">
         <h3 class="mb-3">Comentarios</h3>
-        <app-comment (deleteEvent)="deleteComment($event)" *ngFor="let comment of post?.commentDTOS" [comment]="comment" ></app-comment>
+        <app-comment (deleteEvent)="deleteComment($eventEntity)" *ngFor="let comment of post?.commentDTOS" [comment]="comment" ></app-comment>
     </div>
 </div>
 </body>

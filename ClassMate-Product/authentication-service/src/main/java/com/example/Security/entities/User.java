@@ -1,5 +1,6 @@
 package com.example.Security.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,7 @@ public class User implements UserDetails {
     private String password;
     private boolean locked = false;
     private boolean enabled = false;
+    private boolean isGoogleSynced = false;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile_id")

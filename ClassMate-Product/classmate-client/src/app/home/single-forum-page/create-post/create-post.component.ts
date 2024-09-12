@@ -64,9 +64,9 @@ export class CreatePostComponent implements OnInit{
     this._router.navigate([`forum/${forumId}`]);
   }
 
-  public onFileChange(event: any) {
-    if (event.target.files.length > 0) {
-      const files = event.target.files;
+  public onFileChange(eventEntity: any) {
+    if (eventEntity.target.files.length > 0) {
+      const files = eventEntity.target.files;
       for (let i = 0; i < files.length; i++) {
         this.selectedFiles.push(files[i]);
         this.selectedFileDTOs.push(mapFileToFIleDTO(files[i]));

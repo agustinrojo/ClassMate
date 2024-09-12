@@ -21,4 +21,5 @@ public class UserDTO {
     private List<Long> forumsSubscribed;
     private List<Long> forumsCreated;
     private List<Long> chatroomIdsIn;
+    private boolean isSynced;
 }

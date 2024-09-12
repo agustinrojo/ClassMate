@@ -12,7 +12,9 @@ public interface IEventService {
 
     EventResponseDTO saveEvent(EventRequestDTO eventRequestDTO);
 
-    void updateEvent(Long eventId, EventUpdateDTO eventUpdateDTO);
+    void updateEvent(Long eventId, EventUpdateDTO eventUpdateDTO, Long userId);
 
     void deleteEvent(Long eventId, Long userId);
+
+    void uploadAllEvents(Long userId, String calendarId);
 }

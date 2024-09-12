@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EventDialogComponent } from './event-dialog.component';
+import { EventDialogComponent } from './eventEntity-dialog.component';
 
 describe('EventDialogComponent', () => {
   let component: EventDialogComponent;
@@ -11,7 +11,7 @@ describe('EventDialogComponent', () => {
       declarations: [EventDialogComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(EventDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -8,7 +8,7 @@
       </div>
       <div class="form-group">
         <label for="post-content">Contenido del Post</label>
-        <app-tagging [textAreaControl]="bodyControl" (contentChange)="updatePostBody($event)"></app-tagging>
+        <app-tagging [textAreaControl]="bodyControl" (contentChange)="updatePostBody($eventEntity)"></app-tagging>
         <textarea id="post-content" class="bg-dark" name="content" rows="10" formControlName="body" maxlength="5000"></textarea>
       </div>
       <div *ngIf="selectedFiles.length > 0" class="mb-3">
@@ -19,7 +19,7 @@
       </div>
 
       <label for="file-upload" class="file-upload-label">Seleccionar archivos</label>
-      <input type="file" (change)="onFileChange($event)" id="file-upload" class="file-upload-input" [disabled]="selectedFiles.length >= 3" accept=".pdf, .xlsx, .docx, .jpg, .jpeg">
+      <input type="file" (change)="onFileChange($eventEntity)" id="file-upload" class="file-upload-input" [disabled]="selectedFiles.length >= 3" accept=".pdf, .xlsx, .docx, .jpg, .jpeg">
       <p><i>Sólo se pueden subir hasta 3 archivos</i></p>
       <p><i>Formatos permitidos: .pdf, .xlsx, .docx, .jpg, .jpeg</i></p>
       <div class="row">

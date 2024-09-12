@@ -8,11 +8,14 @@ import com.example.calendar_service.exception.EventNotFoundException;
 import com.example.calendar_service.exception.UnauthorizedActionException;
 import com.example.calendar_service.mapper.IEventMapper;
 import com.example.calendar_service.repository.IEventRepository;
+import com.example.calendar_service.repository.ITokenRepository;
 import com.example.calendar_service.service.IEventService;
+import com.example.calendar_service.service.IGoogleCalendarService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,59 +25,101 @@ public class EventServiceImpl implements IEventService {
 
     private final IEventRepository eventRepository;
     private final IEventMapper eventMapper;
+    private final IGoogleCalendarService googleCalendarService;
+    private final ITokenRepository tokenRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
-    public EventServiceImpl(IEventRepository eventRepository, IEventMapper eventMapper) {
+    public EventServiceImpl(IEventRepository eventRepository, IEventMapper eventMapper, IGoogleCalendarService googleCalendarService, ITokenRepository tokenRepository) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
+        this.googleCalendarService = googleCalendarService;
+        this.tokenRepository = tokenRepository;
     }
-
 
     @Override
     public List<EventResponseDTO> getEventsByUserId(Long userId) {
         LOGGER.info("Getting events by user with id: {}", userId);
-        List<Event> events = eventRepository.findEventsByUserId(userId);
+        List<Event> eventEntities = eventRepository.findEventsByUserId(userId);
 
-        if (events == null || events.isEmpty()) {
+        if (eventEntities == null || eventEntities.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return events.stream().map(eventMapper::mapToResponseEventDTO).collect(Collectors.toList());
+        return eventEntities.stream().map(eventMapper::mapToResponseEventDTO).collect(Collectors.toList());
     }
 
     @Override
     public EventResponseDTO saveEvent(EventRequestDTO eventRequestDTO) {
         LOGGER.info("Saving event with id: {}", eventRequestDTO.getId());
 
-        Event event = eventMapper.mapToEvent(eventRequestDTO);
-        Event savedEvent = eventRepository.save(event);
-        return eventMapper.mapToResponseEventDTO(savedEvent);
+        Event eventEntity = eventMapper.mapToEvent(eventRequestDTO);
+        Event savedEventEntity = eventRepository.save(eventEntity);
+
+        eventRequestDTO.setId(savedEventEntity.getId());
+
+        if(tokenRepository.existsByUserId(eventRequestDTO.getUserId())){
+            try {
+                googleCalendarService.createEvent("primary",eventRequestDTO );
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        return eventMapper.mapToResponseEventDTO(savedEventEntity);
     }
 
     @Override
-    public void updateEvent(Long eventId, EventUpdateDTO eventUpdateDTO) {
+    public void updateEvent(Long eventId, EventUpdateDTO eventUpdateDTO, Long userId) {
         LOGGER.info("Updating event with id: {}", eventId);
 
-        Event event = eventRepository.findById(eventId)
+        Event eventEntity = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
 
-        event.setTitle(eventUpdateDTO.getTitle());
-        event.setDescription(eventUpdateDTO.getDescription());
-        event.setStartDate(eventUpdateDTO.getStartDate());
-        event.setEndDate(eventUpdateDTO.getEndDate());
+        eventEntity.setTitle(eventUpdateDTO.getTitle());
+        eventEntity.setDescription(eventUpdateDTO.getDescription());
+        eventEntity.setStartDate(eventUpdateDTO.getStartDate());
+        eventEntity.setEndDate(eventUpdateDTO.getEndDate());
 
-        eventRepository.save(event);
+        eventRepository.save(eventEntity);
+
+        if(tokenRepository.existsByUserId(userId)){
+            if(eventEntity.getGoogleId() != null){
+                try {
+                    googleCalendarService.updateEvent("primary", eventEntity.getGoogleId(), eventUpdateDTO, userId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
     }
 
     @Override
     public void deleteEvent(Long eventId, Long userId) {
         LOGGER.info("Deleting event with id: {}", eventId);
-        Event event = eventRepository.findById(eventId)
+        Event eventEntity = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
-        if (!event.getUserId().equals(userId)) {
+        if (!eventEntity.getUserId().equals(userId)) {
             throw new UnauthorizedActionException("User not authorized to delete this comment");
         }
 
-        eventRepository.delete(event);
+        eventRepository.delete(eventEntity);
+
+        if(tokenRepository.existsByUserId(userId)){
+            if(eventEntity.getGoogleId() != null){
+                try {
+                    googleCalendarService.deleteEvent("primary", eventEntity.getGoogleId(), userId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void uploadAllEvents(Long userId, String calendarId) {
+        googleCalendarService.uploadAllEvents(userId, calendarId);
     }
 }

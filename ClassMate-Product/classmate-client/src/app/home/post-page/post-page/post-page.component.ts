@@ -12,7 +12,7 @@ import { PostData } from '../../interfaces/post-data.interface';
 import { PostStateService } from '../../../services/dto/state-services/post-state.service';
 import { CommentDTOResponse } from '../../../services/dto/comment/comment-response-dto.interface';
 import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
-import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+import { FileDownloadEvent } from '../../interfaces/file-download-eventEntity.interface';
 import { FileService } from '../../../services/file.service';
 import { ForumService } from '../../../services/forum.service';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
@@ -116,13 +116,13 @@ export class PostPageComponent implements OnInit{
 
   }
 
-  public deleteComment(event: number){
+  public deleteComment(eventEntity: number){
     let userId: number = this._authService.getUserId();
-    this._commentService.deleteComment(event, userId)
+    this._commentService.deleteComment(eventEntity, userId)
       .subscribe(() => {
         //borrar comentario
         const comments : CommentDTOResponse[] = [...this.post.commentDTOS];
-        const deletedCommentIndex = comments.findIndex(c => c.id === event);
+        const deletedCommentIndex = comments.findIndex(c => c.id === eventEntity);
         if(deletedCommentIndex !== -1){
           this.post.commentDTOS.splice(deletedCommentIndex, 1);
         }
@@ -153,9 +153,9 @@ export class PostPageComponent implements OnInit{
     this._router.navigate([`forum/${this.post.forumId}/post/edit/${this.post?.id}`]);
   }
 
-  public onFileChange(event: any) {
-    if (event.target.files.length > 0) {
-      const files = event.target.files;
+  public onFileChange(eventEntity: any) {
+    if (eventEntity.target.files.length > 0) {
+      const files = eventEntity.target.files;
       for (let i = 0; i < files.length; i++) {
         this.selectedFiles.push(files[i]);
         this.fileDTOs.push(this.mapFileToFIleDTO(files[i]));
