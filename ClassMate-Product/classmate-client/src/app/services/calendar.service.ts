@@ -1,10 +1,10 @@
-import { EventRequestDTO } from './dto/calendar/eventEntity-request-dto.interface';
+import { EventRequestDTO } from './dto/calendar/event-request-dto.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { Observable } from 'rxjs';
-import { EventResponseDTO } from './dto/calendar/eventEntity-response-dto.interface';
-import { EventUpdateDTO } from './dto/calendar/eventEntity-update-dto.interface';
+import { EventResponseDTO } from './dto/calendar/event-response-dto.interface';
+import { EventUpdateDTO } from './dto/calendar/event-update-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class CalendarService {

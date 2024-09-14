@@ -12,7 +12,7 @@ import { PostData } from '../../interfaces/post-data.interface';
 import { PostStateService } from '../../../services/dto/state-services/post-state.service';
 import { CommentDTOResponse } from '../../../services/dto/comment/comment-response-dto.interface';
 import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
-import { FileDownloadEvent } from '../../interfaces/file-download-eventEntity.interface';
+import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
 import { FileService } from '../../../services/file.service';
 import { ForumService } from '../../../services/forum.service';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';

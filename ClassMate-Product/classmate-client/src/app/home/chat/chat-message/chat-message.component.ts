@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ChatMessageOutputDTO } from '../../../services/dto/chat/chat-message/chat-message-output-dto.interface';
 import { FileDTO } from '../../../services/dto/attachment/file-dto.interface';
 import { FileService } from '../../../services/file.service';
-import { FileDownloadEvent } from '../../interfaces/file-download-eventEntity.interface';
+import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+
 
 @Component({
   selector: 'app-chat-message',

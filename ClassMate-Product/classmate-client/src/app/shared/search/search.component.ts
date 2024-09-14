@@ -38,11 +38,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.updateForumContext(currentForumData);
     });
 
-    this.navigationSubscription = this._router.eventEntities.pipe(
-    ).subscribe((eventEntity) => {
-      if (eventEntity instanceof NavigationEnd) {
-        this.isSearchPage = eventEntity.urlAfterRedirects.includes('/search');
-        this.checkAndResetForumContext(eventEntity.urlAfterRedirects);
+    this.navigationSubscription = this._router.events.pipe(
+    ).subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isSearchPage = event.urlAfterRedirects.includes('/search');
+        this.checkAndResetForumContext(event.urlAfterRedirects);
       }
     });
   }
