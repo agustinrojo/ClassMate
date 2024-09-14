@@ -1,6 +1,6 @@
 <form  class="comment-form mb-3" [formGroup]="editCommentForm" >
   <label for="comment" class="mb-2">Editar comentario</label>
-  <app-tagging [textAreaControl]="bodyControl" (contentChange)="editCommentForm.get('body')!.setValue($eventEntity)"></app-tagging>
+  <app-tagging [textAreaControl]="bodyControl" (contentChange)="editCommentForm.get('body')!.setValue($event)"></app-tagging>
 
   <!-- The textarea remains linked to the FormControl -->
   <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
@@ -42,7 +42,7 @@
     <br>
 
     <label for="add-file" class="add-file-label" >Seleccionar archivos</label>
-    <input type="file" (change)="onFileAdded($eventEntity)" id="add-file" class="add-file-input mb-3" multiple accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="(files.length + filesToAdd.length) >= 3">
+    <input type="file" (change)="onFileAdded($event)" id="add-file" class="add-file-input mb-3" multiple accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="(files.length + filesToAdd.length) >= 3">
     <button type="submit" class="col-3" id="btn-confirm" (click)="confirmEdition()">Confirmar</button>
     <button type="button" class="col-3 mx-2 bg-danger" (click)="cancel()">Cancelar</button>
 </form>

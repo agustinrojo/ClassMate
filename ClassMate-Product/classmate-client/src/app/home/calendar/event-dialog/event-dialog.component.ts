@@ -1,14 +1,16 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA  } from '@angular/material/dialog';
-import { EventData } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data.interface';
-import { EventDataResult } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data-result.interface';
+import { EventData } from '../../interfaces/calendar/event-dialog/event-data.interface';
+import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
+// import { EventData } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data.interface';
+// import { EventDataResult } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data-result.interface';
 
 
 
 @Component({
   selector: 'app-eventEntity-dialog',
-  templateUrl: './eventEntity-dialog.component.html',
-  styleUrl: './eventEntity-dialog.component.css'
+  templateUrl: './event-dialog.component.html',
+  styleUrl: './event-dialog.component.css'
 })
 export class EventDialogComponent {
 

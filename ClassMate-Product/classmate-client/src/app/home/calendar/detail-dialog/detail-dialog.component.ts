@@ -9,8 +9,8 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
-import { EventData } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data.interface';
-import { EventDataResult } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data-result.interface';
+import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
+import { EventData } from '../../interfaces/calendar/event-dialog/event-data.interface';
 
 @Component({
   selector: 'app-detail-dialog',

@@ -5,6 +5,6 @@
       <!-- <span class="timestamp">{{ timestamp | date:'HH:mm' }}</span> -->
     </p>
     <br>
-    <app-file-badge *ngIf="message.attachment != undefined" [file]="message.attachment" (downloadFileEvent)="downloadFile($eventEntity)"></app-file-badge>
+    <app-file-badge *ngIf="message.attachment != undefined" [file]="message.attachment" (downloadFileEvent)="downloadFile($event)"></app-file-badge>
   </div>
 </div>
