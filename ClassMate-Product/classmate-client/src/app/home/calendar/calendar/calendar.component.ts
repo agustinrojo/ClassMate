@@ -6,17 +6,17 @@ import bootstrapPlugin from '@fullcalendar/bootstrap'
 import esLocale from '@fullcalendar/core/locales/es';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { MatDialog } from '@angular/material/dialog';
-import { EventDialogComponent } from '../eventEntity-dialog/eventEntity-dialog.component';
-import { EventData } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data.interface';
 import { CalendarService } from '../../../services/calendar.service';
-import { EventResponseDTO } from '../../../services/dto/calendar/eventEntity-response-dto.interface';
-import { EventRequestDTO } from '../../../services/dto/calendar/eventEntity-request-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { EventImpl } from '@fullcalendar/core/internal';
-import { EventUpdateDTO } from '../../../services/dto/calendar/eventEntity-update-dto.interface';
-import { EventDataResult } from '../../interfaces/calendar/eventEntity-dialog/eventEntity-data-result.interface';
 import { DetailDialogComponent } from '../detail-dialog/detail-dialog.component';
 import { OAuth2Service } from '../../../services/oauth2-service';
+import { EventResponseDTO } from '../../../services/dto/calendar/event-response-dto.interface';
+import { EventDialogComponent } from '../event-dialog/event-dialog.component';
+import { EventData } from '../../interfaces/calendar/event-dialog/event-data.interface';
+import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
+import { EventRequestDTO } from '../../../services/dto/calendar/event-request-dto.interface';
+import { EventUpdateDTO } from '../../../services/dto/calendar/event-update-dto.interface';
 
 @Component({
   selector: 'app-calendar',
@@ -61,7 +61,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       locales: [esLocale],
       locale: 'es',
       height: 'auto',
-      eventEntities: this.eventsArray,
+      events: this.eventsArray,
       editable: true,
       selectable: true,
       //dateClick: (arg) => this.handleDateClick(arg),
@@ -152,7 +152,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   private handleEventClick(eventInfo: EventClickArg) {
-    let eventEntity = eventInfo.eventEntity;
+    let eventEntity = eventInfo.event;
 
     console.log(eventEntity);
     // // Open modal
@@ -161,24 +161,24 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   private handleEventDrop(eventInfo: EventDropArg) {
-    const { eventEntity } = eventInfo;
+    const { event } = eventInfo;
     const result: EventDataResult = {
-      eventId: Number(eventEntity.id),
-      title: eventEntity.title,
-      start: eventEntity.startStr,
-      end: eventEntity.endStr
+      eventId: Number(event.id),
+      title: event.title,
+      start: event.startStr,
+      end: event.endStr
     };
 
     this.updateEvent(result.eventId!, result);
   }
 
   private handleEventResize(eventInfo: EventResizeDoneArg) {
-    const { eventEntity } = eventInfo;
+    const { event } = eventInfo;
     const result: EventDataResult = {
-      eventId: Number(eventEntity.id),
-      title: eventEntity.title,
-      start: eventEntity.start!.toISOString(),
-      end: eventEntity.end!.toISOString()
+      eventId: Number(event.id),
+      title: event.title,
+      start: event.start!.toISOString(),
+      end: event.end!.toISOString()
     };
 
     this.updateEvent(result.eventId!, result);
