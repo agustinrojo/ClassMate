@@ -1,4 +1,4 @@
-package com.example.notification_service.dto.milestone;
+package com.example.notification_service.dto.APIDTOS.milestone;
 
 
 import com.example.notification_service.dto.NotificationDTO;

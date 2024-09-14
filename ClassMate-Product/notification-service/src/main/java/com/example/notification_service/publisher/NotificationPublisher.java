@@ -1,8 +1,7 @@
 package com.example.notification_service.publisher;
 
-import com.example.notification_service.dto.event.comment.PostAuthorRequestEventDTO;
-import com.example.notification_service.dto.event.message.MessageSenderNameRequestDTO;
-import com.example.notification_service.dto.event.valoration.MilestoneReachedEventDTO;
+import com.example.notification_service.dto.publisherAndConsumerDTOS.comment.PostAuthorRequestEventDTO;
+import com.example.notification_service.dto.publisherAndConsumerDTOS.message.MessageSenderNameRequestDTO;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

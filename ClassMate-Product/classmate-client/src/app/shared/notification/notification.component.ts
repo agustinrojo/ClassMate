@@ -6,6 +6,7 @@ import { CommentNotificationDTO } from '../../services/dto/notification/comment-
 import { Router } from '@angular/router';
 import { MessageNotificationDTO } from '../../services/dto/notification/message-notification-dto.interface';
 import { MilestoneNotificationDTO } from '../../services/dto/notification/milestone-notification-dto.interface copy 2';
+import { EventNotificationDTO } from '../../services/dto/notification/event-notification-dto.interface copy 2';
 
 @Component({
   selector: 'app-notification',
@@ -100,30 +101,42 @@ export class NotificationComponent implements OnInit, OnDestroy {
   }
 
   getNotificationText(notification: NotificationDTO): string {
-    if (notification.type === "COMMENT") {
-      const commentNotification = notification as CommentNotificationDTO;
-      const truncatedTitle = commentNotification.title.length > 40
-      ? commentNotification.title.substring(0, 40) + "..."
-      : commentNotification.title;
-      return `Recibiste un comentario en tu post "${truncatedTitle}"`;
+    switch (notification.type) {
+      case "COMMENT": {
+        const commentNotification = notification as CommentNotificationDTO;
+        const truncatedTitle = commentNotification.title.length > 40
+          ? commentNotification.title.substring(0, 40) + "..."
+          : commentNotification.title;
+        return `Recibiste un comentario en tu post "${truncatedTitle}"`;
+      }
+
+      case "MESSAGE": {
+        const messageNotification = notification as MessageNotificationDTO;
+        return `Recibiste un mensaje de ${messageNotification.senderName}!`;
+      }
+
+      case "MILESTONE": {
+        const milestoneNotification = notification as MilestoneNotificationDTO;
+        return `¡Tu post alcanzó ${milestoneNotification.milestone} valoraciones positivas!`;
+      }
+
+      case "EVENT": {
+        const eventNotification = notification as EventNotificationDTO;
+        return `¡Hoy tenés un evento! ${eventNotification.title}`;
+      }
+
+      default:
+        return 'New notification';
     }
-    if (notification.type === "MESSAGE") {
-      const messageNotification = notification as MessageNotificationDTO;
-      return `Recibiste un mensaje de ${messageNotification.senderName}!`;
-    }
-    if (notification.type === "MILESTONE") {
-      const milestoneNotification = notification as MilestoneNotificationDTO;
-      return `¡Tu post alcanzó ${milestoneNotification.milestone} valoraciones positivas!`;
-    }
-    return 'New notification';
   }
+
 
   goToNotification(notification: NotificationDTO): void {
     if (notification.type === "COMMENT") {
       const commentNotification = notification as CommentNotificationDTO;
       this._router.navigate([`/forum/${commentNotification.forumId}/post/${commentNotification.postId}`]);
     } else if (notification.type === "MESSAGE") {
-      const messageNotification = notification as MessageNotificationDTO;
+      // const messageNotification = notification as MessageNotificationDTO;
       this._router.navigate(['/chat']);
     } else if (notification.type === "MILESTONE") {
       const milestoneNotification = notification as MilestoneNotificationDTO;

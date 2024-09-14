@@ -1,4 +1,4 @@
-package com.example.notification_service.dto.event.valoration;
+package com.example.notification_service.dto.publisherAndConsumerDTOS.valoration;
 
 import lombok.*;
 

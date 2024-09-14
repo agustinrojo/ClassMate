@@ -28,6 +28,16 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.sync-google-routing-key}")
     private String syncRoutingKey;
 
+    // NOTIFICATIONS
+    @Value("${rabbitmq.queue.notifications.event-queue}")
+    private String eventNotificationQueue;
+
+    @Value("${rabbitmq.notifications.event.routing-key}")
+    private String eventNotificationRoutingKey;
+
+    @Value("${rabbitmq.exchange.notifications}")
+    private String notificationsExchange;
+
     @Bean
     public Queue syncGoogleQueue() {
         return new Queue(syncGoogleQueue, true);
@@ -49,6 +59,26 @@ public class RabbitMQConfig {
                 .bind(syncGoogleQueue())
                 .to(syncExchange())
                 .with(syncRoutingKey);
+    }
+
+    // NOTIFICATIONS
+
+    @Bean
+    public TopicExchange notificationsExchange() {
+        return new TopicExchange(notificationsExchange);
+    }
+
+    @Bean
+    public Queue eventNotificationQueue() {
+        return new Queue(eventNotificationQueue, true);
+    }
+
+    @Bean
+    public Binding eventNotificationBinding() {
+        return BindingBuilder
+                .bind(eventNotificationQueue())
+                .to(notificationsExchange())
+                .with(eventNotificationRoutingKey);
     }
 
     @Bean

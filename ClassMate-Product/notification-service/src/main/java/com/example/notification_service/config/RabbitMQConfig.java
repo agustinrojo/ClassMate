@@ -50,6 +50,13 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications.milestone.routing-key}")
     private String milestoneNotificationRoutingKey;
 
+    // EVENT NOTIFICATIONS
+    @Value("${rabbitmq.queue.notifications.event-queue}")
+    private String eventNotificationQueue;
+
+    @Value("${rabbitmq.notifications.event.routing-key}")
+    private String eventNotificationRoutingKey;
+
 
     @Bean
     public Queue commentNotificationQueue() {
@@ -145,8 +152,6 @@ public class RabbitMQConfig {
         return new Queue(milestoneNotificationQueue, true);
     }
 
-
-    // MILESTONE NOTIFICATIONS
     @Bean
     public Binding milestoneNotificationBinding() {
         return BindingBuilder
@@ -154,6 +159,22 @@ public class RabbitMQConfig {
                 .to(notificationsExchange())
                 .with(milestoneNotificationRoutingKey);
     }
+
+
+    // EVENT NOTIFICATIONS
+    @Bean
+    public Queue eventNotificationQueue() {
+        return new Queue(eventNotificationQueue, true);
+    }
+
+    @Bean
+    public Binding eventNotificationBinding() {
+        return BindingBuilder
+                .bind(eventNotificationQueue())
+                .to(notificationsExchange())
+                .with(eventNotificationRoutingKey);
+    }
+
 
     @Bean
     public MessageConverter converter() {

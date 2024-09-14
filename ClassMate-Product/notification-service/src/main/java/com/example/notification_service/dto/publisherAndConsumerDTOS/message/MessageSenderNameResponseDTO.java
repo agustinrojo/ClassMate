@@ -1,4 +1,4 @@
-package com.example.notification_service.dto.event.message;
+package com.example.notification_service.dto.publisherAndConsumerDTOS.message;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageSenderNameRequestDTO {
+public class MessageSenderNameResponseDTO {
     private Long receiverId;
     private Long senderId;
+    private String profileName;
 }

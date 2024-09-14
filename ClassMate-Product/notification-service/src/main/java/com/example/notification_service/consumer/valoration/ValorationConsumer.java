@@ -1,11 +1,8 @@
 package com.example.notification_service.consumer.valoration;
 
 import com.example.notification_service.dto.NotificationDTO;
-import com.example.notification_service.dto.event.comment.CommentNotificationEventDTO;
-import com.example.notification_service.dto.event.comment.PostAuthorRequestEventDTO;
-import com.example.notification_service.dto.event.valoration.MilestoneReachedEventDTO;
+import com.example.notification_service.dto.publisherAndConsumerDTOS.valoration.MilestoneReachedEventDTO;
 import com.example.notification_service.entity.notification.MilestoneNotification;
-import com.example.notification_service.publisher.NotificationPublisher;
 import com.example.notification_service.repository.NotificationRepository;
 import com.example.notification_service.service.NotificationService;
 import org.slf4j.Logger;
