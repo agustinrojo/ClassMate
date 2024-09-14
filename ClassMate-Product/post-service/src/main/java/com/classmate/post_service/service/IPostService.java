@@ -45,10 +45,10 @@ public interface IPostService {
     /**
      * Saves a new post.
      *
-     * @param postRequestDTO the post data to save
+     * @param postSaveDTO the post data to save
      * @return the saved PostDTO
      */
-    PostResponseDTO savePost(PostRequestDTO postRequestDTO);
+    PostResponseDTO savePost(PostSaveDTO postSaveDTO);
 
     /**
      * Updates an existing post.

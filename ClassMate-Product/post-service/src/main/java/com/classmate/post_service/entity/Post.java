@@ -53,7 +53,9 @@ public class Post {
     @Column(nullable = false, length = 5000)
     private String body;
 
-    // Falta photo, attachments y valuation
+    @Column
+    private int lastMilestone = 0;  // Default to 0, no milestones reached yet
+
 
     /**
      * Timestamp indicating when the post was created.

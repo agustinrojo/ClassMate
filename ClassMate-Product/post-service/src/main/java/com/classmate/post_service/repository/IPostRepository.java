@@ -1,9 +1,11 @@
 package com.classmate.post_service.repository;
 
 import com.classmate.post_service.entity.Post;
+import feign.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -34,4 +36,7 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByTitleContainingIgnoreCaseAndForumIdOrderByCreationDateDesc(String name, Long forumId, Pageable pageable);
 
     Page<Post> findByForumIdInOrderByCreationDateDesc(List<Long> forumIds, Pageable pageable);
+
+    @Query("SELECT p.authorId, p.forumId, p.title FROM Post p WHERE p.id = :postId")
+    List<Object[]> findAuthorIdAndForumIdAndTitleById(@Param("postId") Long postId);
 }

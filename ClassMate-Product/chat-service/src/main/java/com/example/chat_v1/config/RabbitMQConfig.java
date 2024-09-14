@@ -24,6 +24,15 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.chat-exchange.name}")
     private String chatExchange;
 
+    // Chat Messages
+    @Value("${rabbitmq.exchange.notifications}")
+    private String notificationsExchange;
+    @Value("${rabbitmq.queue.notifications.message-queue}")
+    private String messageNotificationQueue;
+    @Value("${rabbitmq.notifications-message.routing-key}")
+    private String messageNotificationRoutingKey;
+
+
     @Bean
     public Queue addChatroomQueue() {
         return new Queue(addChatroomQueue, true);
@@ -41,6 +50,28 @@ public class RabbitMQConfig {
                 .to(chatExchange())
                 .with(addChatroomRoutingKey);
     }
+
+    // Chat Messages
+    @Bean
+    public TopicExchange notificationsExchange() {
+        return new TopicExchange(notificationsExchange);
+    }
+
+    @Bean
+    public Queue messageNotificationQueue() {
+        return new Queue(messageNotificationQueue, true);
+    }
+
+    @Bean
+    public Binding messageNotificationBinding() {
+        return BindingBuilder
+                .bind(messageNotificationQueue())
+                .to(notificationsExchange())
+                .with(messageNotificationRoutingKey);
+    }
+
+
+
 
     @Bean
     public MessageConverter converter() {
