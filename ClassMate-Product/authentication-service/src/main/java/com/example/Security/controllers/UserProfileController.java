@@ -5,6 +5,7 @@ import com.example.Security.dto.user.profile.UserProfileResponseDTO;
 import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
+import com.example.Security.publisher.CreateUserPublisher;
 import com.example.Security.service.UserProfileService;
 import com.example.Security.service.UserService;
 import lombok.RequiredArgsConstructor;

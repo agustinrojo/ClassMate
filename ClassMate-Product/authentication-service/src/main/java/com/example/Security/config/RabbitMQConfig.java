@@ -36,6 +36,15 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.add-chatroom-queue}")
     private String addChatroomQueue;
 
+    @Value("${rabbitmq.queue.create-user-comment-service-queue}")
+    private String createUserCommentServiceQueue;
+
+    @Value("${rabbitmq.queue.create-user-post-service-queue}")
+    private String createUserPostServiceQueue;
+
+    @Value("${rabbitmq.queue.create-user-forum-service-queue}")
+    private String createUserForumServiceQueue;
+
     @Value("${rabbitmq.chat-exchange.routing-key}")
     private String addChatroomRoutingKey;
 
@@ -44,6 +53,9 @@ public class RabbitMQConfig {
 
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
+
+    @Value("${rabbitmq.create-user-exchange.name}")
+    private String createUserExchange;
 
     @Value("${rabbitmq.exchange.routing-key}")
     private String subscriptionRoutingKey;
@@ -74,6 +86,8 @@ public class RabbitMQConfig {
     private String messageSenderNameRequestRoutingKey;
     @Value("${rabbitmq.notifications.message-sender-response.routing-key}")
     private String messageSenderNameResponseRoutingKey;
+    @Value("${rabbitmq.create-user-routing-key.name}")
+    private String createUserRoutingKey;
 
 
     @Bean
@@ -112,6 +126,25 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue createUserCommentServiceQueue() { return new Queue(createUserCommentServiceQueue, true); }
+
+    @Bean
+    public Queue createUserPostServiceQueue() { return new Queue(createUserPostServiceQueue, true); }
+
+    @Bean
+    public Queue createUserForumServiceQueue() { return new Queue(createUserForumServiceQueue, true); }
+
+    @Bean
+    public Queue messageSenderRequestQueue() {
+        return new Queue(messageSenderNameRequestQueue, true);
+    }
+
+    @Bean
+    public Queue messageSenderResponseQueue() {
+        return new Queue(messageSenderNameResponseQueue, true);
+    }
+
+    @Bean
     public TopicExchange forumExchange() {
         return new TopicExchange(exchange);
     }
@@ -119,6 +152,16 @@ public class RabbitMQConfig {
     @Bean
     public TopicExchange chatExchange() {
         return new TopicExchange(chatExchange);
+    }
+
+    @Bean
+    public TopicExchange notificationsExchange() {
+        return new TopicExchange(notificationsExchange);
+    }
+
+    @Bean
+    public TopicExchange createUserExchange() {
+        return new TopicExchange(createUserExchange);
     }
 
     @Bean
@@ -176,22 +219,6 @@ public class RabbitMQConfig {
                 .with(addChatroomRoutingKey);
     }
 
-    // Chat Messages
-    @Bean
-    public TopicExchange notificationsExchange() {
-        return new TopicExchange(notificationsExchange);
-    }
-
-    @Bean
-    public Queue messageSenderRequestQueue() {
-        return new Queue(messageSenderNameRequestQueue, true);
-    }
-
-    @Bean
-    public Queue messageSenderResponseQueue() {
-        return new Queue(messageSenderNameResponseQueue, true);
-    }
-
     @Bean
     public Binding messageSenderRequestBinding() {
         return BindingBuilder
@@ -208,6 +235,13 @@ public class RabbitMQConfig {
                 .with(messageSenderNameResponseRoutingKey);
     }
 
+    @Bean
+    public Binding createUserCommentServiceBinding() {
+        return BindingBuilder
+                .bind(createUserCommentServiceQueue())
+                .to(createUserExchange())
+                .with(createUserRoutingKey);
+    }
 
     @Bean
     public MessageConverter converter() {

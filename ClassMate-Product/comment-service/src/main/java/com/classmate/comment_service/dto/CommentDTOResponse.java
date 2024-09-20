@@ -1,6 +1,7 @@
 package com.classmate.comment_service.dto;
 
 import com.classmate.comment_service.dto.filedtos.FileDTO;
+import com.classmate.comment_service.dto.user.UserDTO;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +27,7 @@ public class CommentDTOResponse {
     /**
      * The identifier of the author who created the comment.
      */
-    private Long authorId;
+    private UserDTO author;
 
     /**
      * The body content of the comment.

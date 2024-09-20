@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../auth/dto/user-dto.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class OAuth2Service {
@@ -21,5 +22,9 @@ export class OAuth2Service {
     console.log(isSynced);
 
     window.location.href = `http://localhost:8085/oauth2/connect/google?userId=${this.userId}&isSynced=${isSynced}`;
+  }
+
+  public unsycronize():Observable<void>{
+    return this.http.delete<void>(`${this.baseURL}/unsyncronize/${this.userId}`);
   }
 }

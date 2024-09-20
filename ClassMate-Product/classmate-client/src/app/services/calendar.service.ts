@@ -8,7 +8,7 @@ import { EventUpdateDTO } from './dto/calendar/event-update-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class CalendarService {
-  private baseUrl: string = 'http://localhost:8080/api/eventEntities'
+  private baseUrl: string = 'http://localhost:8080/api/events'
   private loggedUserId!: number;
 
   constructor(

@@ -17,6 +17,7 @@ import { EventData } from '../../interfaces/calendar/event-dialog/event-data.int
 import { EventDataResult } from '../../interfaces/calendar/event-dialog/event-data-result.interface';
 import { EventRequestDTO } from '../../../services/dto/calendar/event-request-dto.interface';
 import { EventUpdateDTO } from '../../../services/dto/calendar/event-update-dto.interface';
+import { User } from '../../../auth/dto/user-dto.interface';
 
 @Component({
   selector: 'app-calendar',
@@ -27,6 +28,7 @@ import { EventUpdateDTO } from '../../../services/dto/calendar/event-update-dto.
 export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild('calendar', { static: false }) fullCalendar!: FullCalendarComponent;
   private calendarApi!: CalendarApi;
+  user!: User;
   loggedUserId!: number;
   calendarOptions?: CalendarOptions;
   selectedEvent: any = { id: '', title: '', start: '', end: '' }; // Event object to bind with modal inputs
@@ -39,6 +41,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     private _oauth2Service: OAuth2Service
   ){
     this.loggedUserId = this._authService.getUserId();
+    this.user = this._authService.getUser();
   }
 
   ngOnInit(): void {
@@ -347,6 +350,17 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   public connectToGoogle(){
     this._oauth2Service.connectToGoogle();
+    this.user.synced = true;
+    this._authService.setSynced(true);
+  }
+
+  public unsyncronize(){
+    this._oauth2Service.unsycronize().subscribe((resp) => {
+      console.log(resp);
+      this.user.synced = false;
+      this._authService.setSynced(false);
+    })
+
   }
 
   private deleteEvent(eventId: number): void {

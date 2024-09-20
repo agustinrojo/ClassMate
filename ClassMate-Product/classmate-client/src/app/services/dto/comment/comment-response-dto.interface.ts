@@ -1,9 +1,10 @@
 import { FileDTO } from "../attachment/file-dto.interface";
+import { UserDisplayDTO } from "../user-display/user-display.interface";
 
 export interface CommentDTOResponse{
   id: number;
   postId: number;
-  authorId: number;
+  author: UserDisplayDTO;
   body: string;
   creationDate: Date;
   files: FileDTO[];

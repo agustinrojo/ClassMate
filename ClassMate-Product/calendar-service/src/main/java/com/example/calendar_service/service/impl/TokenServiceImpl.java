@@ -4,12 +4,17 @@ import com.example.calendar_service.entity.auth.Token;
 import com.example.calendar_service.repository.ITokenRepository;
 import com.example.calendar_service.service.ITokenService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class TokenServiceImpl implements ITokenService {
 
     private final ITokenRepository tokenRepository;
+    private final Logger LOGGER = LoggerFactory.getLogger(TokenServiceImpl.class);
 
     public TokenServiceImpl(ITokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
@@ -51,5 +56,11 @@ public class TokenServiceImpl implements ITokenService {
         return tokenRepository.findByUserId(userId).get(0);
     }
 
+    @Transactional
+    @Override
+    public void deleteTokensByUserId(Long userId){
+        LOGGER.info(String.format("Deleting user %d Token", userId));
+        tokenRepository.deleteAllByUserId(userId);
+    }
 
 }

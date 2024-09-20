@@ -7,6 +7,7 @@ import { CommentUpdateDTO } from '../../../services/dto/comment/comment-update-d
 import { FileService } from '../../../services/file.service';
 import { Valoration } from '../../interfaces/valoration.interface';
 import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-comment',
@@ -26,11 +27,12 @@ export class CommentComponent implements OnInit{
 
   constructor(
     private _commentService: CommentService,
-    private _fileService: FileService
+    private _fileService: FileService,
+    private _router: Router
   ){}
 
   ngOnInit(): void {
-    console.log(this.comment)
+
     this.getUserId();
 
     this.commentValoration = {
@@ -125,6 +127,10 @@ export class CommentComponent implements OnInit{
     });
   }
 
+
+  public navigateToUserProfile() {
+    this._router.navigate([`profile/${this.comment!.author!.userId}`]);
+  }
 
 
 }

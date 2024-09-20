@@ -1,9 +1,9 @@
 <div class="comment" *ngIf="!editing">
   <div class="row mb-2">
     <div class="col-10">
-      <h4>#{{comment!.authorId}}</h4>
+      <h4 (click)="navigateToUserProfile()"><span class="badge rounded-pill text-bg-warning nickname"><b>p/</b>{{comment?.author?.nickname}}</span></h4>
     </div>
-    <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="comment?.authorId === userId">
+    <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="comment?.author?.userId === userId">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
       <ul class="dropdown-menu">
         <li><button class="dropdown-item" (click)="deleteComment()">Borrar</button></li>

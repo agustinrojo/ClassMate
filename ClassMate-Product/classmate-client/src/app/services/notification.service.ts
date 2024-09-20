@@ -12,8 +12,8 @@ import { NotificationUpdateDTO } from './dto/notification/notification-update-dt
 })
 export class NotificationService {
   private stompClient!: CompatClient;
-  private baseWSUrl : string = "http://localhost:8089/ws-notifications";
-  private apiBaseUrl: string = "http://localhost:8089/api/notifications";
+  private baseWSUrl : string = "http://localhost:8090/ws-notifications";
+  private apiBaseUrl: string = "http://localhost:8090/api/notifications";
   private socket!: WebSocket;
   private loggedUserId!: number;
   private notificationSubject: Subject<NotificationDTO> = new Subject<NotificationDTO>();

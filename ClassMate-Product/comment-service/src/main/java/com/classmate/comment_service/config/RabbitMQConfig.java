@@ -47,6 +47,13 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications-comment.routing-key}")
     private String commentNotificationRoutingKey;
 
+    //Create user queue
+    @Value("${rabbitmq.queue.create-user-comment-service-queue}")
+    private String createUserCommentServiceQueue;
+    @Value("${rabbitmq.create-user-exchange.name}")
+    private String createUserExchange;
+    @Value("${rabbitmq.create-user-routing-key.name}")
+    private String createUserRoutingKey;
 
     @Bean
     public Queue deletePostQueue() {
@@ -64,8 +71,18 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue createUserQueue() {
+        return new Queue(createUserCommentServiceQueue, true);
+    }
+
+    @Bean
     public TopicExchange postExchange() {
         return new TopicExchange(postExchange);
+    }
+
+    @Bean
+    public TopicExchange createUserExchange(){
+        return new TopicExchange(createUserExchange);
     }
 
     @Bean
@@ -117,6 +134,13 @@ public class RabbitMQConfig {
                 .with(commentNotificationRoutingKey);
     }
 
+    @Bean
+    public Binding createUserBinding(){
+        return BindingBuilder
+                .bind(createUserQueue())
+                .to(createUserExchange())
+                .with(createUserRoutingKey);
+    }
 
     @Bean
     public MessageConverter converter() {

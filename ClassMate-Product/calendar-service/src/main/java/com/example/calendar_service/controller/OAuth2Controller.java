@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -71,5 +72,12 @@ public class OAuth2Controller {
         }
 
         response.sendRedirect("http://localhost:4200/calendar"); // Redirige al usuario a la vista del calendario
+    }
+
+    @DeleteMapping("/unsyncronize/{userId}")
+    public ResponseEntity<Void> unSyncronizeUser(@PathVariable("userId") Long userId){
+        googleOAuth2Service.unSyncronize(userId);
+        System.out.println(String.format("Unsycrncronyzing %d", userId));
+        return ResponseEntity.noContent().build();
     }
 }

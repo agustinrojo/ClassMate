@@ -26,10 +26,12 @@ public interface CommentMapper {
      * @param commentRequestDTO the CommentDTO
      * @return the Comment entity
      */
+    @Mapping(target = "author", ignore = true)
     Comment mapToComment(CommentDTORequest commentRequestDTO);
 
     @Mapping(source = "attachments", target = "files")
     @Mapping(source = "hasBeenEdited", target = "hasBeenEdited")
+    @Mapping(target = "author", ignore = true)
     CommentDTOResponse mapToCommentDTOResponse(Comment comment);
 
 }

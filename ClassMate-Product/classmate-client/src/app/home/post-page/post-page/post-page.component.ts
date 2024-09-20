@@ -91,7 +91,7 @@ export class PostPageComponent implements OnInit{
 
   public submit(){
     let user = JSON.parse(localStorage.getItem("user") || "");
-
+    console.log("comentando")
     let newComment: CommentDTORequest = {
       id: 0,
       postId: this.post.id,

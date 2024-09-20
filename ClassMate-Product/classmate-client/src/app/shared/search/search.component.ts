@@ -125,9 +125,9 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showResults = false;
   }
 
-  @HostListener('document:click', ['$eventEntity'])
-  onDocumentClick(eventEntity: Event): void {
-    if (!this._elementRef.nativeElement.contains(eventEntity.target)) {
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (!this._elementRef.nativeElement.contains(event.target)) {
       this.showResults = false;
     }
   }

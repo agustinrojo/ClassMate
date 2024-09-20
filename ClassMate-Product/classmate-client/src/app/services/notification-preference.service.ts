@@ -9,7 +9,7 @@ import { NotificationPreferenceUpdateDTO } from './dto/notification/notification
   providedIn: 'root'
 })
 export class NotificationPreferenceService {
-  private baseUrl: string = "http://localhost:8089/api/preferences";
+  private baseUrl: string = "http://localhost:8090/api/preferences";
 
   constructor(private http: HttpClient) {}
 

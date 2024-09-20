@@ -1,10 +1,12 @@
 package com.example.Security.service;
 
+import com.example.Security.dto.user.UserDisplayDTO;
 import com.example.Security.dto.user.profile.*;
 import com.example.Security.entities.Attachment;
 import com.example.Security.entities.User;
 import com.example.Security.entities.UserProfile;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
+import com.example.Security.publisher.CreateUserPublisher;
 import com.example.Security.repositories.AttachmentRepository;
 import com.example.Security.repositories.UserProfileRepository;
 import com.example.Security.repositories.UserRepository;
@@ -25,13 +27,14 @@ public class UserProfileService {
     private final UserRepository userRepository;
     private final AttachmentRepository attachmentRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(UserProfileService.class);
-
+    private final CreateUserPublisher createUserPublisher;
     private static final long MAX_PROFILE_PHOTO_SIZE = 1048576; // 1MB
 
-    public UserProfileService(UserProfileRepository userProfileRepository, UserRepository userRepository, AttachmentRepository attachmentRepository) {
+    public UserProfileService(UserProfileRepository userProfileRepository, UserRepository userRepository, AttachmentRepository attachmentRepository, CreateUserPublisher createUserPublisher) {
         this.userProfileRepository = userProfileRepository;
         this.userRepository = userRepository;
         this.attachmentRepository = attachmentRepository;
+        this.createUserPublisher = createUserPublisher;
     }
 
     @Transactional
@@ -51,6 +54,13 @@ public class UserProfileService {
         user.setUserProfile(userProfile);
         userProfileRepository.save(userProfile);
         userRepository.save(user);
+
+        createUserPublisher.publishCreateUserEvent(
+                UserDisplayDTO.builder()
+                .userId(requestDTO.getUserId())
+                .nickname(requestDTO.getNickname())
+                .build()
+        );
 
         return getUserProfileResponseDTO(user, userProfile);
     }

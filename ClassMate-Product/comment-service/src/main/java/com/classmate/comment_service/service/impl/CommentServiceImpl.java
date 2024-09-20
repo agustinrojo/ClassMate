@@ -7,14 +7,18 @@ import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.dto.CommentDeletionDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
+import com.classmate.comment_service.dto.user.UserDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
+import com.classmate.comment_service.entity.User;
 import com.classmate.comment_service.exception.CommentNotFoundException;
 import com.classmate.comment_service.exception.InvalidCommentException;
 import com.classmate.comment_service.exception.UnauthorizedActionException;
 import com.classmate.comment_service.mapper.CommentMapper;
 import com.classmate.comment_service.publisher.CommentPublisher;
 import com.classmate.comment_service.repository.ICommentRepository;
+import com.classmate.comment_service.mapper.IUserMapper;
+import com.classmate.comment_service.repository.IUserRepository;
 import com.classmate.comment_service.service.ICommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +38,19 @@ public class CommentServiceImpl implements ICommentService {
 
     private final ICommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final IUserMapper userMapper;
     private final FileServiceClient fileServiceClient;
     private final CommentPublisher commentPublisher;
+    private final IUserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, FileServiceClient fileServiceClient, CommentPublisher commentPublisher) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, FileServiceClient fileServiceClient, CommentPublisher commentPublisher, IUserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
+        this.userMapper = userMapper;
         this.fileServiceClient = fileServiceClient;
         this.commentPublisher = commentPublisher;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -52,6 +60,10 @@ public class CommentServiceImpl implements ICommentService {
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
 
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(comment);
+
+        UserDTO userDTO = userMapper.mapUserToUserDTO(comment.getAuthor());
+        commentDTOResponse.setAuthor(userDTO);
+
         commentDTOResponse.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
         commentDTOResponse.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
         commentDTOResponse.setValoration(comment.getValoration());
@@ -73,7 +85,6 @@ public class CommentServiceImpl implements ICommentService {
         validateComment(commentRequestDTO.getBody());
         validateAttachments(commentRequestDTO.getFiles());
 
-
         LOGGER.info("Saving comment...");
 
         List<Attachment> attachments = uploadFiles(commentRequestDTO.getFiles());
@@ -82,18 +93,22 @@ public class CommentServiceImpl implements ICommentService {
         comment.setAttachments(attachments);
         comment.addUpvote(commentRequestDTO.getAuthorId());
 
+        User user = userRepository.findById(commentRequestDTO.getAuthorId()).orElseThrow();
+        comment.setAuthor(user);
+
         Comment savedComment = commentRepository.save(comment);
 
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(savedComment);
         commentDTOResponse.setLikedByUser(true);
         commentDTOResponse.setDislikedByUser(false);
         commentDTOResponse.setValoration(1);
+        commentDTOResponse.setAuthor(userMapper.mapUserToUserDTO(savedComment.getAuthor()));
 
         // Publish notification event to notify post author
         CommentNotificationEventDTO commentNotificationEventDTO = new CommentNotificationEventDTO(
                 savedComment.getPostId(),
                 savedComment.getId(),
-                savedComment.getAuthorId()
+                savedComment.getAuthor().getUserId()
         );
         commentPublisher.publishCommentNotificationEvent(commentNotificationEventDTO);
 
@@ -131,7 +146,7 @@ public class CommentServiceImpl implements ICommentService {
         LOGGER.info("Deleting comment...");
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-        if (!comment.getAuthorId().equals(userId)) {
+        if (!comment.getAuthor().getUserId().equals(userId)) {
             throw new UnauthorizedActionException("User not authorized to delete this comment");
         }
 
@@ -232,6 +247,10 @@ public class CommentServiceImpl implements ICommentService {
 
     public CommentDTOResponse getCommentResponseDTO(Comment comment, Long userId) {
         CommentDTOResponse commentResponseDTO = commentMapper.mapToCommentDTOResponse(comment);
+
+        UserDTO userDTO = userMapper.mapUserToUserDTO(comment.getAuthor());
+        commentResponseDTO.setAuthor(userDTO);
+
         commentResponseDTO.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
         commentResponseDTO.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
         commentResponseDTO.setValoration(comment.getValoration());

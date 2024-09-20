@@ -1,10 +1,7 @@
 package com.classmate.comment_service.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Data
 @Table(name = "comments")
 public class Comment {
 
@@ -39,8 +37,10 @@ public class Comment {
     /**
      * The identifier of the author who created the comment.
      */
-    @Column(nullable = false)
-    private Long authorId;
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User author;
 
     /**
      * The body content of the comment.

@@ -6,6 +6,7 @@ import com.example.calendar_service.publisher.SyncPublisher;
 import com.example.calendar_service.service.IGoogleCalendarService;
 import com.example.calendar_service.service.IGoogleOAuth2Service;
 import com.example.calendar_service.service.ITokenService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -82,6 +83,13 @@ public class GoogleOAuth2ServiceImpl implements IGoogleOAuth2Service {
         }
 
         return token.getAccessToken();
+    }
+
+
+    public void unSyncronize(Long userId){
+        tokenService.deleteTokensByUserId(userId);
+
+        syncPublisher.publishSyncGoogle(userId, false);
     }
 
     private Map<String, String> refreshAccessToken(Long userId) {
