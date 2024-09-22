@@ -1,18 +1,17 @@
 package com.example.notification_service.service.impl;
 
+import com.example.notification_service.dto.APIDTOS.calendarEvent.EventNotificationResponseDTO;
 import com.example.notification_service.dto.NotificationDTO;
 import com.example.notification_service.dto.NotificationUpdateDTO;
-import com.example.notification_service.dto.comment.CommentNotificationResponseDTO;
-import com.example.notification_service.dto.event.valoration.MilestoneReachedEventDTO;
-import com.example.notification_service.dto.message.MessageNotificationResponseDTO;
-import com.example.notification_service.dto.milestone.MilestoneNotificationResponseDTO;
+import com.example.notification_service.dto.APIDTOS.comment.CommentNotificationResponseDTO;
+import com.example.notification_service.dto.APIDTOS.message.MessageNotificationResponseDTO;
+import com.example.notification_service.dto.APIDTOS.milestone.MilestoneNotificationResponseDTO;
 import com.example.notification_service.entity.notification.*;
 
 import com.example.notification_service.repository.NotificationPreferenceRepository;
 import com.example.notification_service.repository.NotificationRepository;
 import com.example.notification_service.service.NotificationService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -71,16 +70,15 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationDTO convertToDTO(Notification notification) {
-        if(notification instanceof CommentNotification) {
-            return getCommentNotificationResponseDTO(notification);
-        } else if (notification instanceof MessageNotification) {
-            return getMessageNotificationResponseDTO(notification);
-        } else if (notification instanceof  MilestoneNotification) {
-            return getMilestoneNotificationResponseDTO(notification);
-        }
-
-        throw new IllegalArgumentException("Unknown notification type: " + notification.getClass().getSimpleName());
+        return switch (notification.getClass().getSimpleName()) {
+            case "CommentNotification" -> getCommentNotificationResponseDTO(notification);
+            case "MessageNotification" -> getMessageNotificationResponseDTO(notification);
+            case "MilestoneNotification" -> getMilestoneNotificationResponseDTO(notification);
+            case "EventNotification" -> getEventNotificationResponseDTO(notification);
+            default -> throw new IllegalArgumentException("Unknown notification type: " + notification.getClass().getSimpleName());
+        };
     }
+
 
     private CommentNotificationResponseDTO getCommentNotificationResponseDTO(Notification notification) {
         return new CommentNotificationResponseDTO(
@@ -118,6 +116,18 @@ public class NotificationServiceImpl implements NotificationService {
                 ((MilestoneNotification) notification).getTitle()
         );
     }
+
+    private EventNotificationResponseDTO getEventNotificationResponseDTO(Notification notification) {
+        return new EventNotificationResponseDTO(
+                notification.getId(),
+                notification.getUserId(),
+                notification.getIsSeen(),
+                notification.getCreationDate(),
+                ((EventNotification) notification).getEventTitle(),
+                ((EventNotification) notification).getStartDate()
+        );
+    }
+
 
     @Override
     public void updateNotification(NotificationUpdateDTO notificationUpdateDTO) {

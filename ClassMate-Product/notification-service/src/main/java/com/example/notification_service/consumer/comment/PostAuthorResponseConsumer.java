@@ -1,8 +1,7 @@
 package com.example.notification_service.consumer.comment;
 
 import com.example.notification_service.dto.NotificationDTO;
-import com.example.notification_service.dto.comment.CommentNotificationResponseDTO;
-import com.example.notification_service.dto.event.comment.PostAuthorResponseEventDTO;
+import com.example.notification_service.dto.publisherAndConsumerDTOS.comment.PostAuthorResponseEventDTO;
 import com.example.notification_service.entity.notification.CommentNotification;
 import com.example.notification_service.repository.NotificationRepository;
 import com.example.notification_service.service.NotificationService;

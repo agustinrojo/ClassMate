@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/eventEntities")
 public class EventController {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;

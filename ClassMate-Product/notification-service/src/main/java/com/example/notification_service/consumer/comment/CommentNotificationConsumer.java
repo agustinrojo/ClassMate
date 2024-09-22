@@ -1,7 +1,7 @@
 package com.example.notification_service.consumer.comment;
 
-import com.example.notification_service.dto.event.comment.CommentNotificationEventDTO;
-import com.example.notification_service.dto.event.comment.PostAuthorRequestEventDTO;
+import com.example.notification_service.dto.publisherAndConsumerDTOS.comment.CommentNotificationEventDTO;
+import com.example.notification_service.dto.publisherAndConsumerDTOS.comment.PostAuthorRequestEventDTO;
 import com.example.notification_service.publisher.NotificationPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

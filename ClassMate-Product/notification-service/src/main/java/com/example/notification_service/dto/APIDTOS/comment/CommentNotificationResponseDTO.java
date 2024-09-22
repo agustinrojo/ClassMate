@@ -1,4 +1,4 @@
-package com.example.notification_service.dto.comment;
+package com.example.notification_service.dto.APIDTOS.comment;
 
 
 import com.example.notification_service.dto.NotificationDTO;

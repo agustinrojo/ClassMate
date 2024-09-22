@@ -1,5 +1,6 @@
 package com.example.calendar_service.service.impl;
 
+import com.example.calendar_service.dto.EventNotificationDTO;
 import com.example.calendar_service.dto.EventRequestDTO;
 import com.example.calendar_service.dto.EventResponseDTO;
 import com.example.calendar_service.dto.EventUpdateDTO;
@@ -7,6 +8,7 @@ import com.example.calendar_service.entity.calendar.Event;
 import com.example.calendar_service.exception.EventNotFoundException;
 import com.example.calendar_service.exception.UnauthorizedActionException;
 import com.example.calendar_service.mapper.IEventMapper;
+import com.example.calendar_service.publisher.EventNotificationPublisher;
 import com.example.calendar_service.repository.IEventRepository;
 import com.example.calendar_service.repository.ITokenRepository;
 import com.example.calendar_service.service.IEventService;
@@ -16,8 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,13 +31,15 @@ public class EventServiceImpl implements IEventService {
     private final IEventMapper eventMapper;
     private final IGoogleCalendarService googleCalendarService;
     private final ITokenRepository tokenRepository;
+    private final EventNotificationPublisher notificationPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
-    public EventServiceImpl(IEventRepository eventRepository, IEventMapper eventMapper, IGoogleCalendarService googleCalendarService, ITokenRepository tokenRepository) {
+    public EventServiceImpl(IEventRepository eventRepository, IEventMapper eventMapper, IGoogleCalendarService googleCalendarService, ITokenRepository tokenRepository, EventNotificationPublisher notificationPublisher) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.googleCalendarService = googleCalendarService;
         this.tokenRepository = tokenRepository;
+        this.notificationPublisher = notificationPublisher;
     }
 
     @Override
@@ -65,6 +71,18 @@ public class EventServiceImpl implements IEventService {
                 throw new RuntimeException(e);
             }
         }
+
+        LocalDate today = LocalDate.now();
+        // Push notification if events date is today
+        if (Objects.equals(eventRequestDTO.getStartDate(), today)) {
+            EventNotificationDTO eventNotificationDTO = new EventNotificationDTO(
+                    eventRequestDTO.getUserId(),
+                    eventRequestDTO.getTitle(),
+                    eventRequestDTO.getStartDate()
+            );
+            notificationPublisher.publishEventNotification(eventNotificationDTO);
+        }
+
         return eventMapper.mapToResponseEventDTO(savedEventEntity);
     }
 

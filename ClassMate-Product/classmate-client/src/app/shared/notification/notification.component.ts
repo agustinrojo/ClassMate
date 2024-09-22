@@ -6,6 +6,7 @@ import { CommentNotificationDTO } from '../../services/dto/notification/comment-
 import { Router } from '@angular/router';
 import { MessageNotificationDTO } from '../../services/dto/notification/message-notification-dto.interface';
 import { MilestoneNotificationDTO } from '../../services/dto/notification/milestone-notification-dto.interface copy 2';
+import { EventNotificationDTO } from '../../services/dto/notification/event-notification-dto.interface copy 2';
 
 @Component({
   selector: 'app-notification',
@@ -100,36 +101,67 @@ export class NotificationComponent implements OnInit, OnDestroy {
   }
 
   getNotificationText(notification: NotificationDTO): string {
-    if (notification.type === "COMMENT") {
-      const commentNotification = notification as CommentNotificationDTO;
-      const truncatedTitle = commentNotification.title.length > 40
-      ? commentNotification.title.substring(0, 40) + "..."
-      : commentNotification.title;
-      return `Recibiste un comentario en tu post "${truncatedTitle}"`;
+    switch (notification.type) {
+      case "COMMENT": {
+        const commentNotification = notification as CommentNotificationDTO;
+        const truncatedTitle = commentNotification.title.length > 20
+          ? commentNotification.title.substring(0, 20) + "..."
+          : commentNotification.title;
+        return `Recibiste un comentario en tu post! ${truncatedTitle}"`;
+      }
+
+      case "MESSAGE": {
+        const messageNotification = notification as MessageNotificationDTO;
+        return `Recibiste un mensaje de ${messageNotification.senderName}!`;
+      }
+
+      case "MILESTONE": {
+        const milestoneNotification = notification as MilestoneNotificationDTO;
+        return `¡Tu post alcanzó ${milestoneNotification.milestone} valoraciones positivas!`;
+      }
+
+      case "EVENT": {
+        const eventNotification = notification as EventNotificationDTO;
+        const truncatedTitle = eventNotification.title.length > 20
+        ? eventNotification.title.substring(0, 20) + "..."
+        : eventNotification.title;
+        return `¡Hoy tenés un evento! ${truncatedTitle}`;
+      }
+
+      default:
+        return 'New notification';
     }
-    if (notification.type === "MESSAGE") {
-      const messageNotification = notification as MessageNotificationDTO;
-      return `Recibiste un mensaje de ${messageNotification.senderName}!`;
-    }
-    if (notification.type === "MILESTONE") {
-      const milestoneNotification = notification as MilestoneNotificationDTO;
-      return `¡Tu post alcanzó ${milestoneNotification.milestone} valoraciones positivas!`;
-    }
-    return 'New notification';
   }
 
+
   goToNotification(notification: NotificationDTO): void {
-    if (notification.type === "COMMENT") {
-      const commentNotification = notification as CommentNotificationDTO;
-      this._router.navigate([`/forum/${commentNotification.forumId}/post/${commentNotification.postId}`]);
-    } else if (notification.type === "MESSAGE") {
-      const messageNotification = notification as MessageNotificationDTO;
-      this._router.navigate(['/chat']);
-    } else if (notification.type === "MILESTONE") {
-      const milestoneNotification = notification as MilestoneNotificationDTO;
-      this._router.navigate([`/forum/${milestoneNotification.forumId}/post/${milestoneNotification.postId}`]);
+    switch (notification.type) {
+      case "COMMENT":
+        const commentNotification = notification as CommentNotificationDTO;
+        this._router.navigate([`/forum/${commentNotification.forumId}/post/${commentNotification.postId}`]);
+        break;
+
+      case "MESSAGE":
+        // const messageNotification = notification as MessageNotificationDTO;
+        this._router.navigate(['/chat']);
+        break;
+
+      case "MILESTONE":
+        const milestoneNotification = notification as MilestoneNotificationDTO;
+        this._router.navigate([`/forum/${milestoneNotification.forumId}/post/${milestoneNotification.postId}`]);
+        break;
+
+      case "EVENT":
+        // const eventNotification = notification as EventNotificationDTO;
+        this._router.navigate(['/calendar']);
+        break;
+
+      default:
+        console.warn('Unhandled notification type:', notification.type);
+        break;
     }
   }
+
 
   // Handle notifications based on their type
   handleNotification(notification: NotificationDTO): void {
@@ -146,6 +178,10 @@ export class NotificationComponent implements OnInit, OnDestroy {
         const milestoneNotification = notification as MilestoneNotificationDTO;
         this.notifications.unshift(milestoneNotification);
         break;
+        case "EVENT":
+          const eventNotification = notification as EventNotificationDTO;
+          this.notifications.unshift(eventNotification);
+          break;
       default:
           console.warn("Unknown notification type", notification);
     }
