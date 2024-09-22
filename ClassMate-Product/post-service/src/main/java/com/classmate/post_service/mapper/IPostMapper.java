@@ -19,8 +19,10 @@ public interface IPostMapper {
     Post mapToPost(PostSaveDTO postSaveDTO);
 
     @Mapping(source = "attachments", target = "files")
+    @Mapping(target = "author", ignore = true)
     APIResponseDTO convertToAPIResponseDTO(Post post);
 
     @Mapping(source = "attachments", target = "files")
+    @Mapping(target = "author", ignore = true)
     PostResponseDTO convertToPostResponseDTO(Post post);
 }

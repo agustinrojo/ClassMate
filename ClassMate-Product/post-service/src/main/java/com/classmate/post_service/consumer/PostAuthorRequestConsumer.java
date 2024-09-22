@@ -2,6 +2,8 @@ package com.classmate.post_service.consumer;
 
 import com.classmate.post_service.dto.notification.PostAuthorRequestEventDTO;
 import com.classmate.post_service.dto.notification.PostAuthorResponseEventDTO;
+import com.classmate.post_service.entity.Post;
+import com.classmate.post_service.exception.PostNotFoundException;
 import com.classmate.post_service.publisher.PostPublisher;
 import com.classmate.post_service.repository.IPostRepository;
 import org.slf4j.Logger;
@@ -26,13 +28,13 @@ public class PostAuthorRequestConsumer {
 
     @RabbitListener(queues = "${rabbitmq.queue.notifications.post-author-request-queue}")
     public void handlePostAuthorRequest(PostAuthorRequestEventDTO event) {
-        List<Object[]> result = postRepository.findAuthorIdAndForumIdAndTitleById(event.getPostId());
+        Post result = postRepository.findById(event.getPostId())
+                .orElseThrow(() -> new PostNotFoundException(String.format("Post with id: %d not found.", event.getPostId())));
 
-        if (result != null && !result.isEmpty()) {
-            Object[] authorIdAndForumIdAndTitle = result.get(0); // Get the first (and presumably only) result
-            Long postAuthorId = (Long) authorIdAndForumIdAndTitle[0];
-            Long forumId = (Long) authorIdAndForumIdAndTitle[1];
-            String title = (String) authorIdAndForumIdAndTitle[2];
+        if (result != null) {
+            Long postAuthorId = result.getAuthor().getUserId();
+            Long forumId = result.getForumId();
+            String title = result.getTitle();
 
 
             PostAuthorResponseEventDTO responseEvent = new PostAuthorResponseEventDTO(

@@ -87,7 +87,7 @@ public class PostController {
                                                                            @RequestParam("userId") Long userId,
                                                                            @RequestParam(defaultValue = "0") int page,
                                                                            @RequestParam(defaultValue = "10") int size){
-        List<PostResponseDTO> posts =postService.getPostsBySubscribedForums(requestByForumsDTO, userId, page, size);
+        List<PostResponseDTO> posts = postService.getPostsBySubscribedForums(requestByForumsDTO, userId, page, size);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 

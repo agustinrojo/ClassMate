@@ -5,13 +5,18 @@ import com.classmate.post_service.client.IFileServiceClient;
 import com.classmate.post_service.dto.*;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
+import com.classmate.post_service.dto.user.UserDTO;
 import com.classmate.post_service.entity.Attachment;
 import com.classmate.post_service.entity.Post;
+import com.classmate.post_service.entity.User;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.exception.PostNotFoundException;
+import com.classmate.post_service.exception.UserNotFoundException;
 import com.classmate.post_service.mapper.IPostMapper;
+import com.classmate.post_service.mapper.IUserMapper;
 import com.classmate.post_service.publisher.PostPublisher;
 import com.classmate.post_service.repository.IPostRepository;
+import com.classmate.post_service.repository.IUserRepository;
 import com.classmate.post_service.service.IPostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,17 +41,21 @@ public class PostServiceImpl implements IPostService {
 
     private final IPostRepository postRepository;
     private final IPostMapper postMapper;
+    private final IUserMapper userMapper;
     private final ICommentClient commentClient;
     private final IFileServiceClient fileServiceClient;
     private final PostPublisher postPublisher;
+    private final IUserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, PostPublisher postPublisher) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, PostPublisher postPublisher, IUserRepository userRepository) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
+        this.userMapper = userMapper;
         this.commentClient = commentClient;
         this.fileServiceClient = fileServiceClient;
         this.postPublisher = postPublisher;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -58,6 +67,9 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
         APIResponseDTO apiResponseDTO = postMapper.convertToAPIResponseDTO(post);
+
+        UserDTO author = userMapper.mapUserToUserDTO(post.getAuthor());
+        apiResponseDTO.setAuthor(author);
 
         apiResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
         apiResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
@@ -101,7 +113,7 @@ public class PostServiceImpl implements IPostService {
         Post existingPost = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(String.format("Post with id %d not found", postId)));
         IsPostAuthorDTO isPostAuthorDTO = IsPostAuthorDTO.builder().isAuthor(false).build();
-        if(existingPost.getAuthorId().equals(authorId)){
+        if(existingPost.getAuthor().getUserId().equals(authorId)){
             isPostAuthorDTO.setAuthor(true);
         }
         return isPostAuthorDTO;
@@ -135,6 +147,11 @@ public class PostServiceImpl implements IPostService {
         List<Attachment> attachments = uploadFiles(postSaveDTO.getFiles());
 
         Post post = postMapper.mapToPost(postSaveDTO);
+
+        User author = userRepository.findById(postSaveDTO.getAuthorId())
+                        .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %d not found.", postSaveDTO.getAuthorId())));
+        post.setAuthor(author);
+
         post.setCreationDate(LocalDateTime.now());
         post.setAttachments(attachments);
         post.addUpvote(postSaveDTO.getAuthorId());
@@ -184,7 +201,7 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
 
-        if (!post.getAuthorId().equals(userId)) {
+        if (!post.getAuthor().getUserId().equals(userId)) {
             throw new RuntimeException("User not authorized to delete this post");
         }
 
@@ -303,6 +320,10 @@ public class PostServiceImpl implements IPostService {
 
     public PostResponseDTO getPostResponseDTO(Post post, Long userId){
         PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(post);
+
+        UserDTO userDTO = userMapper.mapUserToUserDTO(post.getAuthor());
+        postResponseDTO.setAuthor(userDTO);
+
         postResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
         postResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
         postResponseDTO.setValoration(post.getValoration());

@@ -80,7 +80,7 @@ public class PostValorationServiceImpl implements IPostValorationService {
         // Create the event DTO
         MilestoneReachedEventDTO event = MilestoneReachedEventDTO.builder()
                 .postId(post.getId())
-                .authorId(post.getAuthorId())
+                .authorId(post.getAuthor().getUserId())
                 .forumId(post.getForumId())
                 .milestone(milestone)
                 .title(post.getTitle())

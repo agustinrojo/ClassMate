@@ -65,7 +65,7 @@ public class CommentController {
     }
 
     @PostMapping("/{commentId}/removeVote")
-    public ResponseEntity<Void> removeComment(@PathVariable("commentId") Long commentId,
+    public ResponseEntity<Void> removeVote(@PathVariable("commentId") Long commentId,
                                            @RequestParam("userId") Long userId){
         valorationService.removeVoteFromComment(commentId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

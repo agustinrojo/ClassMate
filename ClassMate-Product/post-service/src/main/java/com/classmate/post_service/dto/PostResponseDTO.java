@@ -1,6 +1,7 @@
 package com.classmate.post_service.dto;
 
 import com.classmate.post_service.dto.filedtos.FileDTO;
+import com.classmate.post_service.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class PostResponseDTO {
     /**
      * The identifier of the author who created the post.
      */
-    private Long authorId;
+    private UserDTO author;
 
     /**
      * The title of the post.

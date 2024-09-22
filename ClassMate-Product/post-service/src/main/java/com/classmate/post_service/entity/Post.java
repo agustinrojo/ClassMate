@@ -38,8 +38,9 @@ public class Post {
     /**
      * Identifier of the author who created this post.
      */
-    @Column(nullable = false)
-    private Long authorId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User author;
 
     /**
      * Title of the post.
