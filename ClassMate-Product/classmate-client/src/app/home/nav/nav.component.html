@@ -18,7 +18,7 @@
       <app-notification></app-notification>
 
       <img [src]="userProfilePhoto" class="nav__user-avatar" alt="User Avatar">
-      <span class="nav__user-name" (click)="navigateToProfile()">{{ userProfile.nickname }}</span>
+      <span class="nav__user-name" (click)="navigateToProfile()">{{ userProfile?.nickname }}</span>
       <div class="dropdown">
         <button class="dropdown__toggle">▼</button>
         <div class="dropdown__menu">

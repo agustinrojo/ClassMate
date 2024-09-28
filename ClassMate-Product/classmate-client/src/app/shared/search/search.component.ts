@@ -128,7 +128,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('document:click', ['$event'])
 
   onDocumentClick(event: Event): void {
-    if (!this._elementRef.nativeElement.contains(event.target)) {
+    if (!this._elementRef?.nativeElement.contains(event.target)) {
       this.showResults = false;
     }
   }
@@ -144,11 +144,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   adjustPadding(reset: boolean = false): void {
     if (reset || !this.currentForum) {
-      this.searchInput.nativeElement.style.setProperty('--padding-left', '20px');
-      this.searchInput.nativeElement.classList.remove('has-tag');
+      this.searchInput?.nativeElement.style.setProperty('--padding-left', '20px');
+      this.searchInput?.nativeElement.classList.remove('has-tag');
     } else if (this.forumTag) {
       this.calculateTagWidth();
-      this.searchInput.nativeElement.classList.add('has-tag');
+      this.searchInput?.nativeElement.classList.add('has-tag');
     }
     this._cdr.detectChanges(); // Ensure the view is updated with the new padding
   }

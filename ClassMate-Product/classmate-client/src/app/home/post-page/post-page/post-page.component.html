@@ -3,7 +3,7 @@
     <div class="post">
       <div class="row">
         <div class="col-10">
-          <h2>{{ post.title }}</h2>
+          <h2>{{ post?.title }}</h2>
         </div>
 
         <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="post?.author?.userId === userId">
@@ -16,17 +16,17 @@
 
       </div>
 
-        <p [innerHTML]="post.body | linkify"></p>
+        <p [innerHTML]="post?.body | linkify"></p>
         <div class="row">
-          <app-file-badge *ngFor="let file of post.files" [file]="file" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
+          <app-file-badge *ngFor="let file of post?.files" [file]="file" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>
         </div>
 
 
         <span class="post-time"><span class="badge rounded-pill text-bg-warning nickname" (click)="navigateToUserProfile()"><b>p/</b>{{post?.author?.nickname}}</span></span>
         <br>
-        <span class="post-time">Publicado: {{ post.creationDate | date }}</span>
+        <span class="post-time">Publicado: {{ post?.creationDate | date }}</span>
         <br>
-        <em class="post-time" *ngIf="post.hasBeenEdited">Editado</em>
+        <em class="post-time" *ngIf="post?.hasBeenEdited">Editado</em>
         <div class="row d-flex flex-row-reverse">
           <div class="col-3 my-2">
             <button class="btn btn-dark" (click)="goBackToForum()"> Volver a foro</button>

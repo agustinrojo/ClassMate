@@ -66,7 +66,6 @@ export class ChatService {
   }
 
   public getChatroomsBySender(): Observable<ChatRoomOutputDTO[]>{
-    console.log(this.loggedUserId);
     return this.http.get<ChatRoomOutputDTO[]>(`${this.apiBaseUrl}/chatroom/${this.loggedUserId}`);
   }
 

@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class LinkifyPipe implements PipeTransform {
 
 
-  transform(value: string): string {
+  transform(value?: string): string | undefined {
     if (!value) {
       return value;
     }

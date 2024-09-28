@@ -2,10 +2,10 @@
   <div class="forum-container">
     <div class="row">
       <div class="col-6 text-left">
-        <h1>{{ forum.forum.title }}</h1>
+        <h1>{{ forum?.forum?.title }}</h1>
       </div>
       <div class="col-6 d-flex flex-row-reverse">
-          <div class="dropdown " *ngIf="userId === forum.forum.creatorId">
+          <div class="dropdown " *ngIf="userId === forum?.forum?.creatorId">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
             </button>
@@ -19,9 +19,9 @@
     </div>
       <div class="row mx-3">
         <div class="col-8">
-          <p>{{ forum.forum.description }}</p>
+          <p>{{ forum?.forum?.description }}</p>
           <br>
-          <span class="forum-details" *ngIf="forum.forum.hasBeenEdited"><em>Editado</em></span>
+          <span class="forum-details" *ngIf="forum?.forum?.hasBeenEdited"><em>Editado</em></span>
         </div>
         <div class="col-4 d-flex flex-row-reverse">
           <button class="btn" (click)="goBack()">Volver atrás</button>

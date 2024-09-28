@@ -53,9 +53,9 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
 
   private scrollToBottom(): void {
     try {
-      this.chatMessagesContainer.nativeElement.scrollTop = this.chatMessagesContainer.nativeElement.scrollHeight;
+      this.chatMessagesContainer.nativeElement.scrollTop = this.chatMessagesContainer?.nativeElement?.scrollHeight;
     } catch (err) {
-      console.error(err);
+
     }
   }
 
@@ -64,7 +64,6 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     this.searchQuery = target ? target.value : '';
     if (this.searchQuery.length > 2) {
       this._userProfileService.searchChatUserByNickname(this.searchQuery).subscribe((resp: UserProfileResponseDTO[]) => {
-        console.log(resp);
         this.searchResults = resp;
         this.searchResults = this.searchResults.filter((u: UserProfileResponseDTO) => u.userId != this.loggedUser.id);
       });
@@ -270,7 +269,6 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
 
   private getMessages(receiverId: number) {
     this._chatService.loadMessages(this.loggedUser.id, receiverId).subscribe((messages: ChatMessageOutputDTO[]) => {
-      console.log(messages);
       this.messagesList = messages;
     }, err => {
       console.log(err);
