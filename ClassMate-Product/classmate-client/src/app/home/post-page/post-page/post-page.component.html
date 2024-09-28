@@ -41,12 +41,19 @@
 
         <!-- Keep the textarea as it is -->
         <textarea formControlName="body" class="bg-dark" id="comment" name="comment" rows="3" required maxlength="2000"></textarea>
+        <div class="file-upload-wrapper">
         <label for="file-upload" class="file-upload-label" >Seleccionar archivos</label>
         <input type="file" (change)="onFileChange($event)" id="file-upload" class="file-upload-input" accept=".pdf, .xlsx, .docx, .jpg, .jpeg" [disabled]="selectedFiles.length >= 3">
 
+        <div class="tooltip-wrapper">
+          <div class="tooltip-circle">?</div>
+          <span class="tooltip-text">Sólo se pueden subir hasta 3 archivos<br>Formatos permitidos: .pdf, .xlsx, .docx, .jpg, .jpeg</span>
+        </div>
+        </div>
+
         <app-file-badge *ngFor="let file of selectedFiles; let i = index" [file]="fileDTOs[i]" [canModify]="true" (removeEvent)="removeFile(i)"></app-file-badge>
-        <p><i>Sólo se pueden subir hasta 3 archivos</i></p>
-        <p><i>Formatos permitidos: .pdf, .xlsx, .docx, .jpg, .jpeg</i></p>
+        <!-- <p><i>Sólo se pueden subir hasta 3 archivos</i></p>
+        <p><i>Formatos permitidos: .pdf, .xlsx, .docx, .jpg, .jpeg</i></p> -->
         <button type="submit" [disabled]="!bodyForm.valid" >Comentar</button>
     </form>
     <hr>

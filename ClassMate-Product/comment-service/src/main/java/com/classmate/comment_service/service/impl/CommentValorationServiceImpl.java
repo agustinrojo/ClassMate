@@ -36,7 +36,7 @@ public class CommentValorationServiceImpl implements ICommentValorationService {
         comment.addUpvote(userId);
         commentRepository.save(comment);
 
-        checkForMilestone();
+        checkForMilestone(comment);
     }
 
     @Override

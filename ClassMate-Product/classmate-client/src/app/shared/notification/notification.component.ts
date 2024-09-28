@@ -107,7 +107,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
         const truncatedTitle = commentNotification.title.length > 20
           ? commentNotification.title.substring(0, 20) + "..."
           : commentNotification.title;
-        return `Recibiste un comentario en tu post! ${truncatedTitle}"`;
+        return `Recibiste un comentario en tu post: ${truncatedTitle}! "`;
       }
 
       case "MESSAGE": {
