@@ -5,4 +5,5 @@ export interface MilestoneNotificationDTO extends NotificationDTO {
   forumId: number;
   milestone: number;
   title: string;
+  milestoneType: string;
 }

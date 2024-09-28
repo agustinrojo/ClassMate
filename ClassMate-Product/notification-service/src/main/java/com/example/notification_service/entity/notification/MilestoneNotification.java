@@ -27,6 +27,9 @@ public class MilestoneNotification extends Notification {
     @Column(nullable = true)
     private String title;
 
+    @Column(nullable = false)
+    private String milestoneType; // COMMENT or POST
+
     @Override
     public String getType() {
         return "MILESTONE";

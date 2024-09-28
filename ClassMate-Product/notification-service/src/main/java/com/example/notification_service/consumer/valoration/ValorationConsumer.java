@@ -35,6 +35,7 @@ public class ValorationConsumer {
         notification.setPostId(event.getPostId());
         notification.setForumId(event.getForumId());
         notification.setTitle(event.getTitle());
+        notification.setMilestoneType(event.getMilestoneType());
         notification.setIsSeen(false);
 
         // Save to the database

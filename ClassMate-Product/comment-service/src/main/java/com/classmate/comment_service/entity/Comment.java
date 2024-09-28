@@ -48,6 +48,9 @@ public class Comment {
     @Column(nullable = false, length = 2000)
     private String body;
 
+    @Column
+    private int lastMilestone = 0;  // Default to 0, no milestones reached yet
+
     /**
      * The creation date and time of the comment.
      * This field is automatically populated.
