@@ -47,13 +47,12 @@
 
         <div class="tooltip-wrapper">
           <div class="tooltip-circle">?</div>
-          <span class="tooltip-text">Sólo se pueden subir hasta 3 archivos<br>Formatos permitidos: .pdf, .xlsx, .docx, .jpg, .jpeg</span>
+          <span class="tooltip-text">Solo se pueden subir hasta 3 archivos<br>Formatos permitidos: pdf, xlsx, docx, jpg, jpeg</span>
         </div>
         </div>
 
         <app-file-badge *ngFor="let file of selectedFiles; let i = index" [file]="fileDTOs[i]" [canModify]="true" (removeEvent)="removeFile(i)"></app-file-badge>
-        <!-- <p><i>Sólo se pueden subir hasta 3 archivos</i></p>
-        <p><i>Formatos permitidos: .pdf, .xlsx, .docx, .jpg, .jpeg</i></p> -->
+
         <button type="submit" [disabled]="!bodyForm.valid" >Comentar</button>
     </form>
     <hr>
