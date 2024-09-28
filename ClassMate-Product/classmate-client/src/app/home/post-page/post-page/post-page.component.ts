@@ -184,6 +184,10 @@ export class PostPageComponent implements OnInit{
     })
   }
 
+  public navigateToUserProfile(){
+    this._router.navigate([`/profile/${this.post.author.userId}`])
+  }
+
   public mapFileToFIleDTO(file: File){
     let fileDTO: FileDTO = {
       id: 0,

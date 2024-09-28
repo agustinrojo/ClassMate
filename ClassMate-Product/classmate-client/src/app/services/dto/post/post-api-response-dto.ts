@@ -1,10 +1,11 @@
 import { FileDTO } from "../attachment/file-dto.interface";
 import { CommentDTOResponse } from "../comment/comment-response-dto.interface";
+import { UserDisplayDTO } from "../user-display/user-display.interface";
 
 export interface PostAPIResponseDTO {
   id: number;
   forumId: number;
-  authorId: number;
+  author: UserDisplayDTO;
   title: string;
   body: string;
   lastMilestone: number;

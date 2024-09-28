@@ -107,5 +107,8 @@ private setPostValoration(): void {
   })
   }
 
+  public navigateToUserProfile(){
+    this._router.navigate([`/profile/${this.post.author.userId}`])
+  }
 
 }

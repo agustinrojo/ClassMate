@@ -72,3 +72,9 @@
   color: #f5f5f5; /* Color del contador */
   margin: 0 5px;
 }
+
+.nickname:hover {
+  text-decoration: underline;
+  text-decoration-color: black;
+  cursor: pointer;
+}

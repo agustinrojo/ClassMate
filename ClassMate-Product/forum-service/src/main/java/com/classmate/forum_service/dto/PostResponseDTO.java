@@ -1,6 +1,7 @@
 package com.classmate.forum_service.dto;
 
 import com.classmate.forum_service.dto.file.FileDTO;
+import com.classmate.forum_service.dto.user.UserDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class PostResponseDTO {
     /**
      * The identifier of the author who created the post.
      */
-    private Long authorId;
+    private UserDTO author;
 
     /**
      * The title of the post.

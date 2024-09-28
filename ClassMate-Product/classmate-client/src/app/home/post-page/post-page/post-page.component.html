@@ -6,7 +6,7 @@
           <h2>{{ post.title }}</h2>
         </div>
 
-        <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="post?.authorId === userId">
+        <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="post?.author?.userId === userId">
           <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
           <ul class="dropdown-menu">
             <li><button class="dropdown-item" (click)="deletePost()">Borrar</button></li>
@@ -22,7 +22,7 @@
         </div>
 
 
-        <span class="post-time">Creador: {{ post.authorId }}</span>
+        <span class="post-time"><span class="badge rounded-pill text-bg-warning nickname" (click)="navigateToUserProfile()"><b>p/</b>{{post?.author?.nickname}}</span></span>
         <br>
         <span class="post-time">Publicado: {{ post.creationDate | date }}</span>
         <br>

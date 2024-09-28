@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-10" (click)="navigateToPost(post!.id)"><h2>{{ post.title }}</h2></div>
     <div class="col-2 d-flex flex-row-reverse">
-      <div class="dropdown" *ngIf="post?.authorId === userId">
+      <div class="dropdown" *ngIf="post?.author?.userId === userId">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
         </button>
@@ -23,7 +23,7 @@
 
 
   <div class="post-details">
-      <span>Creado por: {{ post.authorId }}</span> |
+      <span class="badge rounded-pill text-bg-warning nickname" (click)="navigateToUserProfile()"><b>p/</b>{{post?.author?.nickname}}</span><br><br>
       <span>Comentarios: n</span> |
       <span>Publicado: {{ post.creationDate | date }}</span>
       <br>
