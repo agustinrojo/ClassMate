@@ -63,6 +63,20 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications.milestone.routing-key}")
     private String milestoneNotificationRoutingKey;
 
+    // Get forum ID for notifications
+    @Value("${rabbitmq.file-exchange.get.forum.id}")
+    private String getForumIdExchange;
+    @Value("${rabbitmq.queue.notifications.get.forum.id-queue}")
+    private String getForumIdNotificationQueue;
+    @Value("${rabbitmq.notifications.get.forum.id.routing-key}")
+    private String getForumIdNotificationRoutingKey;
+
+    // Get forum ID for notifications RESPONSE
+    @Value("${rabbitmq.queue.notifications.get.forum.id.response-queue}")
+    private String getForumIdNotificationQueueResponse;
+    @Value("${rabbitmq.notifications.get.forum.id.response.routing-key}")
+    private String getForumIdNotificationRoutingKeyResponse;
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -83,6 +97,17 @@ public class RabbitMQConfig {
         return new Queue(deletePostAllFileQueue, true);
     }
 
+    // GET FORUM ID NOTIFICATIONS
+    @Bean
+    public Queue getForumIdNotificationQueue() {
+        return new Queue(getForumIdNotificationQueue, true);
+    }
+    // Get forum ID for notifications RESPONSE
+    @Bean
+    public Queue getForumIdNotificationResponseQueue() {
+        return new Queue(getForumIdNotificationQueueResponse, true);
+    }
+
     @Bean
     public TopicExchange postExchange() {
         return new TopicExchange(postExchange);
@@ -92,6 +117,14 @@ public class RabbitMQConfig {
     public TopicExchange fileExchange() {
         return new TopicExchange(fileExchange);
     }
+
+
+    // GET FORUM ID NOTIFICATIONS EXCHANGE
+    @Bean
+    public TopicExchange getForumIdExchange() {
+        return new TopicExchange(getForumIdExchange);
+    }
+
 
     // NOTIFICATIONS
     @Bean
@@ -172,6 +205,24 @@ public class RabbitMQConfig {
                 .bind(milestoneNotificationQueue())
                 .to(notificationsExchange())
                 .with(milestoneNotificationRoutingKey);
+    }
+
+    // GET FORUM ID NOTIFICATIONS
+    @Bean
+    public Binding getForumIdNotificationBinding() {
+        return BindingBuilder
+                .bind(getForumIdNotificationQueue())
+                .to(getForumIdExchange())
+                .with(getForumIdNotificationRoutingKey);
+    }
+
+    // Get forum ID for notifications RESPONSE
+    @Bean
+    public Binding getForumIdNotificationResponseBinding() {
+        return BindingBuilder
+                .bind(getForumIdNotificationResponseQueue())
+                .to(getForumIdExchange())
+                .with(getForumIdNotificationRoutingKeyResponse);
     }
 
 

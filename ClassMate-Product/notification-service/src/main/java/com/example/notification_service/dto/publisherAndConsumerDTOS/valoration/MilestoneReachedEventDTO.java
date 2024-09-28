@@ -13,5 +13,6 @@ public class MilestoneReachedEventDTO {
     private Long forumId;
     private int milestone;
     private String title;
+    private String milestoneType; // COMMENT or POST
 }
 

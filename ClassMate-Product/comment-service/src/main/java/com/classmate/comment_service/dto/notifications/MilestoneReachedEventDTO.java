@@ -1,4 +1,4 @@
-package com.classmate.post_service.dto.notification;
+package com.classmate.comment_service.dto.notifications;
 
 import lombok.*;
 

@@ -117,7 +117,13 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
       case "MILESTONE": {
         const milestoneNotification = notification as MilestoneNotificationDTO;
-        return `¡Tu post alcanzó ${milestoneNotification.milestone} valoraciones positivas!`;
+        const milestoneType = milestoneNotification.milestoneType
+
+        if (milestoneType === "COMMENT") {
+          return `¡Tu comentario tiene ${milestoneNotification.milestone} valoraciones positivas!`;
+        } else if (milestoneType == "POST") {
+          return `¡Tu post tiene ${milestoneNotification.milestone} valoraciones positivas!`;
+        } else return "";
       }
 
       case "EVENT": {

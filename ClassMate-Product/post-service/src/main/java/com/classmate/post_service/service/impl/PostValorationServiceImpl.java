@@ -20,7 +20,7 @@ public class PostValorationServiceImpl implements IPostValorationService {
     private final IPostRepository postRepository;
     private final PostPublisher postPublisher;
     private final Logger LOGGER = LoggerFactory.getLogger(PostValorationServiceImpl.class);
-    private static final List<Integer> MILESTONES = List.of(10, 25, 50, 75, 100, 150, 200, 300, 400, 500, 1000);
+    private static final List<Integer> MILESTONES = List.of(2, 10, 25, 50, 75, 100, 150, 200, 300, 400, 500, 1000);
 
 
     public PostValorationServiceImpl(IPostRepository postRepository, PostPublisher postPublisher) {
@@ -71,6 +71,9 @@ public class PostValorationServiceImpl implements IPostValorationService {
         if (milestone.isPresent()) {
             post.setLastMilestone(milestone.get());  // Update the last milestone
 
+            // Save the post to persist the milestone change
+            postRepository.save(post);
+
             // Publish the event to the notifications service
             this.publishMilestoneReachedEvent(post, milestone.get());
         }
@@ -84,6 +87,7 @@ public class PostValorationServiceImpl implements IPostValorationService {
                 .forumId(post.getForumId())
                 .milestone(milestone)
                 .title(post.getTitle())
+                .milestoneType("COMMENT")
                 .build();
 
         LOGGER.info(String.format("Publishing milestone reached event with id -> {}", event.getPostId()));
