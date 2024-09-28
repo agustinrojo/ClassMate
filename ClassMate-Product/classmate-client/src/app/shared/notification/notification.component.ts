@@ -107,7 +107,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
         const truncatedTitle = commentNotification.title.length > 20
           ? commentNotification.title.substring(0, 20) + "..."
           : commentNotification.title;
-        return `Recibiste un comentario en tu post! ${truncatedTitle}"`;
+        return `Recibiste un comentario en tu post: ${truncatedTitle}! "`;
       }
 
       case "MESSAGE": {
@@ -117,7 +117,13 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
       case "MILESTONE": {
         const milestoneNotification = notification as MilestoneNotificationDTO;
-        return `¡Tu post alcanzó ${milestoneNotification.milestone} valoraciones positivas!`;
+        const milestoneType = milestoneNotification.milestoneType
+
+        if (milestoneType === "COMMENT") {
+          return `¡Tu comentario tiene ${milestoneNotification.milestone} valoraciones positivas!`;
+        } else if (milestoneType == "POST") {
+          return `¡Tu post tiene ${milestoneNotification.milestone} valoraciones positivas!`;
+        } else return "";
       }
 
       case "EVENT": {

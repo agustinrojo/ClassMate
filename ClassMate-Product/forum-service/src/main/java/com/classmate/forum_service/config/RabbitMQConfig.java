@@ -60,6 +60,7 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.delete-forum-subscription-routing-key}")
     private String deleteForumSubcriptionRoutingKey;
 
+
     @Bean
     public Queue subscriptionQueue() {
         return new Queue(subscriptionQueue, true);

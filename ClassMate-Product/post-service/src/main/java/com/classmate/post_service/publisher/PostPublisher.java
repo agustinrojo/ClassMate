@@ -3,6 +3,7 @@ package com.classmate.post_service.publisher;
 import com.classmate.post_service.dto.PostDeletionDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
+import com.classmate.post_service.dto.notification.GetForumIdNotificationDTOResponse;
 import com.classmate.post_service.dto.notification.MilestoneReachedEventDTO;
 import com.classmate.post_service.dto.notification.PostAuthorResponseEventDTO;
 import org.slf4j.Logger;
@@ -43,6 +44,12 @@ public class PostPublisher {
     @Value("${rabbitmq.notifications.milestone.routing-key}")
     private String milestoneNotificationRoutingKey;
 
+    // GET FORUM ID NOTIFICATIONS RESPONSE
+    @Value("${rabbitmq.file-exchange.get.forum.id}")
+    private String getForumIdExchange;
+    @Value("${rabbitmq.notifications.get.forum.id.response.routing-key}")
+    private String getForumIdNotificationRoutingKeyResponse;
+
     public PostPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -80,9 +87,13 @@ public class PostPublisher {
     }
 
     // VALORATIONS
-
     public void publishMilestoneReachedEvent(MilestoneReachedEventDTO event) {
         rabbitTemplate.convertAndSend(notificationsExchange, milestoneNotificationRoutingKey, event);
+    }
+
+    // GET FORUM ID VALORATIONS
+    public void publishGetForumIdResponseEvent(GetForumIdNotificationDTOResponse event) {
+        rabbitTemplate.convertAndSend(getForumIdExchange, getForumIdNotificationRoutingKeyResponse, event);
     }
 
 }

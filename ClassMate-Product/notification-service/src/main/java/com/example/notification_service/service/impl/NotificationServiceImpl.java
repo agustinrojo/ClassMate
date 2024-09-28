@@ -113,7 +113,8 @@ public class NotificationServiceImpl implements NotificationService {
                 ((MilestoneNotification) notification).getMilestone(),
                 ((MilestoneNotification) notification).getPostId(),
                 ((MilestoneNotification) notification).getForumId(),
-                ((MilestoneNotification) notification).getTitle()
+                ((MilestoneNotification) notification).getTitle(),
+                ((MilestoneNotification) notification).getMilestoneType()
         );
     }
 

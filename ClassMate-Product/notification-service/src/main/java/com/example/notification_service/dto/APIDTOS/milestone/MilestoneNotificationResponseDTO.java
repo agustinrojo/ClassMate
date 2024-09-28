@@ -17,12 +17,14 @@ public class MilestoneNotificationResponseDTO extends NotificationDTO {
     private Long postId;
     private Long forumId;
     private String title;
+    private String milestoneType;
 
-    public MilestoneNotificationResponseDTO(Long id, Long userId, Boolean isSeen, LocalDateTime creationDate, int milestone, Long postId, Long forumId, String title) {
+    public MilestoneNotificationResponseDTO(Long id, Long userId, Boolean isSeen, LocalDateTime creationDate, int milestone, Long postId, Long forumId, String title, String milestoneType) {
         super(id, userId, isSeen, creationDate, "MILESTONE");
         this.milestone = milestone;
         this.postId = postId;
         this.forumId = forumId;
         this.title = title;
+        this.milestoneType = milestoneType;
     }
 }

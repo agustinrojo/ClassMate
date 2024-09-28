@@ -112,4 +112,71 @@ button:disabled {
   }
 }
 
+.file-upload-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Adds space between the button and the circle */
+}
 
+.tooltip-wrapper {
+  bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-circle {
+  width: 14px;  /* Smaller size */
+  height: 14px;  /* Smaller size */
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.7); /* Border with light opacity */
+  color: rgba(255, 255, 255, 0.7); /* Slight opacity on the ? */
+  text-align: center;
+  line-height: 14px; /* Ensures the ? is vertically centered */
+  font-weight: bold;
+  font-size: 10px;  /* Smaller font */
+  cursor: pointer;
+  opacity: 0.5;  /* Circle opacity */
+  transition: opacity 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tooltip-circle:hover {
+  opacity: 1; /* Full opacity on hover */
+  border-color: #f5f5f5; /* Bright border on hover */
+}
+
+.tooltip-text {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%; /* Position the tooltip above the circle */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Arrow pointing down */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.tooltip-wrapper:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
