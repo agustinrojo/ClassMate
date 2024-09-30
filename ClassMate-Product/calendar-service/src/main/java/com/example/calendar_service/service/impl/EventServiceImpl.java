@@ -72,19 +72,13 @@ public class EventServiceImpl implements IEventService {
             }
         }
 
-        LocalDate today = LocalDate.now();
         // Push notification if events date is today
-        if (Objects.equals(eventRequestDTO.getStartDate(), today)) {
-            EventNotificationDTO eventNotificationDTO = new EventNotificationDTO(
-                    eventRequestDTO.getUserId(),
-                    eventRequestDTO.getTitle(),
-                    eventRequestDTO.getStartDate()
-            );
-            notificationPublisher.publishEventNotification(eventNotificationDTO);
-        }
+        pushEventNotification(savedEventEntity);
 
         return eventMapper.mapToResponseEventDTO(savedEventEntity);
     }
+
+
 
     @Override
     public void updateEvent(Long eventId, EventUpdateDTO eventUpdateDTO, Long userId) {
@@ -98,7 +92,9 @@ public class EventServiceImpl implements IEventService {
         eventEntity.setStartDate(eventUpdateDTO.getStartDate());
         eventEntity.setEndDate(eventUpdateDTO.getEndDate());
 
-        eventRepository.save(eventEntity);
+        Event savedEvent = eventRepository.save(eventEntity);
+
+        pushEventNotification(savedEvent);
 
         if(tokenRepository.existsByUserId(userId)){
             if(eventEntity.getGoogleId() != null){
@@ -110,7 +106,18 @@ public class EventServiceImpl implements IEventService {
                 }
             }
         }
+    }
 
+    private void pushEventNotification(Event event) {
+        LocalDate today = LocalDate.now();
+        if (event.getStartDate().equals(today)) {
+            EventNotificationDTO eventNotificationDTO = new EventNotificationDTO(
+                    event.getUserId(),
+                    event.getTitle(),
+                    event.getStartDate()
+            );
+            notificationPublisher.publishEventNotification(eventNotificationDTO);
+        }
     }
 
     @Override

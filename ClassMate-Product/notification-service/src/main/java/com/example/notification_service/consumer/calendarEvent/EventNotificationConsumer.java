@@ -24,15 +24,19 @@ public class EventNotificationConsumer {
 
     @RabbitListener(queues = "${rabbitmq.queue.notifications.event-queue}")
     public void handleEventNotification(EventNotificationDTO event) {
-        EventNotification notification = new EventNotification();
-        notification.setUserId(event.getUserId());
-        notification.setEventTitle(event.getTitle());
-        notification.setStartDate(event.getStartDate());
-        notification.setIsSeen(false);
-        notificationRepository.save(notification);
 
-        // Convert to DTO and send via WebSocket
-        NotificationDTO notificationDTO = notificationService.convertToDTO(notification);
-        messagingTemplate.convertAndSend("/topic/notifications/" + event.getUserId(), notificationDTO);
+        if (notificationService.canSendNotification(event.getUserId(), "EVENT")) {
+            EventNotification notification = new EventNotification();
+            notification.setUserId(event.getUserId());
+            notification.setEventTitle(event.getTitle());
+            notification.setStartDate(event.getStartDate());
+            notification.setIsSeen(false);
+            notificationRepository.save(notification);
+
+            // Convert to DTO and send via WebSocket
+            NotificationDTO notificationDTO = notificationService.convertToDTO(notification);
+            messagingTemplate.convertAndSend("/topic/notifications/" + event.getUserId(), notificationDTO);
+        }
+
     }
 }

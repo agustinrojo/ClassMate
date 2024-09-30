@@ -26,27 +26,27 @@ public class ValorationConsumer {
 
     @RabbitListener(queues = "${rabbitmq.queue.notifications.milestone-queue}")
     public void handleMilestoneNotification(MilestoneReachedEventDTO event) {
-        LOGGER.info("Received milestone event for post ID: {}", event.getPostId());
+        if (notificationService.canSendNotification(event.getAuthorId(), "MILESTONE")) {
+            LOGGER.info("Received milestone event for post ID: {}", event.getPostId());
 
-        // Create the milestone notification
-        MilestoneNotification notification = new MilestoneNotification();
-        notification.setUserId(event.getAuthorId());
-        notification.setMilestone(event.getMilestone());
-        notification.setPostId(event.getPostId());
-        notification.setForumId(event.getForumId());
-        notification.setTitle(event.getTitle());
-        notification.setMilestoneType(event.getMilestoneType());
-        notification.setIsSeen(false);
+            // Create the milestone notification
+            MilestoneNotification notification = new MilestoneNotification();
+            notification.setUserId(event.getAuthorId());
+            notification.setMilestone(event.getMilestone());
+            notification.setPostId(event.getPostId());
+            notification.setForumId(event.getForumId());
+            notification.setTitle(event.getTitle());
+            notification.setMilestoneType(event.getMilestoneType());
+            notification.setIsSeen(false);
 
-        // Save to the database
-        notificationRepository.save(notification);
+            // Save to the database
+            notificationRepository.save(notification);
 
-        // Convert to DTO and send via WebSocket
-        NotificationDTO notificationDTO = notificationService.convertToDTO(notification);
-        messagingTemplate.convertAndSend("/topic/notifications/" + event.getAuthorId(), notificationDTO);
+            // Convert to DTO and send via WebSocket
+            NotificationDTO notificationDTO = notificationService.convertToDTO(notification);
+            messagingTemplate.convertAndSend("/topic/notifications/" + event.getAuthorId(), notificationDTO);
 
-        LOGGER.info("Milestone notification sent to user ID: {}", event.getAuthorId());
+            LOGGER.info("Milestone notification sent to user ID: {}", event.getAuthorId());
+        }
     }
-
-
 }
