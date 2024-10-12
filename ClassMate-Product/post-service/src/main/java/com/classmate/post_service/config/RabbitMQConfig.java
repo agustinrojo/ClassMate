@@ -77,6 +77,12 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications.get.forum.id.response.routing-key}")
     private String getForumIdNotificationRoutingKeyResponse;
 
+    // Create User Queue
+    @Value("${rabbitmq.queue.create-user-post-service-queue}")
+    private String createUserPostServiceQueue;
+
+
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -106,6 +112,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue getForumIdNotificationResponseQueue() {
         return new Queue(getForumIdNotificationQueueResponse, true);
+    }
+
+    @Bean
+    public Queue createUserPostServiceQueue(){
+        return new Queue(createUserPostServiceQueue, true);
     }
 
     @Bean
