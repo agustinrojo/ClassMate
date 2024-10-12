@@ -54,6 +54,7 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
 
+    // Create User exchange
     @Value("${rabbitmq.create-user-exchange.name}")
     private String createUserExchange;
 
@@ -86,6 +87,8 @@ public class RabbitMQConfig {
     private String messageSenderNameRequestRoutingKey;
     @Value("${rabbitmq.notifications.message-sender-response.routing-key}")
     private String messageSenderNameResponseRoutingKey;
+
+    // Create User Routing Key
     @Value("${rabbitmq.create-user-routing-key.name}")
     private String createUserRoutingKey;
 
@@ -239,6 +242,14 @@ public class RabbitMQConfig {
     public Binding createUserCommentServiceBinding() {
         return BindingBuilder
                 .bind(createUserCommentServiceQueue())
+                .to(createUserExchange())
+                .with(createUserRoutingKey);
+    }
+
+    @Bean
+    public Binding createUserPostServiceBinding() {
+        return BindingBuilder
+                .bind(createUserPostServiceQueue())
                 .to(createUserExchange())
                 .with(createUserRoutingKey);
     }

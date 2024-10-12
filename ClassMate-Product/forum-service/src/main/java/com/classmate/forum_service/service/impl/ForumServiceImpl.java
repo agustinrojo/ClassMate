@@ -4,13 +4,17 @@ import com.classmate.forum_service.client.IPostClient;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.entity.Forum;
+import com.classmate.forum_service.entity.User;
 import com.classmate.forum_service.exception.ForumNotFoundException;
 import com.classmate.forum_service.exception.InvalidForumException;
 import com.classmate.forum_service.exception.UnauthorizedActionException;
+import com.classmate.forum_service.exception.UserNotFoundException;
 import com.classmate.forum_service.mapper.IForumMapper;
 import com.classmate.forum_service.publisher.ForumSubscriptionPublisher;
 import com.classmate.forum_service.repository.IForumRepository;
+import com.classmate.forum_service.repository.IUserRepository;
 import com.classmate.forum_service.service.IForumService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,6 +37,7 @@ public class ForumServiceImpl implements IForumService {
     private final IForumMapper forumMapper;
     private final IPostClient postClient;
     private final ForumSubscriptionPublisher subscriptionPublisher;
+    private final IUserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(ForumServiceImpl.class);
 
     /**
@@ -41,12 +47,14 @@ public class ForumServiceImpl implements IForumService {
      * @param forumMapper the forum mapper
      * @param postClient the post client
      * @param subscriptionPublisher the subscription publisher
+     * @param userRepository the user repository
      */
-    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher) {
+    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher, IUserRepository userRepository) {
         this.forumRepository = forumRepository;
         this.forumMapper = forumMapper;
         this.postClient = postClient;
         this.subscriptionPublisher = subscriptionPublisher;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -109,7 +117,7 @@ public class ForumServiceImpl implements IForumService {
         Optional<Forum> existingForum = forumRepository.findById(forumId);
         if(existingForum.isPresent()){
             Forum forum = existingForum.get();
-            return IsForumCreatorDTO.builder().isAuthor(forum.getCreatorId().equals(userId)).build();
+            return IsForumCreatorDTO.builder().isAuthor(forum.getCreator().getUserId().equals(userId)).build();
         } else {
             return IsForumCreatorDTO.builder().isAuthor(false).build();
         }
@@ -119,15 +127,18 @@ public class ForumServiceImpl implements IForumService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public ForumResponseDTO saveForum(ForumRequestDTO forumRequestDTO, Long creatorId) {
         validateForum(forumRequestDTO);
+        User creator = userRepository.findById(creatorId)
+                        .orElseThrow(() ->  new UserNotFoundException(String.format("User with id: %d not found", creatorId)));
         LOGGER.info("Saving forum...");
         Forum forum = forumMapper.convertToForum(forumRequestDTO);
-        forum.setCreatorId(creatorId);
-        forum.setMemberIds(new ArrayList<>());
-        forum.setAdminIds(new ArrayList<>());
-        forum.addMember(creatorId);
-        forum.addAdmin(creatorId);
+        forum.setCreator(creator);
+        forum.setMembers(new HashSet<>());
+        forum.setAdmins(new HashSet<>());
+        forum.addMember(creator);
+        forum.addAdmin(creator);
         forum.setHasBeenEdited(false);
         Forum savedForum = forumRepository.save(forum);
 
@@ -166,7 +177,7 @@ public class ForumServiceImpl implements IForumService {
         LOGGER.info("Deleting forum by id...");
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
-        if (!forum.getCreatorId().equals(userId)) {
+        if (!forum.getCreator().getUserId().equals(userId)) {
             throw new UnauthorizedActionException("User not authorized to delete this forum");
         }
 
@@ -184,8 +195,11 @@ public class ForumServiceImpl implements IForumService {
     public void addMember(Long forumId, Long memberId) {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
+
+        User newMember = userRepository.findById(memberId)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %d not found", memberId)));
         try {
-            forum.addMember(memberId);
+            forum.addMember(newMember);
             ForumSubscriptionDTO forumSubscriptionDTO = ForumSubscriptionDTO.builder()
                     .forumId(forumId)
                     .userId(memberId)
@@ -204,8 +218,10 @@ public class ForumServiceImpl implements IForumService {
     public void addAdmin(Long forumId, Long adminId) {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
+        User newAdmin = userRepository.findById(adminId)
+                .orElseThrow(() ->  new UserNotFoundException(String.format("User with id: %d not found", adminId)));
         try {
-            forum.addAdmin(adminId);
+            forum.addAdmin(newAdmin);
             ForumSubscriptionDTO adminDTO = ForumSubscriptionDTO.builder()
                     .forumId(forumId)
                     .userId(adminId)

@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Entity class representing a forum.
@@ -37,8 +38,9 @@ public class Forum {
     /**
      * The unique identifier of the creator of the forum.
      */
-    @Column(nullable = false)
-    private Long creatorId;
+    @ManyToOne
+    @JoinColumn(name = "creatorId", nullable = false)
+    private User creator;
 
     /**
      * The description of the forum.
@@ -49,18 +51,24 @@ public class Forum {
     /**
      * The list of member IDs associated with the forum.
      */
-    @ElementCollection
-    @CollectionTable(name = "forum_members", joinColumns = @JoinColumn(name = "forum_id"))
-    @Column(name = "member_id")
-    private List<Long> memberIds;
+    @ManyToMany
+    @JoinTable(
+            name = "forum_user_members",
+            joinColumns = @JoinColumn(name = "forum_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> members;
 
     /**
      * The list of admin IDs associated with the forum.
      */
-    @ElementCollection
-    @CollectionTable(name = "forum_admins", joinColumns = @JoinColumn(name = "forum_id"))
-    @Column(name = "admin_id")
-    private List<Long> adminIds;
+    @ManyToMany
+    @JoinTable(
+            name = "forum_user_admins",
+            joinColumns = @JoinColumn(name = "forum_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> admins;
 
     /**
      * The creation date and time of the forum.
@@ -79,19 +87,20 @@ public class Forum {
      * @return true if the user is already a member, false otherwise
      */
     public boolean isAlreadyMember(Long memberId) {
-        return memberIds.contains(memberId);
+        return members.stream()
+                .anyMatch((User user) -> user.getUserId().equals(memberId));
     }
 
     /**
      * Adds a member to the forum.
      *
-     * @param memberId the ID of the member to add
+     * @param member the ID of the member to add
      */
-    public void addMember(Long memberId) {
-        if (isAlreadyMember(memberId)) {
-            throw new IllegalArgumentException(String.format("User %d is already a member of forum %d.", memberId, id));
+    public void addMember(User member) {
+        if (isAlreadyMember(member.getUserId())) {
+            throw new IllegalArgumentException(String.format("User %d is already a member of forum %d.", member.getUserId(), id));
         }
-        this.memberIds.add(memberId);
+        this.members.add(member);
     }
 
     /**
@@ -103,7 +112,7 @@ public class Forum {
         if (!isAlreadyMember(memberId)) {
             throw new IllegalArgumentException(String.format("User %d is not a member of forum %d.", memberId, id));
         }
-        this.memberIds.remove(memberId);
+        this.members.removeIf((User member) -> member.getUserId().equals(memberId));
     }
 
     /**
@@ -113,19 +122,20 @@ public class Forum {
      * @return true if the user is already an admin, false otherwise
      */
     public boolean isAlreadyAdmin(Long adminId) {
-        return adminIds.contains(adminId);
+        return admins.stream()
+                .anyMatch((User admin) -> admin.getUserId().equals(adminId));
     }
 
     /**
      * Adds an admin to the forum.
      *
-     * @param adminId the ID of the admin to add
+     * @param admin the ID of the admin to add
      */
-    public void addAdmin(Long adminId) {
-        if (isAlreadyAdmin(adminId)) {
-            throw new IllegalArgumentException(String.format("User %d is already an admin of forum %d.", adminId, id));
+    public void addAdmin(User admin) {
+        if (isAlreadyAdmin(admin.getUserId())) {
+            throw new IllegalArgumentException(String.format("User %d is already an admin of forum %d.", admin.getUserId(), id));
         }
-        this.adminIds.add(adminId);
+        this.admins.add(admin);
     }
 
     /**
@@ -137,6 +147,6 @@ public class Forum {
         if (!isAlreadyAdmin(adminId)) {
             throw new IllegalArgumentException(String.format("User %d is not an admin of forum %d.", adminId, id));
         }
-        this.adminIds.remove(adminId);
+        this.admins.removeIf((User admin) -> admin.getUserId().equals(adminId));
     }
 }
