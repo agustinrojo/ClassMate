@@ -21,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/{userId/forumsAdmin}")
+    @GetMapping("/{userId}/forumsAdmin")
     public ResponseEntity<List<Long>> getForumsAdmin(@PathVariable Long userId) {
         List<Long> usersAdmin = userService.getForumsAdmin(userId);
 

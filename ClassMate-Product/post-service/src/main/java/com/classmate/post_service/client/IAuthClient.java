@@ -8,6 +8,6 @@ import java.util.List;
 
 @FeignClient(name = "authentication-service")
 public interface IAuthClient {
-    @GetMapping("/api/users/{userId/forumsAdmin}")
+    @GetMapping("/api/users/{userId}/forumsAdmin")
     List<Long> getForumsAdmin(@PathVariable Long userId);
 }

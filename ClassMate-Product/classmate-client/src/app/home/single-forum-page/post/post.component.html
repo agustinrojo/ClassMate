@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-10" (click)="navigateToPost(post!.id)"><h2>{{ post.title }}</h2></div>
     <div class="col-2 d-flex flex-row-reverse">
-      <div class="dropdown" *ngIf="post?.author?.userId === userId">
+      <div class="dropdown" *ngIf="post?.author?.userId === userId || isAdmin">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
         </button>

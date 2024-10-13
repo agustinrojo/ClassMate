@@ -231,6 +231,17 @@ public class PostServiceImpl implements IPostService {
         postRepository.delete(post);
     }
 
+    @Override
+    public Long getPostForumId(Long postId) {
+        LOGGER.info("Getting forum id from post with id: {}" ,postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
+
+
+        LOGGER.info("FORUM ID TO DEBUG: {}", post.getForumId());
+        return post.getForumId();
+    }
+
     public void addAttachments(Post post, List<MultipartFile> filesToAdd) {
         for (MultipartFile file : filesToAdd) {
             Long fileId = Objects.requireNonNull(fileServiceClient.uploadFile(file).getBody()).getFileId();
