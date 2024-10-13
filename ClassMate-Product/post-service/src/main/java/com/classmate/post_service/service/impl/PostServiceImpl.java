@@ -1,5 +1,6 @@
 package com.classmate.post_service.service.impl;
 
+import com.classmate.post_service.client.IAuthClient;
 import com.classmate.post_service.client.ICommentClient;
 import com.classmate.post_service.client.IFileServiceClient;
 import com.classmate.post_service.dto.*;
@@ -44,16 +45,18 @@ public class PostServiceImpl implements IPostService {
     private final IUserMapper userMapper;
     private final ICommentClient commentClient;
     private final IFileServiceClient fileServiceClient;
+    private final IAuthClient authClient;
     private final PostPublisher postPublisher;
     private final IUserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, PostPublisher postPublisher, IUserRepository userRepository) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
         this.commentClient = commentClient;
         this.fileServiceClient = fileServiceClient;
+        this.authClient = authClient;
         this.postPublisher = postPublisher;
         this.userRepository = userRepository;
     }
@@ -201,7 +204,10 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
 
-        if (!post.getAuthor().getUserId().equals(userId)) {
+        boolean isValidUser = post.getAuthor().getUserId().equals(userId);
+        boolean isMod = authClient.getForumsAdmin(userId).contains(post.getForumId());
+
+        if (!isValidUser && !isMod) {
             throw new RuntimeException("User not authorized to delete this post");
         }
 
