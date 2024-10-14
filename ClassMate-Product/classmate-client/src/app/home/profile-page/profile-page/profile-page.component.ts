@@ -48,7 +48,7 @@ export class ProfilePageComponent implements OnInit {
   ngOnInit(): void {
     this.loggedUserId = this._authService.getUserId().toString();
     this.userData = this._authService.getUserData();
-    this.userId = this._activatedRoute.snapshot.paramMap.get("id" || "0")!;
+    this.userId = this._activatedRoute.snapshot.paramMap.get("id")!;
 
     this.getUserProfile();
 
@@ -61,8 +61,9 @@ export class ProfilePageComponent implements OnInit {
   }
 
   public navigateToEditProfile() {
-    // Navigation logic here
+    this._router.navigate(['profile', this.userId, 'edit']);
   }
+
 
   private getUserProfile() {
     this._userProfileService.getUserProfile(this.userId).subscribe((resp: UserProfileResponseDTO) => {

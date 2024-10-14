@@ -90,27 +90,31 @@ export class TaggingComponent implements OnInit {
 
   }
 
-  @HostListener('document:keydown', ['$eventEntity'])
-  handleKeyDown(eventEntity: KeyboardEvent) {
-    if (this.showSuggestions) {
-      if (eventEntity.key === 'ArrowDown') {
-        eventEntity.preventDefault();
-        this.selectedIndex = (this.selectedIndex + 1) % (this.userSuggestions.length + this.forumSuggestions.length);
-      } else if (eventEntity.key === 'ArrowUp') {
-        eventEntity.preventDefault();
-        this.selectedIndex = (this.selectedIndex - 1 + this.userSuggestions.length + this.forumSuggestions.length) % (this.userSuggestions.length + this.forumSuggestions.length);
-      } else if (eventEntity.key === 'Enter' || eventEntity.key === 'Tab') {
-        eventEntity.preventDefault();
-        if (this.selectedIndex < this.userSuggestions.length) {
-          const selectedSuggestion = this.userSuggestions[this.selectedIndex];
-          this.insertTag(selectedSuggestion.nickname, selectedSuggestion.userId, 'user');
-        } else {
-          const selectedSuggestion = this.forumSuggestions[this.selectedIndex - this.userSuggestions.length];
-          this.insertTag(selectedSuggestion.title, selectedSuggestion.id, 'forum');
+  @HostListener('document:keydown', ['$event'])
+  handleKeyDown(event: KeyboardEvent) {
+      if (this.showSuggestions) {
+        const totalSuggestions = this.userSuggestions.length + this.forumSuggestions.length;
+
+        // Only prevent default for navigation keys (ArrowUp, ArrowDown, Enter, Tab)
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          this.selectedIndex = (this.selectedIndex + 1) % totalSuggestions;
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          this.selectedIndex = (this.selectedIndex - 1 + totalSuggestions) % totalSuggestions;
+        } else if (event.key === 'Enter' || event.key === 'Tab') {
+          event.preventDefault();
+          if (this.selectedIndex < this.userSuggestions.length) {
+            const selectedSuggestion = this.userSuggestions[this.selectedIndex];
+            this.insertTag(selectedSuggestion.nickname, selectedSuggestion.userId, 'user');
+          } else {
+            const selectedSuggestion = this.forumSuggestions[this.selectedIndex - this.userSuggestions.length];
+            this.insertTag(selectedSuggestion.title, selectedSuggestion.id, 'forum');
+          }
         }
       }
-    }
   }
+
 
   public isSelected(index: number): boolean {
     return index === this.selectedIndex;
