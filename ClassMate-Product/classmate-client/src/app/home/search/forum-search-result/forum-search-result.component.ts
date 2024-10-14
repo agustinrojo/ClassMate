@@ -64,7 +64,7 @@ export class ForumSearchResultComponent implements OnInit {
   }
 
   getMemberCountText(forum: ForumDTO): string {
-    const count = forum.memberIds.length;
+    const count = forum.members.length;
     return count === 1 ? `${count} miembro` : `${count} miembros`;
   }
 }

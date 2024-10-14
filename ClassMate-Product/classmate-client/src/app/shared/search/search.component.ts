@@ -112,11 +112,11 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isForumDTO(result: any): result is ForumDTO {
-    return (result as ForumDTO).memberIds !== undefined;
+    return (result as ForumDTO).members !== undefined;
   }
 
   getMemberCountText(forum: ForumDTO): string {
-    const count = forum.memberIds.length;
+    const count = forum.members.length;
     return count === 1 ? `${count} miembro` : `${count} miembros`;
   }
 

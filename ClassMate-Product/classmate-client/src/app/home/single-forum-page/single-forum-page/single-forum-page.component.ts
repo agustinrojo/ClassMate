@@ -17,6 +17,7 @@ import { ForumData } from '../../interfaces/forum-data.interface';
 export class SingleForumPageComponent implements OnInit{
   public userId!: number;
   public forum!: ForumApiResponseDTO;
+  public addModeratorButtonToggled: boolean = false;
 
   constructor(
               private _forumService: ForumService,
@@ -98,6 +99,11 @@ export class SingleForumPageComponent implements OnInit{
 
   public goBack(){
     this._router.navigate(["forums"])
+  }
+
+  public toggleAddModerator(){
+    this.addModeratorButtonToggled = !this.addModeratorButtonToggled;
+    console.log(this.addModeratorButtonToggled)
   }
 
   private getUserId(){
