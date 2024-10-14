@@ -79,6 +79,8 @@ public class Post {
     @ElementCollection
     private List<Long> downvotesByUserId = new ArrayList<>();
 
+    private Long commentCount = 0L;
+
 
     public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
@@ -116,6 +118,5 @@ public class Post {
     public int getValoration(){
         return this.upvotesByUserId.size() - this.downvotesByUserId.size();
     }
-
 
 }

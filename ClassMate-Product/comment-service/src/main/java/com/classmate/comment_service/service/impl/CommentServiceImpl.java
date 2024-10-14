@@ -20,6 +20,7 @@ import com.classmate.comment_service.repository.ICommentRepository;
 import com.classmate.comment_service.mapper.IUserMapper;
 import com.classmate.comment_service.repository.IUserRepository;
 import com.classmate.comment_service.service.ICommentService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -80,6 +81,7 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
+    @Transactional
     public CommentDTOResponse saveComment(CommentDTORequest commentRequestDTO) {
 
         validateComment(commentRequestDTO.getBody());
@@ -112,6 +114,9 @@ public class CommentServiceImpl implements ICommentService {
         );
         commentPublisher.publishCommentNotificationEvent(commentNotificationEventDTO);
 
+        Long commentCount = getCommentCountByPostId(commentRequestDTO.getPostId());
+        commentPublisher.publishCommentCountEvent(commentCount, commentRequestDTO.getPostId());
+
         return commentDTOResponse;
     }
 
@@ -142,6 +147,7 @@ public class CommentServiceImpl implements ICommentService {
 
 
     @Override
+    @Transactional
     public void deleteComment(Long id, Long userId) {
         LOGGER.info("Deleting comment...");
         Comment comment = commentRepository.findById(id)
@@ -157,8 +163,13 @@ public class CommentServiceImpl implements ICommentService {
         CommentDeletionDTO event = new CommentDeletionDTO(attachmentIds);
         commentPublisher.publishCommentDeleteEvent(event);
 
+        Long commentCount = commentRepository.countByPostId(comment.getPostId());
+        commentPublisher.publishCommentCountEvent(commentCount - 1, comment.getPostId());
+
         commentRepository.delete(comment);
     }
+
+
 
     public void addAttachments(Comment comment, List<MultipartFile> filesToAdd) {
         for (MultipartFile file : filesToAdd) {
@@ -255,5 +266,9 @@ public class CommentServiceImpl implements ICommentService {
         commentResponseDTO.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
         commentResponseDTO.setValoration(comment.getValoration());
         return commentResponseDTO;
+    }
+
+    private Long getCommentCountByPostId(Long postId){
+        return commentRepository.countByPostId(postId);
     }
 }

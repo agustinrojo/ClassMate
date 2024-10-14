@@ -78,3 +78,9 @@
   text-decoration-color: black;
   cursor: pointer;
 }
+
+.commentCount:hover {
+  text-decoration: underline;
+  text-decoration-color: white;
+  cursor: pointer;
+}

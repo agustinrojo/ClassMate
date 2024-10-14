@@ -13,4 +13,5 @@ export interface PostAPIResponseDTO {
   creationDate: Date;
   commentDTOS: CommentDTOResponse[];
   files: FileDTO[];
+  commentCount: number;
 }

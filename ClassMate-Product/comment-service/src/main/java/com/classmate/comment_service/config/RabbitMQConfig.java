@@ -75,6 +75,17 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications.get.forum.id.response.routing-key}")
     private String getForumIdNotificationRoutingKeyResponse;
 
+    // Comment Count Event
+    //QUEUE
+    @Value("${rabbitmq.queue.comment-count-event-queue}")
+    private String commentCountEventQueue;
+    //EXCHANGE
+    @Value("${rabbitmq.exchange.comment-count-event}")
+    private String commentCountEventExchange;
+    // Routing Key
+    @Value("${rabbitmq.comment-count-event.routing-key}")
+    private String commentCountEventRoutingKey;
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -113,6 +124,12 @@ public class RabbitMQConfig {
         return new Queue(getForumIdNotificationQueueResponse, true);
     }
 
+    // Comment Count Queue
+    @Bean
+    public Queue getCommentCountEventQueue() {
+        return new Queue(commentCountEventQueue, true);
+    }
+
     @Bean
     public TopicExchange postExchange() {
         return new TopicExchange(postExchange);
@@ -132,6 +149,12 @@ public class RabbitMQConfig {
     @Bean
     public TopicExchange getForumIdExchange() {
         return new TopicExchange(getForumIdExchange);
+    }
+
+    // Comment Count Exchange
+    @Bean
+    public TopicExchange getCommentCountExchange(){
+        return new TopicExchange(commentCountEventExchange);
     }
 
     @Bean
@@ -211,6 +234,15 @@ public class RabbitMQConfig {
                 .bind(getForumIdNotificationResponseQueue())
                 .to(getForumIdExchange())
                 .with(getForumIdNotificationRoutingKeyResponse);
+    }
+
+    // Comment Count Binding
+    @Bean
+    public Binding getCommentCountEventBinding() {
+        return BindingBuilder
+                .bind(getCommentCountEventQueue())
+                .to(getCommentCountExchange())
+                .with(commentCountEventRoutingKey);
     }
 
     @Bean

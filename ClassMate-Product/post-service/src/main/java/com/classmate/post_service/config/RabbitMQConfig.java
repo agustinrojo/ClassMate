@@ -77,6 +77,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.notifications.get.forum.id.response.routing-key}")
     private String getForumIdNotificationRoutingKeyResponse;
 
+    @Value("${rabbitmq.queue.comment-count-event-queue}")
+    private String commentCountEventQueue;
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -106,6 +109,12 @@ public class RabbitMQConfig {
     @Bean
     public Queue getForumIdNotificationResponseQueue() {
         return new Queue(getForumIdNotificationQueueResponse, true);
+    }
+
+    // Comment Count Event Queue
+    @Bean
+    public Queue getCommentCountEventQueue() {
+        return new Queue(commentCountEventQueue, true);
     }
 
     @Bean

@@ -64,4 +64,6 @@ public class APIResponseDTO {
     private boolean likedByUser;
 
     private boolean dislikedByUser;
+
+    private Long commentCount;
 }

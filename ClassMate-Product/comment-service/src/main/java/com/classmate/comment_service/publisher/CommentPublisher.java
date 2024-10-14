@@ -1,10 +1,12 @@
 package com.classmate.comment_service.publisher;
 
 import com.classmate.comment_service.dto.CommentDeletionDTO;
+import com.classmate.comment_service.dto.comment_count_event.CommentCountEvent;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
 import com.classmate.comment_service.dto.notifications.GetForumIdNotificationDTORequest;
 import com.classmate.comment_service.dto.notifications.MilestoneReachedEventDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,17 @@ public class CommentPublisher {
     @Value("${rabbitmq.notifications.get.forum.id.routing-key}")
     private String getForumIdNotificationRoutingKey;
 
+    // Comment Count Event
+    //QUEUE
+    @Value("${rabbitmq.queue.comment-count-event-queue}")
+    private String commentCountEventQueue;
+    //EXCHANGE
+    @Value("${rabbitmq.exchange.comment-count-event}")
+    private String commentCountEventExchange;
+    // Routing Key
+    @Value("${rabbitmq.comment-count-event.routing-key}")
+    private String commentCountEventRoutingKey;
+
     public CommentPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -63,5 +76,16 @@ public class CommentPublisher {
     // GET FORUM ID NOTIFICATIONS
     public void publishGetForumIdNotificationEvent(GetForumIdNotificationDTORequest event) {
         rabbitTemplate.convertAndSend(getForumIdExchange, getForumIdNotificationRoutingKey, event);
+    }
+
+    // COMMENT COUNT EVENT
+    public void publishCommentCountEvent(Long commentCount, Long postId){
+        CommentCountEvent commentCountEvent = CommentCountEvent.builder()
+                .commentCount(commentCount)
+                .postId(postId)
+                .build();
+        System.out.println(commentCount);
+        System.out.println(postId);
+        rabbitTemplate.convertAndSend(commentCountEventExchange, commentCountEventRoutingKey, commentCountEvent);
     }
 }

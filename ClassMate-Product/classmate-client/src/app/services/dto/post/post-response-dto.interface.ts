@@ -14,4 +14,5 @@ export interface PostResponseDTO{
   valoration: number;
   likedByUser: boolean;
   dislikedByUser: boolean;
+  commentCount: number;
 }

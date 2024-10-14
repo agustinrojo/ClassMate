@@ -18,4 +18,5 @@ public interface ICommentRepository extends JpaRepository<Comment, Long> {
      * @return a page of comments
      */
     Page<Comment> findByPostId(Long postId, Pageable pageable);
+    long countByPostId(Long postId);
 }
