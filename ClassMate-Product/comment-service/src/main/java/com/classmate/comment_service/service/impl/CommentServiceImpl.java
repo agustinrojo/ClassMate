@@ -61,7 +61,7 @@ public class CommentServiceImpl implements ICommentService {
         LOGGER.info("Getting comment by id...");
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-
+        LOGGER.info("Comment forum ID after retrieving: {}", comment.getForumId());
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(comment);
 
         UserDTO userDTO = userMapper.mapUserToUserDTO(comment.getAuthor());
@@ -77,6 +77,7 @@ public class CommentServiceImpl implements ICommentService {
     public List<CommentDTOResponse> getCommentsByPostId(Long postId, Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> commentsPage = commentRepository.findByPostId(postId, pageable);
+
         return commentsPage.getContent().stream()
                 .map(comment -> getCommentResponseDTO(comment, userId))
                 .collect(Collectors.toList());
@@ -96,7 +97,7 @@ public class CommentServiceImpl implements ICommentService {
         comment.setAttachments(attachments);
         comment.addUpvote(commentRequestDTO.getAuthorId());
 
-        LOGGER.info("Fetching user with ID: {}", commentRequestDTO.getAuthorId());
+//        LOGGER.info("Fetching user with ID: {}", commentRequestDTO.getAuthorId());
         try {
             User user = userRepository.findById(commentRequestDTO.getAuthorId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
@@ -105,7 +106,6 @@ public class CommentServiceImpl implements ICommentService {
             LOGGER.error("Error fetching user: {}", e.getMessage(), e);
             throw e;  // Re-throw the exception or handle it appropriately
         }
-        LOGGER.info("llegamo");
 
         // Get forumId via Openfeign call
         Long commentForumId = postClient.getPostForumId(comment.getPostId());
@@ -270,6 +270,8 @@ public class CommentServiceImpl implements ICommentService {
         commentResponseDTO.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
         commentResponseDTO.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
         commentResponseDTO.setValoration(comment.getValoration());
+
+        commentResponseDTO.setForumId(comment.getForumId());
         return commentResponseDTO;
     }
 }
