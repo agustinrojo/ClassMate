@@ -97,4 +97,6 @@ public interface IForumService {
     ForumExistsDTO forumExists(Long id);
 
     IsForumCreatorDTO isForumCreator(Long forumId , Long userId);
+
+    void banUser(Long forumId, Long bannerId, Long bannedId);
 }

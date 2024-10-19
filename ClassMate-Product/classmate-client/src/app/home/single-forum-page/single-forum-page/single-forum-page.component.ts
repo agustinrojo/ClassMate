@@ -39,24 +39,21 @@ export class SingleForumPageComponent implements OnInit{
     this.getUserId();
   }
 
-  // ngOnDestroy(): void {
-  //   this._forumStateService.setCurrentForumData(null);
-  // }
-
 
   public loadForum(forumId: string) {
     this._forumService.getForumById(forumId)
           .subscribe(f => {
-            this.forum = f;
+            this.forum = f;  // `f.creator` and `f.admin` should now be available
             this._forumStateService.setCurrentForumData({
               id: this.forum.forum.id,
               title: this.forum.forum.title
-            })
+            });
           },
         err => {
           console.log(err);
-        })
+        });
   }
+
 
   public navigateToCreatePost(){
     this._router.navigate([`forum/${this.forum.forum.id}/create-post`]);

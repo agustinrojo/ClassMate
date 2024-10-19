@@ -36,6 +36,8 @@ public interface IForumMapper {
      * @param forum the Forum entity
      * @return the APIResponseDTO
      */
+    @Mapping(target = "creator", ignore = true)
+    @Mapping(target = "admin", ignore = true)  // Ignoring isAdmin during mapping
     APIResponseDTO convertToAPIResponseDTO(Forum forum);
 
 }

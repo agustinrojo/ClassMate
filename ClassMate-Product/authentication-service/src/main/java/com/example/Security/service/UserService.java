@@ -2,6 +2,7 @@ package com.example.Security.service;
 
 import com.example.Security.dto.user.profile.ProfilePhotoDTO;
 import com.example.Security.dto.user.profile.UserProfileResponseDTO;
+import com.example.Security.dto.user.profile.UserProfileWithRoleDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.entities.User;
 import com.example.Security.entities.UserProfile;
@@ -60,6 +61,53 @@ public class UserService {
             throw new IllegalArgumentException("User profile not found");
         }
         return getUserProfileResponseDTO(user, userProfile);
+    }
+
+    public List<UserProfileWithRoleDTO> getUsersFromForum(Long forumId) {
+        List<User> creators = userRepository.findByForumsCreatedContaining(forumId);
+        List<User> admins = userRepository.findByForumsAdminContaining(forumId);
+        List<User> subscribers = userRepository.findByForumsSubscribedContaining(forumId);
+
+        List<UserProfileWithRoleDTO> userProfiles = new ArrayList<>();
+
+        // Add creator first
+        for(User creator : creators) {
+            UserProfileWithRoleDTO userProfile = mapToUserProfileWithRoleDTO(creator, "Creator");
+            userProfiles.add(userProfile);
+        }
+
+        // If not in list already, add admins
+        for(User admin : admins) {
+            if(!isUserInList(userProfiles, admin.getId())) {
+                UserProfileWithRoleDTO userProfile = mapToUserProfileWithRoleDTO(admin, "Admin");
+                userProfiles.add(userProfile);
+            }
+        }
+
+
+        // If not in list already, add subscribers
+        for(User subscriber : subscribers) {
+            if(!isUserInList(userProfiles, subscriber.getId())) {
+                UserProfileWithRoleDTO userProfile = mapToUserProfileWithRoleDTO(subscriber, "Subscriber");
+                userProfiles.add(userProfile);
+            }
+        }
+
+        return userProfiles;
+    }
+
+    private UserProfileWithRoleDTO mapToUserProfileWithRoleDTO(User user, String userType) {
+        UserProfile userProfile = user.getUserProfile();
+        return UserProfileWithRoleDTO.builder()
+                .userId(user.getId())
+                .nickname(userProfile.getNickname())
+                .profilePhoto(convertToFileDTO(userProfile.getProfilePhoto()))
+                .userType(userType)
+                .build();
+    }
+
+    private boolean isUserInList(List<UserProfileWithRoleDTO> users, Long userId) {
+        return users.stream().anyMatch(user -> user.getUserId().equals(userId));
     }
 
 

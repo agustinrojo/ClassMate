@@ -177,4 +177,20 @@ public class ForumController {
         forumService.removeAdmin(forumId, adminId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /**
+     * Ban a user from the forum.
+     *
+     * @param forumId the ID of the forum
+     * @param bannerId the ID of the user who is banning
+     * @param bannedId the ID of the user to be banned
+     * @return HTTP response indicating success or failure
+     */
+    @PostMapping("/{forumId}/ban")
+    public ResponseEntity<Void> banUser(@PathVariable Long forumId,
+                                        @RequestParam Long bannerId,
+                                        @RequestParam Long bannedId) {
+        forumService.banUser(forumId, bannerId, bannedId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

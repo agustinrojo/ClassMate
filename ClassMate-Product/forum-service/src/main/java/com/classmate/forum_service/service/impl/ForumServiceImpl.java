@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -69,10 +70,19 @@ public class ForumServiceImpl implements IForumService {
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
 
+        // Check if the user is banned
+        if (forum.getBannedUsersIds().contains(userId)) {
+            throw new UnauthorizedActionException("You are banned from this forum.");
+        }
+
         List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, userId,0, 10);
 
         APIResponseDTO responseDTO = forumMapper.convertToAPIResponseDTO(forum);
         responseDTO.setPosts(postDTOS);
+        boolean isCreator = Objects.equals(forum.getCreatorId(), userId);
+        boolean isAdmin = forum.getAdminIds().contains(userId);
+        responseDTO.setCreator(isCreator);
+        responseDTO.setAdmin(isAdmin);
 
         return responseDTO;
     }
@@ -254,6 +264,44 @@ public class ForumServiceImpl implements IForumService {
             forumRepository.save(forum);
         } catch (IllegalArgumentException e) {
             LOGGER.error(e.getMessage());
+        }
+    }
+
+    @Override
+    public void banUser(Long forumId, Long bannerId, Long bannedId) {
+        // Get the forum
+        Forum forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
+
+        // Check if the banner is the creator
+        boolean isBannerCreator = forum.getCreatorId().equals(bannerId);
+
+        // Check if the banner is an admin/moderator
+        boolean isBannerAdmin = forum.getAdminIds().contains(bannerId);
+
+        // Check if the banner is a subscriber (not creator or admin)
+        boolean isBannerSubscriber = !isBannerCreator && !isBannerAdmin;
+
+        // Check if the banned user is a creator, admin, or subscriber
+        boolean isBannedUserAdmin = forum.getAdminIds().contains(bannedId);
+        boolean isBannedUserCreator = forum.getCreatorId().equals(bannedId);
+
+        // Validate banner's permission
+        if (isBannerSubscriber) {
+            throw new UnauthorizedActionException("Subscribers cannot ban users.");
+        } else if (isBannerAdmin) {
+            if (isBannedUserAdmin || isBannedUserCreator) {
+                throw new UnauthorizedActionException("Moderators cannot ban other moderators or the creator.");
+            }
+        }
+        // If creator, they can ban anyone
+
+        // Add the banned user to the list
+        if (!forum.getBannedUsersIds().contains(bannedId)) {
+            forum.getBannedUsersIds().add(bannedId);
+            forum.getAdminIds().remove(bannedId);
+            forum.getMemberIds().remove(bannedId);
+            forumRepository.save(forum); // Save changes
         }
     }
 

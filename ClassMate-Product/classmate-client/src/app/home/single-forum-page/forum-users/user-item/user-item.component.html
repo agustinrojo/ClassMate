@@ -1,0 +1,34 @@
+<li class="user-item" (click)="toggleDropdown($event)">
+  <div class="user-info">
+    <img [src]="userProfilePhotoUrl" alt="User Photo">
+    <span>{{ user.nickname }}</span>
+  </div>
+
+  <!-- Role icon display -->
+  <ng-container *ngIf="user.userType === 'Creator'">
+    <i class="bi bi-star-fill creator-icon"></i>
+  </ng-container>
+  <ng-container *ngIf="user.userType === 'Admin'">
+    <i class="bi bi-star admin-icon"></i>
+  </ng-container>
+  <ng-container *ngIf="user.userType === 'Subscriber'">
+    <i class="spacer-icon"></i>
+  </ng-container>
+
+  <!-- Dynamic Dropdown Popup -->
+  <div #dropdownContainer class="dropdown-menu" *ngIf="isDropdownOpen">
+    <p class="user-type">{{ getUserTypeLabel(user.userType) }}</p>
+
+    <!-- Show the ban button if the current user is a creator or moderator -->
+    <ng-container *ngIf="shouldShowBanButton()">
+        <button
+        class="dropdown-item"
+        [ngClass]="{'disabled': !canBanUser()}"
+        [disabled]="!canBanUser()"
+        (click)="banUser()">Banear Usuario
+      </button>
+    </ng-container>
+
+    <button class="dropdown-item">Enviar mensaje</button>
+  </div>
+</li>

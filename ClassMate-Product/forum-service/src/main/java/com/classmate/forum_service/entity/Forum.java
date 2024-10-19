@@ -62,6 +62,11 @@ public class Forum {
     @Column(name = "admin_id")
     private List<Long> adminIds;
 
+    @ElementCollection
+    @CollectionTable(name = "forum_banned_users", joinColumns = @JoinColumn(name = "forum_id"))
+    @Column(name = "banned_users_id")
+    private List<Long> bannedUsersIds;
+
     /**
      * The creation date and time of the forum.
      * This field is automatically populated.

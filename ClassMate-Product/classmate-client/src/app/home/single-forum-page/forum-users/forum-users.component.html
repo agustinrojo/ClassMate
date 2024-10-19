@@ -1,0 +1,12 @@
+<div class="forum-users-container">
+  <div *ngFor="let user of allUsers">
+    <app-user-item
+      [user]="user"
+      [isModerator]="isModerator"
+      [currentUserId]="currentUserId"
+      [forumCreatorId]="forumCreatorId"
+      [isCreator]="isCreator"
+      [isAdmin]="isAdmin">
+    </app-user-item>
+  </div>
+</div>

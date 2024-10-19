@@ -5,4 +5,6 @@ import { PostResponseDTO } from '../post/post-response-dto.interface';
 export interface ForumApiResponseDTO{
   forum: ForumDTO;
   posts: PostResponseDTO[];
+  creator: boolean;
+  admin: boolean;
 }

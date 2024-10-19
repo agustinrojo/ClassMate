@@ -8,6 +8,8 @@ import { EditPostComponent } from './edit-post/edit-post.component';
 import { PostPageModule } from '../post-page/post-page.module';
 import { SharedModule } from '../../shared/shared.module';
 import { EditForumComponent } from './edit-forum/edit-forum.component';
+import { ForumUsersComponent } from './forum-users/forum-users.component';
+import { UserItemComponent } from './forum-users/user-item/user-item.component';
 
 
 
@@ -18,7 +20,9 @@ import { EditForumComponent } from './edit-forum/edit-forum.component';
     PostComponent,
     CreatePostComponent,
     EditPostComponent,
-    EditForumComponent
+    EditForumComponent,
+    ForumUsersComponent,
+    UserItemComponent
   ],
   imports: [
     CommonModule,

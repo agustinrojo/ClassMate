@@ -1,0 +1,94 @@
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #2f2f2f;
+  transition: background-color 0.2s ease-in-out;
+  margin-bottom: 5px;
+  cursor: pointer;
+  position: relative; /* This is essential for the dropdown's absolute positioning */
+}
+
+.user-item:hover {
+  background-color: #444;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.user-info span {
+  font-size: 1em;
+  color: #f5f5f5;
+  margin-right: 10px;
+}
+
+.creator-icon,
+.admin-icon,
+.spacer-icon {
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+.creator-icon {
+  color: #ffd700;
+}
+
+.admin-icon {
+  color: #c0c0c0;
+}
+
+.spacer-icon {
+  visibility: hidden;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Dropdown should appear just below the user item */
+  left: 0;
+  background-color: #3b3b3b; /* Slightly lighter than user-item */
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Slight shadow for depth */
+  z-index: 1000; /* Ensure the dropdown is on top */
+  min-width: 160px;
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  background-color: #4a4a4a;
+  color: #f8f9fa;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #565656; /* Slightly darker on hover */
+}
+
+.dropdown-item:disabled {
+  background-color: #6c757d;
+  color: #b1b1b1;
+  cursor: not-allowed;
+}
+
+.user-type {
+  color: #db4e00;
+}

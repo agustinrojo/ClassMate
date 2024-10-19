@@ -13,18 +13,37 @@ body {
   background-repeat: no-repeat;
 }
 
+/* Container wrapping the forum and users list */
+.forum-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  margin-left: 20px;
+  gap: 20px; /* Adds space between forum and users container */
+}
+
+/* Forum Container styling */
 .forum-container {
-  background-color: #141414; /* Fondo de contenedor oscuro */
+  background-color: #141414;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   text-align: left;
-  max-width: 800px;
-  width: 100%;
+  width: 50%; /* Keep original forum size */
   box-sizing: border-box;
-  margin-bottom: 20px;
-  word-wrap: break-word; /* Rompe las palabras largas */
-  overflow-wrap: break-word; /* Rompe las palabras largas */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Users container on the right */
+.users-container {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  width: 15%; /* Smaller width for users list */
+  height: 100%; /* Matches the height of the forum container */
 }
 
 .forum-container h1 {
@@ -124,9 +143,14 @@ button:hover {
   .post-details {
       font-size: 0.8em;
   }
-
-
-
 }
 
 
+.admin-text {
+  color: #db4e00; /* Color for "Sos admin" */
+  font-size: 0.8em;
+  font-weight: bold;
+  text-align: right;
+  display: block; /* To ensure it appears as a block element */
+  margin-bottom: 2px; /* Add some margin above the hr */
+}
