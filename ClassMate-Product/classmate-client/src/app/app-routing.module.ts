@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home/home.component';
 import { CreateProfileComponent } from './create-profile/create-profile.component';
 import { CanActivateCreateProfileGuard, CanMatchCreateProfileGuard } from './auth/guards/create-profile.guard';
 import { ChatContainerComponent } from './home/chat/chat-container/chat-container.component';
+import { CanActivateProfileSetGuard, CanMatchProfileSetGuard } from './auth/guards/profile-set.guard';
 
 const routes: Routes = [
   {
@@ -28,16 +29,16 @@ const routes: Routes = [
   },
   {
     path       : "create-profile",
-    component  : CreateProfileComponent
+    component  : CreateProfileComponent,
 
-    // canMatch   : [CanMatchCreateProfileGuard],
-    // canActivate: [CanActivateCreateProfileGuard]
+    canMatch   : [CanMatchCreateProfileGuard],
+    canActivate: [CanActivateCreateProfileGuard]
   },
   {
     path       : "home",
     loadChildren: () => import('./home/home.module').then( m => m.HomeModule ),
-    canMatch   : [canMatchGuard],
-    canActivate: [canActivateGuard]
+    canMatch   : [canMatchGuard, CanMatchProfileSetGuard],
+    canActivate: [canActivateGuard, CanActivateProfileSetGuard]
   },
   {
     path       : "post/**",

@@ -28,7 +28,7 @@ public class UserProfileService {
     private final AttachmentRepository attachmentRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(UserProfileService.class);
     private final CreateUserPublisher createUserPublisher;
-    private static final long MAX_PROFILE_PHOTO_SIZE = 1048576; // 1MB
+    private static final long MAX_PROFILE_PHOTO_SIZE = 10 * 1048576; // 1MB
 
     public UserProfileService(UserProfileRepository userProfileRepository, UserRepository userRepository, AttachmentRepository attachmentRepository, CreateUserPublisher createUserPublisher) {
         this.userProfileRepository = userProfileRepository;
@@ -44,6 +44,7 @@ public class UserProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (requestDTO.getProfilePhoto().getSize() > MAX_PROFILE_PHOTO_SIZE) {
+            LOGGER.info("size not allowed");
             throw new IllegalArgumentException("Profile photo exceeds maximum allowed size");
         }
 
