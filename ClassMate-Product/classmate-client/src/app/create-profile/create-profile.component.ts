@@ -52,9 +52,11 @@ export class CreateProfileComponent implements OnInit{
     }
 
     this._userProfileService.saveUserProfile(userProfileReq).subscribe((resp: UserProfileResponseDTO) => {
+      console.log(resp)
       this.handleSubmitSuccess();
     },
     err => {
+      console.log(err)
       this.handleSubmitError(err);
     })
   }
