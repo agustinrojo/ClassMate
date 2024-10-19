@@ -34,7 +34,7 @@ public class Event {
     @Column
     private LocalDate endDate;
 
-    @Column
+    @Column(nullable = true)
     private String googleId;
 
 }

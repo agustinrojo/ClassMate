@@ -35,6 +35,7 @@ export class PostComponent implements OnInit{
 
   ngOnInit(): void {
     this.setPostValoration();
+    console.log("COMMENT COUNT", this.post);
   }
 
 private setPostValoration(): void {
@@ -56,6 +57,8 @@ private setPostValoration(): void {
 
   public getUserId(){
     this.userId = this._authService.getUserId();
+
+
   }
 
   public downloadPostFile(file: FileDownloadEvent) {

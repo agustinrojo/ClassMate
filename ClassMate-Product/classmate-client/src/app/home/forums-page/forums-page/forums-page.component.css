@@ -74,8 +74,9 @@ body {
   font-size: 1em;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 40%;
+  width: 45%;
   box-sizing: border-box;
+  white-space: nowrap; /* Evita que el texto se envuelva */
 }
 #subscribe:hover {
   background-color: #725a3d; /* Color del botón al pasar el cursor */
