@@ -84,7 +84,6 @@ public class UserService {
             }
         }
 
-
         // If not in list already, add subscribers
         for(User subscriber : subscribers) {
             if(!isUserInList(userProfiles, subscriber.getId())) {
@@ -94,6 +93,14 @@ public class UserService {
         }
 
         return userProfiles;
+    }
+
+    public List<UserProfileWithRoleDTO> searchUsersInForum(Long forumId, String nicknameQuery){
+        List<UserProfileWithRoleDTO> members = getUsersFromForum(forumId);
+
+        return members.stream()
+                .filter((UserProfileWithRoleDTO member) -> member.getNickname().contains(nicknameQuery))
+                .collect(Collectors.toList());
     }
 
     private UserProfileWithRoleDTO mapToUserProfileWithRoleDTO(User user, String userType) {

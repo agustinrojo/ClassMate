@@ -40,7 +40,7 @@ export class CreatePostComponent implements OnInit{
     let post: PostRequestDTO = {
       id: 1,
       authorId: user.id,
-      forumId: parseInt(this._activateRoute.snapshot.paramMap.get("id" || "0")!),
+      forumId: parseInt(this._activateRoute.snapshot.paramMap.get("id")!),
       title: this.createPostForm.get("title")?.value,
       body: this.createPostForm.get("body")?.value,
       creationDate: new Date(),
@@ -60,7 +60,7 @@ export class CreatePostComponent implements OnInit{
   }
 
   public goBack(){
-    let forumId: number = parseInt(this._activateRoute.snapshot.paramMap.get("id" || "0")!);
+    let forumId: number = parseInt(this._activateRoute.snapshot.paramMap.get("id")!);
     this._router.navigate([`forum/${forumId}`]);
   }
 

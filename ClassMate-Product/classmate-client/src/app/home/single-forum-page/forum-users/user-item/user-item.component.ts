@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, Renderer2, ElementRef, Output, EventEmitter } from '@angular/core';
 import { UserProfileWithRoleDTO } from '../../../../services/dto/forum/user/user-profile-with-role-dto.interface';
 import { UserProfileService } from '../../../../services/user-profile.service';
 import { ForumService } from '../../../../services/forum.service';
@@ -15,6 +15,9 @@ export class UserItemComponent implements OnInit {
   @Input() public forumCreatorId!: number;
   @Input() public isCreator!: boolean;  // Whether the current user is the forum creator
   @Input() public isAdmin!: boolean;    // Whether the current user is an admin/moderator
+  @Input() public forumId!: number;
+
+  @Output() public adminAddedEvent = new EventEmitter<number>();
 
   public userProfilePhotoUrl!: string;
   public isDropdownOpen: boolean = false;
@@ -99,6 +102,16 @@ export class UserItemComponent implements OnInit {
       default:
         return 'Suscriptor';
     }
+  }
+
+  public addAdmin(){
+    let userId: number = this.user.userId;
+    this._forumService.addAdmin(this.forumId, userId).subscribe(() => {
+      this.adminAddedEvent.emit(userId);
+    },
+    err => {
+      console.log(err);
+    })
   }
 
   private loadUserProfilePhoto(photoId: number) {

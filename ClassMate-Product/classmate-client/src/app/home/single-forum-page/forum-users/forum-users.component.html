@@ -1,16 +1,39 @@
 <div class="forum-users-container">
-  <div class="input-group mb-3" data-bs-theme="dark">
-    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-  </div>
+  <form [formGroup]="searchForm">
+    <div class="input-group mb-3" data-bs-theme="dark">
+      <input formControlName="query" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+  </form>
+
   <hr>
-  <div *ngFor="let user of allUsers">
-    <app-user-item
-      [user]="user"
-      [isModerator]="isModerator"
-      [currentUserId]="currentUserId"
-      [forumCreatorId]="forumCreatorId"
-      [isCreator]="isCreator"
-      [isAdmin]="isAdmin">
-    </app-user-item>
+  <div *ngIf="query.length == 0">
+    <div *ngFor="let user of allUsers">
+      <app-user-item
+        [user]="user"
+        [isModerator]="isModerator"
+        [currentUserId]="currentUserId"
+        [forumCreatorId]="forumCreatorId"
+        [isCreator]="isCreator"
+        [isAdmin]="isAdmin"
+        [forumId]="forumId"
+        (adminAddedEvent)="adminAddedEventAllUsers($event)">
+      </app-user-item>
+    </div>
   </div>
+
+  <div *ngIf="query.length > 0">
+    <div *ngFor="let user of searchResultUsers">
+      <app-user-item
+        [user]="user"
+        [isModerator]="isModerator"
+        [currentUserId]="currentUserId"
+        [forumCreatorId]="forumCreatorId"
+        [isCreator]="isCreator"
+        [isAdmin]="isAdmin"
+        [forumId]="forumId"
+        (adminAddedEvent)="adminAddedEventSearchResults($event)">
+      </app-user-item>
+    </div>
+  </div>
+
 </div>

@@ -30,5 +30,6 @@
     </ng-container>
 
     <button class="dropdown-item">Enviar mensaje</button>
+    <button class="dropdown-item" *ngIf="forumCreatorId == currentUserId && user.userId != currentUserId && !isAdmin">Hacer moderador</button>
   </div>
 </li>

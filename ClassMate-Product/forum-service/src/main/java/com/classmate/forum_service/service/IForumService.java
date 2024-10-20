@@ -101,5 +101,4 @@ public interface IForumService {
 
     void banUser(Long forumId, Long bannerId, Long bannedId);
 
-    UserDTO searchUserMember(String nicknameQuery);
 }

@@ -3,6 +3,7 @@ package com.example.Security.controllers;
 import com.example.Security.dto.user.profile.UserProfileRequestDTO;
 import com.example.Security.dto.user.profile.UserProfileResponseDTO;
 import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
+import com.example.Security.dto.user.profile.UserProfileWithRoleDTO;
 import com.example.Security.entities.Attachment;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.publisher.CreateUserPublisher;
@@ -86,6 +87,13 @@ public class UserProfileController {
     public ResponseEntity<UserProfileResponseDTO> findUserProfileSearchById(@PathVariable("userId") Long userId){
         UserProfileResponseDTO userProfileResponseDTO = userService.findUserProfileSearchById(userId);
         return new ResponseEntity<>(userProfileResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/forumMembers/{forumId}")
+    public ResponseEntity<List<UserProfileWithRoleDTO>> findForumMembers(@PathVariable("forumId") Long forumId,
+                                                                         @RequestParam("q") String nicknameQuery){
+        List<UserProfileWithRoleDTO> members = userService.searchUsersInForum(forumId, nicknameQuery);
+        return new ResponseEntity<>(members, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

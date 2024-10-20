@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response-dto.interface';
 import { UserProfileData } from '../home/interfaces/user-profile-data.interface';
 import { UserProfileUpdateDTO } from './dto/user-profile/user-profile-update-dto.interface';
+import { UserProfileWithRoleDTO } from './dto/forum/user/user-profile-with-role-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class UserProfileService {
@@ -58,6 +59,10 @@ export class UserProfileService {
 
   public findUserProfileSearchById(userId: number): Observable<UserProfileResponseDTO> {
     return this.http.get<UserProfileResponseDTO>(`${this.baseUrl}/search/profileSearch/${userId}`);
+  }
+
+  public searchUsersInForum(forumId: number, query: string){
+    return this.http.get<UserProfileWithRoleDTO[]>(`${this.baseUrl}/search/forumMembers/${forumId}?q=${query}`);
   }
 
   private mapUserProfileReqToFormData(req: UserProfileRequestDTO): FormData{

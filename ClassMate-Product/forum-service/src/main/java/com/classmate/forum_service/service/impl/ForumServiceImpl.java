@@ -318,11 +318,6 @@ public class ForumServiceImpl implements IForumService {
         }
     }
 
-    @Override
-    public UserDTO searchUserMember(String nicknameQuery) {
-        return null;
-    }
-
     /**
      * Validates the forum data.
      *
