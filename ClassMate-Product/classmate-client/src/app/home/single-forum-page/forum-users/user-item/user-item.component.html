@@ -16,12 +16,12 @@
   </ng-container>
 
   <!-- Dynamic Dropdown Popup -->
-  <div class="dropdown-menu" *ngIf="isDropdownOpen">
+  <div #dropdownContainer class="dropdown-menu" *ngIf="isDropdownOpen">
     <p class="user-type">{{ getUserTypeLabel(user.userType) }}</p>
 
     <!-- Show the ban button if the current user is a creator or moderator -->
     <ng-container *ngIf="shouldShowBanButton()">
-      <button
+        <button
         class="dropdown-item"
         [ngClass]="{'disabled': !canBanUser()}"
         [disabled]="!canBanUser()"
@@ -30,6 +30,7 @@
     </ng-container>
 
     <button class="dropdown-item">Enviar mensaje</button>
-    <button class="dropdown-item" (click)="addAdmin()" *ngIf="forumCreatorId == currentUserId && user.userId != currentUserId && !isAdmin">Hacer moderador</button>
+    <button class="dropdown-item" (click)="addAdmin()" *ngIf="forumCreatorId == currentUserId && user.userId != currentUserId && user.userType == 'Subscriber'">Hacer moderador</button>
+    <button class="dropdown-item" (click)="removeAdmin()" *ngIf="forumCreatorId == currentUserId && user.userId != currentUserId && user.userType == 'Admin'">Quitar moderador</button>
   </div>
 </li>

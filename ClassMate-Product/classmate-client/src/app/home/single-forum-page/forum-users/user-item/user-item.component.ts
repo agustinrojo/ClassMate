@@ -17,9 +17,9 @@ export class UserItemComponent implements OnInit {
   @Input() public forumCreatorId!: number;
   @Input() public isCreator!: boolean;  // Whether the current user is the forum creator
   @Input() public isAdmin!: boolean;    // Whether the current user is an admin/moderator
-  @Input() public forumId!: number;
 
   @Output() public adminAddedEvent = new EventEmitter<number>();
+  @Output() public adminRemovedEvent = new EventEmitter<number>();
 
   public userProfilePhotoUrl!: string;
   public isDropdownOpen: boolean = false;
@@ -36,6 +36,7 @@ export class UserItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.user)
     if (this.user.profilePhoto) {
       this.loadUserProfilePhoto(this.user.profilePhoto.photoId);
     }
@@ -116,6 +117,16 @@ export class UserItemComponent implements OnInit {
     let userId: number = this.user.userId;
     this._forumService.addAdmin(this.forumId, userId).subscribe(() => {
       this.adminAddedEvent.emit(userId);
+    },
+    err => {
+      console.log(err);
+    })
+  }
+
+  public removeAdmin(){
+    let userId: number = this.user.userId;
+    this._forumService.removeAdmin(this.forumId, userId).subscribe(() => {
+      this.adminRemovedEvent.emit(userId);
     },
     err => {
       console.log(err);

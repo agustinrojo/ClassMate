@@ -60,6 +60,23 @@ export class ForumUsersComponent implements OnChanges, OnInit {
     this.adminAddedEventAllUsers(userId);
   }
 
+  public adminRemovedEventAllUsers(userId: number){
+    let userIndex = this.allUsers.findIndex((user: UserProfileWithRoleDTO) => user.userId == userId);
+    let newAdmin = this.allUsers[userIndex];
+    newAdmin.userType = "Subscriber";
+
+    this.allUsers[userIndex] = newAdmin;
+  }
+
+  public adminRemovedEventSearchResults(userId: number) {
+    let userIndex = this.searchResultUsers.findIndex((user: UserProfileWithRoleDTO) => user.userId == userId);
+    let newAdmin = this.searchResultUsers[userIndex];
+    newAdmin.userType = "Subscriber";
+
+    this.searchResultUsers[userIndex] = newAdmin;
+    this.adminRemovedEventAllUsers(userId);
+  }
+
   private loadUsers() {
     this._userService.getUsersByForum(this.forumId).subscribe(users => {
       // Order users: first creator, then admins, then subscribers
