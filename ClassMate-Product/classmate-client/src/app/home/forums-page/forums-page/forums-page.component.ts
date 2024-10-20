@@ -1,8 +1,10 @@
+import { state } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { ForumDTO } from '../../../services/dto/forum/forum-dto.interface';
 import { ForumService } from '../../../services/forum.service';
 import { Router } from '@angular/router';
 import { User } from '../../../auth/dto/user-dto.interface';
+import { MessageService } from '../../../services/message.service';
 
 @Component({
   selector: 'app-forums-page',
@@ -13,15 +15,27 @@ export class ForumsPageComponent implements OnInit{
   public forums : ForumDTO[] = [];
   public forumsSubscribed! : number[];
   public forumsCreated! : number[];
+  public message: string = '';
 
-  constructor(private _forumService: ForumService, private _router: Router){
+  constructor(
+    private _forumService: ForumService,
+    private _router: Router,
+    private _messageService: MessageService
+  ){
 
   }
 
   ngOnInit(): void {
+    // Subscribe to the message from the MessageService
+    this._messageService.getMessage().subscribe(message => {
+      if (message) {
+        this.showMessage(message);
+      }
+    });
+
+
     this.getForumsSubscribed();
     this.loadForums();
-
   }
 
   public loadForums() : ForumDTO[]{
@@ -59,9 +73,21 @@ export class ForumsPageComponent implements OnInit{
         this.getForumsSubscribed();
       },
     err => {
+      if (err.status === 403) {
+        this.showMessage("Estás baneado de este foro");
+      }
       console.log(err);
     })
   }
+
+  private showMessage(message: string): void {
+    this.message = message;
+    setTimeout(() => {
+      this.message = ''; // Clear the message after 3 seconds
+      this._messageService.clearMessage(); // Clear the message from the service
+    }, 3000); // Display the message for 3 seconds
+  }
+
 
   public navigateToCreateForum(){
     this._router.navigate(["create-forum"]);

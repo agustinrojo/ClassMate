@@ -8,6 +8,7 @@ import { AuthServiceService } from '../../../auth/auth-service.service';
 import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
 import { ForumData } from '../../interfaces/forum-data.interface';
+import { MessageService } from '../../../services/message.service';
 
 @Component({
   selector: 'app-single-forum-page',
@@ -24,7 +25,8 @@ export class SingleForumPageComponent implements OnInit{
               private _authService: AuthServiceService,
               private _forumStateService: ForumStateService,
               private _router: Router,
-              private _activatedRoute:ActivatedRoute
+              private _activatedRoute:ActivatedRoute,
+              private _messageService: MessageService
             ){}
 
 
@@ -50,6 +52,11 @@ export class SingleForumPageComponent implements OnInit{
             });
           },
         err => {
+          if (err.status === 403) {
+            // Redirect back to the forums page and pass the message
+            this._messageService.setMessage('Estás baneado de este foro');
+            this._router.navigate(['/forums']);
+          }
           console.log(err);
         });
   }

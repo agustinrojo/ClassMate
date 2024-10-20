@@ -2,6 +2,11 @@
   <div class="forums-container">
     <h1>Foros de Discusión</h1>
     <button id="btn-create-forum" class="btn create-forum-btn mb-2" (click)="navigateToCreateForum()">Crear Foro</button>
+      <!-- Message display -->
+  <div *ngIf="message" class="message-container">
+    <p>{{ message }}</p>
+  </div>
+
     <div class="forum" *ngFor="let forum of forums">
       <div class="row">
         <div class="col-6">

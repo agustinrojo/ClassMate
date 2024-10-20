@@ -89,6 +89,11 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.create-user-routing-key.name}")
     private String createUserRoutingKey;
 
+    // Ban Member Events
+    @Value("${rabbitmq.queue.ban-user-delete-member-queue}")
+    private String banUserDeleteMemberQueue;
+    @Value("${rabbitmq.exchange.ban-user-delete-member-routing-key}")
+    private String banUserDeleteMemberRoutingKey;
 
     @Bean
     public Queue subscriptionQueue() {
@@ -143,6 +148,13 @@ public class RabbitMQConfig {
     public Queue messageSenderResponseQueue() {
         return new Queue(messageSenderNameResponseQueue, true);
     }
+
+    // Ban members
+    @Bean
+    public Queue banUserDeleteMemberQueue() {
+        return new Queue(banUserDeleteMemberQueue, true);
+    }
+
 
     @Bean
     public TopicExchange forumExchange() {
@@ -242,6 +254,16 @@ public class RabbitMQConfig {
                 .to(createUserExchange())
                 .with(createUserRoutingKey);
     }
+
+    // Ban members
+    @Bean
+    public Binding banUserDeleteMemberBinding() {
+        return BindingBuilder
+                .bind(banUserDeleteMemberQueue())
+                .to(forumExchange())
+                .with(banUserDeleteMemberRoutingKey);
+    }
+
 
     @Bean
     public MessageConverter converter() {

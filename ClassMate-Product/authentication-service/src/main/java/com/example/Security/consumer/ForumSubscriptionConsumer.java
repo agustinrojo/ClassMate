@@ -2,6 +2,7 @@ package com.example.Security.consumer;
 
 import com.example.Security.dto.forum.ForumDeletionDTO;
 import com.example.Security.dto.forum.ForumSubscriptionDTO;
+import com.example.Security.dto.user.BanUserDeleteMemberEventDTO;
 import com.example.Security.entities.User;
 import com.example.Security.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,17 @@ public class ForumSubscriptionConsumer {
 
     public ForumSubscriptionConsumer(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    // Ban members
+    @Transactional
+    @RabbitListener(queues = "${rabbitmq.queue.ban-user-delete-member-queue}")
+    public void handleBanUserDeleteMemberEvent(BanUserDeleteMemberEventDTO banUserDeleteMemberEventDTO) {
+        User user = userRepository.findById(banUserDeleteMemberEventDTO.getUserIdToBan())
+                .orElseThrow(() -> new RuntimeException(String.format("User to ban not found with ID: %s", banUserDeleteMemberEventDTO.getUserIdToBan())));
+
+        user.removeAdminFromForum(banUserDeleteMemberEventDTO.getForumId());
+        user.removeForumSubscription(banUserDeleteMemberEventDTO.getForumId());
     }
 
     @Transactional

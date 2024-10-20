@@ -3,10 +3,12 @@ package com.classmate.forum_service.service.impl;
 import com.classmate.forum_service.client.IPostClient;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
+import com.classmate.forum_service.dto.user.BanUserDeleteMemberEventDTO;
 import com.classmate.forum_service.entity.Forum;
 import com.classmate.forum_service.exception.ForumNotFoundException;
 import com.classmate.forum_service.exception.InvalidForumException;
 import com.classmate.forum_service.exception.UnauthorizedActionException;
+import com.classmate.forum_service.exception.UserBannedException;
 import com.classmate.forum_service.mapper.IForumMapper;
 import com.classmate.forum_service.publisher.ForumSubscriptionPublisher;
 import com.classmate.forum_service.repository.IForumRepository;
@@ -34,6 +36,7 @@ public class ForumServiceImpl implements IForumService {
     private final IPostClient postClient;
     private final ForumSubscriptionPublisher subscriptionPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(ForumServiceImpl.class);
+    private final ForumSubscriptionPublisher forumSubscriptionPublisher;
 
     /**
      * Constructs a new ForumServiceImpl with the specified repository, mapper, post client, and subscription publisher.
@@ -43,11 +46,12 @@ public class ForumServiceImpl implements IForumService {
      * @param postClient the post client
      * @param subscriptionPublisher the subscription publisher
      */
-    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher) {
+    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher, ForumSubscriptionPublisher forumSubscriptionPublisher) {
         this.forumRepository = forumRepository;
         this.forumMapper = forumMapper;
         this.postClient = postClient;
         this.subscriptionPublisher = subscriptionPublisher;
+        this.forumSubscriptionPublisher = forumSubscriptionPublisher;
     }
 
     /**
@@ -72,7 +76,7 @@ public class ForumServiceImpl implements IForumService {
 
         // Check if the user is banned
         if (forum.getBannedUsersIds().contains(userId)) {
-            throw new UnauthorizedActionException("You are banned from this forum.");
+            throw new UserBannedException("User banned from forum");
         }
 
         List<PostResponseDTO> postDTOS = postClient.getPostsByForumId(id, userId,0, 10);
@@ -194,6 +198,11 @@ public class ForumServiceImpl implements IForumService {
     public void addMember(Long forumId, Long memberId) {
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
+
+        if (forum.getBannedUsersIds().contains(memberId)) {
+            throw new UserBannedException("User banned from forum");
+        }
+
         try {
             forum.addMember(memberId);
             ForumSubscriptionDTO forumSubscriptionDTO = ForumSubscriptionDTO.builder()
@@ -302,6 +311,9 @@ public class ForumServiceImpl implements IForumService {
             forum.getAdminIds().remove(bannedId);
             forum.getMemberIds().remove(bannedId);
             forumRepository.save(forum); // Save changes
+
+            // Publish event to delete user membership from Authentication Service
+            forumSubscriptionPublisher.publishBanUserDeleteMemberEvent(new BanUserDeleteMemberEventDTO(bannedId, forumId));
         }
     }
 

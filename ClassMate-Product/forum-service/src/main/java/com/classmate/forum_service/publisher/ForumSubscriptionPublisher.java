@@ -2,6 +2,7 @@ package com.classmate.forum_service.publisher;
 
 import com.classmate.forum_service.dto.ForumDeletionDTO;
 import com.classmate.forum_service.dto.ForumSubscriptionDTO;
+import com.classmate.forum_service.dto.user.BanUserDeleteMemberEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -37,6 +38,10 @@ public class ForumSubscriptionPublisher {
 
     @Value("${rabbitmq.forum-exchange.name}")
     private String exchange;
+
+    // Ban members
+    @Value("${rabbitmq.exchange.ban-user-delete-member-routing-key}")
+    private String banUserDeleteMemberRoutingKey;
 
 
     public ForumSubscriptionPublisher(RabbitTemplate rabbitTemplate) {
@@ -76,5 +81,10 @@ public class ForumSubscriptionPublisher {
     public void publishForumSubscriptionDeletion(ForumDeletionDTO forumDeletionDTO){
         LOGGER.info(String.format("Forum deletion event sent to RabbitMQ -> %s", forumDeletionDTO.toString()));
         rabbitTemplate.convertAndSend(exchange, deleteForumSubcriptionRoutingKey, forumDeletionDTO);
+    }
+
+    public void publishBanUserDeleteMemberEvent(BanUserDeleteMemberEventDTO banUserDeleteMemberEventDTO){
+        LOGGER.info(String.format("Banning user event, user with id: %s banned from forum with ID: %s", banUserDeleteMemberEventDTO.getUserIdToBan()), banUserDeleteMemberEventDTO.getForumId());
+        rabbitTemplate.convertAndSend(exchange, banUserDeleteMemberRoutingKey, banUserDeleteMemberEventDTO);
     }
 }
