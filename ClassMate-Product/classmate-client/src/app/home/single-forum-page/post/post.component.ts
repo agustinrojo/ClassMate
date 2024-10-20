@@ -19,10 +19,8 @@ import { PostService } from '../../../services/post.service';
   styleUrl: './post.component.css'
 })
 export class PostComponent implements OnInit{
-
-
-
   public userId!: number;
+  public isAdmin!: boolean;
   public postValoration!: Valoration;
   @Input() public post!: PostResponseDTO;
   @Output() public deleteEvent: EventEmitter<number> = new EventEmitter<number>();
@@ -57,9 +55,22 @@ private setPostValoration(): void {
 
   public getUserId(){
     this.userId = this._authService.getUserId();
-
-
+    this.isUserAdmin();
   }
+
+  private isUserAdmin(): void {
+    this._authService.getForumsAdmin().subscribe({
+      next: (forumsAdmin: number[]) => {
+        // Check if the user is an admin in the forum associated with the current post
+        this.isAdmin = forumsAdmin.includes(this.post.forumId);
+      },
+      error: (err) => {
+        console.error('Error fetching forums admin list', err);
+        this.isAdmin = false; // Handle the case where the admin check fails
+      }
+    });
+  }
+
 
   public downloadPostFile(file: FileDownloadEvent) {
     this._fileService.downloadFile(file.fileId).subscribe((blob: Blob) => {

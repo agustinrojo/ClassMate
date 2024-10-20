@@ -32,6 +32,7 @@ public interface CommentMapper {
     @Mapping(source = "attachments", target = "files")
     @Mapping(source = "hasBeenEdited", target = "hasBeenEdited")
     @Mapping(target = "author", ignore = true)
+    @Mapping(target = "forumId", ignore = true)
     CommentDTOResponse mapToCommentDTOResponse(Comment comment);
 
 }

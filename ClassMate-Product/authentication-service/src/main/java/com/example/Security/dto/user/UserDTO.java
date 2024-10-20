@@ -20,6 +20,7 @@ public class UserDTO {
     private String email;
     private List<Long> forumsSubscribed;
     private List<Long> forumsCreated;
+    private List<Long> forumsAdmin;
     private List<Long> chatroomIdsIn;
     private boolean isSynced;
 }

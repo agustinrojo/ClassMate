@@ -6,6 +6,7 @@ export interface User{
   carrera: string;
   email:string;
   forumsSubscribed: number[];
+  forumsAdmin: number[];
   forumsCreated: number[];
   chatroomIdsIn: number[];
   synced: boolean;

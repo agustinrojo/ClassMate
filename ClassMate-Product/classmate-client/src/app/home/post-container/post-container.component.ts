@@ -27,7 +27,7 @@ export class PostContainerComponent implements OnInit{
   }
 
   private loadSubscribedPosts(): void {
-    const forumsSubscribed: number[] = this._authService.getForumsSubscibed();
+    const forumsSubscribed: number[] = this._authService.getForumsSubscribed();
     for (const forumId of forumsSubscribed) {
       this._forumsService.getForumById(forumId.toString()).subscribe((forum: ForumApiResponseDTO) => {
         const forumData: ForumDataSidebar = {

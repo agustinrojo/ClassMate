@@ -68,5 +68,7 @@ public interface IPostService {
 
     IsPostAuthorDTO isPostAuthor(Long postId, Long authorId);
 
+    Long getPostForumId(Long postId);
+
     List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, Long userId, int page, int size);
 }
