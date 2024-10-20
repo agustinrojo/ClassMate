@@ -50,7 +50,9 @@ export class SharedSidebarComponent implements OnInit {
   }
 
   private loadSubscribedForums(): void {
-    const forumsSubscribed: number[] = this._authService.getForumsSubscibed();
+    const forumsSubscribed: number[] = this._authService.getForumsSubscribed();
+    console.log("Forums subscribed", forumsSubscribed);
+
 
     if (forumsSubscribed && forumsSubscribed.length > 0) {
       let loadedForums: ForumDataSidebar[] = [];

@@ -110,6 +110,13 @@ public class UserService {
         return users.stream().anyMatch(user -> user.getUserId().equals(userId));
     }
 
+    public List<Long> getForumsAdmin(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", userId));
+
+        return user.getForumsAdmin();
+    }
+
 
     private UserProfileResponseDTO mapUserToResponseDTO(User user) {
         UserProfile userProfile = user.getUserProfile();
@@ -138,6 +145,5 @@ public class UserService {
                 .size(attachment.getSize())
                 .build();
     }
-
 
 }

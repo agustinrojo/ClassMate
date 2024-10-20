@@ -105,9 +105,18 @@ export class AuthServiceService {
     return user.id;
   }
 
-  public getForumsSubscibed(): number[] {
+  public getForumsSubscribed(): number[] {
     let user: User = JSON.parse(localStorage.getItem("user")!);
     return user.forumsSubscribed;
+  }
+
+  // public getForumsAdminDeprecated(): number[] {
+  //   let user: User = JSON.parse(localStorage.getItem("user")!);
+  //   return user.forumsAdmin;
+  // }
+
+  public getForumsAdmin(): Observable<number[]> {
+    return this.http.get<number[]>(`${this.baseUrl}/api/users/${this.getUserId()}/forumsAdmin`);
   }
 
   public getUser(): User {

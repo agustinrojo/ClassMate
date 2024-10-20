@@ -75,6 +75,12 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/{postId}/forumId")
+    public ResponseEntity<Long> getPostForumId(@PathVariable Long postId) {
+        Long postForumId = postService.getPostForumId(postId);
+        return new ResponseEntity<>(postForumId, HttpStatus.OK);
+    }
+
     @GetMapping("/isAuthor/{postId}/{authorId}")
     public ResponseEntity<IsPostAuthorDTO> isPostAuthor(@PathVariable("postId") Long postId,
                                                         @PathVariable("authorId") Long authorId){
