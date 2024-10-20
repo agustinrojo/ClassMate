@@ -8,6 +8,7 @@ import { FileService } from '../../../services/file.service';
 import { Valoration } from '../../interfaces/valoration.interface';
 import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
 import { Router } from '@angular/router';
+import { AuthServiceService } from '../../../auth/auth-service.service';
 
 @Component({
   selector: 'app-comment',
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
 export class CommentComponent implements OnInit{
 
   public userId! : number;
+  public isAdmin!: boolean;
   public editing: boolean = false;
   public disableBtn: boolean = false;
   public showErr : boolean = false;
@@ -28,7 +30,8 @@ export class CommentComponent implements OnInit{
   constructor(
     private _commentService: CommentService,
     private _fileService: FileService,
-    private _router: Router
+    private _router: Router,
+    private _authService: AuthServiceService
   ){}
 
   ngOnInit(): void {
@@ -65,6 +68,24 @@ export class CommentComponent implements OnInit{
   private getUserId(){
     let user: User = JSON.parse(localStorage.getItem("user")!);
     this.userId = user.id;
+    this.isUserAdmin();
+    console.log("User is admin? ", this.isAdmin);
+    console.log(this.comment.forumId);
+
+
+  }
+
+  private isUserAdmin(): void {
+    this._authService.getForumsAdmin().subscribe({
+      next: (forumsAdmin: number[]) => {
+        // Check if the user is an admin in the forum associated with the current post
+        this.isAdmin = forumsAdmin.includes(this.comment.forumId);
+      },
+      error: (err) => {
+        console.error('Error fetching forums admin list', err);
+        this.isAdmin = false; // Handle the case where the admin check fails
+      }
+    });
   }
 
   public cancelEdition(){

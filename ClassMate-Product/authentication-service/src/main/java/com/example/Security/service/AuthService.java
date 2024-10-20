@@ -285,6 +285,7 @@ public class AuthService {
                 .carrera(user.getCarrera())
                 .forumsSubscribed(user.getForumsSubscribed())
                 .forumsCreated(user.getForumsCreated())
+                .forumsAdmin(user.getForumsAdmin())
                 .chatroomIdsIn(user.getChatroomIdsIn())
                 .isSynced(user.isGoogleSynced())
                 .build();

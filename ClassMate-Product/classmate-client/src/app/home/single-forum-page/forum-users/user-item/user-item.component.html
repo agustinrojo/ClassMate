@@ -16,12 +16,12 @@
   </ng-container>
 
   <!-- Dynamic Dropdown Popup -->
-  <div #dropdownContainer class="dropdown-menu" *ngIf="isDropdownOpen">
+  <div class="dropdown-menu" *ngIf="isDropdownOpen">
     <p class="user-type">{{ getUserTypeLabel(user.userType) }}</p>
 
     <!-- Show the ban button if the current user is a creator or moderator -->
     <ng-container *ngIf="shouldShowBanButton()">
-        <button
+      <button
         class="dropdown-item"
         [ngClass]="{'disabled': !canBanUser()}"
         [disabled]="!canBanUser()"

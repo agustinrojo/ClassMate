@@ -26,7 +26,6 @@ import java.util.List;
 public class UserProfileController {
     private final UserProfileService service;
     private final UserService userService;
-    private final UserProfileService userProfileService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserProfileResponseDTO> createUserProfile(@ModelAttribute UserProfileRequestDTO requestDTO) {

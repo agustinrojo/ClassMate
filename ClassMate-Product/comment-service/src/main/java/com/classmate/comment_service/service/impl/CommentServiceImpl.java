@@ -1,6 +1,7 @@
 package com.classmate.comment_service.service.impl;
 
 import com.classmate.comment_service.client.FileServiceClient;
+import com.classmate.comment_service.client.IPostClient;
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
@@ -41,15 +42,17 @@ public class CommentServiceImpl implements ICommentService {
     private final CommentMapper commentMapper;
     private final IUserMapper userMapper;
     private final FileServiceClient fileServiceClient;
+    private final IPostClient postClient;
     private final CommentPublisher commentPublisher;
     private final IUserRepository userRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, FileServiceClient fileServiceClient, CommentPublisher commentPublisher, IUserRepository userRepository) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
         this.fileServiceClient = fileServiceClient;
+        this.postClient = postClient;
         this.commentPublisher = commentPublisher;
         this.userRepository = userRepository;
     }
@@ -59,7 +62,7 @@ public class CommentServiceImpl implements ICommentService {
         LOGGER.info("Getting comment by id...");
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-
+        LOGGER.info("Comment forum ID after retrieving: {}", comment.getForumId());
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(comment);
 
         UserDTO userDTO = userMapper.mapUserToUserDTO(comment.getAuthor());
@@ -75,6 +78,7 @@ public class CommentServiceImpl implements ICommentService {
     public List<CommentDTOResponse> getCommentsByPostId(Long postId, Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Comment> commentsPage = commentRepository.findByPostId(postId, pageable);
+
         return commentsPage.getContent().stream()
                 .map(comment -> getCommentResponseDTO(comment, userId))
                 .collect(Collectors.toList());
@@ -95,8 +99,20 @@ public class CommentServiceImpl implements ICommentService {
         comment.setAttachments(attachments);
         comment.addUpvote(commentRequestDTO.getAuthorId());
 
-        User user = userRepository.findById(commentRequestDTO.getAuthorId()).orElseThrow();
-        comment.setAuthor(user);
+//        LOGGER.info("Fetching user with ID: {}", commentRequestDTO.getAuthorId());
+        try {
+            User user = userRepository.findById(commentRequestDTO.getAuthorId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            comment.setAuthor(user);
+        } catch (Exception e) {
+            LOGGER.error("Error fetching user: {}", e.getMessage(), e);
+            throw e;  // Re-throw the exception or handle it appropriately
+        }
+
+        // Get forumId via Openfeign call
+        Long commentForumId = postClient.getPostForumId(comment.getPostId());
+        LOGGER.info("Comment forumId: {}", commentForumId);
+        comment.setForumId(commentForumId);
 
         Comment savedComment = commentRepository.save(comment);
 
@@ -265,6 +281,8 @@ public class CommentServiceImpl implements ICommentService {
         commentResponseDTO.setLikedByUser(comment.getUpvotesByUserId().contains(userId));
         commentResponseDTO.setDislikedByUser(comment.getDownvotesByUserId().contains(userId));
         commentResponseDTO.setValoration(comment.getValoration());
+
+        commentResponseDTO.setForumId(comment.getForumId());
         return commentResponseDTO;
     }
 

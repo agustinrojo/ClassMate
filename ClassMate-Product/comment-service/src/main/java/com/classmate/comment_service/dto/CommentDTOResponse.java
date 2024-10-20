@@ -24,6 +24,8 @@ public class CommentDTOResponse {
      */
     private Long postId;
 
+    private Long forumId;
+
     /**
      * The identifier of the author who created the comment.
      */

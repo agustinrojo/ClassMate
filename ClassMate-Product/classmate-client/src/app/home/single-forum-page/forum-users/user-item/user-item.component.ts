@@ -2,6 +2,7 @@ import { Component, Input, OnInit, Renderer2, ElementRef, Output, EventEmitter }
 import { UserProfileWithRoleDTO } from '../../../../services/dto/forum/user/user-profile-with-role-dto.interface';
 import { UserProfileService } from '../../../../services/user-profile.service';
 import { ForumService } from '../../../../services/forum.service';
+import { UserDropdownService } from '../../../../services/user-dropdown.service';
 
 @Component({
   selector: 'app-user-item',
@@ -10,6 +11,7 @@ import { ForumService } from '../../../../services/forum.service';
 })
 export class UserItemComponent implements OnInit {
   @Input() public user!: UserProfileWithRoleDTO;
+  @Input() public forumId!: number;
   @Input() public isModerator!: boolean;
   @Input() public currentUserId!: number;
   @Input() public forumCreatorId!: number;
@@ -21,16 +23,29 @@ export class UserItemComponent implements OnInit {
 
   public userProfilePhotoUrl!: string;
   public isDropdownOpen: boolean = false;
+  private dropdownId: number; // Add a unique identifier for this dropdown
 
-  constructor(private _userProfileService: UserProfileService,
+  constructor(
+    private _userProfileService: UserProfileService,
     private _forumService: ForumService,
-     private renderer: Renderer2,
-      private el: ElementRef) {}
+    private dropdownService: UserDropdownService, // Inject the service
+    private renderer: Renderer2,
+    private el: ElementRef
+  ) {
+    this.dropdownId = Math.random(); // Generate a unique ID for each dropdown component
+  }
 
   ngOnInit(): void {
     if (this.user.profilePhoto) {
       this.loadUserProfilePhoto(this.user.profilePhoto.photoId);
     }
+
+    // Listen for other dropdowns being opened and close this one if needed
+    this.dropdownService.openDropdown$.subscribe(openDropdownId => {
+      if (openDropdownId !== this.dropdownId) {
+        this.isDropdownOpen = false; // Close if another dropdown is opened
+      }
+    });
 
     // Close the dropdown if clicked outside
     this.renderer.listen('window', 'click', (event: Event) => {
@@ -38,25 +53,18 @@ export class UserItemComponent implements OnInit {
         this.isDropdownOpen = false;
       }
     });
-    console.log("SOY CREADOR, SOY ADMIN", this.isCreator, this.isAdmin);
-
   }
 
   toggleDropdown(event: MouseEvent): void {
     event.stopPropagation(); // Prevent bubbling
-    this.isDropdownOpen = !this.isDropdownOpen;
-    if (this.isDropdownOpen) {
-      this.closeOtherDropdowns();
-    }
-  }
 
-  closeOtherDropdowns(): void {
-    const openDropdowns = document.querySelectorAll('.dropdown-menu');
-    openDropdowns.forEach(dropdown => {
-      if (dropdown !== this.el.nativeElement.querySelector('.dropdown-menu')) {
-        dropdown.classList.add('hidden');
-      }
-    });
+    // Toggle the current dropdown and notify the service
+    this.isDropdownOpen = !this.isDropdownOpen;
+
+    if (this.isDropdownOpen) {
+      // Notify other dropdowns to close
+      this.dropdownService.notifyOpenDropdown(this.dropdownId);
+    }
   }
 
   // Logic to determine if the "Banear Usuario" button should be enabled or disabled
@@ -77,20 +85,20 @@ export class UserItemComponent implements OnInit {
     return this.isCreator || this.isAdmin;
   }
 
-    // Method to ban a user
-    banUser(): void {
-      if (this.canBanUser()) {
-        this._forumService.banUser(this.forumCreatorId, this.currentUserId, this.user.userId).subscribe({
-          next: () => {
-            console.log(`User ${this.user.userId} banned successfully.`);
-            // Optional: Update the UI to reflect the change
-          },
-          error: (err) => {
-            console.error('Failed to ban user:', err);
-          }
-        });
-      }
+  // Method to ban a user
+  banUser(): void {
+    if (this.canBanUser()) {
+      this._forumService.banUser(this.forumId, this.currentUserId, this.user.userId).subscribe({
+        next: () => {
+          console.log(`User ${this.user.userId} banned successfully.`);
+          // Optional: Update the UI to reflect the change
+        },
+        error: (err) => {
+          console.error('Failed to ban user:', err);
+        }
+      });
     }
+  }
 
   getUserTypeLabel(userType: string): string {
     switch (userType) {

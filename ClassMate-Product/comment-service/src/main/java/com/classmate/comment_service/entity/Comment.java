@@ -34,10 +34,13 @@ public class Comment {
     @Column(nullable = false)
     private Long postId;
 
+
+    @Column(nullable = false)
+    private Long forumId;
+
     /**
      * The identifier of the author who created the comment.
      */
-
     @ManyToOne
     @JoinColumn(name = "userId")
     private User author;

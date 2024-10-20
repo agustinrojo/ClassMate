@@ -31,12 +31,31 @@ public class ForumSubscriptionConsumer {
     @Transactional
     @RabbitListener(queues = "${rabbitmq.queue.ban-user-delete-member-queue}")
     public void handleBanUserDeleteMemberEvent(BanUserDeleteMemberEventDTO banUserDeleteMemberEventDTO) {
+        LOGGER.info("Banning user event");
+
+        // Fetch the user by ID
         User user = userRepository.findById(banUserDeleteMemberEventDTO.getUserIdToBan())
                 .orElseThrow(() -> new RuntimeException(String.format("User to ban not found with ID: %s", banUserDeleteMemberEventDTO.getUserIdToBan())));
 
-        user.removeAdminFromForum(banUserDeleteMemberEventDTO.getForumId());
-        user.removeForumSubscription(banUserDeleteMemberEventDTO.getForumId());
+        Long forumId = banUserDeleteMemberEventDTO.getForumId();
+
+        // Check if the user is an admin of the forum before removing them
+        if (user.isAlreadyAdminOfForum(forumId)) {
+            user.removeAdminFromForum(forumId);
+            LOGGER.info("User {} removed as admin from forum {}", user.getId(), forumId);
+        } else {
+            LOGGER.warn("User {} is not an admin of forum {}", user.getId(), forumId);
+        }
+
+        // Check if the user is subscribed to the forum before removing them
+        if (user.isAlreadySubscribedToForum(forumId)) {
+            user.removeSubscriptionFromForum(forumId);
+            LOGGER.info("User {} unsubscribed from forum {}", user.getId(), forumId);
+        } else {
+            LOGGER.warn("User {} is not subscribed to forum {}", user.getId(), forumId);
+        }
     }
+
 
     @Transactional
     @RabbitListener(queues = "${rabbitmq.queue.subscription-queue}")
