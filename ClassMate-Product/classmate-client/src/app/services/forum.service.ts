@@ -86,6 +86,7 @@ export class ForumService {
     return this.http.post<void>(`${this.baseUrl}/${forumId}/admins/${userId}`, {});
   }
 
+
   public banUser(forumId: number, bannerId: number, bannedId: number): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/${forumId}/ban?bannerId=${bannerId}&bannedId=${bannedId}`, {});
   }
