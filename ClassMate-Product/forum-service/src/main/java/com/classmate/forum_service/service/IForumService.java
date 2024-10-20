@@ -2,6 +2,7 @@ package com.classmate.forum_service.service;
 
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
+import com.classmate.forum_service.dto.user.UserDTO;
 
 import java.util.List;
 
@@ -99,4 +100,6 @@ public interface IForumService {
     IsForumCreatorDTO isForumCreator(Long forumId , Long userId);
 
     void banUser(Long forumId, Long bannerId, Long bannedId);
+
+    UserDTO searchUserMember(String nicknameQuery);
 }

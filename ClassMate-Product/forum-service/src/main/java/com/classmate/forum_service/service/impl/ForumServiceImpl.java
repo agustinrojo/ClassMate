@@ -4,6 +4,7 @@ import com.classmate.forum_service.client.IPostClient;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.dto.user.BanUserDeleteMemberEventDTO;
+import com.classmate.forum_service.dto.user.UserDTO;
 import com.classmate.forum_service.entity.Forum;
 import com.classmate.forum_service.exception.ForumNotFoundException;
 import com.classmate.forum_service.exception.InvalidForumException;
@@ -315,6 +316,11 @@ public class ForumServiceImpl implements IForumService {
             // Publish event to delete user membership from Authentication Service
             forumSubscriptionPublisher.publishBanUserDeleteMemberEvent(new BanUserDeleteMemberEventDTO(bannedId, forumId));
         }
+    }
+
+    @Override
+    public UserDTO searchUserMember(String nicknameQuery) {
+        return null;
     }
 
     /**

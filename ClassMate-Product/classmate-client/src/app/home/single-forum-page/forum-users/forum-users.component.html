@@ -1,4 +1,8 @@
 <div class="forum-users-container">
+  <div class="input-group mb-3" data-bs-theme="dark">
+    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+  </div>
+  <hr>
   <div *ngFor="let user of allUsers">
     <app-user-item
       [user]="user"
