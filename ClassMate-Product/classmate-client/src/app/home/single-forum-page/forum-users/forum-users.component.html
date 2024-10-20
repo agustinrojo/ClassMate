@@ -2,6 +2,7 @@
   <div *ngFor="let user of allUsers">
     <app-user-item
       [user]="user"
+      [forumId]="forumId"
       [isModerator]="isModerator"
       [currentUserId]="currentUserId"
       [forumCreatorId]="forumCreatorId"

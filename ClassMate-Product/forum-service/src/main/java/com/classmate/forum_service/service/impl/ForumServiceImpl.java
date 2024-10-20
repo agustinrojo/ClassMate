@@ -278,6 +278,7 @@ public class ForumServiceImpl implements IForumService {
 
     @Override
     public void banUser(Long forumId, Long bannerId, Long bannedId) {
+        LOGGER.info("Banning user");
         // Get the forum
         Forum forum = forumRepository.findById(forumId)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + forumId));
@@ -297,25 +298,45 @@ public class ForumServiceImpl implements IForumService {
 
         // Validate banner's permission
         if (isBannerSubscriber) {
-            throw new UnauthorizedActionException("Subscribers cannot ban users.");
+            throw new UserBannedException("Subscribers cannot ban users.");
         } else if (isBannerAdmin) {
             if (isBannedUserAdmin || isBannedUserCreator) {
-                throw new UnauthorizedActionException("Moderators cannot ban other moderators or the creator.");
+                throw new UserBannedException("Moderators cannot ban other moderators or the creator.");
             }
         }
         // If creator, they can ban anyone
 
-        // Add the banned user to the list
+        // Add the banned user to the list if they are not already banned
         if (!forum.getBannedUsersIds().contains(bannedId)) {
+            LOGGER.info("Entered ban");
+
+            // Remove the banned user from the admin list, if they are an admin
+            if (isBannedUserAdmin) {
+                forum.getAdminIds().remove(bannedId);
+                LOGGER.info("User {} removed from admin list for forum {}", bannedId, forumId);
+            } else {
+                LOGGER.info("User {} was not an admin for forum {}", bannedId, forumId);
+            }
+
+            // Remove the banned user from the member list, if they are a member
+            if (forum.getMemberIds().contains(bannedId)) {
+                forum.getMemberIds().remove(bannedId);
+                LOGGER.info("User {} removed from member list for forum {}", bannedId, forumId);
+            } else {
+                LOGGER.info("User {} was not a member of forum {}", bannedId, forumId);
+            }
+
+            // Add the user to the banned users list
             forum.getBannedUsersIds().add(bannedId);
-            forum.getAdminIds().remove(bannedId);
-            forum.getMemberIds().remove(bannedId);
             forumRepository.save(forum); // Save changes
 
             // Publish event to delete user membership from Authentication Service
             forumSubscriptionPublisher.publishBanUserDeleteMemberEvent(new BanUserDeleteMemberEventDTO(bannedId, forumId));
+        } else {
+            LOGGER.info("User {} is already banned from forum {}", bannedId, forumId);
         }
     }
+
 
     /**
      * Validates the forum data.

@@ -84,7 +84,10 @@ public class ForumSubscriptionPublisher {
     }
 
     public void publishBanUserDeleteMemberEvent(BanUserDeleteMemberEventDTO banUserDeleteMemberEventDTO){
-        LOGGER.info(String.format("Banning user event, user with id: %s banned from forum with ID: %s", banUserDeleteMemberEventDTO.getUserIdToBan()), banUserDeleteMemberEventDTO.getForumId());
+        LOGGER.info(String.format("Banning user event, user with id: %s banned from forum with ID: %s",
+                banUserDeleteMemberEventDTO.getUserIdToBan(),
+                banUserDeleteMemberEventDTO.getForumId()));
         rabbitTemplate.convertAndSend(exchange, banUserDeleteMemberRoutingKey, banUserDeleteMemberEventDTO);
     }
+
 }
