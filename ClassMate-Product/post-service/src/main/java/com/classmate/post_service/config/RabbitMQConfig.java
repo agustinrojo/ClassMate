@@ -80,6 +80,9 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.comment-count-event-queue}")
     private String commentCountEventQueue;
 
+    @Value("${rabbitmq.queue.create-user-post-service-queue}")
+    private String createUserPostServiceQueue;
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -111,6 +114,10 @@ public class RabbitMQConfig {
         return new Queue(getForumIdNotificationQueueResponse, true);
     }
 
+    @Bean
+    public Queue getCreateUserPostServiceQueue() {
+        return new Queue(createUserPostServiceQueue);
+    }
     // Comment Count Event Queue
     @Bean
     public Queue getCommentCountEventQueue() {

@@ -41,8 +41,8 @@ public class UserProfileService {
     public UserProfileResponseDTO createUserProfile(UserProfileRequestDTO requestDTO) throws IOException {
         LOGGER.info(String.format("Creating Profile for user with id '%d'", requestDTO.getUserId()));
         User user = userRepository.findById(requestDTO.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
+                .orElseThrow(() -> new ResourceWithNumericValueDoesNotExistException("User", "id", requestDTO.getUserId()));
+        System.out.println("llego aca");
         if (requestDTO.getProfilePhoto().getSize() > MAX_PROFILE_PHOTO_SIZE) {
             LOGGER.info("size not allowed");
             throw new IllegalArgumentException("Profile photo exceeds maximum allowed size");

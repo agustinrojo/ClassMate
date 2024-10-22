@@ -255,6 +255,14 @@ public class RabbitMQConfig {
                 .with(createUserRoutingKey);
     }
 
+    @Bean
+    public Binding createUserPostServiceBinding(){
+        return BindingBuilder
+                .bind(createUserPostServiceQueue())
+                .to(createUserExchange())
+                .with(createUserRoutingKey);
+    }
+
     // Ban members
     @Bean
     public Binding banUserDeleteMemberBinding() {
