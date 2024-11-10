@@ -119,11 +119,11 @@ public class UserProfileService {
         return UserProfileResponseDTO.builder()
                 .userId(user.getId())
                 .nickname(userProfile.getNickname())
+                .name(String.format("%s %s", user.getFirstName(), user.getLastName()))
                 .profilePhoto(convertToFileDTO(userProfile.getProfilePhoto()))
                 .description(userProfile.getDescription())
                 .build();
     }
-
 
 
     public void updateUserProfile(Long userId, UserProfileUpdateDTO userProfileUpdateDTO) throws IOException {
