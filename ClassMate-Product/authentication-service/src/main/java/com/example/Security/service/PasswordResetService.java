@@ -10,6 +10,7 @@ import com.example.Security.exception.TokenExpiredException;
 import com.example.Security.exception.TokenNotFoundException;
 import com.example.Security.repositories.PasswordResetRepository;
 import com.example.Security.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ public class PasswordResetService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public void createResetToken(String email){
         String token = UUID.randomUUID().toString();
         User existingUser = userRepository.findByEmail(email)
@@ -50,24 +52,31 @@ public class PasswordResetService {
         sendResetPasswordEmail(existingUser.getEmail(), existingUser.getFirstName(), token);
     }
 
+    @Transactional
     public void resetPassword(ResetPasswordDTO resetPasswordDTO){
         if(isTokenValid(resetPasswordDTO.getToken())){
             String email = resetPasswordDTO.getEmail();
+            PasswordResetToken resetToken = passwordResetRepository.findByToken(resetPasswordDTO.getToken())
+                    .orElseThrow(() -> new ResourceNotFoundException("Reset Token", "token", resetPasswordDTO.getToken()));
             User existingUser = userRepository.findByEmail(email)
                     .orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
 
             existingUser.setPassword(passwordEncoder.encode(resetPasswordDTO.getNewPassword()));
             userRepository.save(existingUser);
+            resetToken.setResetAt(LocalDateTime.now());
+            passwordResetRepository.save(resetToken);
         } else {
             throw new InvalidTokenException();
         }
     }
 
+    @Transactional
     private boolean isTokenValid(String token){
         PasswordResetToken existingToken = passwordResetRepository.findByToken(token)
                 .orElseThrow(() -> new TokenNotFoundException(token));
 
-        if(existingToken.getExpiryDate().isAfter(LocalDateTime.now())){
+
+        if(existingToken.getExpiryDate().isBefore(LocalDateTime.now()) || existingToken.getResetAt() != null){
             throw new TokenExpiredException(token);
         }
 
@@ -99,7 +108,7 @@ public class PasswordResetService {
                 "        </p>\n" +
                 "        <p>Este enlace es válido por 1 hora. Si no puedes hacer clic en el enlace, copia y pega la siguiente URL en tu navegador:</p>\n" +
                 "        <p style=\"word-wrap: break-word;\">\n" +
-                "            <a href=\"http://localhost:4200/reset-password?token=" + token + "&email="+ email + "\" style=\"color: #007bff;\">http://localhost:4200/reset-password?token=" + token + "&email=" + email +"\" + token + \"</a>\n" +
+                "            <a href=\"http://localhost:4200/reset-password?token=" + token + "&email="+ email + "\" style=\"color: #007bff;\">http://localhost:4200/reset-password?token=" + token + "&email=" + email +"</a>\n" +
                 "        </p>\n" +
                 "        <p>Si no solicitaste este cambio, puedes ignorar este correo electrónico. Tu contraseña actual seguirá siendo segura.</p>\n" +
                 "        <p>Gracias por utilizar <strong>UTN ClassMate</strong>.</p>\n" +
