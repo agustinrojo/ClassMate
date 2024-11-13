@@ -11,6 +11,7 @@ import { ValidationResponse } from './dto/validation-response.interface';
 import { ValidationRequest } from './dto/validation-request.interface';
 import { UserData } from './interfaces/user-data.interface';
 import { JsonPipe } from '@angular/common';
+import { ResetPasswordDTO } from './dto/reset-password-dto.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +65,7 @@ export class AuthServiceService {
     localStorage.removeItem("user")
   }
 
-  refreshToken(): Observable<any> {
+  public refreshToken(): Observable<any> {
     const refreshToken = this.getRefreshToken();
     console.log(refreshToken)
     if (!refreshToken) {
@@ -81,6 +82,14 @@ export class AuthServiceService {
         return throwError("Token refresh failed");
       })
     );
+  }
+
+  public requestPasswordReset(email:string): Observable<any>{
+    return this.http.post(`${this.baseUrl}/api/auth/request-reset-password?email=${email}`, {});
+  }
+
+  public resetPassword(resetPasswordDTO: ResetPasswordDTO){
+    return this.http.post(`${this.baseUrl}/api/auth/reset-password`, resetPasswordDTO);
   }
 
   public getRefreshToken(): string {

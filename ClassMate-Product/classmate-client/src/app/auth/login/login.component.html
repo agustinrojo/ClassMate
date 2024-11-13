@@ -11,17 +11,17 @@
 
           <button type="submit" [disabled]="!loginForm.valid || btnDisabled">Iniciar Sesión</button>
 
-
-
           <div class="col-12 mt-3">
             ¿No tenés cuenta? <a class="link-underline-secondary" [routerLink]="['/register']" routerLinkActive="router-link-active"  >Registrate</a>
+          </div>
+
+          <div class="col-12 mt-3">
+            <a class="link-underline-secondary" [routerLink]="['/request-password-reset']" routerLinkActive="router-link-active"  >¿Olvidaste tu contraseña?</a>
           </div>
 
           <div *ngIf="loading" class="row mt-5 mb-2 justify-content-center">
             <span class="loader mr-1"></span>
           </div>
-
-
 
       </form>
   </div>

@@ -9,6 +9,8 @@ import { CreateProfileComponent } from './create-profile/create-profile.componen
 import { CanActivateCreateProfileGuard, CanMatchCreateProfileGuard } from './auth/guards/create-profile.guard';
 import { ChatContainerComponent } from './home/chat/chat-container/chat-container.component';
 import { CanActivateProfileSetGuard, CanMatchProfileSetGuard } from './auth/guards/profile-set.guard';
+import { RequestPasswordResetComponent } from './auth/request-password-reset/request-password-reset.component';
+import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -43,6 +45,14 @@ const routes: Routes = [
   {
     path       : "post/**",
     component  : HomeComponent,
+  },
+  {
+    path       : "request-password-reset",
+    component  : RequestPasswordResetComponent
+  },
+  {
+    path       : "reset-password",
+    component  : ResetPasswordComponent
   }
 ];
 
