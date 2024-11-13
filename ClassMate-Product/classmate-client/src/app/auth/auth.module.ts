@@ -8,13 +8,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EmailSentComponent } from './email-sent/email-sent.component';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
+import { RequestPasswordResetComponent } from './request-password-reset/request-password-reset.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     RegisterComponent,
-    EmailSentComponent
+    EmailSentComponent,
+    RequestPasswordResetComponent,
+    ResetPasswordComponent
   ],
   imports: [
     CommonModule,

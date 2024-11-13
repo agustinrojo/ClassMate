@@ -44,6 +44,8 @@ public class SecurityConfig {
     "/api/auth/validate-token",
     "/api/auth/validate-user-token",
     "/api/auth/confirm",
+    "/api/auth/request-reset-password",
+    "/api/auth/reset-password",
     "/error"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

@@ -47,6 +47,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleResourceNotFound(ResourceWithNumericValueDoesNotExistException exception, WebRequest request){
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .timeStamp(LocalDateTime.now())
+                .message(exception.getMessage())
+                .path(request.getDescription(false))
+                .errorCode("RESOURCE_DOES_NOT_EXIST")
+                .build();
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorDetails> handleRExpiredJwtException(ExpiredJwtException exception, WebRequest request){
         ErrorDetails errorDetails = ErrorDetails.builder()

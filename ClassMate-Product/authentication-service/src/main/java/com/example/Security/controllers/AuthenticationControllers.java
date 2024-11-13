@@ -4,11 +4,13 @@ import com.example.Security.dto.auth.AuthReq;
 import com.example.Security.dto.auth.AuthenticationResp;
 import com.example.Security.dto.register.RegisterReq;
 import com.example.Security.dto.register.RegisterRespDTO;
+import com.example.Security.dto.reset_password.ResetPasswordDTO;
 import com.example.Security.dto.token.TokenValidationRequest;
 import com.example.Security.dto.token.TokenValidationResponse;
 import com.example.Security.dto.token.UserTokenValidationRequest;
 import com.example.Security.service.AuthService;
 import com.example.Security.service.ConfirmationTokenService;
+import com.example.Security.service.PasswordResetService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class AuthenticationControllers {
 
     private final AuthService authService;
     private final ConfirmationTokenService confirmationTokenService;
+    private final PasswordResetService passwordResetService;
 
 
     @PostMapping("/register")
@@ -54,5 +57,17 @@ public class AuthenticationControllers {
     @PostMapping("/refresh_token")
     public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response){
         return authService.refreshToken(request, response);
+    }
+
+    @PostMapping("/request-reset-password")
+    public ResponseEntity requestResetPasword(@RequestParam("email") String email){
+        passwordResetService.createResetToken(email);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO){
+        passwordResetService.resetPassword(resetPasswordDTO);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

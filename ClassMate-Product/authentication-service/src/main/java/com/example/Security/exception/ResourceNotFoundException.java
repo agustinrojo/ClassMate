@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class ResourceWithNumericValueDoesNotExistException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException{
     private String resource;
     private String field;
-    private Long value;
+    private String value;
 
-    public ResourceWithNumericValueDoesNotExistException(String resource, String field, Long value) {
-        super(String.format("%s not found with %s : %d", resource, field, value));
+    public ResourceNotFoundException(String resource, String field, String value) {
+        super(String.format("%s not found with %s : %s", resource, field, value));
         this.resource = resource;
         this.field = field;
         this.value = value;
