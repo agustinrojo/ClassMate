@@ -93,6 +93,15 @@ public class ForumServiceImpl implements IForumService {
     }
 
     @Override
+    public List<ForumResponseDTO> getMultipleForumsByIds(List<Long> ids, int page, int size) {
+        Page<Forum> forums = forumRepository.findByIdIn(ids, PageRequest.of(page, size));
+        return forums.stream()
+                .map(forumMapper::convertToForumResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public ForumSidebarDataDTO getForumSidebarDataById(Long id) {
         LOGGER.info("Getting forum sidebar data by id...");
         Forum forum = forumRepository.findById(id)

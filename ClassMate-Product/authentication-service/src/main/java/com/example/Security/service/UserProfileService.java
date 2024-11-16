@@ -122,6 +122,7 @@ public class UserProfileService {
                 .name(String.format("%s %s", user.getFirstName(), user.getLastName()))
                 .profilePhoto(convertToFileDTO(userProfile.getProfilePhoto()))
                 .description(userProfile.getDescription())
+                .forumsSubscribed(user.getForumsSubscribed())
                 .build();
     }
 
@@ -136,7 +137,6 @@ public class UserProfileService {
         System.out.println(userProfileUpdateDTO);
 
         if(!(userProfileUpdateDTO.getProfilePhotoUpdateDTO().getPhotoIdToRemove() == null)){
-            System.out.println("entro a photo to id to remove");
             Long photoIdToRemove = userProfileUpdateDTO.getProfilePhotoUpdateDTO().getPhotoIdToRemove();
             userProfileRepository.deleteById(photoIdToRemove);
         }
@@ -149,8 +149,6 @@ public class UserProfileService {
                     .contentType(newPhoto.getContentType())
                     .bytes(newPhoto.getBytes())
                     .build();
-            System.out.println("entro a photo to add");
-            System.out.println(newAttachment);
             userProfile.setProfilePhoto(newAttachment);
         }
         existingUser.setUserProfile(userProfile);

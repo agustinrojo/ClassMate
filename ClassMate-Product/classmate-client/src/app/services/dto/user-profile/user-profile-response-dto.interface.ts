@@ -6,4 +6,5 @@ export interface UserProfileResponseDTO {
   name: string;
   profilePhoto: ProfilePhotoDTO;
   description: string;
+  forumsSubscribed: number[];
 }

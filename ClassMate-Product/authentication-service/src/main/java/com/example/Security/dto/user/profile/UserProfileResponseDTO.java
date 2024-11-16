@@ -2,6 +2,8 @@ package com.example.Security.dto.user.profile;
 
 import lombok.*;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -14,4 +16,5 @@ public class UserProfileResponseDTO {
     private String name;
     private ProfilePhotoDTO profilePhoto;
     private String description;
+    private List<Long> forumsSubscribed;
 }

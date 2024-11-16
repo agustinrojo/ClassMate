@@ -38,7 +38,6 @@ export class ProfilePageComponent implements OnInit {
 
   constructor(
     private _userProfileService: UserProfileService,
-    private _userProfileStateService: UserProfileStateService,
     private _authService: AuthServiceService,
     private _notificationPreferenceService: NotificationPreferenceService,
     private _activatedRoute: ActivatedRoute,
@@ -51,7 +50,6 @@ export class ProfilePageComponent implements OnInit {
     this.userId = this._activatedRoute.snapshot.paramMap.get("id")!;
 
     this.getUserProfile();
-
     // Debounce preference updates to avoid spamming the backend
     this.preferenceUpdateSubject.pipe(debounceTime(150)).subscribe(() => {
       this.savePreferences();
@@ -69,6 +67,7 @@ export class ProfilePageComponent implements OnInit {
     this._userProfileService.getUserProfile(this.userId).subscribe((resp: UserProfileResponseDTO) => {
       this.userProfile = resp;
       this.getUserProfilePhoto(this.userProfile.profilePhoto.photoId);
+      console.log(resp)
     });
   }
 

@@ -29,7 +29,7 @@
       </button>
     </ng-container>
 
-    <button class="dropdown-item">Enviar mensaje</button>
+    <!-- <button class="dropdown-item">Enviar mensaje</button> -->
     <button class="dropdown-item" (click)="addAdmin()" *ngIf="forumCreatorId == currentUserId && user.userId != currentUserId && user.userType == 'Subscriber'">Hacer moderador</button>
     <button class="dropdown-item" (click)="removeAdmin()" *ngIf="forumCreatorId == currentUserId && user.userId != currentUserId && user.userType == 'Admin'">Quitar moderador</button>
   </div>

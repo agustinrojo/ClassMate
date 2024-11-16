@@ -51,6 +51,14 @@ public class ForumController {
         return new ResponseEntity<>(apiResponseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/multiple-forums")
+    private ResponseEntity<List<ForumResponseDTO>> getMultipleForumsByIds(@RequestParam List<Long> ids,
+                                                                          @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                          @RequestParam(value = "size", defaultValue = "10") int size){
+        List<ForumResponseDTO> forumResponseDTOS = forumService.getMultipleForumsByIds(ids, page, size);
+        return ResponseEntity.ok(forumResponseDTOS);
+    }
+
     @GetMapping("/sidebarData/{id}")
     public ResponseEntity<ForumSidebarDataDTO> getForumDataSidebarById(@PathVariable Long id) {
         ForumSidebarDataDTO forumSidebarDataDTO = forumService.getForumSidebarDataById(id);

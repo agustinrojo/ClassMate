@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Repository interface for managing Forum entities.
  */
@@ -18,4 +20,5 @@ public interface IForumRepository extends JpaRepository<Forum, Long> {
      * @return a page of forums matching the given title
      */
     Page<Forum> findByTitleContainingIgnoreCaseOrderByCreationDateDesc(String title, Pageable pageable);
+    Page<Forum> findByIdIn(List<Long> ids, Pageable pageable);
 }

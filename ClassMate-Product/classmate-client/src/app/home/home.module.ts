@@ -21,6 +21,7 @@ import { ChatContainerComponent } from './chat/chat-container/chat-container.com
 import { ChatMessageComponent } from './chat/chat-message/chat-message.component';
 import { ChatUserComponent } from './chat/chat-user/chat-user.component';
 import { ChatModule } from './chat/chat.module';
+import { ForumListComponent } from './profile-page/forum-list/forum-list.component';
 
 
 
@@ -33,6 +34,7 @@ import { ChatModule } from './chat/chat.module';
     EditProfileComponent,
     ForumSearchResultComponent,
     PostSearchResultComponent,
+    ForumListComponent,
 
   ],
   imports: [

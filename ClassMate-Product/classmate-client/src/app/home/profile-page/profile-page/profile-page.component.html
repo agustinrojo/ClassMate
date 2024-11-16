@@ -1,76 +1,72 @@
 <body>
   <div class="profile-container">
-      <div class="dropdown-container">
-          <button class="dropdown-button">Opciones</button>
-          <div class="dropdown-menu" *ngIf="userId == loggedUserId">
-              <a (click)="navigateToEditProfile()">Editar</a>
-
-          </div>
+    <div class="dropdown-container">
+      <button class="dropdown-button">Opciones</button>
+      <div class="dropdown-menu" *ngIf="userId == loggedUserId">
+        <a (click)="navigateToEditProfile()">Editar</a>
       </div>
-      <div class="profile-picture">
-          <img [src]="userProfilePhotoURL" alt="Foto de Perfil">
+    </div>
+    <div class="profile-picture">
+      <img [src]="userProfilePhotoURL" alt="Foto de Perfil">
+    </div>
+    <h1>&#64;{{ userProfile.nickname }}</h1>
+    <div class="user-info">
+      <h2>{{ userProfile.name }}</h2>
+      <p>{{ userData.legajo }}</p>
+      <div class="card" *ngIf="userProfile.description" data-bs-theme="dark">
+        <div class="card-body">
+          <p>{{ userProfile.description }}</p>
+        </div>
       </div>
-      <h1>&#64;{{ userProfile.nickname }}</h1>
-      <div class="user-info">
-          <h2>{{ userProfile.name }}</h2>
-          <p>{{ userData.legajo }}</p>
-          <div class="card" *ngIf="userProfile.description"  data-bs-theme="dark">
-              <div class="card-body">
-                  <p>{{ userProfile.description }}</p>
-              </div>
-          </div>
-      </div>
-
-
-
-  <!-- Notification Preferences -->
-  <div class="notification-preferences">
-    <h3>Notificaciones</h3>
-    <hr>
-    <div class="preference-item">
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="preferences.commentNotificationEnabled"
-          (change)="updatePreferences()"
-        />
-        Comentarios en Post Propio
-      </label>
     </div>
 
-    <div class="preference-item">
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="preferences.likeNotificationEnabled"
-          (change)="updatePreferences()"
-        />
-        Likes
-      </label>
-    </div>
-
-    <div class="preference-item">
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="preferences.messageNotificationEnabled"
-          (change)="updatePreferences()"
-        />
-        Mensajes
-      </label>
-    </div>
-
-    <div class="preference-item">
-      <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="preferences.eventNotificationEnabled"
-          (change)="updatePreferences()"
-        />
-        Eventos
-      </label>
+    <!-- Notification Preferences -->
+    <div class="notification-preferences">
+      <h3>Notificaciones</h3>
+      <hr>
+      <div class="preference-item">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="preferences.commentNotificationEnabled"
+            (change)="updatePreferences()"
+          />
+          Comentarios en Post Propio
+        </label>
+      </div>
+      <div class="preference-item">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="preferences.likeNotificationEnabled"
+            (change)="updatePreferences()"
+          />
+          Likes
+        </label>
+      </div>
+      <div class="preference-item">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="preferences.messageNotificationEnabled"
+            (change)="updatePreferences()"
+          />
+          Mensajes
+        </label>
+      </div>
+      <div class="preference-item">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="preferences.eventNotificationEnabled"
+            (change)="updatePreferences()"
+          />
+          Eventos
+        </label>
+      </div>
     </div>
   </div>
 
-
-
+  <!-- Foros Suscritos -->
+  <app-forum-list [forumsSubcribedIds]="userProfile.forumsSubscribed"></app-forum-list>
+</body>

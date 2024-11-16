@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ForumDTO } from './dto/forum/forum-dto.interface';
@@ -9,6 +9,7 @@ import { ForumExistsDTO } from './dto/forum/forum-exists-dto.interface';
 import { IsForumCreatorDTO } from './dto/forum/is-forum-creator-dto.interface';
 import { ForumDataSidebar } from './dto/forum/forum-data-dto.interface';
 import { ForumStateService } from './dto/state-services/forum-state.service';
+import { MultipleForumRequestDTO } from './dto/forum/multiple-forum-request-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class ForumService {
@@ -39,6 +40,18 @@ export class ForumService {
 
   public forumExists(forumId: number): Observable<ForumExistsDTO> {
     return this.http.get<ForumExistsDTO>(`${this.baseUrl}/exists/${forumId}`);
+  }
+
+  public getMultipleForums(ids: number[], page:number = 0, size: number = 10): Observable<ForumDTO[]>{
+    let params: HttpParams = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    ids.forEach(id => {
+      params = params.append("ids", id.toString());
+    })
+
+    return this.http.get<ForumDTO[]>(`${this.baseUrl}/multiple-forums`, { params });
   }
 
   public isForumCreator(forumId: number): Observable<IsForumCreatorDTO> {

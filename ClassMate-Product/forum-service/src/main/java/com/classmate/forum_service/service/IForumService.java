@@ -26,6 +26,8 @@ public interface IForumService {
      */
     APIResponseDTO getForumById(Long id, Long userId);
 
+    List<ForumResponseDTO> getMultipleForumsByIds(List<Long> ids, int page, int size);
+
     ForumSidebarDataDTO getForumSidebarDataById(Long id);
 
     /**

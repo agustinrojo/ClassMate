@@ -233,6 +233,37 @@ h2 {
   transition: .4s;
 }
 
+.forums-container {
+  background-color: #1e1e1e; /* Fondo oscuro */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  max-width: 300px;
+  width: 100%;
+  margin-left: 1%;
+  color: #f5f5f5; /* Texto claro */
+}
+
+.forums-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.forum-item {
+  background-color: #292929;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  color: #f5f5f5;
+  transition: background-color 0.3s;
+}
+
+.forum-item:hover {
+  background-color: #d4a373; /* Resalta el foro */
+}
+
 input:checked + .slider {
   background-color: #d4a373;
   border: 1px solid #d4a373;
@@ -246,3 +277,4 @@ input:checked + .slider:before {
   transform: translateX(1.4em);
   background-color: #fff;
 }
+
