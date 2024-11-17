@@ -64,7 +64,7 @@ public interface IPostService {
      * @param id the ID of the post to delete
      * @param userId the ID of the user attempting to delete the post
      */
-    void deletePost(Long id, Long userId);
+    void deletePost(Long id, Long userId, String authorizationHeader);
 
     IsPostAuthorDTO isPostAuthor(Long postId, Long authorId);
 

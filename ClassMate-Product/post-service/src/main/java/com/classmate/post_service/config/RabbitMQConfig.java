@@ -83,6 +83,20 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.create-user-post-service-queue}")
     private String createUserPostServiceQueue;
 
+    @Value("${rabbitmq.queue.create-post-queue}")
+    private String createPostQueue;
+
+    @Value("${rabbitmq.queue.delete-user-post-queue}")
+    private String deleteUserPostQueue;
+
+    @Value("${rabbitmq.exchange.create-post-exchange.name}")
+    private String createPostExchange;
+
+    @Value("${rabbitmq.exchange.create-post.routing-key}")
+    private String createPostRoutingKey;
+
+
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -101,6 +115,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue deletePostAllFileQueue() {
         return new Queue(deletePostAllFileQueue, true);
+    }
+
+    @Bean
+    public Queue deleteUserPostQueue() {
+        return new Queue(deleteUserPostQueue, true);
     }
 
     // GET FORUM ID NOTIFICATIONS
@@ -165,9 +184,23 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue createPostQueue() { return new Queue(createPostQueue, true); }
+
+    @Bean
+    public TopicExchange createPostExchange() { return new TopicExchange(createPostExchange); }
+
+    @Bean
     public Binding deletePostBinding() {
         return BindingBuilder
                 .bind(deletePostQueue())
+                .to(postExchange())
+                .with(deletePostRoutingKey);
+    }
+
+    @Bean
+    public Binding deleteUserPostBinding(){
+        return BindingBuilder
+                .bind(deleteUserPostQueue())
                 .to(postExchange())
                 .with(deletePostRoutingKey);
     }
@@ -241,6 +274,13 @@ public class RabbitMQConfig {
                 .with(getForumIdNotificationRoutingKeyResponse);
     }
 
+    @Bean
+    public Binding createPostBinding() {
+        return BindingBuilder
+                .bind(createPostQueue())
+                .to(createPostExchange())
+                .with(createPostRoutingKey);
+    }
 
     @Bean
     public MessageConverter converter() {

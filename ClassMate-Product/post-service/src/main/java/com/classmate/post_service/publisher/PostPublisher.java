@@ -1,5 +1,6 @@
 package com.classmate.post_service.publisher;
 
+import com.classmate.post_service.dto.CreatePostEvent;
 import com.classmate.post_service.dto.PostDeletionDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
@@ -50,6 +51,12 @@ public class PostPublisher {
     @Value("${rabbitmq.notifications.get.forum.id.response.routing-key}")
     private String getForumIdNotificationRoutingKeyResponse;
 
+    @Value("${rabbitmq.exchange.create-post-exchange.name}")
+    private String createPostExchange;
+
+    @Value("${rabbitmq.exchange.create-post.routing-key}")
+    private String createPostRoutingKey;
+
     public PostPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -94,6 +101,16 @@ public class PostPublisher {
     // GET FORUM ID VALORATIONS
     public void publishGetForumIdResponseEvent(GetForumIdNotificationDTOResponse event) {
         rabbitTemplate.convertAndSend(getForumIdExchange, getForumIdNotificationRoutingKeyResponse, event);
+    }
+
+    public void publishCreatePostEvent(Long userId, Long postId){
+        CreatePostEvent createPostEvent = CreatePostEvent.builder()
+                        .postId(postId)
+                        .userId(userId)
+                        .build();
+        
+        LOGGER.info("Publishing createPostEvent: " + createPostEvent);
+        rabbitTemplate.convertAndSend(createPostExchange, createPostRoutingKey, createPostEvent);
     }
 
 }

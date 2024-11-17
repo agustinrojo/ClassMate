@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByForumsAdminContaining(Long forumId);
 
+    List<User> findByPostsCreatedContaining(Long postId);
+
     @Query("SELECT u FROM User u JOIN u.userProfile up WHERE up.nickname = :nickname")
     List<User> findByUserProfileNickname(@Param("nickname") String nickname);
 

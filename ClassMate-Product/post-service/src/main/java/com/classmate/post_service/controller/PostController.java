@@ -149,8 +149,10 @@ public class PostController {
      * @return a response indicating success or failure
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id, @RequestParam Long userId) {
-        postService.deletePost(id, userId);
+    public ResponseEntity<Void> deletePost(@PathVariable Long id,
+                                           @RequestParam Long userId,
+                                           @RequestHeader("Authorization") String authorizationHeader) {
+        postService.deletePost(id, userId, authorizationHeader);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

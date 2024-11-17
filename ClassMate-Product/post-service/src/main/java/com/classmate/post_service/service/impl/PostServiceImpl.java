@@ -153,13 +153,18 @@ public class PostServiceImpl implements IPostService {
 
         User author = userRepository.findById(postSaveDTO.getAuthorId())
                         .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %d not found.", postSaveDTO.getAuthorId())));
-        post.setAuthor(author);
 
+        post.setAuthor(author);
         post.setCreationDate(LocalDateTime.now());
         post.setAttachments(attachments);
         post.addUpvote(postSaveDTO.getAuthorId());
         Post savedPost = postRepository.save(post);
+
+        postPublisher.publishCreatePostEvent(savedPost.getAuthor().getUserId(), savedPost.getId());
+
         PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
+
+
         postResponseDTO.setLikedByUser(true);
         postResponseDTO.setDislikedByUser(false);
         postResponseDTO.setValoration(1);
@@ -199,15 +204,20 @@ public class PostServiceImpl implements IPostService {
      * {@inheritDoc}
      */
     @Override
-    public void deletePost(Long id, Long userId) {
+    public void deletePost(Long id, Long userId, String authorizationHeader) {
         LOGGER.info("Deleting post by id...");
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
 
-        boolean isValidUser = post.getAuthor().getUserId().equals(userId);
-        boolean isMod = authClient.getForumsAdmin(userId).contains(post.getForumId());
+        System.out.println(post);
+        System.out.println(userId);
 
-        if (!isValidUser && !isMod) {
+        boolean isValidUser = post.getAuthor().getUserId().equals(userId);
+        List<Long> forumAdmins = authClient.getForumsAdmin(userId, authorizationHeader);
+
+        System.out.println(forumAdmins);
+
+        if ((!isValidUser && !forumAdmins.contains(post.getForumId()))) {
             throw new RuntimeException("User not authorized to delete this post");
         }
 

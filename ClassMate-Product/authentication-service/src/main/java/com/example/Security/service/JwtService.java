@@ -108,7 +108,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private String generateToken(@NotNull User user, long expirationTime){
+    private String  generateToken(@NotNull User user, long expirationTime){
         HashMap<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", user.getId());
         return Jwts

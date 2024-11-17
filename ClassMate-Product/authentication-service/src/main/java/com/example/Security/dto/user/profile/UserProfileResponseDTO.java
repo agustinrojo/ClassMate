@@ -17,4 +17,5 @@ public class UserProfileResponseDTO {
     private ProfilePhotoDTO profilePhoto;
     private String description;
     private List<Long> forumsSubscribed;
+    private List<Long> postsCreated;
 }

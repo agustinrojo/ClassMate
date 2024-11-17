@@ -93,6 +93,7 @@ public class ForumSubscriptionConsumer {
         Long deletedForumId = forumDeletionDTO.getForumId();
         LOGGER.info(String.format("Removing forums subscriptions of forum: '%d'", deletedForumId));
         handleForumDeletionFromSubscribedUsers(deletedForumId);
+        handleForumDeletionFromAdmindUsers(deletedForumId);
         handleForumDeletionFromCreatorUser(deletedForumId);
     }
 
@@ -107,6 +108,8 @@ public class ForumSubscriptionConsumer {
         }
 
         User user = optionalUser.get();
+
+
 
         try {
             handler.handle(user, forumId);
@@ -151,6 +154,13 @@ public class ForumSubscriptionConsumer {
         usersSubscribed
                 .forEach(u -> u.removeForumSubscription(deletedForumId));
         userRepository.saveAll(usersSubscribed);
+    }
+
+    private void handleForumDeletionFromAdmindUsers(Long deletedForumId){
+        List<User> adminUsers = this.userRepository.findByForumsAdminContaining(deletedForumId);
+        adminUsers
+                .forEach(u -> u.removeForumSubscription(deletedForumId));
+        userRepository.saveAll(adminUsers);
     }
 
     private void handleForumDeletionFromCreatorUser(Long deletedForumId){
