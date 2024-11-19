@@ -64,11 +64,6 @@ public class User implements UserDetails {
     @Column(name = "chatroom_id_in")
     private List<Long> chatroomIdsIn = new ArrayList<>();
 
-    @ElementCollection
-    @CollectionTable(name = "posts_created_ids", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "post_created_id")
-    private List<Long> postsCreated = new ArrayList<>();
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -162,11 +157,4 @@ public class User implements UserDetails {
         chatroomIdsIn.add(chatroomId);
     }
 
-    public void addPostCreated(Long postId) {
-        postsCreated.add(postId);
-    }
-
-    public void removePostCreated(Long postId) {
-        postsCreated.removeIf(postId::equals);
-    }
 }

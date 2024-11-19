@@ -10,6 +10,8 @@ import { UserProfileStateService } from '../../../services/dto/state-services/us
 import { debounceTime, Subject } from 'rxjs';
 import { NotificationPreferenceUpdateDTO } from '../../../services/dto/notification/notification-preference-update-dto.interface copy 2';
 import { NotificationPreferenceDTO } from '../../../services/dto/notification/notification-preference-dto.interface copy';
+import { PostService } from '../../../services/post.service';
+import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
 
 
 @Component({
@@ -24,6 +26,7 @@ export class ProfilePageComponent implements OnInit {
   public userData!: UserData;
   public userId!: string;
   public loggedUserId!: string;
+  public posts: PostResponseDTO[] = []
 
   private preferenceUpdateSubject: Subject<void> = new Subject<void>();
 
@@ -40,11 +43,19 @@ export class ProfilePageComponent implements OnInit {
     private _userProfileService: UserProfileService,
     private _authService: AuthServiceService,
     private _notificationPreferenceService: NotificationPreferenceService,
+    private _postService: PostService,
     private _activatedRoute: ActivatedRoute,
     private _router: Router
   ) {}
 
   ngOnInit(): void {
+    this.initComponent();
+    this._activatedRoute.params.subscribe((params) => {
+      this.initComponent();
+    });
+  }
+
+  private initComponent(){
     this.loggedUserId = this._authService.getUserId().toString();
     this.userData = this._authService.getUserData();
     this.userId = this._activatedRoute.snapshot.paramMap.get("id")!;
@@ -55,11 +66,16 @@ export class ProfilePageComponent implements OnInit {
       this.savePreferences();
     });
 
+    this.getPosts();
     this.loadUserPreferences();
   }
 
   public navigateToEditProfile() {
     this._router.navigate(['profile', this.userId, 'edit']);
+  }
+
+  public navigateToNotificationPreferences() {
+    this._router.navigate(['profile', this.userId, 'notification-preferences']);
   }
 
 
@@ -97,5 +113,14 @@ export class ProfilePageComponent implements OnInit {
     this._notificationPreferenceService.updateUserPreferences(Number(this.loggedUserId), this.preferences).subscribe(() => {
       console.log("Preferences updated successfully", this.preferences);
     });
+  }
+
+  private getPosts(){
+    this._postService.getPostsByAuthor(this.userId).subscribe((posts: PostResponseDTO[]) => {
+      this.posts = [...posts];
+    },
+    (err) => {
+      console.log(err);
+    })
   }
 }

@@ -95,12 +95,6 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.ban-user-delete-member-routing-key}")
     private String banUserDeleteMemberRoutingKey;
 
-    @Value("${rabbitmq.queue.create-post-queue}")
-    private String createPostQueue;
-
-    @Value("${rabbitmq.queue.delete-user-post-queue}")
-    private String deleteUserPostQueue;
-
     @Bean
     public Queue subscriptionQueue() {
         return new Queue(subscriptionQueue, true);
@@ -159,14 +153,6 @@ public class RabbitMQConfig {
     @Bean
     public Queue banUserDeleteMemberQueue() {
         return new Queue(banUserDeleteMemberQueue, true);
-    }
-
-    @Bean
-    public Queue createPostQueue() { return new Queue(createPostQueue, true); }
-
-    @Bean
-    public Queue deleteUserPostQueue() {
-        return new Queue(deleteUserPostQueue, true);
     }
 
     @Bean

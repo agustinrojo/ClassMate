@@ -117,11 +117,6 @@ public class RabbitMQConfig {
         return new Queue(deletePostAllFileQueue, true);
     }
 
-    @Bean
-    public Queue deleteUserPostQueue() {
-        return new Queue(deleteUserPostQueue, true);
-    }
-
     // GET FORUM ID NOTIFICATIONS
     @Bean
     public Queue getForumIdNotificationQueue() {
@@ -183,11 +178,6 @@ public class RabbitMQConfig {
         return new Queue(milestoneNotificationQueue, true);
     }
 
-    @Bean
-    public Queue createPostQueue() { return new Queue(createPostQueue, true); }
-
-    @Bean
-    public TopicExchange createPostExchange() { return new TopicExchange(createPostExchange); }
 
     @Bean
     public Binding deletePostBinding() {
@@ -197,13 +187,7 @@ public class RabbitMQConfig {
                 .with(deletePostRoutingKey);
     }
 
-    @Bean
-    public Binding deleteUserPostBinding(){
-        return BindingBuilder
-                .bind(deleteUserPostQueue())
-                .to(postExchange())
-                .with(deletePostRoutingKey);
-    }
+
 
     @Bean
     public Binding deleteForumBinding() {
@@ -274,13 +258,6 @@ public class RabbitMQConfig {
                 .with(getForumIdNotificationRoutingKeyResponse);
     }
 
-    @Bean
-    public Binding createPostBinding() {
-        return BindingBuilder
-                .bind(createPostQueue())
-                .to(createPostExchange())
-                .with(createPostRoutingKey);
-    }
 
     @Bean
     public MessageConverter converter() {

@@ -103,14 +103,5 @@ public class PostPublisher {
         rabbitTemplate.convertAndSend(getForumIdExchange, getForumIdNotificationRoutingKeyResponse, event);
     }
 
-    public void publishCreatePostEvent(Long userId, Long postId){
-        CreatePostEvent createPostEvent = CreatePostEvent.builder()
-                        .postId(postId)
-                        .userId(userId)
-                        .build();
-        
-        LOGGER.info("Publishing createPostEvent: " + createPostEvent);
-        rabbitTemplate.convertAndSend(createPostExchange, createPostRoutingKey, createPostEvent);
-    }
 
 }

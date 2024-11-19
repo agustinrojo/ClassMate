@@ -123,7 +123,6 @@ public class UserProfileService {
                 .profilePhoto(convertToFileDTO(userProfile.getProfilePhoto()))
                 .description(userProfile.getDescription())
                 .forumsSubscribed(user.getForumsSubscribed())
-                .postsCreated(user.getPostsCreated())
                 .build();
     }
 

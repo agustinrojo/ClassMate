@@ -22,6 +22,7 @@ import { ChatMessageComponent } from './chat/chat-message/chat-message.component
 import { ChatUserComponent } from './chat/chat-user/chat-user.component';
 import { ChatModule } from './chat/chat.module';
 import { ForumListComponent } from './profile-page/forum-list/forum-list.component';
+import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
 
 
 
@@ -35,6 +36,7 @@ import { ForumListComponent } from './profile-page/forum-list/forum-list.compone
     ForumSearchResultComponent,
     PostSearchResultComponent,
     ForumListComponent,
+    NotificationPreferencesComponent,
 
   ],
   imports: [

@@ -1,30 +1,6 @@
-<body>
-  <div class="profile-container">
-    <div class="dropdown-container">
-      <button class="dropdown-button" *ngIf="userId == loggedUserId">Opciones</button>
-      <div class="dropdown-menu" *ngIf="userId == loggedUserId">
-        <a (click)="navigateToEditProfile()">Editar</a>
-        <a (click)="navigateToNotificationPreferences()">Notificaciones</a>
-      </div>
-    </div>
-    <div class="profile-picture">
-      <img [src]="userProfilePhotoURL" alt="Foto de Perfil">
-    </div>
-    <h1>&#64;{{ userProfile.nickname }}</h1>
-    <div class="user-info">
-      <h2>{{ userProfile.name }}</h2>
-      <p>{{ userData.legajo }}</p>
-      <div class="card" *ngIf="userProfile.description" data-bs-theme="dark">
-        <div class="card-body">
-          <p>{{ userProfile.description }}</p>
-        </div>
-      </div>
-    </div>
-
-    <app-post *ngFor="let post of posts" [post]="post"></app-post>
-
-    <!-- Notification Preferences -->
-    <!-- <div class="notification-preferences">
+ <body>
+  <div class="preferences-container">
+    <div class="notification-preferences">
       <h3>Notificaciones</h3>
       <hr>
       <div class="preference-item">
@@ -67,9 +43,10 @@
           Eventos
         </label>
       </div>
-    </div> -->
+    </div>
+    <button class="btn btn-dark" (click)="goBack()">Volver Atrás</button>
   </div>
 
-  <!-- Foros Suscritos -->
-  <app-forum-list [forumsSubcribedIds]="userProfile.forumsSubscribed"></app-forum-list>
-</body>
+
+ </body>
+

@@ -30,6 +30,8 @@ public interface IPostService {
 
     List<PostResponseDTO> getPostsByNameAndForumId(String name, Long forumId, Long userId, int page, int size);
 
+    List<PostResponseDTO> getPostsByAuthorId(Long authorId, Long userId, int page, int size);
+
 
     /**
      * Retrieves posts by forum ID with pagination support.

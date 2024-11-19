@@ -37,4 +37,6 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByForumIdInOrderByCreationDateDesc(List<Long> forumIds, Pageable pageable);
 
+    Page<Post> findAllByAuthor_UserId(Long userId, Pageable pageable);
+
 }

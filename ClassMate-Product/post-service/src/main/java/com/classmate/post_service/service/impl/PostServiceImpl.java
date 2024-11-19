@@ -100,6 +100,14 @@ public class PostServiceImpl implements IPostService {
         return postsPage.getContent().stream().map(post -> getPostResponseDTO(post, userId)).collect(Collectors.toList());
     }
 
+    @Override
+    public List<PostResponseDTO> getPostsByAuthorId(Long authorId, Long userId,int page, int size) {
+        Page<Post> posts = postRepository.findAllByAuthor_UserId(authorId, PageRequest.of(page, size));
+        return posts.getContent().stream()
+                .map((Post p) -> getPostResponseDTO(p, userId))
+                .collect(Collectors.toList());
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -160,10 +168,7 @@ public class PostServiceImpl implements IPostService {
         post.addUpvote(postSaveDTO.getAuthorId());
         Post savedPost = postRepository.save(post);
 
-        postPublisher.publishCreatePostEvent(savedPost.getAuthor().getUserId(), savedPost.getId());
-
         PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
-
 
         postResponseDTO.setLikedByUser(true);
         postResponseDTO.setDislikedByUser(false);

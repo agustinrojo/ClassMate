@@ -97,6 +97,15 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<PostResponseDTO>> getPostsByAuthor(@PathVariable("authorId") Long authorId,
+                                                                  @RequestParam("userId") Long userId,
+                                                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                  @RequestParam(value = "size", defaultValue = "10") int size){
+        List<PostResponseDTO> postResponseDTOS = postService.getPostsByAuthorId(authorId, userId,page, size);
+        return new ResponseEntity<>(postResponseDTOS, HttpStatus.OK);
+    }
+
     /**
      * Create a new post.
      * @param postSaveDTO the post to create

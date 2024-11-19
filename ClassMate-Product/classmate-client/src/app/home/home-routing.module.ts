@@ -18,6 +18,8 @@ import { ForumSearchResultComponent } from './search/forum-search-result/forum-s
 import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
 import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
 import { CalendarComponent } from './calendar/calendar/calendar.component';
+import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
+import { CanActivateNotificationPreferences, CanMatchNotificationPreferences } from '../auth/guards/notification-preferences.guard';
 
 
 export const routes: Routes = [
@@ -71,6 +73,12 @@ export const routes: Routes = [
       {
         path: "profile/:id/edit",
         component: EditProfileComponent
+      },
+      {
+        path: "profile/:id/notification-preferences",
+        component: NotificationPreferencesComponent,
+        canMatch: [CanMatchNotificationPreferences],
+        canActivate: [CanActivateNotificationPreferences]
       },
       {
         path: 'forums/search',

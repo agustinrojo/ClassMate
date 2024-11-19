@@ -32,6 +32,10 @@ export class PostService {
     return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/search/${forumId}?name=${name}&userId=${this.userId}&page=${page}&size=${size}`);
   }
 
+  public getPostsByAuthor(authorId: string, page: number = 0, size: number = 10): Observable<PostResponseDTO[]>{
+    return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/author/${authorId}?userId=${this.userId}&page=${page}&size=${size}`);
+  }
+
   public isPostAuthor(postId: number, userId: number): Observable<IsPostAuthor>{
     return this.http.get<IsPostAuthor>(`${this.baseUrl}/isAuthor/${postId}/${userId}`);
   }
