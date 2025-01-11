@@ -19,6 +19,7 @@ import com.classmate.post_service.publisher.PostPublisher;
 import com.classmate.post_service.repository.IPostRepository;
 import com.classmate.post_service.repository.IUserRepository;
 import com.classmate.post_service.service.IPostService;
+import com.classmate.post_service.service.IPostValorationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -48,9 +49,10 @@ public class PostServiceImpl implements IPostService {
     private final IAuthClient authClient;
     private final PostPublisher postPublisher;
     private final IUserRepository userRepository;
+    private final IPostValorationService valorationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository, IPostValorationService valorationService) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
@@ -59,6 +61,7 @@ public class PostServiceImpl implements IPostService {
         this.authClient = authClient;
         this.postPublisher = postPublisher;
         this.userRepository = userRepository;
+        this.valorationService = valorationService;
     }
 
     /**
@@ -165,8 +168,9 @@ public class PostServiceImpl implements IPostService {
         post.setAuthor(author);
         post.setCreationDate(LocalDateTime.now());
         post.setAttachments(attachments);
-        post.addUpvote(postSaveDTO.getAuthorId());
         Post savedPost = postRepository.save(post);
+        valorationService.upvotePost(savedPost.getId(), author.getUserId());
+
 
         PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
 

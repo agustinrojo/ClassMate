@@ -21,6 +21,7 @@ import com.classmate.comment_service.repository.ICommentRepository;
 import com.classmate.comment_service.mapper.IUserMapper;
 import com.classmate.comment_service.repository.IUserRepository;
 import com.classmate.comment_service.service.ICommentService;
+import com.classmate.comment_service.service.ICommentValorationService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,9 +46,10 @@ public class CommentServiceImpl implements ICommentService {
     private final IPostClient postClient;
     private final CommentPublisher commentPublisher;
     private final IUserRepository userRepository;
+    private final ICommentValorationService valorationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
@@ -55,6 +57,7 @@ public class CommentServiceImpl implements ICommentService {
         this.postClient = postClient;
         this.commentPublisher = commentPublisher;
         this.userRepository = userRepository;
+        this.valorationService = valorationService;
     }
 
     @Override
@@ -87,34 +90,38 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     @Transactional
     public CommentDTOResponse saveComment(CommentDTORequest commentRequestDTO) {
+        LOGGER.info("Saving comment...");
 
         validateComment(commentRequestDTO.getBody());
         validateAttachments(commentRequestDTO.getFiles());
-
-        LOGGER.info("Saving comment...");
 
         List<Attachment> attachments = uploadFiles(commentRequestDTO.getFiles());
 
         Comment comment = commentMapper.mapToComment(commentRequestDTO);
         comment.setAttachments(attachments);
-        comment.addUpvote(commentRequestDTO.getAuthorId());
-
-//        LOGGER.info("Fetching user with ID: {}", commentRequestDTO.getAuthorId());
-        try {
-            User user = userRepository.findById(commentRequestDTO.getAuthorId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            comment.setAuthor(user);
-        } catch (Exception e) {
-            LOGGER.error("Error fetching user: {}", e.getMessage(), e);
-            throw e;  // Re-throw the exception or handle it appropriately
-        }
 
         // Get forumId via Openfeign call
         Long commentForumId = postClient.getPostForumId(comment.getPostId());
         LOGGER.info("Comment forumId: {}", commentForumId);
         comment.setForumId(commentForumId);
 
+
+        try {
+            User user = userRepository.findById(commentRequestDTO.getAuthorId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            comment.setAuthor(user);
+        } catch (Exception e) {
+            LOGGER.error("Error fetching user: {}", e.getMessage(), e);
+            throw e;  // Re-throw the exception or handle it appropriately
+        }
+
         Comment savedComment = commentRepository.save(comment);
+
+        if (savedComment.getAuthor() != null) {
+            LOGGER.info("Comment author ID {}", savedComment.getAuthor().getUserId());
+            valorationService.upvoteComment(savedComment.getId(), savedComment.getAuthor().getUserId());
+        }
 
         CommentDTOResponse commentDTOResponse = commentMapper.mapToCommentDTOResponse(savedComment);
         commentDTOResponse.setLikedByUser(true);

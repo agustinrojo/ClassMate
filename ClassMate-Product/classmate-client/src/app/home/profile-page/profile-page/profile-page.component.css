@@ -278,3 +278,68 @@ input:checked + .slider:before {
   background-color: #fff;
 }
 
+.reputation-container {
+  text-align: center;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+
+.reputation-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.reputation-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #b0b0b0; /* Modern, subtle gray text */
+  margin-right: 10px;
+}
+
+.reputation-percentage {
+  font-size: 14px;
+  font-weight: 500;
+  color: #d4a373; /* Slightly warmer color for percentage */
+}
+
+.reputation-bar {
+  display: flex;
+  height: 6px; /* Slim height */
+  width: 100%;
+  background-color: #292929; /* Neutral dark background */
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.likes-bar,
+.dislikes-bar {
+  height: 100%; /* Ensure both bars align perfectly */
+  transition: width 0.3s ease;
+}
+
+.likes-bar {
+  background-color: #4a90e2; /* Blue for likes */
+}
+
+.dislikes-bar {
+  background-color: #e94e77; /* Red for dislikes */
+}
+
+/* Hover text styling */
+.hover-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #f5f5f5; /* Bright white for contrast */
+  margin-top: 8px; /* Space between text and bar */
+  position: absolute;
+  top: -25px; /* Prevent layout shift by positioning it above the bar */
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none; /* Prevent mouse interaction */
+  white-space: nowrap;
+}

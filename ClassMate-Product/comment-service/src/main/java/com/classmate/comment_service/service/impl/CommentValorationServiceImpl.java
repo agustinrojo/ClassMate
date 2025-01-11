@@ -2,6 +2,8 @@ package com.classmate.comment_service.service.impl;
 
 import com.classmate.comment_service.dto.notifications.GetForumIdNotificationDTORequest;
 import com.classmate.comment_service.dto.notifications.MilestoneReachedEventDTO;
+import com.classmate.comment_service.dto.user.userReputation.ReputationAction;
+import com.classmate.comment_service.dto.user.userReputation.UserReputationChangeDTO;
 import com.classmate.comment_service.entity.Comment;
 import com.classmate.comment_service.exception.CommentNotFoundException;
 import com.classmate.comment_service.publisher.CommentPublisher;
@@ -37,6 +39,8 @@ public class CommentValorationServiceImpl implements ICommentValorationService {
         commentRepository.save(comment);
 
         checkForMilestone(comment);
+
+        updateUserReputation(comment.getAuthor().getUserId(), ReputationAction.LIKE);
     }
 
     @Override
@@ -46,6 +50,17 @@ public class CommentValorationServiceImpl implements ICommentValorationService {
                 .orElseThrow(() -> new CommentNotFoundException(String.format("Comment with id: '%d' not found",  commentId)));
         comment.addDownvote(userId);
         commentRepository.save(comment);
+
+        updateUserReputation(comment.getAuthor().getUserId(), ReputationAction.DISLIKE);
+    }
+
+    private void updateUserReputation(Long userIdToUpdate, ReputationAction action) {
+        UserReputationChangeDTO event = UserReputationChangeDTO.builder()
+                .userId(userIdToUpdate)
+                .action(action)
+                .build();
+
+        commentPublisher.publishUserReputationChange(event);
     }
 
     @Override
@@ -53,8 +68,10 @@ public class CommentValorationServiceImpl implements ICommentValorationService {
     public void removeVoteFromComment(Long commentId, Long userId) {
         Comment comment = this.commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(String.format("Comment with id: '%d' not found",  commentId)));
-        comment.removeVote(userId);
+        ReputationAction action = comment.removeVote(userId);
         commentRepository.save(comment);
+
+        updateUserReputation(comment.getAuthor().getUserId(), action);
     }
 
     private void checkForMilestone(Comment comment) {

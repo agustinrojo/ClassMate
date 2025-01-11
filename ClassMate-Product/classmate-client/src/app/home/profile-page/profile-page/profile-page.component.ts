@@ -12,6 +12,7 @@ import { NotificationPreferenceUpdateDTO } from '../../../services/dto/notificat
 import { NotificationPreferenceDTO } from '../../../services/dto/notification/notification-preference-dto.interface copy';
 import { PostService } from '../../../services/post.service';
 import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
+import { GetUserProfileResponseDTO } from '../../../services/dto/user-profile/get-user-profile-response-dto.interface copy';
 
 
 @Component({
@@ -20,13 +21,15 @@ import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.in
   styleUrl: './profile-page.component.css'
 })
 export class ProfilePageComponent implements OnInit {
-  public userProfile!: UserProfileResponseDTO;
+  public userProfile!: GetUserProfileResponseDTO;
   public userProfilePhotoURL!: string;
   public userProfilePhoto!: Blob;
   public userData!: UserData;
   public userId!: string;
   public loggedUserId!: string;
   public posts: PostResponseDTO[] = []
+  public hoverText: string = '';
+
 
   private preferenceUpdateSubject: Subject<void> = new Subject<void>();
 
@@ -80,10 +83,9 @@ export class ProfilePageComponent implements OnInit {
 
 
   private getUserProfile() {
-    this._userProfileService.getUserProfile(this.userId).subscribe((resp: UserProfileResponseDTO) => {
+    this._userProfileService.getUserProfile(this.userId).subscribe((resp: GetUserProfileResponseDTO) => {
       this.userProfile = resp;
       this.getUserProfilePhoto(this.userProfile.profilePhoto.photoId);
-      console.log(resp)
     });
   }
 
@@ -123,4 +125,16 @@ export class ProfilePageComponent implements OnInit {
       console.log(err);
     })
   }
+
+  public getLikesPercentage(): number {
+    const total = this.userProfile.likesAmmount + this.userProfile.dislikesAmmount;
+    return total > 0 ? (this.userProfile.likesAmmount / total) * 100 : 50;
+  }
+
+  public getDislikesPercentage(): number {
+    const total = this.userProfile.likesAmmount + this.userProfile.dislikesAmmount;
+    return total > 0 ? (this.userProfile.dislikesAmmount / total) * 100 : 50;
+  }
+
+
 }

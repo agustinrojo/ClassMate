@@ -1,9 +1,6 @@
 package com.example.Security.controllers;
 
-import com.example.Security.dto.user.profile.UserProfileRequestDTO;
-import com.example.Security.dto.user.profile.UserProfileResponseDTO;
-import com.example.Security.dto.user.profile.UserProfileUpdateDTO;
-import com.example.Security.dto.user.profile.UserProfileWithRoleDTO;
+import com.example.Security.dto.user.profile.*;
 import com.example.Security.entities.Attachment;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.publisher.CreateUserPublisher;
@@ -40,9 +37,9 @@ public class UserProfileController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserProfileResponseDTO> getUserProfile(@PathVariable Long userId) {
+    public ResponseEntity<GetUserProfileResponseDTO> getUserProfile(@PathVariable Long userId) {
         try {
-            UserProfileResponseDTO responseDTO = service.getUserProfile(userId);
+            GetUserProfileResponseDTO responseDTO = service.getUserProfile(userId);
             return new ResponseEntity<>(responseDTO, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -64,6 +64,9 @@ public class User implements UserDetails {
     @Column(name = "chatroom_id_in")
     private List<Long> chatroomIdsIn = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private UserReputation reputation = new UserReputation();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

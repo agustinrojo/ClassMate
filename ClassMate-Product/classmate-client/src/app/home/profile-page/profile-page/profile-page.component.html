@@ -13,13 +13,41 @@
     <h1>&#64;{{ userProfile.nickname }}</h1>
     <div class="user-info">
       <h2>{{ userProfile.name }}</h2>
-      <p>{{ userData.legajo }}</p>
+      <!-- <p>{{ userData.legajo }}</p> -->
       <div class="card" *ngIf="userProfile.description" data-bs-theme="dark">
         <div class="card-body">
           <p>{{ userProfile.description }}</p>
         </div>
       </div>
     </div>
+
+  <!-- Reputation Section -->
+  <div class="reputation-container">
+    <div class="reputation-header">
+      <span class="reputation-text">Reputación</span>
+      <span class="reputation-percentage">
+        {{ getLikesPercentage().toFixed(0) }}%
+      </span>
+    </div>
+    <div class="reputation-bar">
+      <div
+        class="likes-bar"
+        [style.width]="getLikesPercentage() + '%'"
+        (mouseenter)="hoverText = 'Likes: ' + userProfile.likesAmmount"
+        (mouseleave)="hoverText = ''">
+      </div>
+      <div
+        class="dislikes-bar"
+        [style.width]="getDislikesPercentage() + '%'"
+        (mouseenter)="hoverText = 'Dislikes: ' + userProfile.dislikesAmmount"
+        (mouseleave)="hoverText = ''">
+      </div>
+    </div>
+    <div class="hover-text" *ngIf="hoverText">{{ hoverText }}</div>
+  </div>
+
+
+
 
     <app-post *ngFor="let post of posts" [post]="post"></app-post>
 

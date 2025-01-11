@@ -126,7 +126,7 @@ public class PostController {
 
     @PostMapping("/{postId}/downvote")
     public ResponseEntity<Void> downvotePost(@PathVariable("postId") Long postId,
-                                           @RequestParam("userId") Long userId){
+                                             @RequestParam("userId") Long userId){
         valorationService.downvotePost(postId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

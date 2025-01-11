@@ -6,7 +6,10 @@ import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
 import com.classmate.comment_service.dto.notifications.GetForumIdNotificationDTORequest;
 import com.classmate.comment_service.dto.notifications.MilestoneReachedEventDTO;
+import com.classmate.comment_service.dto.user.userReputation.UserReputationChangeDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommentPublisher {
     private final RabbitTemplate rabbitTemplate;
+    private Logger LOGGER = LoggerFactory.getLogger(CommentPublisher.class);
 
     @Value("${rabbitmq.file-exchange.name}")
     private String exchange;
@@ -51,6 +55,13 @@ public class CommentPublisher {
     @Value("${rabbitmq.comment-count-event.routing-key}")
     private String commentCountEventRoutingKey;
 
+    // USER REPUTATION
+    @Value("${rabbitmq.user-reputation-exchange}")
+    private String userReputationExchange;
+    @Value("${rabbitmq.user-reputation-routing-key}")
+    private String userReputationRoutingKey;
+
+
     public CommentPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -87,5 +98,11 @@ public class CommentPublisher {
         System.out.println(commentCount);
         System.out.println(postId);
         rabbitTemplate.convertAndSend(commentCountEventExchange, commentCountEventRoutingKey, commentCountEvent);
+    }
+
+    // USER REPUTATION
+    public void publishUserReputationChange(UserReputationChangeDTO event) {
+        LOGGER.info(String.format("Publishing UserReputationChange event for user with id -> %s", event.getUserId().toString()));
+        rabbitTemplate.convertAndSend(userReputationExchange, userReputationRoutingKey, event);
     }
 }

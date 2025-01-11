@@ -1,5 +1,6 @@
 package com.classmate.comment_service.entity;
 
+import com.classmate.comment_service.dto.user.userReputation.ReputationAction;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -98,9 +99,14 @@ public class Comment {
         }
     }
 
-    public void removeVote(Long userId) {
-        upvotesByUserId.remove(userId);
-        downvotesByUserId.remove(userId);
+    public ReputationAction removeVote(Long userId) {
+        if(upvotesByUserId.contains(userId)) {
+            upvotesByUserId.remove(userId);
+            return ReputationAction.REMOVELIKE;
+        } else {
+            downvotesByUserId.remove(userId);
+            return ReputationAction.REMOVEDISLIKE;
+        }
     }
 
     public int getValoration() {

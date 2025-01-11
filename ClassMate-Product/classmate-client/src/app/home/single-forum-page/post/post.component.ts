@@ -91,6 +91,18 @@ private setPostValoration(): void {
     if(this.post.likedByUser){
       return;
     }
+
+    if (this.post.dislikedByUser) {
+      // If there's an active downvote, remove it first
+      this._postService.removePostVote(this.post.id).subscribe(() => {
+        this.executeUpvote();
+      }, (err) => {
+        console.error("Error removing downvote", err);
+      });
+    } else {
+      // Directly upvote if no downvote exists
+      this.executeUpvote();
+    }
     this._postService.upvotePost(this.post.id).subscribe(() => {
       console.log("Upvote success")
     },
@@ -100,15 +112,43 @@ private setPostValoration(): void {
   }
 
   public downvotePost() {
-    if(this.post.dislikedByUser){
+    if (this.post.dislikedByUser) {
+      // Already downvoted, no action needed
       return;
     }
+
+    if (this.post.likedByUser) {
+      // If there's an active upvote, remove it first
+      this._postService.removePostVote(this.post.id).subscribe(() => {
+        console.log("Upvote removed, proceeding to downvote");
+        this.executeDownvote();
+      }, (err) => {
+        console.error("Error removing upvote", err);
+      });
+    } else {
+      // Directly downvote if no upvote exists
+      this.executeDownvote();
+    }
+  }
+
+  private executeUpvote() {
+    this._postService.upvotePost(this.post.id).subscribe(() => {
+      console.log("Upvote success");
+      this.post.likedByUser = true;
+      this.post.dislikedByUser = false; // Clear any existing state
+    }, (err) => {
+      console.error("Error upvoting post", err);
+    });
+  }
+
+  private executeDownvote() {
     this._postService.downvotePost(this.post.id).subscribe(() => {
-      console.log("Downvote success")
-    },
-  err => {
-    console.log(err);
-  })
+      console.log("Downvote success");
+      this.post.dislikedByUser = true;
+      this.post.likedByUser = false; // Clear any existing state
+    }, (err) => {
+      console.error("Error downvoting post", err);
+    });
   }
 
   public removePostVote() {
