@@ -53,6 +53,7 @@ export class CreatePostComponent implements OnInit{
         this.disableBtn = true;
       },
     async err => {
+      console.log(err)
       this.showErr = true;
       await delay(3000);
       this._router.navigate([`forum/${post.forumId}`]);

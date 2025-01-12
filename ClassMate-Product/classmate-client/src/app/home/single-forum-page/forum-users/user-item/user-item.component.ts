@@ -96,6 +96,7 @@ export class UserItemComponent implements OnInit {
         },
         error: (err) => {
           console.error('Failed to ban user:', err);
+          console.log(err)
         }
       });
     }

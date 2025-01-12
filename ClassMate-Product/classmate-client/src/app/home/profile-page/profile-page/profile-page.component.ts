@@ -78,6 +78,18 @@ export class ProfilePageComponent implements OnInit {
     this._router.navigate(['profile', this.userId, 'notification-preferences']);
   }
 
+  public deletePost(postId: number){
+    this._postService.deletePost(postId).subscribe(() => {
+      const index = this.posts.findIndex((p: PostResponseDTO) => postId == p.id);
+      if(index != -1){
+        this.posts.splice(index, 1);
+      }
+    },
+    (err) => {
+      console.log(err);
+    }
+    )
+  }
 
   private getUserProfile() {
     this._userProfileService.getUserProfile(this.userId).subscribe((resp: UserProfileResponseDTO) => {

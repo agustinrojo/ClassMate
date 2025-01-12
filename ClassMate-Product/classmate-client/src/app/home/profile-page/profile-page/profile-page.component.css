@@ -92,6 +92,12 @@ h2 {
   color: #b07a57; /* Tono cálido */
 }
 
+h3 {
+  margin-bottom: 1em;
+  font-size: 1.3em;
+  color: #b07a57; /* Tono cálido */
+}
+
 .user-info {
   text-align: left;
   margin-bottom: 20px;

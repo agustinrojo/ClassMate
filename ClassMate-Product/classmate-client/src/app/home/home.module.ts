@@ -38,6 +38,7 @@ import { NotificationPreferencesComponent } from './profile-page/notification-pr
     ForumListComponent,
     NotificationPreferencesComponent,
 
+
   ],
   imports: [
     CommonModule,
