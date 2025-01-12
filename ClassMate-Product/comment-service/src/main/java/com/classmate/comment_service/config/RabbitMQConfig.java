@@ -86,6 +86,14 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.comment-count-event.routing-key}")
     private String commentCountEventRoutingKey;
 
+    // User Reputation
+    @Value("${rabbitmq.queue.user-reputation-queue}")
+    private String userReputationQueue;
+    @Value("${rabbitmq.user-reputation-exchange}")
+    private String userReputationExchange;
+    @Value("${rabbitmq.user-reputation-routing-key}")
+    private String userReputationRoutingKey;
+
     @Bean
     public Queue deletePostQueue() {
         return new Queue(deletePostQueue, true); // durable queue
@@ -156,6 +164,18 @@ public class RabbitMQConfig {
     public TopicExchange getCommentCountExchange(){
         return new TopicExchange(commentCountEventExchange);
     }
+
+    // User Reputation
+    @Bean
+    public TopicExchange userReputationExchange() {
+        return new TopicExchange(userReputationExchange);
+    }
+
+    @Bean
+    public Queue userReputationQueue() {
+        return new Queue(userReputationQueue, true);
+    }
+
 
     @Bean
     public Binding deletePostBinding() {
@@ -243,6 +263,15 @@ public class RabbitMQConfig {
                 .bind(getCommentCountEventQueue())
                 .to(getCommentCountExchange())
                 .with(commentCountEventRoutingKey);
+    }
+
+    // User Reputation
+    @Bean
+    public Binding userReputationBinding() {
+        return BindingBuilder
+                .bind(userReputationQueue())
+                .to(userReputationExchange())
+                .with(userReputationRoutingKey);
     }
 
     @Bean

@@ -1,6 +1,8 @@
 package com.classmate.post_service.service.impl;
 
 import com.classmate.post_service.dto.notification.MilestoneReachedEventDTO;
+import com.classmate.post_service.dto.user.userReputation.ReputationAction;
+import com.classmate.post_service.dto.user.userReputation.UserReputationChangeDTO;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.exception.PostNotFoundException;
 import com.classmate.post_service.publisher.PostPublisher;
@@ -38,7 +40,11 @@ public class PostValorationServiceImpl implements IPostValorationService {
         postRepository.save(post);
 
         checkForMilestone(post);
+
+        updateUserReputation(post.getAuthor().getUserId(), ReputationAction.LIKE);
     }
+
+
 
     @Override
     @Transactional
@@ -48,6 +54,17 @@ public class PostValorationServiceImpl implements IPostValorationService {
 
         post.addDownvote(userId);
         postRepository.save(post);
+
+        updateUserReputation(post.getAuthor().getUserId(), ReputationAction.DISLIKE);
+    }
+
+    private void updateUserReputation(Long userIdToUpdate, ReputationAction action) {
+        UserReputationChangeDTO event = UserReputationChangeDTO.builder()
+                .userId(userIdToUpdate)
+                .action(action)
+                .build();
+
+        postPublisher.publishUserReputationChange(event);
     }
 
     @Override
@@ -56,8 +73,10 @@ public class PostValorationServiceImpl implements IPostValorationService {
         Post post = this.postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(String.format("Post with id: '%d' not found", postId)));
 
-        post.removeVote(userId);
+        ReputationAction action = post.removeVote(userId);
         postRepository.save(post);
+
+        updateUserReputation(post.getAuthor().getUserId(), action);
     }
 
     private void checkForMilestone(Post post) {

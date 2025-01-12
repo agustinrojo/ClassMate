@@ -1,12 +1,12 @@
 package com.classmate.post_service.publisher;
 
-import com.classmate.post_service.dto.CreatePostEvent;
 import com.classmate.post_service.dto.PostDeletionDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
 import com.classmate.post_service.dto.notification.GetForumIdNotificationDTOResponse;
 import com.classmate.post_service.dto.notification.MilestoneReachedEventDTO;
 import com.classmate.post_service.dto.notification.PostAuthorResponseEventDTO;
+import com.classmate.post_service.dto.user.userReputation.UserReputationChangeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -57,6 +57,12 @@ public class PostPublisher {
     @Value("${rabbitmq.exchange.create-post.routing-key}")
     private String createPostRoutingKey;
 
+    // USER REPUTATION
+    @Value("${rabbitmq.user-reputation-exchange}")
+    private String userReputationExchange;
+    @Value("${rabbitmq.user-reputation-routing-key}")
+    private String userReputationRoutingKey;
+
     public PostPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -103,5 +109,10 @@ public class PostPublisher {
         rabbitTemplate.convertAndSend(getForumIdExchange, getForumIdNotificationRoutingKeyResponse, event);
     }
 
+    // USER REPUTATION
+    public void publishUserReputationChange(UserReputationChangeDTO event) {
+        LOGGER.info(String.format("Publishing UserReputationChange event for user with id -> %s", event.getUserId().toString()));
+        rabbitTemplate.convertAndSend(userReputationExchange, userReputationRoutingKey, event);
+    }
 
 }

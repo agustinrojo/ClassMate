@@ -118,26 +118,62 @@ export class CommentComponent implements OnInit{
 
   public upvoteComment() {
     if (this.comment.likedByUser) {
+      // Already upvoted, no action needed
       return;
     }
+
+    if (this.comment.dislikedByUser) {
+      // Remove downvote before upvoting
+      this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
+        this.executeUpvote();
+      }, (err) => {
+        console.error("Error removing downvote", err);
+      });
+    } else {
+      // Directly upvote if no downvote exists
+      this.executeUpvote();
+    }
+  }
+
+  private executeUpvote() {
     this._commentService.upvoteComment(this.comment.id).subscribe(() => {
-      console.log("Upvote success")
-    }, err => {
-      console.log(err);
+      console.log("Upvote success");
+      this.comment.likedByUser = true;
+      this.comment.dislikedByUser = false; // Clear any existing downvote
+    }, (err) => {
+      console.error("Error upvoting comment", err);
     });
   }
 
   public downvoteComment() {
     if (this.comment.dislikedByUser) {
+      // Already downvoted, no action needed
       return;
     }
+
+    if (this.comment.likedByUser) {
+      // Remove upvote before downvoting
+      this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
+        this.executeDownvote();
+      }, (err) => {
+        console.error("Error removing upvote", err);
+      });
+    } else {
+      // Directly downvote if no upvote exists
+      this.executeDownvote();
+    }
+  }
+
+  private executeDownvote() {
     this._commentService.downvoteComment(this.comment.id).subscribe(() => {
       console.log("Downvote success");
-    },
-    err => {
-      console.log(err);
+      this.comment.dislikedByUser = true;
+      this.comment.likedByUser = false; // Clear any existing upvote
+    }, (err) => {
+      console.error("Error downvoting comment", err);
     });
   }
+
 
   public removeCommentVote() {
     this._commentService.removeCommentVote(this.comment.id).subscribe(() => {

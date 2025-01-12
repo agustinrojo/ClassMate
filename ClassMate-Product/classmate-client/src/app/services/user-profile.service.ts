@@ -7,6 +7,7 @@ import { UserProfileResponseDTO } from './dto/user-profile/user-profile-response
 import { UserProfileData } from '../home/interfaces/user-profile-data.interface';
 import { UserProfileUpdateDTO } from './dto/user-profile/user-profile-update-dto.interface';
 import { UserProfileWithRoleDTO } from './dto/forum/user/user-profile-with-role-dto.interface';
+import { GetUserProfileResponseDTO } from './dto/user-profile/get-user-profile-response-dto.interface copy';
 
 @Injectable({providedIn: 'root'})
 export class UserProfileService {
@@ -22,8 +23,8 @@ export class UserProfileService {
 
 
 
-  public getUserProfile( userId: string ): Observable<UserProfileResponseDTO>{
-    return this.http.get<UserProfileResponseDTO>(`${this.baseUrl}/${userId}`);
+  public getUserProfile( userId: string ): Observable<GetUserProfileResponseDTO>{
+    return this.http.get<GetUserProfileResponseDTO>(`${this.baseUrl}/${userId}`);
   }
 
 

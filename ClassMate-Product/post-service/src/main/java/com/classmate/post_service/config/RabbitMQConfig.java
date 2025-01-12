@@ -95,6 +95,14 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.create-post.routing-key}")
     private String createPostRoutingKey;
 
+    // User Reputation
+    @Value("${rabbitmq.queue.user-reputation-queue}")
+    private String userReputationQueue;
+    @Value("${rabbitmq.user-reputation-exchange}")
+    private String userReputationExchange;
+    @Value("${rabbitmq.user-reputation-routing-key}")
+    private String userReputationRoutingKey;
+
 
 
     @Bean
@@ -178,6 +186,17 @@ public class RabbitMQConfig {
         return new Queue(milestoneNotificationQueue, true);
     }
 
+    // User Reputation
+    @Bean
+    public TopicExchange userReputationExchange() {
+        return new TopicExchange(userReputationExchange);
+    }
+
+    @Bean
+    public Queue userReputationQueue() {
+        return new Queue(userReputationQueue, true);
+    }
+
 
     @Bean
     public Binding deletePostBinding() {
@@ -256,6 +275,15 @@ public class RabbitMQConfig {
                 .bind(getForumIdNotificationResponseQueue())
                 .to(getForumIdExchange())
                 .with(getForumIdNotificationRoutingKeyResponse);
+    }
+
+    // User Reputation
+    @Bean
+    public Binding userReputationBinding() {
+        return BindingBuilder
+                .bind(userReputationQueue())
+                .to(userReputationExchange())
+                .with(userReputationRoutingKey);
     }
 
 

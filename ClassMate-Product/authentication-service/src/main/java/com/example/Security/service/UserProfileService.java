@@ -5,6 +5,7 @@ import com.example.Security.dto.user.profile.*;
 import com.example.Security.entities.Attachment;
 import com.example.Security.entities.User;
 import com.example.Security.entities.UserProfile;
+import com.example.Security.entities.UserReputation;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
 import com.example.Security.publisher.CreateUserPublisher;
 import com.example.Security.repositories.AttachmentRepository;
@@ -67,8 +68,9 @@ public class UserProfileService {
     }
 
     @Transactional(readOnly = true)
-    public UserProfileResponseDTO getUserProfile(Long userId) {
-        LOGGER.info(String.format("Getting Profile for user with id '%d'", userId));
+    public GetUserProfileResponseDTO getUserProfile(Long userId) {
+        LOGGER.info("Getting Profile for user with id '{}'", userId);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
@@ -77,7 +79,22 @@ public class UserProfileService {
             throw new IllegalArgumentException("User profile not found");
         }
 
-        return getUserProfileResponseDTO(user, userProfile);
+        UserReputation userReputation = user.getReputation();
+
+        // Default reputation values
+        long likesAmmount = userReputation != null ? userReputation.getLikesAmmount() : 0L;
+        long dislikesAmmount = userReputation != null ? userReputation.getDislikesAmmount() : 0L;
+
+        return GetUserProfileResponseDTO.builder()
+                .userId(user.getId())
+                .nickname(userProfile.getNickname())
+                .name(String.format("%s %s", user.getFirstName(), user.getLastName()))
+                .profilePhoto(convertToFileDTO(userProfile.getProfilePhoto()))
+                .description(userProfile.getDescription())
+                .forumsSubscribed(user.getForumsSubscribed())
+                .likesAmmount(likesAmmount)
+                .dislikesAmmount(dislikesAmmount)
+                .build();
     }
 
 
