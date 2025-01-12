@@ -10,7 +10,7 @@
         <module name="authentication-service" />
         <module name="service-registry" />
       </profile>
-      <profile name="Annotation profile for storage-service" enabled="true">
+      <profile name="Annotation profile for calendar-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -36,7 +36,7 @@
       <module name="calendar-service" options="-parameters" />
       <module name="chat-service" options="-parameters" />
       <module name="comment-service" options="-parameters -parameters" />
-      <module name="forum-service" options="-parameters" />
+      <module name="forum-service" options="-parameters -parameters" />
       <module name="notification-service" options="-parameters -parameters" />
       <module name="post-service" options="-parameters" />
       <module name="service-registry" options="-parameters" />

@@ -1,28 +1,80 @@
 version: '3'
 
 services:
-  app_vet:
-    build: clinica_veterinaria #url de donde se encuentra el Dockerfile
+  rabbitmq:
+    image: rabbitmq:3.13.2-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      -  app-network
+
+  service_registry:
+    build: service-registry
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - app-network
+
+  authentication_service:
+    build: ./authentication-service
     ports:
       - "8080:8080"
-    environment:
-      DB_URL: jdbc:mysql://clinica_vet_db:3306/clinica_veterinaria?createDatabaseIfNotExist=true&serverTimezone=UTC
-      DB_USER_NAME: root
-      DB_PASSWORD: 1234
     restart: always
     depends_on:
-      clinica_vet_db:
-        condition: service_healthy
-  clinica_vet_db:
-    image: mysql:8.0.33
-    ports:
-      - "3307:3306"
+      - jwt_security_db
+      - rabbitmq
+      - service_registry
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_PASSWORD: 1234
-      MYSQL_DATABASE: clinica_veterinaria
+      AUTH_DB_HOST: jwt_security_db
+      AUTH_DB_PORT: 5432
+      AUTH_DB_NAME: jwt_security
+      AUTH_DB_USERNAME: postgres
+      AUTH_DB_PASSWORD: postgres
+    networks:
+      - app-network
+
+  jwt_security_db:
+    image: postgres:16.3
     restart: always
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 10s
-      retries: 10
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: jwt_security
+    ports:
+      - "5432:5432"
+    volumes:
+      - jwt_security_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+
+  calendar_db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${CALENDAR_DB_PASSWORD}
+      POSTGRES_USER: ${CALENDAR_DB_USERNAME}
+      POSTGRES_DB: ${CALENDAR_DB_NAME}
+    ports:
+      - "5434:5432"  # Puerto interno 5432 mapeado al puerto externo 5434
+    volumes:
+      - calendar_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+
+volumes:
+  rabbitmq_data:
+  jwt_security_data:
+  calendar_db_data:
+
+networks:
+  app-network:
+    driver: bridge
