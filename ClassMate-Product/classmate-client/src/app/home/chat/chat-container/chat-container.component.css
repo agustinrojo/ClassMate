@@ -221,7 +221,7 @@ body {
   padding: 15px;
   background-color: #2a2a2a;
   border-top: 1px solid #3a3a3a;
-  gap: 10px; /* Espaciado uniforme entre los elementos */
+  gap: 5px; /* Espaciado uniforme entre los elementos */
 }
 
 .message-input input[type="text"] {
