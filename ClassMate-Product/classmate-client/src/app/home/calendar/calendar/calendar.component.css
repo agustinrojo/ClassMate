@@ -8,10 +8,9 @@
   max-width: 1100px;
   margin: 0 auto;
   overflow: hidden;
-  margin-right: 5%;
+  margin-top: -40px;
   border-radius: 20px;
   z-index: 1000;
-  margin-bottom: 20px;
 }
 
 .table-bordered > :not(caption) > * > * {
