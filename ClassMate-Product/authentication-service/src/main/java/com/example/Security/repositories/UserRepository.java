@@ -30,4 +30,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u JOIN FETCH u.userProfile WHERE u.id = :id")
     Optional<User> findByIdWithUserProfile(@Param("id") Long id);
+
 }

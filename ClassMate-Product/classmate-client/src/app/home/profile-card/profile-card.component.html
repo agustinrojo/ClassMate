@@ -1,0 +1,11 @@
+<div class="card" (click)="navigateToUserProfile()">
+  <div class="profile-container">
+    <img [src]="userProfilePhoto">
+  </div>
+  <div class="profile-info">
+    <h1>{{ name }}</h1>
+    <p class="job-title">p/{{ username }}</p>
+    <p class="desc">{{ description }}</p>
+  </div>
+  <div class="card-bottom"></div>
+</div>

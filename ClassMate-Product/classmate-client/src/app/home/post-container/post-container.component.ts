@@ -14,7 +14,8 @@ import { PostService } from '../../services/post.service';
 export class PostContainerComponent implements OnInit{
   public forums: ForumDataSidebar[] = [];
   public posts: PostResponseDTO[] = [];
-  public noSubscribedForums: boolean = false;
+  public noPosts: boolean = false;
+
 
   constructor(private _authService: AuthServiceService,
               private _forumsService: ForumService,
@@ -23,7 +24,7 @@ export class PostContainerComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadSubscribedPosts();
-    this.noSubscribedForums = this.forums.length == 0;
+    this.noPosts = this.forums.length == 0;
   }
 
   private loadSubscribedPosts(): void {
@@ -34,15 +35,17 @@ export class PostContainerComponent implements OnInit{
           id: forum.forum.id,
           title: forum.forum.title
         }
-
         this.forums.unshift(forumData);
         this.posts.push(...forum.posts);
-
       },
     err => {
       console.log(err)
     })
     }
+    if(this.posts.length == 0){
+      this.noPosts = true;
+    }
+    console.log(this.posts.length)
   }
 
   public deletePost(post: PostResponseDTO) {

@@ -1,0 +1,50 @@
+.container {
+  width: 50%; /* Mantener el 50% del ancho */
+  margin: 0 auto; /* Centrar el contenedor */
+  padding: 20px;
+  background-color: #141414;
+  color: #f5f5f5;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.forums-button,
+.posts-button,
+.users-button {
+  background-color: #343A40;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 8px 15px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 10px; /* Espaciado inferior */
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.forums-button:hover,
+.posts-button:hover,
+.users-button:hover {
+  background-color: #555;
+}
+
+.active-button {
+  background-color: #555;
+}
+
+/* Nuevo estilo para organizar los profile cards */
+.profile-card-container {
+  display: flex; /* Organiza en fila */
+  flex-wrap: wrap; /* Permite que se envuelvan si no caben en una fila */
+  gap: 16px; /* Espaciado entre los componentes */
+  justify-content: space-between; /* Ajusta la distribución horizontal */
+}
+
+app-profile-card {
+  flex: 1 1 calc(33% - 16px); /* Ajusta el tamaño al 33% del contenedor menos el margen */
+  max-width: 200px; /* Limita el tamaño máximo del card */
+}

@@ -1,0 +1,14 @@
+<div class="container">
+  <button class="forums-button" (click)="navigateToForumSearch()">Foros</button>
+  <button class="posts-button" (click)="switchToPostSearch()">Todos los Posts</button>
+  <button class="users-button active-button">Usuarios</button>
+  <hr />
+  <div class="profile-card-container">
+    <app-profile-card *ngFor="let user of userProfiles"
+      [userId]="user.userId"
+      [name]="user.name"
+      [username]="user.nickname"
+      [description]="user.description"
+      [profilePhotoDTO]="user.profilePhoto"></app-profile-card>
+  </div>
+</div>

@@ -20,6 +20,7 @@ import { ChatContainerComponent } from './chat/chat-container/chat-container.com
 import { CalendarComponent } from './calendar/calendar/calendar.component';
 import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
 import { CanActivateNotificationPreferences, CanMatchNotificationPreferences } from '../auth/guards/notification-preferences.guard';
+import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 
 
 export const routes: Routes = [
@@ -91,6 +92,10 @@ export const routes: Routes = [
       {
         path: 'posts/search',
         component: PostSearchResultComponent // Add post search results route
+      },
+      {
+        path: 'users/search',
+        component: UserSearchResultComponent // Add post search results route
       },
       {
         path       : "chat",

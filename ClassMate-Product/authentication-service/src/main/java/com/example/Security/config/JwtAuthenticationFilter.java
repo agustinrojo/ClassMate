@@ -46,9 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String userEmail;
 
         String path =  request.getRequestURL().toString();
-
-
-
         // para filtrar headers vacios o no validos
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response); // se le pasa la req y la resp al proximo filtro

@@ -23,6 +23,8 @@ import { ChatUserComponent } from './chat/chat-user/chat-user.component';
 import { ChatModule } from './chat/chat.module';
 import { ForumListComponent } from './profile-page/forum-list/forum-list.component';
 import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
+import { ProfileCardComponent } from './profile-card/profile-card.component';
+import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 
 
 
@@ -37,6 +39,8 @@ import { NotificationPreferencesComponent } from './profile-page/notification-pr
     PostSearchResultComponent,
     ForumListComponent,
     NotificationPreferencesComponent,
+    UserSearchResultComponent,
+    ProfileCardComponent
 
   ],
   imports: [

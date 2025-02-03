@@ -10,6 +10,7 @@ import { User } from '../../../auth/dto/user-dto.interface';
   styleUrl: './forum-search-result.component.css'
 })
 export class ForumSearchResultComponent implements OnInit {
+
   public forums: ForumDTO[] = [];
   public query: string = '';
   public forumsSubscribed: number[] = [];
@@ -51,6 +52,9 @@ export class ForumSearchResultComponent implements OnInit {
     this._router.navigate(['posts/search'], { queryParams: { query: this.query } });
   }
 
+  switchToUserSearch() {
+    this._router.navigate(['users/search'], { queryParams: { query: this.query } });
+  }
 
   subscribe(forumId: number): void {
     this._forumService.addMember(forumId, 123).subscribe(() => { // Replace '123' with actual user ID logic

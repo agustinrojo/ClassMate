@@ -63,7 +63,7 @@ export class ChatContainerComponent implements OnInit, AfterViewChecked {
     const target = $eventEntity.target as HTMLInputElement;
     this.searchQuery = target ? target.value : '';
     if (this.searchQuery.length > 2) {
-      this._userProfileService.searchChatUserByNickname(this.searchQuery).subscribe((resp: UserProfileResponseDTO[]) => {
+      this._userProfileService.searchUserByNickname(this.searchQuery).subscribe((resp: UserProfileResponseDTO[]) => {
         this.searchResults = resp;
         this.searchResults = this.searchResults.filter((u: UserProfileResponseDTO) => u.userId != this.loggedUser.id);
       });

@@ -1,6 +1,7 @@
 <div class="container">
   <button class="forums-button"  (click)="navigateToForumSearch()">Foros</button>
   <button class="posts-button" [ngClass]="{'active-button': isAllPostsSearch}" (click)="switchToPostSearch()">Todos los Posts</button>
+  <button class="forums-button"  (click)="switchToUserSearch()">Usuarios</button>
   <hr>
   <div *ngIf="noPostsFound" >No se encontraron posts para "{{ query }}"{{ forumId ? ' en este foro' : '' }}</div>
   <div *ngIf="!noPostsFound">
