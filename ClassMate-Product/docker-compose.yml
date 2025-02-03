@@ -13,8 +13,13 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       -  app-network
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  service_registry:
+  service-registry:
     build: service-registry
     ports:
       - "8761:8761"
@@ -28,15 +33,26 @@ services:
       - "8080:8080"
     restart: always
     depends_on:
-      - jwt_security_db
-      - rabbitmq
-      - service_registry
+      jwt_security_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+      calendar_service:
+        condition: service_started
     environment:
-      AUTH_DB_HOST: jwt_security_db
-      AUTH_DB_PORT: 5432
-      AUTH_DB_NAME: jwt_security
-      AUTH_DB_USERNAME: postgres
-      AUTH_DB_PASSWORD: postgres
+      AUTH_DB_HOST: ${AUTH_DB_HOST}
+      AUTH_DB_PORT: ${AUTH_DB_PORT}
+      AUTH_DB_NAME: ${AUTH_DB_NAME}
+      AUTH_DB_USERNAME: ${AUTH_DB_USERNAME}
+      AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
     networks:
       - app-network
 
@@ -44,16 +60,41 @@ services:
     image: postgres:16.3
     restart: always
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: jwt_security
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: ${AUTH_DB_USERNAME}
+      POSTGRES_USER: ${AUTH_DB_PASSWORD}
+      POSTGRES_DB: ${AUTH_DB_NAME}
+    ports: []
     volumes:
       - jwt_security_data:/var/lib/postgresql/data
     networks:
       - app-network
 
+  calendar_service:
+    build: ./calendar-service
+    ports:
+      - "8085:8085"
+    restart: always
+    depends_on:
+      calendar_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+    environment:
+      CALENDAR_DB_HOST: ${CALENDAR_DB_HOST}
+      CALENDAR_DB_PORT: ${CALENDAR_DB_PORT}
+      CALENDAR_DB_NAME: ${CALENDAR_DB_NAME}
+      CALENDAR_DB_USERNAME: ${CALENDAR_DB_USERNAME}
+      CALENDAR_DB_PASSWORD: ${CALENDAR_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
+    networks:
+      - app-network
 
   calendar_db:
     image: postgres:16.3
@@ -62,18 +103,262 @@ services:
       POSTGRES_PASSWORD: ${CALENDAR_DB_PASSWORD}
       POSTGRES_USER: ${CALENDAR_DB_USERNAME}
       POSTGRES_DB: ${CALENDAR_DB_NAME}
-    ports:
-      - "5434:5432"  # Puerto interno 5432 mapeado al puerto externo 5434
+    ports: []
     volumes:
       - calendar_db_data:/var/lib/postgresql/data
     networks:
       - app-network
 
+  chat-service:
+    build: ./chat-service
+    ports:
+      - "8088:8088"
+    restart: always
+    depends_on:
+      chat_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+    environment:
+      CHAT_DB_HOST: ${CHAT_DB_HOST}
+      CHAT_DB_PORT: ${CHAT_DB_PORT}
+      CHAT_DB_NAME: ${CHAT_DB_NAME}
+      CHAT_DB_USERNAME: ${CHAT_DB_USERNAME}
+      CHAT_DB_PASSWORD: ${CHAT_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
+    networks:
+      - app-network
+
+  chat_db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${CHAT_DB_PASSWORD}
+      POSTGRES_USER: ${CHAT_DB_USERNAME}
+      POSTGRES_DB: ${CHAT_DB_NAME}
+    ports: []
+    volumes:
+      - chat_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  comment-service:
+    build: ./comment-service
+    ports:
+      - "8081:8081"
+    restart: always
+    depends_on:
+      comment_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+    environment:
+      COMMENT_DB_HOST: ${COMMENT_DB_HOST}
+      COMMENT_DB_PORT: ${COMMENT_DB_PORT}
+      COMMENT_DB_NAME: ${COMMENT_DB_NAME}
+      COMMENT_DB_USERNAME: ${COMMENT_DB_USERNAME}
+      COMMENT_DB_PASSWORD: ${COMMENT_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
+    networks:
+      - app-network
+
+  comment_db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${COMMENT_DB_PASSWORD}
+      POSTGRES_USER: ${COMMENT_DB_USERNAME}
+      POSTGRES_DB: ${COMMENT_DB_NAME}
+    ports: []
+    volumes:
+      - comment_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  post-service:
+    build: ./post-service
+    ports:
+      - "8083:8083"
+    restart: always
+    depends_on:
+      post_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+    environment:
+      POST_DB_HOST: ${POST_DB_HOST}
+      POST_DB_PORT: ${POST_DB_PORT}
+      POST_DB_NAME: ${POST_DB_NAME}
+      POST_DB_USERNAME: ${POST_DB_USERNAME}
+      POST_DB_PASSWORD: ${POST_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
+    networks:
+      - app-network
+
+  post_db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POST_DB_PASSWORD}
+      POSTGRES_USER: ${POST_DB_USERNAME}
+      POSTGRES_DB: ${POST_DB_NAME}
+    ports: []
+    volumes:
+      - post_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  forum-service:
+    build: ./forum-service
+    ports:
+      - "8082:8082"
+    restart: always
+    depends_on:
+      forum_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+    environment:
+      FORUM_DB_HOST: ${FORUM_DB_HOST}
+      FORUM_DB_PORT: ${FORUM_DB_PORT}
+      FORUM_DB_NAME: ${FORUM_DB_NAME}
+      FORUM_DB_USERNAME: ${FORUM_DB_USERNAME}
+      FORUM_DB_PASSWORD: ${FORUM_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
+    networks:
+      - app-network
+
+  forum_db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${FORUM_DB_PASSWORD}
+      POSTGRES_USER: ${FORUM_DB_USERNAME}
+      POSTGRES_DB: ${FORUM_DB_NAME}
+    ports: []
+    volumes:
+      - forum_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8090:8090"
+    restart: always
+    depends_on:
+      notification_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+    environment:
+      NOTIFICATION_DB_HOST: ${NOTIFICATION_DB_HOST}
+      NOTIFICATION_DB_PORT: ${NOTIFICATION_DB_PORT}
+      NOTIFICATION_DB_NAME: ${NOTIFICATION_DB_NAME}
+      NOTIFICATION_DB_USERNAME: ${NOTIFICATION_DB_USERNAME}
+      NOTIFICATION_DB_PASSWORD: ${NOTIFICATION_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
+    networks:
+      - app-network
+
+  notification_db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${NOTIFICATION_DB_PASSWORD}
+      POSTGRES_USER: ${NOTIFICATION_DB_USERNAME}
+      POSTGRES_DB: ${NOTIFICATION_DB_NAME}
+    ports: []
+    volumes:
+      - notification_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  storage-service:
+    build: ./storage-service
+    ports:
+      - "8084:8084"
+    restart: always
+    depends_on:
+      notification_db:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+    environment:
+      STORAGE_DB_HOST: ${STORAGE_DB_HOST}
+      STORAGE_DB_PORT: ${STORAGE_DB_PORT}
+      STORAGE_DB_NAME: ${STORAGE_DB_NAME}
+      STORAGE_DB_USERNAME: ${STORAGE_DB_USERNAME}
+      STORAGE_DB_PASSWORD: ${STORAGE_DB_PASSWORD}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      SERVICE_REGISTRY_HOST: service-registry
+      SERVICE_REGISTRY_PORT: 8761
+    networks:
+      - app-network
+
+  storage_db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${STORAGE_DB_PASSWORD}
+      POSTGRES_USER: ${STORAGE_DB_USERNAME}
+      POSTGRES_DB: ${STORAGE_DB_NAME}
+    ports: [ ]
+    volumes:
+      - storage_db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
 volumes:
   rabbitmq_data:
   jwt_security_data:
   calendar_db_data:
+  chat_db_data:
+  comment_db_data:
+  post_db_data:
+  forum_db_data:
+  notification_db_data:
+  storage_db_data:
 
 networks:
   app-network:

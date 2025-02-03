@@ -46,7 +46,7 @@ export class UserProfileService {
     return this.http.put<void>(`${this.baseUrl}/${this.userId}`, formData, { headers });
   }
 
-  public searchChatUserByNickname( nicknameSubstr: string, page: number = 0, size: number = 10 ) : Observable<UserProfileResponseDTO[]>{
+  public searchUserByNickname( nicknameSubstr: string, page: number = 0, size: number = 10 ) : Observable<UserProfileResponseDTO[]>{
     return this.http.get<UserProfileResponseDTO[]>(`${this.baseUrl}/search/${nicknameSubstr}?page=${page}&size=${size}`);
   }
 

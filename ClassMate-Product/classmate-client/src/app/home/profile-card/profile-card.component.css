@@ -1,0 +1,79 @@
+.card {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  aspect-ratio: 1; /* Hace que el card sea cuadrado */
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer; /* Cambia el cursor a pointer para indicar interactividad */
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  background-color: #1e1e1e;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Aumenta ligeramente el tamaño */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Aumenta la sombra */
+  background-color: #292929; /* Cambia ligeramente el color de fondo */
+}
+
+.card img {
+  width: 80px; /* Más pequeño */
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #1e1e1e;
+  margin-top: 8px; /* Añade un pequeño margen superior */
+  transition: border-color 0.3s ease; /* Suaviza el cambio de color del borde */
+}
+
+.card:hover img {
+  border-color: #b07a57; /* Cambia el color del borde de la imagen en hover */
+}
+
+.card .profile-container {
+  background-color: #b07a57;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px; /* Compacto */
+}
+
+.card .profile-info {
+  text-align: center;
+  padding: 0px 8px; /* Reduce el padding */
+  color: white;
+}
+
+.card .profile-info h1 {
+  font-size: 1.1rem; /* Más pequeño */
+  margin-bottom: 4px;
+}
+
+.card .profile-info .job-title {
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.card .profile-info .desc {
+  font-size: 0.7rem;
+  margin-bottom: 6px;
+}
+
+.card .profile-social {
+  display: flex;
+  gap: 4px; /* Reduce el espacio */
+}
+
+.card-bottom {
+  height: 4px; /* Más pequeño */
+  background-color: #b07a57;
+  transition: background-color 0.3s ease;
+}
+
+.card:hover .card-bottom {
+  background-color: #ff6b6b; /* Cambia el color del borde inferior en hover */
+}

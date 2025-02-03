@@ -55,4 +55,8 @@ export class PostSearchResultComponent implements OnInit {
     this._router.navigate(['posts/search'], { queryParams: { query: this.query } });
   }
 
+  switchToUserSearch() {
+    this._router.navigate(['users/search'], { queryParams: { query: this.query } });
+  }
+
 }

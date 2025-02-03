@@ -130,6 +130,7 @@ public class UserService {
         return UserProfileResponseDTO.builder()
                 .userId(user.getId())
                 .nickname(userProfile.getNickname())
+                .name(user.getFirstName() + " " + user.getLastName())
                 .profilePhoto(convertToFileDTO(userProfile.getProfilePhoto()))
                 .description(userProfile.getDescription())
                 .build();
