@@ -47,7 +47,6 @@ public class PasswordResetService {
                 .token(token)
                 .expiryDate(LocalDateTime.now(Clock.systemDefaultZone()).plusHours(1))
                 .build();
-
         passwordResetRepository.save(resetToken);
         sendResetPasswordEmail(existingUser.getEmail(), existingUser.getFirstName(), token);
     }

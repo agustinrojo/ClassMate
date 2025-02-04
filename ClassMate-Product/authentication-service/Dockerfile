@@ -1,5 +1,12 @@
+# Etapa 1: Construcción del JAR
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Ejecutar la aplicación
 FROM openjdk:17-jdk-slim
-ARG JAR_FILE=target/authentication-service-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} auth_service.jar
+WORKDIR /app
+COPY --from=builder /app/target/authentication-service-0.0.1-SNAPSHOT.jar authentication_service.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "auth_service.jar"]
+ENTRYPOINT ["java", "-jar", "authentication_service.jar"]

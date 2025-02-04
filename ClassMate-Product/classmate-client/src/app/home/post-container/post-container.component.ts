@@ -5,11 +5,13 @@ import { ForumService } from '../../services/forum.service';
 import { ForumApiResponseDTO } from '../../services/dto/forum/forum-api-response-dto.interface';
 import { ForumDataSidebar } from '../../services/dto/forum/forum-data-dto.interface';
 import { PostService } from '../../services/post.service';
+import { SingleForumPageModule } from "../single-forum-page/single-forum-page.module";
 
 @Component({
   selector: 'app-post-container',
   templateUrl: './post-container.component.html',
-  styleUrl: './post-container.component.css'
+  styleUrl: './post-container.component.css',
+
 })
 export class PostContainerComponent implements OnInit{
   public forums: ForumDataSidebar[] = [];

@@ -124,7 +124,3 @@ body {
   transition: .4s;
 }
 
-.btn-container {
-  display: flex;
-  align-items: start;
-}

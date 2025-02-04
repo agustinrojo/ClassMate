@@ -61,6 +61,7 @@ public class AuthenticationControllers {
 
     @PostMapping("/request-reset-password")
     public ResponseEntity requestResetPasword(@RequestParam("email") String email){
+        System.out.println("email");
         passwordResetService.createResetToken(email);
         return new ResponseEntity(HttpStatus.OK);
     }

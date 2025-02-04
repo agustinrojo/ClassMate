@@ -7,9 +7,23 @@ import { Router } from '@angular/router';
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
 
+  private WHITE_LIST_URL = [
+    "http://localhost:8080/api/auth/register",
+    "http://localhost:8080/api/auth/authenticate",
+    "http://localhost:8080/api/auth/validate",
+    "http://localhost:8080/api/auth/refresh_token",
+    "http://localhost:8080/api/auth/request-reset-password",
+    "http://localhost:8080/api/auth/reset-password"
+    ]
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if(req.url != "http://localhost:8080/api/auth/register" && req.url != "http://localhost:8080/api/auth/authenticate" && req.url != "http://localhost:8080/api/auth/validate" && req.url != "http://localhost:8080/api/auth/refresh_token"){
+    if(req.url != "http://localhost:8080/api/auth/register" &&
+      req.url != "http://localhost:8080/api/auth/authenticate" &&
+      req.url != "http://localhost:8080/api/auth/validate" &&
+      req.url != "http://localhost:8080/api/auth/refresh_token" &&
+      !req.url.includes("http://localhost:8080/api/auth/request-reset-password") &&
+      req.url != "http://localhost:8080/api/auth/reset-password"
+      ){
 
       const modifiedReq = req.clone({
         // headers: req.headers.set("Authorization", `Bearer ${localStorage.getItem("accessToken")}`)
