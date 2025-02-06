@@ -3,6 +3,7 @@ package com.classmate.comment_service.service;
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
+import com.classmate.comment_service.entity.enums.Role;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,6 +53,6 @@ public interface ICommentService {
      * @param id the ID of the comment to delete
      * @param userId the ID of the user performing the deletion
      */
-    void deleteComment(Long id, Long userId);
+    void deleteComment(Long id, Long userId, Role role);
 
 }

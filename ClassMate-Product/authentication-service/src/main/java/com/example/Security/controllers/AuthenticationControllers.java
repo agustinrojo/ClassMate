@@ -30,8 +30,9 @@ public class AuthenticationControllers {
 
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterRespDTO> register(@RequestBody RegisterReq request){
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<RegisterRespDTO> register(@RequestBody RegisterReq request,
+                                                    @RequestParam(defaultValue = "false") boolean isAdmin){
+        return ResponseEntity.ok(authService.register(request, isAdmin));
     }
 
     @GetMapping("/confirm")

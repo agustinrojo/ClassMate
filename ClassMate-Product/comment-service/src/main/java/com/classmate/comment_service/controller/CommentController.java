@@ -3,8 +3,10 @@ package com.classmate.comment_service.controller;
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
+import com.classmate.comment_service.entity.enums.Role;
 import com.classmate.comment_service.service.ICommentService;
 import com.classmate.comment_service.service.ICommentValorationService;
+import com.classmate.comment_service.service.IJWTService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +27,17 @@ public class CommentController {
 
     private final ICommentValorationService valorationService;
 
+    private final IJWTService jwtService;
+
     /**
      * Constructor to inject the comment service dependency.
      *
      * @param commentService the comment service to be injected
      */
-    public CommentController(ICommentService commentService, ICommentValorationService valorationService) {
+    public CommentController(ICommentService commentService, ICommentValorationService valorationService, IJWTService jwtService) {
         this.commentService = commentService;
         this.valorationService = valorationService;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -128,8 +133,11 @@ public class CommentController {
      * @return a response entity with the HTTP status NO_CONTENT
      */
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id, @RequestParam Long userId) {
-        commentService.deleteComment(id, userId);
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id,
+                                              @RequestParam Long userId,
+                                              @RequestHeader("Authorization") String token) {
+        Role role = jwtService.extractRole(token);
+        commentService.deleteComment(id, userId, role);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
