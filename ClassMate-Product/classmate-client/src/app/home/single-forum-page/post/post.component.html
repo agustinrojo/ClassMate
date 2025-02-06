@@ -4,7 +4,7 @@
       <span class="badge rounded-pill text-bg-warning nickname mb-2" (click)="navigateToUserProfile()"><b>p/</b>{{post?.author?.nickname}}</span>
     </div>
     <div class="col-10 d-flex flex-row-reverse">
-      <div class="dropdown" *ngIf="post?.author?.userId === userId || isAdmin">
+      <div class="dropdown" *ngIf="post?.author?.userId === userId || isAdmin || userRole.toString() == 'ADMIN'">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
         </button>

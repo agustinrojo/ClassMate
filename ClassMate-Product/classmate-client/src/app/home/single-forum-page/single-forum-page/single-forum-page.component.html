@@ -7,7 +7,7 @@
           <h1 class="mx-3">{{ forum?.forum?.title }}</h1>
         </div>
         <div class="col-6 d-flex flex-row-reverse">
-          <div class="dropdown " *ngIf="userId === forum?.forum?.creatorId">
+          <div class="dropdown " *ngIf="userId === forum?.forum?.creatorId || userRole.toString() == 'ADMIN'">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu">
               <li><button class="dropdown-item" (click)="deleteForum()">Borrar</button></li>

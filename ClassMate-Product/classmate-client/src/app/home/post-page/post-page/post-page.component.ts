@@ -16,6 +16,7 @@ import { FileDownloadEvent } from '../../interfaces/file-download-event.interfac
 import { FileService } from '../../../services/file.service';
 import { ForumService } from '../../../services/forum.service';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
+import { Role } from '../../../auth/enums/role.enum';
 
 @Component({
   selector: 'app-post-page',
@@ -26,6 +27,7 @@ export class PostPageComponent implements OnInit{
   public post!: PostAPIResponseDTO;
   public bodyForm!: FormGroup;
   public userId! : number;
+  public userRole!: Role;
   public selectedFiles: File[] = [];
   public fileDTOs: FileDTO[] = [];
 
@@ -43,6 +45,7 @@ export class PostPageComponent implements OnInit{
 
   ngOnInit(): void {
     this.userId = this._authService.getUserId();
+    this.userRole = this._authService.getUser().role;
     let postId = this._activatedRoute.snapshot.paramMap.get('id')!;
     this.loadPost(postId);
 

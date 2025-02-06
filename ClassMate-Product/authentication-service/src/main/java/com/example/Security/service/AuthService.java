@@ -289,6 +289,7 @@ public class AuthService {
                 .email(user.getEmail())
                 .legajo(user.getLegajo())
                 .carrera(user.getCarrera())
+                .role(user.getRole())
                 .forumsSubscribed(user.getForumsSubscribed())
                 .forumsCreated(user.getForumsCreated())
                 .forumsAdmin(user.getForumsAdmin())

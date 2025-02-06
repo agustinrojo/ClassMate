@@ -12,6 +12,7 @@ import { FileDownloadEvent } from '../../interfaces/file-download-event.interfac
 import { FileService } from '../../../services/file.service';
 import { Valoration } from '../../interfaces/valoration.interface';
 import { PostService } from '../../../services/post.service';
+import { Role } from '../../../auth/enums/role.enum';
 
 @Component({
   selector: 'app-post',
@@ -20,6 +21,7 @@ import { PostService } from '../../../services/post.service';
 })
 export class PostComponent implements OnInit{
   public userId!: number;
+  public userRole!: Role;
   public isAdmin!: boolean;
   public postValoration!: Valoration;
   @Input() public post!: PostResponseDTO;
@@ -38,6 +40,7 @@ export class PostComponent implements OnInit{
 
 private setPostValoration(): void {
   this.getUserId();
+  this.getUserRole()
   this.postValoration = {
     id: this.post.id,
     valoration: this.post.valoration,
@@ -56,6 +59,10 @@ private setPostValoration(): void {
   public getUserId(){
     this.userId = this._authService.getUserId();
     this.isUserAdmin();
+  }
+
+  private getUserRole(){
+    this.userRole = this._authService.getUser().role;
   }
 
   private isUserAdmin(): void {
