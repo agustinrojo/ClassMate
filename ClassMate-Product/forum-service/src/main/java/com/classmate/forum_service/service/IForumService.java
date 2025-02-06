@@ -3,6 +3,7 @@ package com.classmate.forum_service.service;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.dto.user.UserDTO;
+import com.classmate.forum_service.entity.enums.Role;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public interface IForumService {
      * @param id the ID of the forum to delete
      * @param userId the ID of the user attempting to delete the forum
      */
-    void deleteForum(Long id, Long userId);
+    void deleteForum(Long id, Long userId, Role role);
 
     /**
      * Adds a member to a forum.

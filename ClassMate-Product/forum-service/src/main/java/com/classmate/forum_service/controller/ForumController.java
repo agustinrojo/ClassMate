@@ -2,7 +2,9 @@ package com.classmate.forum_service.controller;
 
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
+import com.classmate.forum_service.entity.enums.Role;
 import com.classmate.forum_service.service.IForumService;
+import com.classmate.forum_service.service.IJWTService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +19,16 @@ import java.util.List;
 public class ForumController {
 
     private final IForumService forumService;
+    private final IJWTService jwtService;
 
     /**
      * Constructs a new ForumController with the specified forum service.
      *
      * @param forumService the forum service
      */
-    public ForumController(IForumService forumService) {
+    public ForumController(IForumService forumService, IJWTService jwtService) {
         this.forumService = forumService;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -129,8 +133,9 @@ public class ForumController {
      * @return a response indicating success or failure
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteForum(@PathVariable Long id, @RequestParam Long userId) {
-        forumService.deleteForum(id, userId);
+    public ResponseEntity<Void> deleteForum(@PathVariable Long id, @RequestParam Long userId, @RequestHeader("Authorization") String token) {
+        Role role = jwtService.extractRole(token);
+        forumService.deleteForum(id, userId, role);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
