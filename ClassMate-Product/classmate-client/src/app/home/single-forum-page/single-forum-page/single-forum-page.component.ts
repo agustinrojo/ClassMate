@@ -3,12 +3,12 @@ import { ForumService } from '../../../services/forum.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ForumApiResponseDTO } from '../../../services/dto/forum/forum-api-response-dto.interface';
 import { PostService } from '../../../services/post.service';
-import { PostRequestDTO } from '../../../services/dto/post/post-request-dto.interface';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { PostResponseDTO } from '../../../services/dto/post/post-response-dto.interface';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
 import { ForumData } from '../../interfaces/forum-data.interface';
 import { MessageService } from '../../../services/message.service';
+import { Role } from '../../../auth/enums/role.enum';
 
 @Component({
   selector: 'app-single-forum-page',
@@ -18,6 +18,7 @@ import { MessageService } from '../../../services/message.service';
 export class SingleForumPageComponent implements OnInit{
   public userId!: number;
   public forum!: ForumApiResponseDTO;
+  public userRole!: Role;
 
   constructor(
               private _forumService: ForumService,
@@ -39,6 +40,7 @@ export class SingleForumPageComponent implements OnInit{
       }
     });
     this.getUserId();
+    this.getUserRole();
   }
 
 
@@ -108,6 +110,9 @@ export class SingleForumPageComponent implements OnInit{
     this.userId = this._authService.getUserId();
   }
 
+  private getUserRole(){
+    this.userRole = this._authService.getUser().role;
+  }
 
 
 

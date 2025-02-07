@@ -10,6 +10,7 @@ import com.classmate.post_service.dto.user.UserDTO;
 import com.classmate.post_service.entity.Attachment;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.entity.User;
+import com.classmate.post_service.entity.enums.Role;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.exception.PostNotFoundException;
 import com.classmate.post_service.exception.UserNotFoundException;
@@ -18,6 +19,7 @@ import com.classmate.post_service.mapper.IUserMapper;
 import com.classmate.post_service.publisher.PostPublisher;
 import com.classmate.post_service.repository.IPostRepository;
 import com.classmate.post_service.repository.IUserRepository;
+import com.classmate.post_service.service.IJWTService;
 import com.classmate.post_service.service.IPostService;
 import com.classmate.post_service.service.IPostValorationService;
 import org.slf4j.Logger;
@@ -50,9 +52,10 @@ public class PostServiceImpl implements IPostService {
     private final PostPublisher postPublisher;
     private final IUserRepository userRepository;
     private final IPostValorationService valorationService;
+    private final IJWTService jwtService;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository, IPostValorationService valorationService) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository, IPostValorationService valorationService, IJWTService jwtService) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
@@ -62,6 +65,7 @@ public class PostServiceImpl implements IPostService {
         this.postPublisher = postPublisher;
         this.userRepository = userRepository;
         this.valorationService = valorationService;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -223,10 +227,11 @@ public class PostServiceImpl implements IPostService {
 
         boolean isValidUser = post.getAuthor().getUserId().equals(userId);
         List<Long> forumAdmins = authClient.getForumsAdmin(userId, authorizationHeader);
+        Role userRole = jwtService.extractRole(authorizationHeader);
 
         System.out.println(forumAdmins);
 
-        if ((!isValidUser && !forumAdmins.contains(post.getForumId()))) {
+        if ((!isValidUser && !forumAdmins.contains(post.getForumId())) && !userRole.equals(Role.ADMIN)) {
             throw new RuntimeException("User not authorized to delete this post");
         }
 

@@ -6,6 +6,7 @@ import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.dto.user.BanUserDeleteMemberEventDTO;
 import com.classmate.forum_service.dto.user.UserDTO;
 import com.classmate.forum_service.entity.Forum;
+import com.classmate.forum_service.entity.enums.Role;
 import com.classmate.forum_service.exception.ForumNotFoundException;
 import com.classmate.forum_service.exception.InvalidForumException;
 import com.classmate.forum_service.exception.UnauthorizedActionException;
@@ -186,11 +187,11 @@ public class ForumServiceImpl implements IForumService {
      * {@inheritDoc}
      */
     @Override
-    public void deleteForum(Long id, Long userId) {
+    public void deleteForum(Long id, Long userId, Role role) {
         LOGGER.info("Deleting forum by id...");
         Forum forum = forumRepository.findById(id)
                 .orElseThrow(() -> new ForumNotFoundException("Forum not found with id: " + id));
-        if (!forum.getCreatorId().equals(userId)) {
+        if (!forum.getCreatorId().equals(userId) && !role.equals(Role.ADMIN)) {
             throw new UnauthorizedActionException("User not authorized to delete this forum");
         }
 

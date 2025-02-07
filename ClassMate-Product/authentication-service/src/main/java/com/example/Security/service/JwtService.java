@@ -111,6 +111,7 @@ public class JwtService {
     private String  generateToken(@NotNull User user, long expirationTime){
         HashMap<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("id", user.getId());
+        extraClaims.put("role", user.getRole());
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

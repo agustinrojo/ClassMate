@@ -12,6 +12,7 @@ import com.classmate.comment_service.dto.user.UserDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
 import com.classmate.comment_service.entity.User;
+import com.classmate.comment_service.entity.enums.Role;
 import com.classmate.comment_service.exception.CommentNotFoundException;
 import com.classmate.comment_service.exception.InvalidCommentException;
 import com.classmate.comment_service.exception.UnauthorizedActionException;
@@ -171,11 +172,12 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     @Transactional
-    public void deleteComment(Long id, Long userId) {
+    public void deleteComment(Long id, Long userId, Role role) {
         LOGGER.info("Deleting comment...");
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
-        if (!comment.getAuthor().getUserId().equals(userId)) {
+        LOGGER.info(String.format("ROLE %s", role.toString()));
+        if (!comment.getAuthor().getUserId().equals(userId) && role != Role.ADMIN){
             throw new UnauthorizedActionException("User not authorized to delete this comment");
         }
 

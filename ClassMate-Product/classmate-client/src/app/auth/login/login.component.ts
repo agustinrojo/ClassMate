@@ -43,6 +43,7 @@ constructor(private _fb: FormBuilder, private _authService: AuthServiceService, 
   private login(req:LoginRequest){
     this._authService.authenticate(req)
       .subscribe((resp: LoginResponse) => {
+        console.log(resp);
         this.loginSuccess(resp);
       },
       (err) => {

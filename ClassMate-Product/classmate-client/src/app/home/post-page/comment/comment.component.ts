@@ -9,6 +9,7 @@ import { Valoration } from '../../interfaces/valoration.interface';
 import { FileDownloadEvent } from '../../interfaces/file-download-event.interface';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../auth/auth-service.service';
+import { Role } from '../../../auth/enums/role.enum';
 
 @Component({
   selector: 'app-comment',
@@ -19,6 +20,7 @@ export class CommentComponent implements OnInit{
 
   public userId! : number;
   public isAdmin!: boolean;
+  public userRole!: Role;
   public editing: boolean = false;
   public disableBtn: boolean = false;
   public showErr : boolean = false;
@@ -35,9 +37,8 @@ export class CommentComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-
     this.getUserId();
-
+    this.getUserRole();
     this.commentValoration = {
       id: this.comment.id,
       valoration: this.comment.valoration,
@@ -71,8 +72,10 @@ export class CommentComponent implements OnInit{
     this.isUserAdmin();
     console.log("User is admin? ", this.isAdmin);
     console.log(this.comment.forumId);
+  }
 
-
+  private getUserRole(){
+    this.userRole = this._authService.getUser().role;
   }
 
   private isUserAdmin(): void {

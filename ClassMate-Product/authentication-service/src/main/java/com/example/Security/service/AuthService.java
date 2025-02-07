@@ -68,7 +68,7 @@ public class AuthService {
 
     }
 
-    public RegisterRespDTO register(RegisterReq req){
+    public RegisterRespDTO register(RegisterReq req, boolean isAdmin){
         //check email
         boolean isValidEmail = emailValidator.test(req.getEmail());
         if(!isValidEmail){
@@ -77,10 +77,16 @@ public class AuthService {
         System.out.println(req);
         User user = this.mapToUser(req);
 
+        if(isAdmin){
+            user.setRole(Role.ADMIN);
+            user.setEnabled(true);
+            signUpUser(user);
+        }else {
+            String token = signUpUser(user);
+            String link = "http://localhost:8080/api/auth/confirm?token=" + token;
+            emailSender.sendConfirmationEmail(req.getEmail(), buildConfirmationEmail(link, "UTN Classmate", user.getFirstName()));
+        }
 
-        String token = signUpUser(user);
-        String link = "http://localhost:8080/api/auth/confirm?token=" + token;
-        emailSender.sendConfirmationEmail(req.getEmail(), buildConfirmationEmail(link, "UTN Classmate", user.getFirstName()));
         return RegisterRespDTO.builder()
                 .success(true)
                 .build();
@@ -283,6 +289,7 @@ public class AuthService {
                 .email(user.getEmail())
                 .legajo(user.getLegajo())
                 .carrera(user.getCarrera())
+                .role(user.getRole())
                 .forumsSubscribed(user.getForumsSubscribed())
                 .forumsCreated(user.getForumsCreated())
                 .forumsAdmin(user.getForumsAdmin())
