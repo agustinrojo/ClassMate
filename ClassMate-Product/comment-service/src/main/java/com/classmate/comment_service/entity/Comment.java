@@ -76,6 +76,9 @@ public class Comment {
     @ElementCollection
     private List<Long> downvotesByUserId = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "delete_request_id")
+    private List<DeleteRequest> deleteRequests = new ArrayList<>();
 
     public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
@@ -111,5 +114,9 @@ public class Comment {
 
     public int getValoration() {
         return (this.upvotesByUserId.size() - this.downvotesByUserId.size());
+    }
+
+    public void addDeleteRequest(DeleteRequest deleteRequest){
+        deleteRequests.add(deleteRequest);
     }
 }

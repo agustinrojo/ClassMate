@@ -1,10 +1,9 @@
 package com.classmate.comment_service.dto;
 
+import com.classmate.comment_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.comment_service.dto.filedtos.FileDTO;
 import com.classmate.comment_service.dto.user.UserDTO;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,4 +50,6 @@ public class CommentDTOResponse {
     private boolean dislikedByUser;
 
     private int valoration;
+
+    private boolean isReportedByUser;
 }

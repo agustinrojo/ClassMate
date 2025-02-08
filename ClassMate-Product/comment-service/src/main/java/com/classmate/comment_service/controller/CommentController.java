@@ -3,6 +3,7 @@ package com.classmate.comment_service.controller;
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
+import com.classmate.comment_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.comment_service.entity.enums.Role;
 import com.classmate.comment_service.service.ICommentService;
 import com.classmate.comment_service.service.ICommentValorationService;
@@ -74,6 +75,13 @@ public class CommentController {
                                            @RequestParam("userId") Long userId){
         valorationService.removeVoteFromComment(commentId, userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/report/{commentId}")
+    public ResponseEntity<Void> report(@PathVariable("commentId") Long commentId,
+                                       @RequestBody DeleteRequestDTO deleteRequestDTO){
+        commentService.reportComment(deleteRequestDTO, commentId);
+        return ResponseEntity.noContent().build();
     }
 
     /**

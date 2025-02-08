@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 /**
  * Mapper interface for converting between Comment and CommentDTO objects.
  */
-@Mapper(componentModel = "spring", uses = AttachmentMapper.class)
+@Mapper(componentModel = "spring", uses = {AttachmentMapper.class, DeleteRequestMapper.class})
 public interface CommentMapper {
 
 //    /**

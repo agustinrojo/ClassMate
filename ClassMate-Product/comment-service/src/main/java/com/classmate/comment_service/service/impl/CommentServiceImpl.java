@@ -6,17 +6,20 @@ import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.dto.CommentDeletionDTO;
+import com.classmate.comment_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
 import com.classmate.comment_service.dto.user.UserDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
+import com.classmate.comment_service.entity.DeleteRequest;
 import com.classmate.comment_service.entity.User;
 import com.classmate.comment_service.entity.enums.Role;
 import com.classmate.comment_service.exception.CommentNotFoundException;
 import com.classmate.comment_service.exception.InvalidCommentException;
 import com.classmate.comment_service.exception.UnauthorizedActionException;
 import com.classmate.comment_service.mapper.CommentMapper;
+import com.classmate.comment_service.mapper.DeleteRequestMapper;
 import com.classmate.comment_service.publisher.CommentPublisher;
 import com.classmate.comment_service.repository.ICommentRepository;
 import com.classmate.comment_service.mapper.IUserMapper;
@@ -43,6 +46,7 @@ public class CommentServiceImpl implements ICommentService {
     private final ICommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final IUserMapper userMapper;
+    private final DeleteRequestMapper deleteRequestMapper;
     private final FileServiceClient fileServiceClient;
     private final IPostClient postClient;
     private final CommentPublisher commentPublisher;
@@ -50,10 +54,11 @@ public class CommentServiceImpl implements ICommentService {
     private final ICommentValorationService valorationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, DeleteRequestMapper deleteRequestMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
+        this.deleteRequestMapper = deleteRequestMapper;
         this.fileServiceClient = fileServiceClient;
         this.postClient = postClient;
         this.commentPublisher = commentPublisher;
@@ -194,6 +199,17 @@ public class CommentServiceImpl implements ICommentService {
         commentRepository.delete(comment);
     }
 
+    @Override
+    @Transactional
+    public void reportComment(DeleteRequestDTO deleteRequest, Long commentId) {
+        Comment reportedComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(String.format("Comment with id %d not found.", commentId)));
+
+        DeleteRequest newDeleteRequest = deleteRequestMapper.mapToEntity(deleteRequest);
+
+        reportedComment.addDeleteRequest(newDeleteRequest);
+        commentRepository.save(reportedComment);
+    }
 
 
     public void addAttachments(Comment comment, List<MultipartFile> filesToAdd) {
@@ -292,6 +308,8 @@ public class CommentServiceImpl implements ICommentService {
         commentResponseDTO.setValoration(comment.getValoration());
 
         commentResponseDTO.setForumId(comment.getForumId());
+        commentResponseDTO.setReportedByUser(comment.getDeleteRequests().stream()
+                                                        .anyMatch((DeleteRequest del) -> del.getReporterId().equals(userId)));
         return commentResponseDTO;
     }
 
