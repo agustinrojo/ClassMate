@@ -10,6 +10,9 @@ import { FileDownloadEvent } from '../../interfaces/file-download-event.interfac
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { Role } from '../../../auth/enums/role.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportCommentDialogComponent } from '../report-comment-dialog/report-comment-dialog.component';
+import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
 
 @Component({
   selector: 'app-comment',
@@ -33,7 +36,8 @@ export class CommentComponent implements OnInit{
     private _commentService: CommentService,
     private _fileService: FileService,
     private _router: Router,
-    private _authService: AuthServiceService
+    private _authService: AuthServiceService,
+    private _dialog: MatDialog
   ){}
 
   ngOnInit(): void {
@@ -64,6 +68,28 @@ export class CommentComponent implements OnInit{
 
   public toggleEditing(){
     this.editing = true;
+  }
+
+  public openReportDialog(){
+    const dialogRef = this._dialog.open(ReportCommentDialogComponent, {
+      width: '250px',
+      height: '300px'
+    })
+
+    dialogRef.afterClosed().subscribe((message: string) => {
+      const deleteRequst: DeleteRequestDTO = {
+        reporterId: this.userId,
+        message: message
+      }
+
+      this._commentService.reportComment(this.comment.id, deleteRequst).subscribe(() => {
+        this.comment.reportedByUser = true;
+        console.log("report success")
+      },
+      (err) => {
+        console.log(err);
+      })
+    })
   }
 
   private getUserId(){

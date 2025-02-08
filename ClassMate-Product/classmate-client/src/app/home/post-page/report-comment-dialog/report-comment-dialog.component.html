@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Reportar comentario</h1>
+<div mat-dialog-content>
+  <mat-form-field >
+    <textarea matInput [(ngModel)]="message" maxlength="50">
+    </textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close()">Cancelar</button>
+  <button mat-button color="warn" (click)="report()">Reportar</button>
+</div>

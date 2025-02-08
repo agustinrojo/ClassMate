@@ -54,4 +54,6 @@ public class CommentDTO {
     private boolean likedByUser;
 
     private boolean dislikedByUser;
+
+    private boolean isReportedByUser;
 }

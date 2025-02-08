@@ -152,6 +152,10 @@ body {
   color: #f8f9fa; /* Color de texto claro */
 }
 
+.dropdown-item:disabled {
+  cursor: no-drop;
+}
+
 .dropdown-item:hover {
   background-color: #495057; /* Fondo al hacer hover */
   color: #ffffff; /* Color de texto al hacer hover */

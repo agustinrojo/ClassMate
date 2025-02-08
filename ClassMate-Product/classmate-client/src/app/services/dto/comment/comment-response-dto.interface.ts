@@ -13,4 +13,5 @@ export interface CommentDTOResponse{
   valoration: number;
   likedByUser: boolean;
   dislikedByUser: boolean;
+  reportedByUser: boolean;
 }
