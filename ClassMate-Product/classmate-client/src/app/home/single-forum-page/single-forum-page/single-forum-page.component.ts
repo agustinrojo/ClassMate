@@ -9,6 +9,9 @@ import { ForumStateService } from '../../../services/dto/state-services/forum-st
 import { ForumData } from '../../interfaces/forum-data.interface';
 import { MessageService } from '../../../services/message.service';
 import { Role } from '../../../auth/enums/role.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
+import { ReportCommentDialogComponent } from '../../../shared/report-comment-dialog/report-comment-dialog.component';
 
 @Component({
   selector: 'app-single-forum-page',
@@ -16,6 +19,7 @@ import { Role } from '../../../auth/enums/role.enum';
   styleUrl: './single-forum-page.component.css'
 })
 export class SingleForumPageComponent implements OnInit{
+
   public userId!: number;
   public forum!: ForumApiResponseDTO;
   public userRole!: Role;
@@ -27,7 +31,8 @@ export class SingleForumPageComponent implements OnInit{
               private _forumStateService: ForumStateService,
               private _router: Router,
               private _activatedRoute:ActivatedRoute,
-              private _messageService: MessageService
+              private _messageService: MessageService,
+              private _dialog: MatDialog
             ){}
 
 
@@ -106,6 +111,26 @@ export class SingleForumPageComponent implements OnInit{
     this._router.navigate(["forums"])
   }
 
+      public openReportDialog() {
+        const dialogRef = this._dialog.open(ReportCommentDialogComponent, {
+          width: '250px',
+          height: '300px'
+        });
+
+        dialogRef.afterClosed().subscribe((message: string) => {
+          const deleteRequest: DeleteRequestDTO = {
+            message: message,
+            reporterId: this.userId
+          }
+          this._forumService.reportForum(this.forum.forum.id, deleteRequest).subscribe(() => {
+            this.forum.reportedByUser = true;
+            console.log("report success")
+          },
+          (err) => {
+            console.log(err);
+          })
+        })
+      }
 
 
   private getUserId(){

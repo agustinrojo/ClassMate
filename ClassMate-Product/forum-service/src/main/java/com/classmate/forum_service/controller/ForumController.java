@@ -2,6 +2,7 @@ package com.classmate.forum_service.controller;
 
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
+import com.classmate.forum_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.forum_service.entity.enums.Role;
 import com.classmate.forum_service.service.IForumService;
 import com.classmate.forum_service.service.IJWTService;
@@ -204,6 +205,13 @@ public class ForumController {
                                         @RequestParam Long bannerId,
                                         @RequestParam Long bannedId) {
         forumService.banUser(forumId, bannerId, bannedId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/report/{forumId}")
+    public ResponseEntity<Void> reportForum(@PathVariable("forumId") Long forumId,
+                                            @RequestBody DeleteRequestDTO deleteRequest){
+        forumService.reportForum(forumId, deleteRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

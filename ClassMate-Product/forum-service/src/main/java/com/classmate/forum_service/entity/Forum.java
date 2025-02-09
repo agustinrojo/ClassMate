@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,6 +84,11 @@ public class Forum {
      * @param memberId the ID of the member to check
      * @return true if the user is already a member, false otherwise
      */
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "delete_request_id")
+    private List<DeleteRequest> deleteRequests = new ArrayList<>();
+
     public boolean isAlreadyMember(Long memberId) {
         return memberIds.contains(memberId);
     }
@@ -143,5 +149,9 @@ public class Forum {
             throw new IllegalArgumentException(String.format("User %d is not an admin of forum %d.", adminId, id));
         }
         this.adminIds.remove(adminId);
+    }
+
+    public void addDeleteRequest(DeleteRequest deleteRequest){
+        deleteRequests.add(deleteRequest);
     }
 }

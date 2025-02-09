@@ -30,4 +30,6 @@ public class APIResponseDTO {
 
     private boolean isAdmin;
 
+    private boolean isReportedByUser;
+
 }
