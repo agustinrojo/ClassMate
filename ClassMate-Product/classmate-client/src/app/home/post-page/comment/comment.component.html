@@ -6,9 +6,9 @@
     <div class="dropdown col-2 d-flex flex-row-reverse" *ngIf="comment?.author?.userId === userId || isAdmin || userRole.toString() == 'ADMIN'">
       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
       <ul class="dropdown-menu">
-        <li><button class="dropdown-item" *ngIf="comment.author.userId == userId || isAdmin" (click)="deleteComment()">Borrar</button></li>
+        <li><button class="dropdown-item" *ngIf="comment.author.userId == userId || isAdmin || userRole.toString() == 'ADMIN'" (click)="deleteComment()">Borrar</button></li>
         <li><button *ngIf="comment.author.userId == userId" class="dropdown-item" (click)="toggleEditing()" [disabled]="comment.hasBeenEdited">Editar</button></li>
-        <li><button *ngIf="!comment.reportedByUser && !(comment.author.userId == userId)" class="dropdown-item" (click)="openReportDialog()" [disabled]="comment.reportedByUser">Reportar</button></li>
+        <li><button *ngIf="!comment.reportedByUser && !(comment.author.userId == userId)" class="dropdown-item" (click)="openReportDialog()">Reportar</button></li>
       </ul>
     </div>
   </div>

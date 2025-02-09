@@ -8,6 +8,7 @@ import { PostUpdateDTO } from './dto/post/post-update-dto.interface';
 import { IsPostAuthor } from './dto/post/is-post-author-dto.interface';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { PostResponseDTO } from './dto/post/post-response-dto.interface';
+import { DeleteRequestDTO } from './dto/delete-request/delete-request.dto';
 
 @Injectable({providedIn: 'root'})
 export class PostService {
@@ -70,6 +71,10 @@ export class PostService {
     const headers = new HttpHeaders();
     headers.append('Content-Type', 'multipart/form-data');
     return this.http.put<void>(`${this.baseUrl}/${postId}`, updateFormData, { headers });
+  }
+
+  public reportPost(postId: number, deleteRequest: DeleteRequestDTO): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/report/${postId}`, deleteRequest)
   }
 
   public mapRequestToFormData(req: PostRequestDTO): FormData {

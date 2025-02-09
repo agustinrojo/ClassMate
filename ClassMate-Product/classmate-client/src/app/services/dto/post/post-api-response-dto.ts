@@ -14,4 +14,5 @@ export interface PostAPIResponseDTO {
   commentDTOS: CommentDTOResponse[];
   files: FileDTO[];
   commentCount: number;
+  reportedByUser: boolean;
 }

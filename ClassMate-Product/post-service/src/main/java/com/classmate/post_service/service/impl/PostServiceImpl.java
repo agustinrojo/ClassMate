@@ -4,16 +4,19 @@ import com.classmate.post_service.client.IAuthClient;
 import com.classmate.post_service.client.ICommentClient;
 import com.classmate.post_service.client.IFileServiceClient;
 import com.classmate.post_service.dto.*;
+import com.classmate.post_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
 import com.classmate.post_service.dto.user.UserDTO;
 import com.classmate.post_service.entity.Attachment;
+import com.classmate.post_service.entity.DeleteRequest;
 import com.classmate.post_service.entity.Post;
 import com.classmate.post_service.entity.User;
 import com.classmate.post_service.entity.enums.Role;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.exception.PostNotFoundException;
 import com.classmate.post_service.exception.UserNotFoundException;
+import com.classmate.post_service.mapper.DeleteRequestMapper;
 import com.classmate.post_service.mapper.IPostMapper;
 import com.classmate.post_service.mapper.IUserMapper;
 import com.classmate.post_service.publisher.PostPublisher;
@@ -22,6 +25,7 @@ import com.classmate.post_service.repository.IUserRepository;
 import com.classmate.post_service.service.IJWTService;
 import com.classmate.post_service.service.IPostService;
 import com.classmate.post_service.service.IPostValorationService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -53,9 +57,10 @@ public class PostServiceImpl implements IPostService {
     private final IUserRepository userRepository;
     private final IPostValorationService valorationService;
     private final IJWTService jwtService;
+    private final DeleteRequestMapper deleteRequestMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository, IPostValorationService valorationService, IJWTService jwtService) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository, IPostValorationService valorationService, IJWTService jwtService, DeleteRequestMapper deleteRequestMapper) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
@@ -66,6 +71,7 @@ public class PostServiceImpl implements IPostService {
         this.userRepository = userRepository;
         this.valorationService = valorationService;
         this.jwtService = jwtService;
+        this.deleteRequestMapper = deleteRequestMapper;
     }
 
     /**
@@ -87,6 +93,9 @@ public class PostServiceImpl implements IPostService {
         apiResponseDTO.setHasBeenEdited(post.getHasBeenEdited());
         List<CommentDTO> commentDTOS = commentClient.getCommentsByPostId(id, userId, 0, 10);
         apiResponseDTO.setCommentDTOS(commentDTOS);
+        apiResponseDTO.setReportedByUser(post.getDeleteRequests()
+                                                .stream()
+                                                .anyMatch((DeleteRequest deleteRequest) -> deleteRequest.getReporterId().equals(userId)));
         return apiResponseDTO;
     }
 
@@ -149,6 +158,16 @@ public class PostServiceImpl implements IPostService {
         return postRepository.findByForumIdInOrderByCreationDateDesc(forumIds, pageRequest)
                 .map(post -> getPostResponseDTO(post, userId))
                 .getContent();
+    }
+
+    @Override
+    @Transactional
+    public void reportPost(Long postId, DeleteRequestDTO deleteRequestDTO) {
+        Post reportedPost = postRepository.findById(postId)
+                                .orElseThrow(() -> new PostNotFoundException(String.format("Post with id: %d not found.", postId)));
+        DeleteRequest deleteRequest = deleteRequestMapper.mapToEntity(deleteRequestDTO);
+        reportedPost.addDeleteRequest(deleteRequest);
+        postRepository.save(reportedPost);
     }
 
     /**
@@ -368,6 +387,9 @@ public class PostServiceImpl implements IPostService {
         postResponseDTO.setLikedByUser(post.getUpvotesByUserId().contains(userId));
         postResponseDTO.setDislikedByUser(post.getDownvotesByUserId().contains(userId));
         postResponseDTO.setValoration(post.getValoration());
+        postResponseDTO.setReportedByUser(post.getDeleteRequests()
+                                                .stream()
+                                                .anyMatch((DeleteRequest deleteRequest) -> deleteRequest.getReporterId().equals(userId)));
         return postResponseDTO;
     }
 }

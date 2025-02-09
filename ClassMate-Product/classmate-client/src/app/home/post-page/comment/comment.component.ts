@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../auth/auth-service.service';
 import { Role } from '../../../auth/enums/role.enum';
 import { MatDialog } from '@angular/material/dialog';
-import { ReportCommentDialogComponent } from '../report-comment-dialog/report-comment-dialog.component';
 import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
+import { ReportCommentDialogComponent } from '../../../shared/report-comment-dialog/report-comment-dialog.component';
 
 @Component({
   selector: 'app-comment',

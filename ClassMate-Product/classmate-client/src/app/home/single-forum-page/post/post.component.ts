@@ -13,6 +13,9 @@ import { FileService } from '../../../services/file.service';
 import { Valoration } from '../../interfaces/valoration.interface';
 import { PostService } from '../../../services/post.service';
 import { Role } from '../../../auth/enums/role.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportCommentDialogComponent } from '../../../shared/report-comment-dialog/report-comment-dialog.component';
+import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
 
 @Component({
   selector: 'app-post',
@@ -30,7 +33,8 @@ export class PostComponent implements OnInit{
   constructor(private _authService: AuthServiceService,
               private _fileService: FileService,
               private _router: Router,
-              private _postService: PostService
+              private _postService: PostService,
+              private _dialog: MatDialog
             ) {}
 
   ngOnInit(): void {
@@ -137,6 +141,27 @@ private setPostValoration(): void {
       this.executeDownvote();
     }
   }
+
+    public openReportDialog() {
+      const dialogRef = this._dialog.open(ReportCommentDialogComponent, {
+        width: '250px',
+        height: '300px'
+      });
+
+      dialogRef.afterClosed().subscribe((message: string) => {
+        const deleteRequest: DeleteRequestDTO = {
+          message: message,
+          reporterId: this.userId
+        }
+        this._postService.reportPost(this.post.id, deleteRequest).subscribe(() => {
+          this.post.reportedByUser = true;
+          console.log("report success")
+        },
+        (err) => {
+          console.log(err);
+        })
+      })
+    }
 
   private executeUpvote() {
     this._postService.upvotePost(this.post.id).subscribe(() => {

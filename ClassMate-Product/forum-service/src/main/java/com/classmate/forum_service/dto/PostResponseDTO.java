@@ -59,4 +59,6 @@ public class PostResponseDTO {
     private boolean dislikedByUser;
 
     private Long commentCount;
+
+    private boolean isReportedByUser;
 }

@@ -17,6 +17,9 @@ import { FileService } from '../../../services/file.service';
 import { ForumService } from '../../../services/forum.service';
 import { ForumStateService } from '../../../services/dto/state-services/forum-state.service';
 import { Role } from '../../../auth/enums/role.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportCommentDialogComponent } from '../../../shared/report-comment-dialog/report-comment-dialog.component';
+import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
 
 @Component({
   selector: 'app-post-page',
@@ -24,6 +27,7 @@ import { Role } from '../../../auth/enums/role.enum';
   styleUrl: './post-page.component.css'
 })
 export class PostPageComponent implements OnInit{
+
   public post!: PostAPIResponseDTO;
   public bodyForm!: FormGroup;
   public userId! : number;
@@ -40,7 +44,8 @@ export class PostPageComponent implements OnInit{
                private _router: Router,
                private _fb: FormBuilder,
                private _forumService: ForumService,
-               private _forumStateService: ForumStateService
+               private _forumStateService: ForumStateService,
+               private _dialog: MatDialog
                ){ }
 
   ngOnInit(): void {
@@ -188,6 +193,27 @@ export class PostPageComponent implements OnInit{
 
   public navigateToUserProfile(){
     this._router.navigate([`/profile/${this.post.author.userId}`])
+  }
+
+  public openReportDialog() {
+    const dialogRef = this._dialog.open(ReportCommentDialogComponent, {
+      width: '250px',
+      height: '300px'
+    });
+
+    dialogRef.afterClosed().subscribe((message: string) => {
+      const deleteRequest: DeleteRequestDTO = {
+        message: message,
+        reporterId: this.userId
+      }
+      this._postService.reportPost(this.post.id, deleteRequest).subscribe(() => {
+        this.post.reportedByUser = true;
+        console.log("report success")
+      },
+      (err) => {
+        console.log(err);
+      })
+    })
   }
 
   public mapFileToFIleDTO(file: File){
