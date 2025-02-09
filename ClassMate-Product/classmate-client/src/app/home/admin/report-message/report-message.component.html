@@ -1,0 +1,6 @@
+<div class="report-section">
+  <h5>Reportes:</h5>
+    <div class="report-message" *ngFor="let deleteRequest of deleteRequests">
+      <strong class="mr-2"><span class="badge rounded-pill text-bg-warning nickname"><b>p/</b>{{deleteRequest.reporterNickname}}</span></strong> {{deleteRequest.message}}
+    </div>
+</div>

@@ -2,6 +2,7 @@ package com.classmate.comment_service.controller;
 
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
+import com.classmate.comment_service.dto.CommentDeleteRequestDTO;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.comment_service.entity.enums.Role;
@@ -117,6 +118,13 @@ public class CommentController {
                                                                        @RequestParam(defaultValue = "10") int size) {
         List<CommentDTOResponse> comments = commentService.getCommentsByPostId(postId, userId, page, size);
         return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
+    @GetMapping("/reported")
+    public ResponseEntity<List<CommentDeleteRequestDTO>> getReportedComments(@RequestParam(defaultValue = "0") int page,
+                                                                             @RequestParam(defaultValue = "10") int size) {
+        List<CommentDeleteRequestDTO> reportedComments = commentService.getReportedComments(page, size);
+        return new ResponseEntity<>(reportedComments, HttpStatus.OK);
     }
 
     /**

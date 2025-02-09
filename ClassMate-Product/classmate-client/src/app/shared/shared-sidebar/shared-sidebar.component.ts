@@ -6,6 +6,7 @@ import { ForumService } from '../../services/forum.service';
 import { ForumApiResponseDTO } from '../../services/dto/forum/forum-api-response-dto.interface';
 import { ForumStateService } from '../../services/dto/state-services/forum-state.service';
 import { ForumData } from '../../home/interfaces/forum-data.interface';
+import { Role } from '../../auth/enums/role.enum';
 
 @Component({
   selector: 'app-shared-sidebar',
@@ -14,6 +15,7 @@ import { ForumData } from '../../home/interfaces/forum-data.interface';
 })
 export class SharedSidebarComponent implements OnInit {
   public forums: ForumDataSidebar[] = [];
+  public userRole!: string;
   public sections: { [key: string]: boolean } = {
     forums: true,
   };
@@ -29,6 +31,11 @@ export class SharedSidebarComponent implements OnInit {
     this.loadSubscribedForums();
     this.listenForumCreationEvent();
     this.listenForumRemovalEvent();
+    this.getUserRole();
+  }
+
+  public navigateToReports() {
+    this._router.navigate(["admin/reports"]);
   }
 
   private listenForumCreationEvent(): void {
@@ -94,5 +101,9 @@ export class SharedSidebarComponent implements OnInit {
 
   private sortForums(): void {
     this.forums.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  private getUserRole(): void {
+    this.userRole = this._authService.getUser().role.toString();
   }
 }

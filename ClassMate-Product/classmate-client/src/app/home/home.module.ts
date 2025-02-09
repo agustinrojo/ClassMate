@@ -17,15 +17,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { ForumSearchResultComponent } from './search/forum-search-result/forum-search-result.component';
 import { PostSearchResultComponent } from './search/post-search-result/post-search-result.component';
-import { ChatContainerComponent } from './chat/chat-container/chat-container.component';
-import { ChatMessageComponent } from './chat/chat-message/chat-message.component';
-import { ChatUserComponent } from './chat/chat-user/chat-user.component';
 import { ChatModule } from './chat/chat.module';
 import { ForumListComponent } from './profile-page/forum-list/forum-list.component';
 import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
 import { ProfileCardComponent } from './profile-card/profile-card.component';
 import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
-import { ReportCommentDialogComponent } from '../shared/report-comment-dialog/report-comment-dialog.component';
+import { AdminModule } from './admin/admin.module';
 
 
 
@@ -51,7 +48,8 @@ import { ReportCommentDialogComponent } from '../shared/report-comment-dialog/re
     ReactiveFormsModule,
     SharedModule,
     ChatModule,
-    FormsModule
+    FormsModule,
+    AdminModule
   ],
   exports: [
     HomeComponent

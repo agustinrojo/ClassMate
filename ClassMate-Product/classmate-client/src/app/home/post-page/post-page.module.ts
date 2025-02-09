@@ -30,6 +30,9 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
     SharedModule
   ],
+  exports: [
+    CommentComponent
+  ],
   providers: [
     PostService
   ]

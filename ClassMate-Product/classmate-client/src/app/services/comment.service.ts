@@ -6,6 +6,7 @@ import { CommentDTOResponse } from './dto/comment/comment-response-dto.interface
 import { CommentUpdateDTO } from './dto/comment/comment-update-dto.interface';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { DeleteRequestDTO } from './dto/delete-request/delete-request.dto';
+import { CommentDeleteRequestDTO } from './dto/comment/comment-delete-request-dto.interface';
 
 
 @Injectable({providedIn: 'root'})
@@ -57,6 +58,10 @@ export class CommentService {
 
   public reportComment(commentId: number, deleteRequest: DeleteRequestDTO): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/report/${commentId}`, deleteRequest);
+  }
+
+  public getReportedComments(): Observable<CommentDeleteRequestDTO[]>{
+    return this.http.get<CommentDeleteRequestDTO[]>(`${this.baseUrl}/reported`);
   }
 
   public mapRequestToFormData(req: CommentDTORequest): FormData {

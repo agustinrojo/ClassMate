@@ -21,6 +21,8 @@ import { CalendarComponent } from './calendar/calendar/calendar.component';
 import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
 import { CanActivateNotificationPreferences, CanMatchNotificationPreferences } from '../auth/guards/notification-preferences.guard';
 import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
+import { ReportsComponent } from './admin/reports/reports.component';
+import { CanActivateAdminGuard, CanMatchAdminGuard } from '../auth/guards/admin.guard';
 
 
 export const routes: Routes = [
@@ -104,6 +106,12 @@ export const routes: Routes = [
       {
         path: "calendar",
         component: CalendarComponent
+      },
+      {
+        path: "admin/reports",
+        component: ReportsComponent,
+        canMatch: [CanMatchAdminGuard],
+        canActivate: [CanActivateAdminGuard]
       }
     ]
   }
