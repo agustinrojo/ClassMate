@@ -35,13 +35,9 @@ export function checkProfileSet( userId: string ): Observable<boolean>{
   return userProfileService.getUserProfile(userId).pipe(
     map((resp: UserProfileResponseDTO) => {
       if(resp){
-        console.log("primer if")
-        console.log(resp)
         router.navigate(["home/main"]);
         return false;
       } else {
-        console.log("segundo if")
-        console.log(resp)
         return true;
       }
     }),

@@ -61,6 +61,32 @@
   }
 }
 
+.sidebar-bottom {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+}
+
+/* Estilo del botón de reportes */
+.sidebar-report-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #2c2c2c;
+  color: #f5f5f5;
+  border: none;
+  border-radius: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.sidebar-report-button:hover {
+  background-color: #444;
+  transform: scale(1.05);
+}
+
 @media (max-width: 576px) {
   .shared-sidebar-container {
     width: 80px; /* Ancho mínimo para pantallas móviles */

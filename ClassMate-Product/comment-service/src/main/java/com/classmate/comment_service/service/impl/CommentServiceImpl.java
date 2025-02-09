@@ -2,11 +2,9 @@ package com.classmate.comment_service.service.impl;
 
 import com.classmate.comment_service.client.FileServiceClient;
 import com.classmate.comment_service.client.IPostClient;
-import com.classmate.comment_service.dto.CommentDTORequest;
-import com.classmate.comment_service.dto.CommentDTOResponse;
-import com.classmate.comment_service.dto.CommentUpdateDTO;
-import com.classmate.comment_service.dto.CommentDeletionDTO;
+import com.classmate.comment_service.dto.*;
 import com.classmate.comment_service.dto.delete_request.DeleteRequestDTO;
+import com.classmate.comment_service.dto.delete_request.DeleteRequestDTOResponse;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
 import com.classmate.comment_service.dto.user.UserDTO;
@@ -18,6 +16,7 @@ import com.classmate.comment_service.entity.enums.Role;
 import com.classmate.comment_service.exception.CommentNotFoundException;
 import com.classmate.comment_service.exception.InvalidCommentException;
 import com.classmate.comment_service.exception.UnauthorizedActionException;
+import com.classmate.comment_service.mapper.AttachmentMapper;
 import com.classmate.comment_service.mapper.CommentMapper;
 import com.classmate.comment_service.mapper.DeleteRequestMapper;
 import com.classmate.comment_service.publisher.CommentPublisher;
@@ -47,6 +46,7 @@ public class CommentServiceImpl implements ICommentService {
     private final CommentMapper commentMapper;
     private final IUserMapper userMapper;
     private final DeleteRequestMapper deleteRequestMapper;
+    private final AttachmentMapper attachmentMapper;
     private final FileServiceClient fileServiceClient;
     private final IPostClient postClient;
     private final CommentPublisher commentPublisher;
@@ -54,11 +54,12 @@ public class CommentServiceImpl implements ICommentService {
     private final ICommentValorationService valorationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, DeleteRequestMapper deleteRequestMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, DeleteRequestMapper deleteRequestMapper, AttachmentMapper attachmentMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
         this.deleteRequestMapper = deleteRequestMapper;
+        this.attachmentMapper = attachmentMapper;
         this.fileServiceClient = fileServiceClient;
         this.postClient = postClient;
         this.commentPublisher = commentPublisher;
@@ -211,6 +212,16 @@ public class CommentServiceImpl implements ICommentService {
         commentRepository.save(reportedComment);
     }
 
+    @Override
+    public List<CommentDeleteRequestDTO> getReportedComments(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Comment> reportedComments = commentRepository.findAllWithDeleteRequests(pageable);
+        return reportedComments
+                .stream()
+                .map(this::mapToCommentDeleteRequestDTO)
+                .toList();
+    }
+
 
     public void addAttachments(Comment comment, List<MultipartFile> filesToAdd) {
         for (MultipartFile file : filesToAdd) {
@@ -315,5 +326,36 @@ public class CommentServiceImpl implements ICommentService {
 
     private Long getCommentCountByPostId(Long postId){
         return commentRepository.countByPostId(postId);
+    }
+
+    private CommentDeleteRequestDTO mapToCommentDeleteRequestDTO(Comment comment){
+        UserDTO userDTO = userMapper.mapUserToUserDTO(comment.getAuthor());
+        List<DeleteRequestDTOResponse> deleteRequests = comment.getDeleteRequests()
+                .stream()
+                .map((DeleteRequest deleteRequest) -> {
+                    User user = userRepository.findById(deleteRequest.getReporterId())
+                            .orElseThrow(() -> new CommentNotFoundException(String.format("User with id: %d not found", deleteRequest.getReporterId())));
+                    return DeleteRequestDTOResponse
+                            .builder()
+                            .reporterId(deleteRequest.getReporterId())
+                            .message(deleteRequest.getMessage())
+                            .reporterNickname(user.getNickname())
+                            .build();
+                })
+                .toList();
+        return CommentDeleteRequestDTO
+                .builder()
+                .deleteRequests(deleteRequests)
+                .author(userDTO)
+                .creationDate(comment.getCreationDate())
+                .forumId(comment.getForumId())
+                .hasBeenEdited(comment.getHasBeenEdited())
+                .valoration(comment.getValoration())
+                .files(comment.getAttachments().stream().map(attachmentMapper::toFileDTO).toList())
+                .body(comment.getBody())
+                .postId(comment.getPostId())
+                .id(comment.getId())
+                .build();
+
     }
 }

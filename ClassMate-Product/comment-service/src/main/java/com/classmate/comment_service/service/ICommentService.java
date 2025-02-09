@@ -2,6 +2,7 @@ package com.classmate.comment_service.service;
 
 import com.classmate.comment_service.dto.CommentDTORequest;
 import com.classmate.comment_service.dto.CommentDTOResponse;
+import com.classmate.comment_service.dto.CommentDeleteRequestDTO;
 import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.comment_service.entity.enums.Role;
@@ -58,4 +59,5 @@ public interface ICommentService {
 
     void reportComment(DeleteRequestDTO deleteRequest, Long commentId);
 
+    List<CommentDeleteRequestDTO> getReportedComments(int page, int size);
 }
