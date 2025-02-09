@@ -1,6 +1,7 @@
 package com.classmate.post_service.controller;
 
 import com.classmate.post_service.dto.*;
+import com.classmate.post_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.post_service.service.IPostService;
 import com.classmate.post_service.service.IPostValorationService;
 import org.springframework.http.HttpStatus;
@@ -135,6 +136,13 @@ public class PostController {
     public ResponseEntity<Void> removeVote(@PathVariable("postId") Long postId,
                                              @RequestParam("userId") Long userId){
         valorationService.removeVoteFromPost(postId, userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/report/{postId}")
+    public ResponseEntity<Void> reportPost(@PathVariable("postId") Long postId,
+                                           @RequestBody DeleteRequestDTO deleteRequestDTO){
+        postService.reportPost(postId, deleteRequestDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

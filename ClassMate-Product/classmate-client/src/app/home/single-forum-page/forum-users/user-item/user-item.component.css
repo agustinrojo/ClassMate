@@ -18,6 +18,7 @@
 .user-info {
   display: flex;
   align-items: center;
+  z-index: 990;
 }
 
 .user-item img {

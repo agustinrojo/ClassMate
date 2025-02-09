@@ -1,6 +1,7 @@
 package com.classmate.post_service.service;
 
 import com.classmate.post_service.dto.*;
+import com.classmate.post_service.dto.delete_request.DeleteRequestDTO;
 
 import java.util.List;
 
@@ -73,4 +74,6 @@ public interface IPostService {
     Long getPostForumId(Long postId);
 
     List<PostResponseDTO> getPostsBySubscribedForums(RequestByForumsDTO requestByForumsDTO, Long userId, int page, int size);
+
+    void reportPost(Long postId, DeleteRequestDTO deleteRequest);
 }

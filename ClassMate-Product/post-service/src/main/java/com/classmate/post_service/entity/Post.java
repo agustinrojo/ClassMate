@@ -82,6 +82,10 @@ public class Post {
 
     private Long commentCount = 0L;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "delete_request_id")
+    private List<DeleteRequest> deleteRequests = new ArrayList<>();
+
 
     public void addAttachment(Attachment attachment) {
         this.attachments.add(attachment);
@@ -123,6 +127,10 @@ public class Post {
 
     public int getValoration(){
         return this.upvotesByUserId.size() - this.downvotesByUserId.size();
+    }
+
+    public void addDeleteRequest(DeleteRequest deleteRequest){
+        deleteRequests.add(deleteRequest);
     }
 
 }

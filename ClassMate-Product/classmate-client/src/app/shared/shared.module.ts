@@ -12,6 +12,11 @@ import { SharedSidebarComponent } from './shared-sidebar/shared-sidebar.componen
 import { TaggingComponent } from './tagging/tagging.component';
 import { CalendarModule } from "../home/calendar/calendar.module";
 import { NotificationComponent } from './notification/notification.component';
+import { ReportCommentDialogComponent } from './report-comment-dialog/report-comment-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -27,14 +32,19 @@ import { NotificationComponent } from './notification/notification.component';
     SearchComponent,
     SharedSidebarComponent,
     TaggingComponent,
-    NotificationComponent
-
+    NotificationComponent,
+    ReportCommentDialogComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    CalendarModule
+    CalendarModule,
+    FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatInputModule,
+    MatMenuModule,
 ],
   exports: [
     FileBadgeComponent,

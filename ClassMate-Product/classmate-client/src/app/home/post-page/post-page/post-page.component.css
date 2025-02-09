@@ -150,6 +150,7 @@ body {
 
 .dropdown-item {
   color: #f8f9fa; /* Color de texto claro */
+  z-index: 1000;
 }
 
 .dropdown-item:disabled {

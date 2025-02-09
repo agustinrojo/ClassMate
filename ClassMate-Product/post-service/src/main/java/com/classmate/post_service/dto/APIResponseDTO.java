@@ -1,5 +1,6 @@
 package com.classmate.post_service.dto;
 
+import com.classmate.post_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.post_service.dto.filedtos.FileDTO;
 import com.classmate.post_service.dto.user.UserDTO;
 import lombok.AllArgsConstructor;
@@ -66,4 +67,6 @@ public class APIResponseDTO {
     private boolean dislikedByUser;
 
     private Long commentCount;
+
+    private boolean isReportedByUser;
 }

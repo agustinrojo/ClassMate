@@ -15,4 +15,5 @@ export interface PostResponseDTO{
   likedByUser: boolean;
   dislikedByUser: boolean;
   commentCount: number;
+  reportedByUser: boolean;
 }

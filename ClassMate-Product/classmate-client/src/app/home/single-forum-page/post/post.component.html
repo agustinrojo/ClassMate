@@ -9,7 +9,8 @@
 
         </button>
           <ul class="dropdown-menu">
-          <li><a class="dropdown-item" (click)="deletePost()">Borrar</a></li>
+          <li><a class="dropdown-item" *ngIf="post.author.userId == userId || isAdmin || userRole.toString() == 'ADMIN'" (click)="deletePost()">Borrar</a></li>
+          <li><a class="dropdown-item" *ngIf="!post.reportedByUser" (click)="openReportDialog()">Reportar</a></li>
         </ul>
       </div>
     </div>
@@ -53,6 +54,11 @@
       <div class="row d-flex flex-row-reverse">
         <div class="col-4 d-flex flex-row-reverse">
           <em *ngIf="post.hasBeenEdited">Editado</em>
+        </div>
+      </div>
+      <div class="row d-flex flex-row-reverse">
+        <div class="col-4 d-flex flex-row-reverse">
+          <em *ngIf="post.reportedByUser">Reportado</em>
         </div>
       </div>
 

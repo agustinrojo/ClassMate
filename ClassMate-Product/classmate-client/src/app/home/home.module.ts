@@ -25,6 +25,7 @@ import { ForumListComponent } from './profile-page/forum-list/forum-list.compone
 import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
 import { ProfileCardComponent } from './profile-card/profile-card.component';
 import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
+import { ReportCommentDialogComponent } from '../shared/report-comment-dialog/report-comment-dialog.component';
 
 
 
@@ -41,7 +42,6 @@ import { UserSearchResultComponent } from './search/user-search-result/user-sear
     NotificationPreferencesComponent,
     UserSearchResultComponent,
     ProfileCardComponent
-
   ],
   imports: [
     CommonModule,

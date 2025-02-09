@@ -1,11 +1,9 @@
 package com.classmate.post_service.dto;
 
+import com.classmate.post_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.post_service.dto.filedtos.FileDTO;
 import com.classmate.post_service.dto.user.UserDTO;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class PostResponseDTO {
 
     /**
@@ -60,4 +59,8 @@ public class PostResponseDTO {
     private boolean dislikedByUser;
 
     private Long commentCount;
+
+    private List<DeleteRequestDTO> deleteRequests;
+
+    private boolean isReportedByUser;
 }
