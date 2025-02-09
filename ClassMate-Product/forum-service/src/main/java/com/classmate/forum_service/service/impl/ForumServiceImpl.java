@@ -3,14 +3,17 @@ package com.classmate.forum_service.service.impl;
 import com.classmate.forum_service.client.IPostClient;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
+import com.classmate.forum_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.forum_service.dto.user.BanUserDeleteMemberEventDTO;
 import com.classmate.forum_service.dto.user.UserDTO;
+import com.classmate.forum_service.entity.DeleteRequest;
 import com.classmate.forum_service.entity.Forum;
 import com.classmate.forum_service.entity.enums.Role;
 import com.classmate.forum_service.exception.ForumNotFoundException;
 import com.classmate.forum_service.exception.InvalidForumException;
 import com.classmate.forum_service.exception.UnauthorizedActionException;
 import com.classmate.forum_service.exception.UserBannedException;
+import com.classmate.forum_service.mapper.DeleteRequestMapper;
 import com.classmate.forum_service.mapper.IForumMapper;
 import com.classmate.forum_service.publisher.ForumSubscriptionPublisher;
 import com.classmate.forum_service.repository.IForumRepository;
@@ -39,6 +42,7 @@ public class ForumServiceImpl implements IForumService {
     private final ForumSubscriptionPublisher subscriptionPublisher;
     private static final Logger LOGGER = LoggerFactory.getLogger(ForumServiceImpl.class);
     private final ForumSubscriptionPublisher forumSubscriptionPublisher;
+    private final DeleteRequestMapper deleteRequestMapper;
 
     /**
      * Constructs a new ForumServiceImpl with the specified repository, mapper, post client, and subscription publisher.
@@ -48,12 +52,13 @@ public class ForumServiceImpl implements IForumService {
      * @param postClient the post client
      * @param subscriptionPublisher the subscription publisher
      */
-    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher, ForumSubscriptionPublisher forumSubscriptionPublisher) {
+    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher, ForumSubscriptionPublisher forumSubscriptionPublisher, DeleteRequestMapper deleteRequestMapper) {
         this.forumRepository = forumRepository;
         this.forumMapper = forumMapper;
         this.postClient = postClient;
         this.subscriptionPublisher = subscriptionPublisher;
         this.forumSubscriptionPublisher = forumSubscriptionPublisher;
+        this.deleteRequestMapper = deleteRequestMapper;
     }
 
     /**
@@ -89,6 +94,9 @@ public class ForumServiceImpl implements IForumService {
         boolean isAdmin = forum.getAdminIds().contains(userId);
         responseDTO.setCreator(isCreator);
         responseDTO.setAdmin(isAdmin);
+        responseDTO.setReportedByUser(forum.getDeleteRequests()
+                                                .stream()
+                                                .anyMatch((DeleteRequest deleteRequest) -> deleteRequest.getReporterId().equals(userId)));
 
         return responseDTO;
     }
@@ -346,6 +354,16 @@ public class ForumServiceImpl implements IForumService {
         } else {
             LOGGER.info("User {} is already banned from forum {}", bannedId, forumId);
         }
+    }
+
+    @Override
+    public void reportForum(Long forumId, DeleteRequestDTO deleteRequestDTO) {
+        Forum reportedForum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ForumNotFoundException(String.format("Forum with id: %d not found.", forumId)));
+        DeleteRequest deleteRequest = deleteRequestMapper.mapToEntity(deleteRequestDTO);
+        reportedForum.addDeleteRequest(deleteRequest);
+
+        forumRepository.save(reportedForum);
     }
 
 

@@ -6,12 +6,13 @@
         <div class="col-6 d-flex flex-row-start">
           <h1 class="mx-3">{{ forum?.forum?.title }}</h1>
         </div>
-        <div class="col-6 d-flex flex-row-reverse">
-          <div class="dropdown " *ngIf="userId === forum?.forum?.creatorId || userRole.toString() == 'ADMIN'">
+        <div class="col-6 d-flex flex-row-reverse" *ngIf="!forum.reportedByUser">
+          <div class="dropdown ">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu">
-              <li><button class="dropdown-item" (click)="deleteForum()">Borrar</button></li>
+              <li><button class="dropdown-item" *ngIf="forum.forum.creatorId == userId || userRole.toString() == 'ADMIN'" (click)="deleteForum()">Borrar</button></li>
               <li><button class="dropdown-item" (click)="editForum()" [disabled]="forum.forum.hasBeenEdited">Editar</button></li>
+              <li><button class="dropdown-item" *ngIf="!forum.reportedByUser" (click)="openReportDialog()">Reportar</button></li>
             </ul>
           </div>
         </div>
@@ -21,6 +22,7 @@
           <p>{{ forum?.forum?.description }}</p>
           <br>
           <span class="forum-details" *ngIf="forum?.forum?.hasBeenEdited"><em>Editado</em></span>
+          <span class="forum-details" *ngIf="forum.reportedByUser"><em>Reportado</em></span>
         </div>
         <div class="col-4 d-flex flex-row-reverse">
           <button class="btn" (click)="goBack()">Volver atrás</button>

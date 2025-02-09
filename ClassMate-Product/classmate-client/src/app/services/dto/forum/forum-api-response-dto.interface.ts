@@ -7,4 +7,5 @@ export interface ForumApiResponseDTO{
   posts: PostResponseDTO[];
   creator: boolean;
   admin: boolean;
+  reportedByUser: boolean;
 }

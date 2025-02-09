@@ -10,6 +10,7 @@ import { IsForumCreatorDTO } from './dto/forum/is-forum-creator-dto.interface';
 import { ForumDataSidebar } from './dto/forum/forum-data-dto.interface';
 import { ForumStateService } from './dto/state-services/forum-state.service';
 import { MultipleForumRequestDTO } from './dto/forum/multiple-forum-request-dto.interface';
+import { DeleteRequestDTO } from './dto/delete-request/delete-request.dto';
 
 @Injectable({providedIn: 'root'})
 export class ForumService {
@@ -107,7 +108,9 @@ export class ForumService {
     return this.http.post<void>(`${this.baseUrl}/${forumId}/ban?bannerId=${bannerId}&bannedId=${bannedId}`, {});
   }
 
-
+  public reportForum(forumId: number, deleteRequest: DeleteRequestDTO): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/report/${forumId}`, deleteRequest);
+  }
 
   private updateLocalStorage(forumId: number, isDeletion: boolean): void {
     let user = JSON.parse(localStorage.getItem("user")!);
