@@ -23,6 +23,7 @@ import { CanActivateNotificationPreferences, CanMatchNotificationPreferences } f
 import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
 import { ReportsComponent } from './admin/reports/reports.component';
 import { CanActivateAdminGuard, CanMatchAdminGuard } from '../auth/guards/admin.guard';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 
 export const routes: Routes = [
@@ -112,7 +113,11 @@ export const routes: Routes = [
         component: ReportsComponent,
         canMatch: [CanMatchAdminGuard],
         canActivate: [CanActivateAdminGuard]
-      }
+      },
+      {
+        path: 'statistics',
+        component: StatisticsComponent,
+      },
     ]
   }
 ]

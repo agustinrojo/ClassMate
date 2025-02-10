@@ -106,4 +106,8 @@ export class SharedSidebarComponent implements OnInit {
   private getUserRole(): void {
     this.userRole = this._authService.getUser().role.toString();
   }
+  public navigateToStatistics(): void {
+    this._router.navigate(['statistics']);
+  }
+
 }

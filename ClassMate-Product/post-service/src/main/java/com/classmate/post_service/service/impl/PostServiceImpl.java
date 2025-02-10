@@ -7,6 +7,7 @@ import com.classmate.post_service.dto.*;
 import com.classmate.post_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
+import com.classmate.post_service.dto.statistics.PostCreatedStatisticDTO;
 import com.classmate.post_service.dto.user.UserDTO;
 import com.classmate.post_service.entity.Attachment;
 import com.classmate.post_service.entity.DeleteRequest;
@@ -194,6 +195,13 @@ public class PostServiceImpl implements IPostService {
         Post savedPost = postRepository.save(post);
         valorationService.upvotePost(savedPost.getId(), author.getUserId());
 
+        // Publish the post creation event to statistics microservice
+        PostCreatedStatisticDTO postEvent = new PostCreatedStatisticDTO(
+                savedPost.getId(),
+                savedPost.getForumId(),
+                savedPost.getCreationDate()
+        );
+        postPublisher.publishPostCreatedStatisticEvent(postEvent);
 
         PostResponseDTO postResponseDTO = postMapper.convertToPostResponseDTO(savedPost);
 

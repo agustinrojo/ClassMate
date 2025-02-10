@@ -6,6 +6,7 @@ import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
 import com.classmate.post_service.dto.notification.GetForumIdNotificationDTOResponse;
 import com.classmate.post_service.dto.notification.MilestoneReachedEventDTO;
 import com.classmate.post_service.dto.notification.PostAuthorResponseEventDTO;
+import com.classmate.post_service.dto.statistics.PostCreatedStatisticDTO;
 import com.classmate.post_service.dto.user.userReputation.UserReputationChangeDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,12 @@ public class PostPublisher {
     @Value("${rabbitmq.user-reputation-routing-key}")
     private String userReputationRoutingKey;
 
+    // STATISTICS
+    @Value("${rabbitmq.exchange.statistics}")
+    private String statisticsExchange;
+    @Value("${rabbitmq.post.created.statistic.routing-key}")
+    private String postCreatedStatisticRoutingKey;
+
     public PostPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
@@ -113,6 +120,16 @@ public class PostPublisher {
     public void publishUserReputationChange(UserReputationChangeDTO event) {
         LOGGER.info(String.format("Publishing UserReputationChange event for user with id -> %s", event.getUserId().toString()));
         rabbitTemplate.convertAndSend(userReputationExchange, userReputationRoutingKey, event);
+    }
+
+    // STATISTICS
+    public void publishPostCreatedStatisticEvent(PostCreatedStatisticDTO event) {
+        if (event != null) {
+            LOGGER.info(String.format("Post creation event sent to RabbitMQ -> %s", event));
+            rabbitTemplate.convertAndSend(statisticsExchange, postCreatedStatisticRoutingKey, event);
+        } else {
+            LOGGER.error("PostCreatedStatisticDTO is null, skipping event publication");
+        }
     }
 
 }
