@@ -1,5 +1,4 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PostAPIResponseDTO } from './dto/post/post-api-response-dto';
 import { PostRequestDTO } from './dto/post/post-request-dto.interface';
@@ -9,6 +8,8 @@ import { IsPostAuthor } from './dto/post/is-post-author-dto.interface';
 import { AuthServiceService } from '../auth/auth-service.service';
 import { PostResponseDTO } from './dto/post/post-response-dto.interface';
 import { DeleteRequestDTO } from './dto/delete-request/delete-request.dto';
+import { Injectable } from '@angular/core';
+import { PostDeleteRequestDTOResponse } from './dto/post/post-delete-request-dto-response.interface';
 
 @Injectable({providedIn: 'root'})
 export class PostService {
@@ -35,6 +36,10 @@ export class PostService {
 
   public getPostsByAuthor(authorId: string, page: number = 0, size: number = 10): Observable<PostResponseDTO[]>{
     return this.http.get<PostResponseDTO[]>(`${this.baseUrl}/author/${authorId}?userId=${this.userId}&page=${page}&size=${size}`);
+  }
+
+  public getReportedPosts(): Observable<PostDeleteRequestDTOResponse[]> {
+    return this.http.get<PostDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported`);
   }
 
   public isPostAuthor(postId: number, userId: number): Observable<IsPostAuthor>{

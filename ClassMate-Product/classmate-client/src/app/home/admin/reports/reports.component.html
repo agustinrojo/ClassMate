@@ -1,3 +1,12 @@
 <div class="container">
-  <app-comment-reports></app-comment-reports>
+  <div class="form-floating">
+    <select [(ngModel)]="selectedValue" data-bs-theme="dark" class="form-select" id="floatingSelect" aria-label="Floating label select example">
+      <option selected value="comments">Comentarios</option>
+      <option value="posts">Posts</option>
+      <option value="forums">Foros</option>
+    </select>
+    <label data-bs-theme="dark" for="floatingSelect">Entidad</label>
+  </div>
+  <app-comment-reports *ngIf="selectedValue == 'comments'"></app-comment-reports>
+  <app-post-reports *ngIf="selectedValue == 'posts'"></app-post-reports>
 </div>

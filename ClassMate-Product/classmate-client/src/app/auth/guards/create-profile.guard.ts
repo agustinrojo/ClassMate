@@ -1,4 +1,3 @@
-import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
 import { CanMatchFn, Route, Router, UrlSegment } from '@angular/router';
 
@@ -6,6 +5,7 @@ import { Observable, catchError, map, of } from 'rxjs';
 import { UserProfileService } from '../../services/user-profile.service';
 import { UserProfileResponseDTO } from '../../services/dto/user-profile/user-profile-response-dto.interface';
 import { AuthServiceService } from '../auth-service.service';
+import { inject } from '@angular/core';
 
 export const CanActivateCreateProfileGuard: CanActivateFn = (
   route: ActivatedRouteSnapshot,

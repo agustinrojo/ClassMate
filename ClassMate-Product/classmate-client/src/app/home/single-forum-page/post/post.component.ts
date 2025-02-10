@@ -1,4 +1,3 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 
 import { Router } from '@angular/router';
@@ -16,6 +15,7 @@ import { Role } from '../../../auth/enums/role.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { ReportCommentDialogComponent } from '../../../shared/report-comment-dialog/report-comment-dialog.component';
 import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-post',

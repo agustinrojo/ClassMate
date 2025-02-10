@@ -39,4 +39,7 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByAuthor_UserId(Long userId, Pageable pageable);
 
+    @Query("SELECT p FROM Post p WHERE SIZE(p.deleteRequests) > 0")
+    Page<Post> findAllWithDeleteRequests(Pageable pageable);
+
 }
