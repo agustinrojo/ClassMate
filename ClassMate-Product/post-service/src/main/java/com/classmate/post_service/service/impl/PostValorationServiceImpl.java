@@ -1,6 +1,8 @@
 package com.classmate.post_service.service.impl;
 
+import com.classmate.post_service.dto.delete_request.PostDeleteRequestDTO;
 import com.classmate.post_service.dto.notification.MilestoneReachedEventDTO;
+import com.classmate.post_service.dto.user.UserDTO;
 import com.classmate.post_service.dto.user.userReputation.ReputationAction;
 import com.classmate.post_service.dto.user.userReputation.UserReputationChangeDTO;
 import com.classmate.post_service.entity.Post;
@@ -11,6 +13,9 @@ import com.classmate.post_service.service.IPostValorationService;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,6 +84,8 @@ public class PostValorationServiceImpl implements IPostValorationService {
         updateUserReputation(post.getAuthor().getUserId(), action);
     }
 
+
+
     private void checkForMilestone(Post post) {
         int currentValoration = post.getValoration();
 
@@ -114,4 +121,5 @@ public class PostValorationServiceImpl implements IPostValorationService {
         // Publish the event to the notifications service
         postPublisher.publishMilestoneReachedEvent(event);
     }
+
 }

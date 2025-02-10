@@ -5,6 +5,8 @@ import com.classmate.post_service.client.ICommentClient;
 import com.classmate.post_service.client.IFileServiceClient;
 import com.classmate.post_service.dto.*;
 import com.classmate.post_service.dto.delete_request.DeleteRequestDTO;
+import com.classmate.post_service.dto.delete_request.DeleteRequestDTOResponse;
+import com.classmate.post_service.dto.delete_request.PostDeleteRequestDTO;
 import com.classmate.post_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.post_service.dto.filedtos.PostFileDeletionDTO;
 import com.classmate.post_service.dto.statistics.PostCreatedStatisticDTO;
@@ -17,6 +19,7 @@ import com.classmate.post_service.entity.enums.Role;
 import com.classmate.post_service.exception.InvalidPostException;
 import com.classmate.post_service.exception.PostNotFoundException;
 import com.classmate.post_service.exception.UserNotFoundException;
+import com.classmate.post_service.mapper.AttachmentMapper;
 import com.classmate.post_service.mapper.DeleteRequestMapper;
 import com.classmate.post_service.mapper.IPostMapper;
 import com.classmate.post_service.mapper.IUserMapper;
@@ -59,9 +62,10 @@ public class PostServiceImpl implements IPostService {
     private final IPostValorationService valorationService;
     private final IJWTService jwtService;
     private final DeleteRequestMapper deleteRequestMapper;
+    private final AttachmentMapper attachmentMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
-    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository, IPostValorationService valorationService, IJWTService jwtService, DeleteRequestMapper deleteRequestMapper) {
+    public PostServiceImpl(IPostRepository postRepository, IPostMapper postMapper, IUserMapper userMapper, ICommentClient commentClient, IFileServiceClient fileServiceClient, IAuthClient authClient, PostPublisher postPublisher, IUserRepository userRepository, IPostValorationService valorationService, IJWTService jwtService, DeleteRequestMapper deleteRequestMapper, AttachmentMapper attachmentMapper) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.userMapper = userMapper;
@@ -73,6 +77,7 @@ public class PostServiceImpl implements IPostService {
         this.valorationService = valorationService;
         this.jwtService = jwtService;
         this.deleteRequestMapper = deleteRequestMapper;
+        this.attachmentMapper = attachmentMapper;
     }
 
     /**
@@ -319,6 +324,16 @@ public class PostServiceImpl implements IPostService {
         }
     }
 
+    @Override
+    public List<PostDeleteRequestDTO> getReportedPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> reportedPosts = postRepository.findAllWithDeleteRequests(pageable);
+        return reportedPosts
+                .stream()
+                .map(this::getPostDeleteRequestDTO)
+                .toList();
+    }
+
     private List<Attachment> uploadFiles(List<MultipartFile> files) {
         List<Attachment> attachments = new ArrayList<>();
         if (files != null && !files.isEmpty()) {
@@ -399,5 +414,34 @@ public class PostServiceImpl implements IPostService {
                                                 .stream()
                                                 .anyMatch((DeleteRequest deleteRequest) -> deleteRequest.getReporterId().equals(userId)));
         return postResponseDTO;
+    }
+
+    private PostDeleteRequestDTO getPostDeleteRequestDTO(Post post){
+        UserDTO userDTO = userMapper.mapUserToUserDTO(post.getAuthor());
+        List<DeleteRequestDTOResponse> deleteRequests = post.getDeleteRequests()
+                .stream()
+                .map((DeleteRequest deleteRequest) -> {
+                    User user = userRepository.findById(deleteRequest.getReporterId())
+                            .orElseThrow(() -> new UserNotFoundException(String.format("User with id: %d not found", deleteRequest.getReporterId())));
+                    return DeleteRequestDTOResponse.builder()
+                            .reporterId(user.getUserId())
+                            .reporterNickname(user.getNickname())
+                            .message(deleteRequest.getMessage())
+                            .build();
+                })
+                .toList();
+        return PostDeleteRequestDTO.builder()
+                .deleteRequests(deleteRequests)
+                .creationDate(post.getCreationDate())
+                .commentCount(post.getCommentCount())
+                .author(userDTO)
+                .body(post.getBody())
+                .files(post.getAttachments().stream().map(attachmentMapper::toFileDTO).toList())
+                .id(post.getId())
+                .valoration(post.getValoration())
+                .title(post.getTitle())
+                .hasBeenEdited(post.getHasBeenEdited())
+                .forumId(post.getForumId())
+                .build();
     }
 }

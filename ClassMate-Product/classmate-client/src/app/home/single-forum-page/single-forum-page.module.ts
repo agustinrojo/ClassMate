@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SingleForumPageComponent } from './single-forum-page/single-forum-page.component';
 import { PostComponent } from './post/post.component';
@@ -10,6 +9,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { EditForumComponent } from './edit-forum/edit-forum.component';
 import { ForumUsersComponent } from './forum-users/forum-users.component';
 import { UserItemComponent } from './forum-users/user-item/user-item.component';
+import { NgModule } from '@angular/core';
 
 
 
