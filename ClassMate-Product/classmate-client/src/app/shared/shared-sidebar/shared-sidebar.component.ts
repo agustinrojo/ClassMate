@@ -95,4 +95,9 @@ export class SharedSidebarComponent implements OnInit {
   private sortForums(): void {
     this.forums.sort((a, b) => a.title.localeCompare(b.title));
   }
+
+  public navigateToStatistics(): void {
+    this._router.navigate(['statistics']);
+  }
+
 }

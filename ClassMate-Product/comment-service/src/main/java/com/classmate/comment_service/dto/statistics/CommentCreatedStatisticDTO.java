@@ -1,6 +1,9 @@
-package com.classmate.post_service.dto.statistics;
+package com.classmate.comment_service.dto.statistics;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -8,8 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCreatedStatisticDTO {
-    private Long postId;
+public class CommentCreatedStatisticDTO {
+    private Long commentId;
     private Long forumId;
     private LocalDateTime timestamp;
 }

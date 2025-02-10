@@ -21,6 +21,7 @@ import { CalendarComponent } from './calendar/calendar/calendar.component';
 import { NotificationPreferencesComponent } from './profile-page/notification-preferences/notification-preferences.component';
 import { CanActivateNotificationPreferences, CanMatchNotificationPreferences } from '../auth/guards/notification-preferences.guard';
 import { UserSearchResultComponent } from './search/user-search-result/user-search-result.component';
+import { StatisticsComponent } from '../statistics/statistics.component';
 
 
 export const routes: Routes = [
@@ -104,7 +105,11 @@ export const routes: Routes = [
       {
         path: "calendar",
         component: CalendarComponent
-      }
+      },
+      {
+        path: 'statistics',
+        component: StatisticsComponent,
+      },
     ]
   }
 ]

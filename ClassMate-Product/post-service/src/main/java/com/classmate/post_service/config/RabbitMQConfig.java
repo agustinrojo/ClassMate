@@ -103,6 +103,14 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.user-reputation-routing-key}")
     private String userReputationRoutingKey;
 
+    // STATISTICS
+    @Value("${rabbitmq.exchange.statistics}")
+    private String statisticsExchange;
+    @Value("${rabbitmq.queue.post.created.statistic}")
+    private String postCreatedStatisticQueue;
+    @Value("${rabbitmq.post.created.statistic.routing-key}")
+    private String postCreatedStatisticRoutingKey;
+
 
 
     @Bean
@@ -197,6 +205,16 @@ public class RabbitMQConfig {
         return new Queue(userReputationQueue, true);
     }
 
+    // STATISTICS
+    @Bean
+    public TopicExchange statisticsExchange() {
+        return new TopicExchange(statisticsExchange);
+    }
+
+    @Bean
+    public Queue postStatisticsQueue() {
+        return new Queue(postCreatedStatisticQueue, true);
+    }
 
     @Bean
     public Binding deletePostBinding() {
@@ -284,6 +302,15 @@ public class RabbitMQConfig {
                 .bind(userReputationQueue())
                 .to(userReputationExchange())
                 .with(userReputationRoutingKey);
+    }
+
+    // STATISTICS
+    @Bean
+    public Binding postStatisticsBinding() {
+        return BindingBuilder
+                .bind(postStatisticsQueue())
+                .to(statisticsExchange())
+                .with(postCreatedStatisticRoutingKey);
     }
 
 

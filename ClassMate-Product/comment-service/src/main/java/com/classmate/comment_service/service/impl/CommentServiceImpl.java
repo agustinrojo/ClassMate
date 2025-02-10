@@ -8,6 +8,7 @@ import com.classmate.comment_service.dto.CommentUpdateDTO;
 import com.classmate.comment_service.dto.CommentDeletionDTO;
 import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
+import com.classmate.comment_service.dto.statistics.CommentCreatedStatisticDTO;
 import com.classmate.comment_service.dto.user.UserDTO;
 import com.classmate.comment_service.entity.Attachment;
 import com.classmate.comment_service.entity.Comment;
@@ -139,6 +140,14 @@ public class CommentServiceImpl implements ICommentService {
 
         Long commentCount = getCommentCountByPostId(commentRequestDTO.getPostId());
         commentPublisher.publishCommentCountEvent(commentCount, commentRequestDTO.getPostId());
+
+        // Publish the comment creation event to statistics microservice
+        CommentCreatedStatisticDTO postEvent = new CommentCreatedStatisticDTO(
+                savedComment.getId(),
+                savedComment.getForumId(),
+                savedComment.getCreationDate()
+        );
+        commentPublisher.publishPostCreatedStatisticEvent(postEvent);
 
         return commentDTOResponse;
     }

@@ -6,6 +6,7 @@ import com.classmate.comment_service.dto.filedtos.FileDeletionDTO;
 import com.classmate.comment_service.dto.notifications.CommentNotificationEventDTO;
 import com.classmate.comment_service.dto.notifications.GetForumIdNotificationDTORequest;
 import com.classmate.comment_service.dto.notifications.MilestoneReachedEventDTO;
+import com.classmate.comment_service.dto.statistics.CommentCreatedStatisticDTO;
 import com.classmate.comment_service.dto.user.userReputation.UserReputationChangeDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -61,6 +62,12 @@ public class CommentPublisher {
     @Value("${rabbitmq.user-reputation-routing-key}")
     private String userReputationRoutingKey;
 
+    // STATISTICS
+    @Value("${rabbitmq.exchange.statistics}")
+    private String statisticsExchange;
+    @Value("${rabbitmq.comment.created.statistic.routing-key}")
+    private String commentCreatedStatisticRoutingKey;
+
 
     public CommentPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -104,5 +111,15 @@ public class CommentPublisher {
     public void publishUserReputationChange(UserReputationChangeDTO event) {
         LOGGER.info(String.format("Publishing UserReputationChange event for user with id -> %s", event.getUserId().toString()));
         rabbitTemplate.convertAndSend(userReputationExchange, userReputationRoutingKey, event);
+    }
+
+    // STATISTICS
+    public void publishPostCreatedStatisticEvent(CommentCreatedStatisticDTO event) {
+        if (event != null) {
+            LOGGER.info(String.format("Comment creation event sent to RabbitMQ -> %s", event));
+            rabbitTemplate.convertAndSend(statisticsExchange, commentCreatedStatisticRoutingKey, event);
+        } else {
+            LOGGER.error("CommentCreatedStatisticDTO is null, skipping event publication");
+        }
     }
 }
