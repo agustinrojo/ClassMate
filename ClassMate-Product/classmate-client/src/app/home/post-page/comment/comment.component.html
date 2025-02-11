@@ -32,6 +32,6 @@
   <div class="row">
     <app-valoration [valoration]="commentValoration" (likeEvent)="upvoteComment()" (dislikeEvent)="downvoteComment()" (removeEvent)="removeCommentVote()"></app-valoration>
   </div>
-
+  <app-report-message *ngIf="deleteRequests" [deleteRequests]="deleteRequests!"></app-report-message>
 </div>
 <app-edit-comment (cancelEditing)="cancelEdition()" (editComment)="editComment($event)"  [body]="comment.body" [files]="comment.files" *ngIf="editing"></app-edit-comment>

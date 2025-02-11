@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReportCommentDialogComponent } from '../../../shared/report-comment-dialog/report-comment-dialog.component';
 import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DeleteRequestDTOResponse } from '../../../services/dto/delete-request/delete-request-response.dto';
 
 @Component({
   selector: 'app-post',
@@ -28,6 +29,7 @@ export class PostComponent implements OnInit{
   public isAdmin!: boolean;
   public postValoration!: Valoration;
   @Input() public post!: PostResponseDTO;
+  @Input() public deleteRequests?: DeleteRequestDTOResponse[] | null = null;
   @Output() public deleteEvent: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _authService: AuthServiceService,

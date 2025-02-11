@@ -11,8 +11,7 @@
     <div *ngFor="let post of reportedPostsDisplay; let i = index" class="row">
       <div class="col-8">
         <hr>
-        <app-post [post]="post"></app-post>
-        <app-report-message [deleteRequests]="reportedPosts[i].deleteRequests"></app-report-message>
+        <app-post [post]="post" [deleteRequests]="reportedPosts[i].deleteRequests"></app-post>
       </div>
     </div>
   </section>

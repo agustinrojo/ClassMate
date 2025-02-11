@@ -10,6 +10,7 @@ import { EditForumComponent } from './edit-forum/edit-forum.component';
 import { ForumUsersComponent } from './forum-users/forum-users.component';
 import { UserItemComponent } from './forum-users/user-item/user-item.component';
 import { NgModule } from '@angular/core';
+import { AdminModule } from '../admin/admin.module';
 
 
 
