@@ -1,10 +1,10 @@
 import { state } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
 import { ForumDTO } from '../../../services/dto/forum/forum-dto.interface';
 import { ForumService } from '../../../services/forum.service';
 import { Router } from '@angular/router';
 import { User } from '../../../auth/dto/user-dto.interface';
 import { MessageService } from '../../../services/message.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-forums-page',

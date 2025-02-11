@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileBadgeComponent } from './file-badge/file-badge.component';
 import { CapitalizePipe } from './pipes/capitalize.pipe';
@@ -17,6 +16,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { ReportMessageComponent } from './report-message/report-message.component';
+import { NgModule } from '@angular/core';
 
 
 
@@ -33,7 +34,8 @@ import { MatMenuModule } from '@angular/material/menu';
     SharedSidebarComponent,
     TaggingComponent,
     NotificationComponent,
-    ReportCommentDialogComponent
+    ReportCommentDialogComponent,
+    ReportMessageComponent
   ],
   imports: [
     CommonModule,
@@ -56,7 +58,8 @@ import { MatMenuModule } from '@angular/material/menu';
     SearchComponent,
     SharedSidebarComponent,
     TaggingComponent,
-    NotificationComponent
+    NotificationComponent,
+    ReportMessageComponent
 
   ]
 })

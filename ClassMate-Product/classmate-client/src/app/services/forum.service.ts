@@ -1,5 +1,4 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ForumDTO } from './dto/forum/forum-dto.interface';
 import { ForumApiResponseDTO } from './dto/forum/forum-api-response-dto.interface';
@@ -9,8 +8,9 @@ import { ForumExistsDTO } from './dto/forum/forum-exists-dto.interface';
 import { IsForumCreatorDTO } from './dto/forum/is-forum-creator-dto.interface';
 import { ForumDataSidebar } from './dto/forum/forum-data-dto.interface';
 import { ForumStateService } from './dto/state-services/forum-state.service';
-import { MultipleForumRequestDTO } from './dto/forum/multiple-forum-request-dto.interface';
 import { DeleteRequestDTO } from './dto/delete-request/delete-request.dto';
+import { ForumDeleteRequestDTOResponse } from './dto/forum/forum-delete-request-dto-response.interface';
+import { Injectable } from '@angular/core';
 
 @Injectable({providedIn: 'root'})
 export class ForumService {
@@ -110,6 +110,10 @@ export class ForumService {
 
   public reportForum(forumId: number, deleteRequest: DeleteRequestDTO): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/report/${forumId}`, deleteRequest);
+  }
+
+  public getReportedForums(): Observable<ForumDeleteRequestDTOResponse[]> {
+    return this.http.get<ForumDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported`);
   }
 
   private updateLocalStorage(forumId: number, isDeletion: boolean): void {

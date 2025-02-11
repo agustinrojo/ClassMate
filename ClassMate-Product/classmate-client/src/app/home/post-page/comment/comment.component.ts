@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CommentDTORequest } from '../../../services/dto/comment/comment-request-dto.interface';
 import { User } from '../../../auth/dto/user-dto.interface';
 import { CommentDTOResponse } from '../../../services/dto/comment/comment-response-dto.interface';
 import { CommentService } from '../../../services/comment.service';
@@ -13,6 +12,7 @@ import { Role } from '../../../auth/enums/role.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteRequestDTO } from '../../../services/dto/delete-request/delete-request.dto';
 import { ReportCommentDialogComponent } from '../../../shared/report-comment-dialog/report-comment-dialog.component';
+import { DeleteRequestDTOResponse } from '../../../services/dto/delete-request/delete-request-response.dto';
 
 @Component({
   selector: 'app-comment',
@@ -29,6 +29,7 @@ export class CommentComponent implements OnInit{
   public showErr : boolean = false;
   public commentValoration!: Valoration;
   @Input() public comment!: CommentDTOResponse;
+  @Input() public deleteRequests?: DeleteRequestDTOResponse[] | null = null;
   @Output() public deleteEvent = new EventEmitter<number>();
 
 

@@ -11,8 +11,7 @@
     <div *ngFor="let comment of reportedCommentsDisplay; let i = index" class="row">
       <div class="col-8">
         <hr>
-        <app-comment [comment]="comment"></app-comment>
-        <app-report-message [deleteRequests]="reportedComments[i].deleteRequests"></app-report-message>
+        <app-comment [comment]="comment" [deleteRequests]="reportedComments[i].deleteRequests"></app-comment>
       </div>
     </div>
   </section>

@@ -3,6 +3,7 @@ package com.classmate.forum_service.controller;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.dto.delete_request.DeleteRequestDTO;
+import com.classmate.forum_service.dto.delete_request.ForumDeleteRequestDTOResponse;
 import com.classmate.forum_service.entity.enums.Role;
 import com.classmate.forum_service.service.IForumService;
 import com.classmate.forum_service.service.IJWTService;
@@ -97,6 +98,14 @@ public class ForumController {
                                                             @RequestParam("userId") Long userId) {
         IsForumCreatorDTO isForumCreatorDTO = forumService.isForumCreator(forumId, userId);
         return new ResponseEntity<>(isForumCreatorDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/reported")
+    public ResponseEntity<List<ForumDeleteRequestDTOResponse>> getReportedForums(@RequestHeader("Authorization") String authorization,
+                                                                                 @RequestParam(defaultValue = "0") int page,
+                                                                                 @RequestParam(defaultValue = "10") int size) {
+        List<ForumDeleteRequestDTOResponse> reportedForums = forumService.getReportedForums(page, size, authorization);
+        return new ResponseEntity<>(reportedForums, HttpStatus.OK);
     }
 
     /**
