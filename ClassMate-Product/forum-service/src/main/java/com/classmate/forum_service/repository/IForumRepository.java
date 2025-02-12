@@ -4,6 +4,8 @@ import com.classmate.forum_service.entity.Forum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -21,4 +23,10 @@ public interface IForumRepository extends JpaRepository<Forum, Long> {
      */
     Page<Forum> findByTitleContainingIgnoreCaseOrderByCreationDateDesc(String title, Pageable pageable);
     Page<Forum> findByIdIn(List<Long> ids, Pageable pageable);
+
+    @Query("SELECT f FROM Forum f " +
+            "WHERE SIZE(f.deleteRequests) > 0 " +
+            "AND (LOWER(f.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(f.description) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<Forum> findByDeleteRequestsAndKeyword(@Param("keyword") String keyword);
 }

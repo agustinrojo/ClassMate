@@ -334,6 +334,18 @@ public class PostServiceImpl implements IPostService {
                 .toList();
     }
 
+    @Override
+    public List<PostDeleteRequestDTO> findReportedPostsByKeyword(String keyword) {
+        List<Post> reportedPosts = postRepository.findByDeleteRequestsAndKeyword(keyword);
+        if(reportedPosts.isEmpty()){
+            return new ArrayList<>();
+        }
+        return reportedPosts
+                .stream()
+                .map(this::getPostDeleteRequestDTO)
+                .toList();
+    }
+
     private List<Attachment> uploadFiles(List<MultipartFile> files) {
         List<Attachment> attachments = new ArrayList<>();
         if (files != null && !files.isEmpty()) {
