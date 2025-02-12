@@ -2,8 +2,14 @@
   <h1 class="text-center text-light mb-4">Dashboard de Estadísticas</h1>
 
   <div class="row">
-    <div class="col-md-8 mx-auto">
+    <!-- Forum Activity Chart -->
+    <div class="col-md-6 mx-auto">
       <app-forum-activity-chart></app-forum-activity-chart>
+    </div>
+
+    <!-- Forum Creation Stats Chart -->
+    <div class="col-md-6 mx-auto">
+      <app-forum-creation-chart [forumData]="forumData"></app-forum-creation-chart>
     </div>
   </div>
 </div>
