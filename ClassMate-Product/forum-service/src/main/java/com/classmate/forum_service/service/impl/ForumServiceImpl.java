@@ -177,6 +177,8 @@ public class ForumServiceImpl implements IForumService {
                 .build();
         subscriptionPublisher.publishCreatorUpdate(creatorDTO);
 
+        subscriptionPublisher.publishForumCreatedEvent();
+        
         return forumMapper.convertToForumResponseDTO(savedForum);
     }
 
