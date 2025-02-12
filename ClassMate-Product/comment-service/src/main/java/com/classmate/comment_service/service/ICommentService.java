@@ -60,4 +60,6 @@ public interface ICommentService {
     void reportComment(DeleteRequestDTO deleteRequest, Long commentId);
 
     List<CommentDeleteRequestDTO> getReportedComments(int page, int size);
+
+    List<CommentDeleteRequestDTO> findReportedCommentsByKeyword(String keyword);
 }

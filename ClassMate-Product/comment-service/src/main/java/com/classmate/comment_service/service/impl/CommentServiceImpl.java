@@ -231,6 +231,18 @@ public class CommentServiceImpl implements ICommentService {
                 .toList();
     }
 
+    @Override
+    public List<CommentDeleteRequestDTO> findReportedCommentsByKeyword(String keyword) {
+        List<Comment> reportedComments = commentRepository.findByDeleteRequestsAndKeyword(keyword);
+        if(reportedComments.isEmpty()){
+            return new ArrayList<>();
+        }
+        return reportedComments
+                .stream()
+                .map(this::mapToCommentDeleteRequestDTO)
+                .toList();
+    }
+
 
     public void addAttachments(Comment comment, List<MultipartFile> filesToAdd) {
         for (MultipartFile file : filesToAdd) {
