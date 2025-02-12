@@ -3,6 +3,7 @@ package com.classmate.forum_service.service;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.dto.delete_request.DeleteRequestDTO;
+import com.classmate.forum_service.dto.delete_request.ForumDeleteRequestDTOResponse;
 import com.classmate.forum_service.dto.user.UserDTO;
 import com.classmate.forum_service.entity.enums.Role;
 
@@ -107,4 +108,5 @@ public interface IForumService {
 
     void reportForum(Long forumId, DeleteRequestDTO deleteRequest);
 
+    List<ForumDeleteRequestDTOResponse> getReportedForums(int page, int size, String authorizationHeader);
 }

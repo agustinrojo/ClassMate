@@ -1,10 +1,14 @@
 package com.classmate.forum_service.service.impl;
 
+import com.classmate.forum_service.client.IAuthClient;
 import com.classmate.forum_service.client.IPostClient;
 import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.dto.delete_request.DeleteRequestDTO;
+import com.classmate.forum_service.dto.delete_request.DeleteRequestDTOResponse;
+import com.classmate.forum_service.dto.delete_request.ForumDeleteRequestDTOResponse;
 import com.classmate.forum_service.dto.user.BanUserDeleteMemberEventDTO;
+import com.classmate.forum_service.dto.user.GetUserProfileResponseDTO;
 import com.classmate.forum_service.dto.user.UserDTO;
 import com.classmate.forum_service.entity.DeleteRequest;
 import com.classmate.forum_service.entity.Forum;
@@ -22,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,6 +48,7 @@ public class ForumServiceImpl implements IForumService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ForumServiceImpl.class);
     private final ForumSubscriptionPublisher forumSubscriptionPublisher;
     private final DeleteRequestMapper deleteRequestMapper;
+    private final IAuthClient authClient;
 
     /**
      * Constructs a new ForumServiceImpl with the specified repository, mapper, post client, and subscription publisher.
@@ -52,13 +58,14 @@ public class ForumServiceImpl implements IForumService {
      * @param postClient the post client
      * @param subscriptionPublisher the subscription publisher
      */
-    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher, ForumSubscriptionPublisher forumSubscriptionPublisher, DeleteRequestMapper deleteRequestMapper) {
+    public ForumServiceImpl(IForumRepository forumRepository, IForumMapper forumMapper, IPostClient postClient, ForumSubscriptionPublisher subscriptionPublisher, ForumSubscriptionPublisher forumSubscriptionPublisher, DeleteRequestMapper deleteRequestMapper, IAuthClient authClient) {
         this.forumRepository = forumRepository;
         this.forumMapper = forumMapper;
         this.postClient = postClient;
         this.subscriptionPublisher = subscriptionPublisher;
         this.forumSubscriptionPublisher = forumSubscriptionPublisher;
         this.deleteRequestMapper = deleteRequestMapper;
+        this.authClient = authClient;
     }
 
     /**
@@ -366,6 +373,16 @@ public class ForumServiceImpl implements IForumService {
         forumRepository.save(reportedForum);
     }
 
+    @Override
+    public List<ForumDeleteRequestDTOResponse> getReportedForums(int page, int size, String authorizationHeader) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Forum> reportedForums = forumRepository.findAllWithDeleteRequests(pageable);
+        return reportedForums
+                .stream()
+                .map((Forum forum) -> getForumDeleteRequestDTO(forum, authorizationHeader))
+                .toList();
+    }
+
 
     /**
      * Validates the forum data.
@@ -385,5 +402,29 @@ public class ForumServiceImpl implements IForumService {
         if (forumRequestDTO.getDescription().length() > 300) {
             throw new InvalidForumException("Forum description cannot exceed 300 characters");
         }
+    }
+
+    private ForumDeleteRequestDTOResponse getForumDeleteRequestDTO(Forum forum, String authorizationHeader){
+        List<DeleteRequestDTOResponse> deleteRequests = forum.getDeleteRequests()
+                .stream()
+                .map((DeleteRequest deleteRequest) -> {
+                    GetUserProfileResponseDTO user = authClient.getUserProfile(deleteRequest.getReporterId(), authorizationHeader);
+                    return DeleteRequestDTOResponse
+                            .builder()
+                            .message(deleteRequest.getMessage())
+                            .reporterId(deleteRequest.getReporterId())
+                            .reporterNickname(user.getNickname())
+                            .build();
+                })
+                .toList();
+        return ForumDeleteRequestDTOResponse
+                .builder()
+                .id(forum.getId())
+                .creationDate(forum.getCreationDate())
+                .title(forum.getTitle())
+                .description(forum.getDescription())
+                .hasBeenEdited(forum.getHasBeenEdited())
+                .deleteRequests(deleteRequests)
+                .build();
     }
 }
