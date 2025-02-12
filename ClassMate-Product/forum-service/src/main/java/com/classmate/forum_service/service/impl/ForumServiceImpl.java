@@ -5,7 +5,6 @@ import com.classmate.forum_service.dto.*;
 import com.classmate.forum_service.dto.create.ForumRequestDTO;
 import com.classmate.forum_service.dto.delete_request.DeleteRequestDTO;
 import com.classmate.forum_service.dto.user.BanUserDeleteMemberEventDTO;
-import com.classmate.forum_service.dto.user.UserDTO;
 import com.classmate.forum_service.entity.DeleteRequest;
 import com.classmate.forum_service.entity.Forum;
 import com.classmate.forum_service.entity.enums.Role;
@@ -169,6 +168,8 @@ public class ForumServiceImpl implements IForumService {
                 .userId(creatorId)
                 .build();
         subscriptionPublisher.publishCreatorUpdate(creatorDTO);
+
+        subscriptionPublisher.publishForumCreatedEvent();
 
         return forumMapper.convertToForumResponseDTO(savedForum);
     }

@@ -30,6 +30,13 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.comment.created.statistic.routing-key}")
     private String commentCreatedStatisticRoutingKey;
 
+    // FORUMS CREATION
+    @Value("${rabbitmq.queue.forum.created.statistic}")
+    private String forumCreatedStatisticQueue;
+    @Value("${rabbitmq.forum.created.statistic.routing-key}")
+    private String forumCreatedStatisticRoutingKey;
+
+
     @Bean
     public TopicExchange statisticsExchange() {
         return new TopicExchange(statisticsExchange);
@@ -43,6 +50,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue commentStatisticsQueue() {
         return new Queue(commentCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public Queue forumStatisticsQueue() {
+        return new Queue(forumCreatedStatisticQueue, true);
     }
 
 
@@ -62,6 +74,15 @@ public class RabbitMQConfig {
                 .bind(commentStatisticsQueue())
                 .to(statisticsExchange())
                 .with(commentCreatedStatisticRoutingKey);
+    }
+
+    // FORUMS CREATION
+    @Bean
+    public Binding forumStatisticsBinding() {
+        return BindingBuilder
+                .bind(forumStatisticsQueue())
+                .to(statisticsExchange())
+                .with(forumCreatedStatisticRoutingKey);
     }
 
     @Bean
