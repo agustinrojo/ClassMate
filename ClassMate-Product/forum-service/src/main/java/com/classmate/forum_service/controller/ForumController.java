@@ -108,6 +108,13 @@ public class ForumController {
         return new ResponseEntity<>(reportedForums, HttpStatus.OK);
     }
 
+    @GetMapping("/reported/{query}")
+    public ResponseEntity<List<ForumDeleteRequestDTOResponse>> findReportedForumsByKeyword(@RequestHeader("Authorization") String authorization,
+                                                                                           @PathVariable("query") String query){
+        List<ForumDeleteRequestDTOResponse> reportedForums = forumService.findReportedForumsByKeyword(query, authorization);
+        return new ResponseEntity<>(reportedForums, HttpStatus.OK);
+    }
+
     /**
      * Creates a new forum.
      *

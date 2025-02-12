@@ -383,6 +383,19 @@ public class ForumServiceImpl implements IForumService {
                 .toList();
     }
 
+    @Override
+    public List<ForumDeleteRequestDTOResponse> findReportedForumsByKeyword(String keyword, String authorizationHeader) {
+        List<Forum> reportedForums = forumRepository.findByDeleteRequestsAndKeyword(keyword);
+        System.out.println(reportedForums);
+        if(reportedForums.isEmpty()){
+            return new ArrayList<>();
+        }
+        return reportedForums
+                .stream()
+                .map((Forum forum) -> getForumDeleteRequestDTO(forum, authorizationHeader))
+                .toList();
+    }
+
 
     /**
      * Validates the forum data.

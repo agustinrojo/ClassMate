@@ -109,4 +109,6 @@ public interface IForumService {
     void reportForum(Long forumId, DeleteRequestDTO deleteRequest);
 
     List<ForumDeleteRequestDTOResponse> getReportedForums(int page, int size, String authorizationHeader);
+
+    List<ForumDeleteRequestDTOResponse> findReportedForumsByKeyword(String keyword, String authorizationHeader);
 }
