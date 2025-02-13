@@ -36,6 +36,16 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.forum.created.statistic.routing-key}")
     private String forumCreatedStatisticRoutingKey;
 
+    // USER STATISTICS
+    @Value("${rabbitmq.queue.user.created.statistic}")
+    private String userCreatedStatisticQueue;
+    @Value("${rabbitmq.user.created.statistic.routing-key}")
+    private String userCreatedStatisticRoutingKey;
+    @Value("${rabbitmq.queue.user.logged.statistic}")
+    private String userLoggedStatisticQueue;
+    @Value("${rabbitmq.user.logged.statistic.routing-key}")
+    private String userLoggedStatisticRoutingKey;
+
 
     @Bean
     public TopicExchange statisticsExchange() {
@@ -55,6 +65,16 @@ public class RabbitMQConfig {
     @Bean
     public Queue forumStatisticsQueue() {
         return new Queue(forumCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public Queue userCreatedStatisticsQueue() {
+        return new Queue(userCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public Queue userLoggedStatisticsQueue() {
+        return new Queue(userLoggedStatisticQueue, true);
     }
 
 
@@ -83,6 +103,23 @@ public class RabbitMQConfig {
                 .bind(forumStatisticsQueue())
                 .to(statisticsExchange())
                 .with(forumCreatedStatisticRoutingKey);
+    }
+
+    // USER STATISTICS
+    @Bean
+    public Binding userCreatedStatisticsBinding() {
+        return BindingBuilder
+                .bind(userCreatedStatisticsQueue())
+                .to(statisticsExchange())
+                .with(userCreatedStatisticRoutingKey);
+    }
+
+    @Bean
+    public Binding userLoggedStatisticsBinding() {
+        return BindingBuilder
+                .bind(userLoggedStatisticsQueue())
+                .to(statisticsExchange())
+                .with(userLoggedStatisticRoutingKey);
     }
 
     @Bean

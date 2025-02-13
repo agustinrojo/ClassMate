@@ -2,14 +2,27 @@
   <h1 class="text-center text-light mb-4">Dashboard de Estadísticas</h1>
 
   <div class="row">
-    <!-- Forum Activity Chart -->
+    <!-- Forum Activity Stats -->
     <div class="col-md-6 mx-auto">
       <app-forum-activity-chart></app-forum-activity-chart>
     </div>
 
-    <!-- Forum Creation Stats Chart -->
+    <!-- Forum Creation Stats -->
     <div class="col-md-6 mx-auto">
       <app-forum-creation-chart [forumData]="forumData"></app-forum-creation-chart>
+    </div>
+  </div>
+
+  <!-- Users Activity Stats -->
+  <div class="row mt-4">
+    <!-- Total Users Card -->
+    <div class="col-md-6 mx-auto">
+      <app-users-activity-stats></app-users-activity-stats>
+    </div>
+
+    <!-- Active Users Card -->
+    <div class="col-md-6 mx-auto">
+
     </div>
   </div>
 </div>

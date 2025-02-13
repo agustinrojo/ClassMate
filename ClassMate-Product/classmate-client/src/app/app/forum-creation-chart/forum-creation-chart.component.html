@@ -11,7 +11,7 @@
   </div>
 
   <!-- Paragraph moved to the left without affecting layout -->
-  <p class="text-left total-forums">Cantidad de foros totales: {{ totalForums }}</p>
+
 
   <div class="chart-container">
     <canvas
@@ -20,5 +20,6 @@
       [options]="chartOptions"
       [type]="'bar'"
     ></canvas>
+    <p class="text-left total-forums">Foros creados históricamente: {{ totalForums }}</p>
   </div>
 </div>

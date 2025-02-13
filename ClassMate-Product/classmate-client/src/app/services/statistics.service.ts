@@ -33,4 +33,12 @@ export class StatisticsService {
       `${this.baseUrl}/totalForums`
     );
   }
+
+  public getTotalUsersCreated(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/totalUsers`);
+  }
+
+  public getActiveUsers(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/activeUsers`);
+  }
 }

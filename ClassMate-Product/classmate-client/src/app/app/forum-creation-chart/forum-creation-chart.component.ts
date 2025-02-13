@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartOptions } from 'chart.js';
-import { ForumCreationMetricsDTO } from '../services/dto/statistics/forum-creation-metrics-dto.interface';
-import { StatisticsService } from '../services/statistics.service'; // Import service to get data
+import { ForumCreationMetricsDTO } from '../../services/dto/statistics/forum-creation-metrics-dto.interface';
+import { StatisticsService } from '../../services/statistics.service'; // Import service to get data
 
 @Component({
   selector: 'app-forum-creation-chart',

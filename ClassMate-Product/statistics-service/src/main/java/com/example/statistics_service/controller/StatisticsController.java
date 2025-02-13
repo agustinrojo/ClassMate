@@ -4,6 +4,7 @@ import com.example.statistics_service.dto.ActivityResponseDTO;
 import com.example.statistics_service.dto.ForumCreationMetricsDTO;
 import com.example.statistics_service.service.IForumActivityService;
 import com.example.statistics_service.service.IForumCreationStatsService;
+import com.example.statistics_service.service.IUserStatsService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,13 @@ import java.util.List;
 public class StatisticsController {
 
     private final IForumActivityService forumActivityService;
-
     private final IForumCreationStatsService forumCreationStatsService;
+    private final IUserStatsService userStatsService;
 
-    public StatisticsController(IForumActivityService forumActivityService, IForumCreationStatsService forumCreationStatsService) {
+    public StatisticsController(IForumActivityService forumActivityService, IForumCreationStatsService forumCreationStatsService, IUserStatsService userStatsService) {
         this.forumActivityService = forumActivityService;
         this.forumCreationStatsService = forumCreationStatsService;
+        this.userStatsService = userStatsService;
     }
 
 
@@ -45,5 +47,15 @@ public class StatisticsController {
         return ResponseEntity.ok(totalForums);
     }
 
+    @GetMapping("/totalUsers")
+    public ResponseEntity<Long> getTotalUsersCreated() {
+        Long totalUsers = userStatsService.getTotalUsersCreated();
+        return ResponseEntity.ok(totalUsers);
+    }
 
+    @GetMapping("/activeUsers")
+    public ResponseEntity<Long> getActiveUsers() {
+        Long activeUsers = userStatsService.getActiveUsers();
+        return ResponseEntity.ok(activeUsers);
+    }
 }

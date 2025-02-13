@@ -3,14 +3,21 @@
   height: 350px;
   background: #1b1b1b; /* Match your main background */
   padding: 15px;
-  border-radius: 10px;
+  border-radius: 15px; /* Soft rounded corners */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.chart-container:hover {
+  transform: translateY(-5px); /* Slight hover effect to raise it */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6); /* Increase shadow on hover */
 }
 
 .card {
   background-color: #141414 !important; /* Match dark mode */
   border-radius: 10px;
   border: 1px solid #2c2c2c;
+  position: relative; /* To allow absolute positioning of the paragraph */
 }
 
 h2 {
