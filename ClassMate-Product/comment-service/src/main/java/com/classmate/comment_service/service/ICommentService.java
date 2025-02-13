@@ -62,4 +62,6 @@ public interface ICommentService {
     List<CommentDeleteRequestDTO> getReportedComments(int page, int size);
 
     List<CommentDeleteRequestDTO> findReportedCommentsByKeyword(String keyword);
+
+    void absolveComment(Long commentId);
 }

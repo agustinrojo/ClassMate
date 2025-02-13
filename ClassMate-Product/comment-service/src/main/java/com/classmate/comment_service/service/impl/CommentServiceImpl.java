@@ -23,6 +23,7 @@ import com.classmate.comment_service.mapper.DeleteRequestMapper;
 import com.classmate.comment_service.publisher.CommentPublisher;
 import com.classmate.comment_service.repository.ICommentRepository;
 import com.classmate.comment_service.mapper.IUserMapper;
+import com.classmate.comment_service.repository.IDeleteRequestRepository;
 import com.classmate.comment_service.repository.IUserRepository;
 import com.classmate.comment_service.service.ICommentService;
 import com.classmate.comment_service.service.ICommentValorationService;
@@ -53,9 +54,10 @@ public class CommentServiceImpl implements ICommentService {
     private final CommentPublisher commentPublisher;
     private final IUserRepository userRepository;
     private final ICommentValorationService valorationService;
+    private final IDeleteRequestRepository deleteRequestRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, DeleteRequestMapper deleteRequestMapper, AttachmentMapper attachmentMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, DeleteRequestMapper deleteRequestMapper, AttachmentMapper attachmentMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService, IDeleteRequestRepository deleteRequestRepository) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
@@ -66,6 +68,7 @@ public class CommentServiceImpl implements ICommentService {
         this.commentPublisher = commentPublisher;
         this.userRepository = userRepository;
         this.valorationService = valorationService;
+        this.deleteRequestRepository = deleteRequestRepository;
     }
 
     @Override
@@ -241,6 +244,15 @@ public class CommentServiceImpl implements ICommentService {
                 .stream()
                 .map(this::mapToCommentDeleteRequestDTO)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public void absolveComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(String.format("Comment with id: %d not found", commentId)));
+        comment.clearDeleteRequests();
+        commentRepository.save(comment);
     }
 
 

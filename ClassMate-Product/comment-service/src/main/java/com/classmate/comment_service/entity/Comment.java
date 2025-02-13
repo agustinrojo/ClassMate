@@ -119,4 +119,8 @@ public class Comment {
     public void addDeleteRequest(DeleteRequest deleteRequest){
         deleteRequests.add(deleteRequest);
     }
+
+    public void clearDeleteRequests(){
+        deleteRequests.clear();
+    }
 }

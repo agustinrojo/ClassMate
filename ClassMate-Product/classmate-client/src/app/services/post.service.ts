@@ -42,6 +42,10 @@ export class PostService {
     return this.http.get<PostDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported`);
   }
 
+  public getReportedPostsByKeyword(query: string): Observable<PostDeleteRequestDTOResponse[]> {
+    return this.http.get<PostDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported/${query}`);
+  }
+
   public isPostAuthor(postId: number, userId: number): Observable<IsPostAuthor>{
     return this.http.get<IsPostAuthor>(`${this.baseUrl}/isAuthor/${postId}/${userId}`);
   }

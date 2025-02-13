@@ -116,6 +116,10 @@ export class ForumService {
     return this.http.get<ForumDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported`);
   }
 
+  public getReportedForumsByKeyword(query: string): Observable<ForumDeleteRequestDTOResponse[]> {
+    return this.http.get<ForumDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported/${query}`);
+  }
+
   private updateLocalStorage(forumId: number, isDeletion: boolean): void {
     let user = JSON.parse(localStorage.getItem("user")!);
 

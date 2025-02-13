@@ -147,6 +147,12 @@ public class CommentController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping("/absolve/{id}")
+    public ResponseEntity<Void> absolveComment(@PathVariable("id") Long id){
+        commentService.absolveComment(id);
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * Endpoint to delete a comment by its ID.
      *

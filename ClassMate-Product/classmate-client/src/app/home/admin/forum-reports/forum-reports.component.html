@@ -1,6 +1,12 @@
 
 <div>
-
+  <div class="row">
+    <div class="col-4">
+      <div data-bs-theme="dark" class="input-group mb-3 mt-4">
+        <input [(ngModel)]="query" (input)="getReportedForumsByKeyword()" data-bs-theme="dark" type="text" class="form-control" placeholder="Buscar" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+      </div>
+    </div>
+  </div>
   <div class="d-flex flex-column justify-content-center align-items-center" style="height: 50vh;" *ngIf="reportedForums.length == 0">
     <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-stickies mb-3" viewBox="0 0 16 16">
       <path d="M1.5 0A1.5 1.5 0 0 0 0 1.5V13a1 1 0 0 0 1 1V1.5a.5.5 0 0 1 .5-.5H14a1 1 0 0 0-1-1z"/>
