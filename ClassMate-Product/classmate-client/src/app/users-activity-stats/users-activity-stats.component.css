@@ -6,6 +6,7 @@
   position: relative; /* Positioning for the text display */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Add a larger shadow for depth */
   transition: all 0.3s ease-in-out;
+  border: 1px solid #2c2c2c; /* This adds the subtle highlight around the card */
 }
 
 .card:hover {
@@ -24,7 +25,7 @@ h2 {
 .stats-container {
   display: flex;
   justify-content: center; /* Centers the content horizontally */
-  align-items: flex-start; /* Aligns the items at the top */
+  align-items: center; /* Vertically center items, just in case */
   margin-top: 20px;
 }
 
@@ -33,9 +34,7 @@ h2 {
   font-weight: 700;
   color: #74d2c1; /* Teal color for emphasis */
   text-align: center; /* Ensures the text itself is centered */
-  margin-top: -10px; /* Adjust this value to move it higher */
 }
-
 
 
 .stats-value {

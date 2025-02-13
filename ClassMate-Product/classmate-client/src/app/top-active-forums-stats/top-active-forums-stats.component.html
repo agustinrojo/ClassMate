@@ -1,0 +1,9 @@
+<div class="card d-flex flex-column p-4 shadow-lg rounded-lg h-100 top-active-forums-container">
+  <h2 class="text-center mb-3">Top 5 Foros Más Activos</h2>
+  <div class="list-group flex-grow-1 overflow-auto">
+    <div *ngFor="let forum of topForums" class="list-group-item">
+      <span class="forum-title">{{ forum.title }}</span>
+      <span class="activity-count">{{ forum.totalActivity }} interacciones</span>
+    </div>
+  </div>
+</div>

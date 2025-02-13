@@ -42,3 +42,7 @@ canvas {
   margin-left: auto !important;
   margin-top: auto;
 }
+
+.container {
+  margin-top: -10px !important;
+}

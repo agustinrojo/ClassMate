@@ -113,4 +113,7 @@ public interface IForumService {
     List<ForumDeleteRequestDTOResponse> findReportedForumsByKeyword(String keyword, String authorizationHeader);
 
     void absolveForum(Long forumId);
+
+    List<ForumSidebarDataDTO> getForumNamesByIds(List<Long> ids);
+
 }

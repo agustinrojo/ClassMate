@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivityResponseDTO } from './dto/statistics/activity-response-dto.interface';
 import { ForumCreationMetricsDTO } from './dto/statistics/forum-creation-metrics-dto.interface';
+import { TopForumDTO } from './dto/statistics/top-forum-dto.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,9 @@ export class StatisticsService {
 
   public getActiveUsers(): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/activeUsers`);
+  }
+
+  getTopActiveForums(): Observable<TopForumDTO[]> {
+    return this.http.get<TopForumDTO[]>(`${this.baseUrl}/top-active-forums`);
   }
 }

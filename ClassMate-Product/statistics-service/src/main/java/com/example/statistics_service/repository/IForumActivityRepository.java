@@ -13,5 +13,15 @@ public interface IForumActivityRepository extends JpaRepository<ForumActivity, L
 
     @Query("SELECT fa FROM ForumActivity fa WHERE fa.timestamp BETWEEN :startDate AND :endDate ORDER BY fa.timestamp")
     List<ForumActivity> findAllActivitiesBetween(LocalDateTime startDate, LocalDateTime endDate);
+
+    @Query("""
+    SELECT fa.forumId, SUM(fa.activityCount) as totalActivity 
+    FROM ForumActivity fa 
+    GROUP BY fa.forumId 
+    ORDER BY totalActivity DESC
+    LIMIT 5
+    """)
+    List<Object[]> findTop5MostActiveForums();
+
 }
 

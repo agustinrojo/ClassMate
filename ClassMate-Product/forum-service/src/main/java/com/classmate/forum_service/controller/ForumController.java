@@ -236,4 +236,11 @@ public class ForumController {
         forumService.absolveForum(forumId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/names-by-ids")
+    public ResponseEntity<List<ForumSidebarDataDTO>> getForumNamesByIds(@RequestParam List<Long> ids) {
+        List<ForumSidebarDataDTO> forumNames = forumService.getForumNamesByIds(ids);
+        return ResponseEntity.ok(forumNames);
+    }
+
 }

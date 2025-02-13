@@ -21,6 +21,7 @@ import { StatisticsComponent } from './statistics/statistics.component';
 import { ForumActivityChartComponent } from './forum-activity-chart/forum-activity-chart.component';
 import { ForumCreationChartComponent } from './app/forum-creation-chart/forum-creation-chart.component';
 import { UsersActivityStatsComponent } from './users-activity-stats/users-activity-stats.component';
+import { TopActiveForumsStatsComponent } from './top-active-forums-stats/top-active-forums-stats.component';
 
 
 
@@ -30,7 +31,8 @@ import { UsersActivityStatsComponent } from './users-activity-stats/users-activi
     StatisticsComponent,
     ForumActivityChartComponent,
     ForumCreationChartComponent,
-    UsersActivityStatsComponent
+    UsersActivityStatsComponent,
+    TopActiveForumsStatsComponent
   ],
   imports: [
     BrowserModule,

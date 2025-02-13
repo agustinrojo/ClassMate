@@ -1,7 +1,6 @@
 <div class="container mt-4">
-  <h1 class="text-center text-light mb-4">Dashboard de Estadísticas</h1>
-
-  <div class="row">
+  <!-- <h1 class="text-center text-light mb-4">La vida de ClassMate</h1> -->
+  <div class="row ">
     <!-- Forum Activity Stats -->
     <div class="col-md-6 mx-auto">
       <app-forum-activity-chart></app-forum-activity-chart>
@@ -14,15 +13,15 @@
   </div>
 
   <!-- Users Activity Stats -->
-  <div class="row mt-4">
-    <!-- Total Users Card -->
-    <div class="col-md-6 mx-auto">
-      <app-users-activity-stats></app-users-activity-stats>
-    </div>
-
-    <!-- Active Users Card -->
-    <div class="col-md-6 mx-auto">
-
-    </div>
+<div class="row mt-4">
+  <div class="col-md-6 d-flex align-items-stretch">
+    <app-top-active-forums-stats class="flex-grow-1"></app-top-active-forums-stats>
   </div>
+
+  <div class="col-md-6 d-flex align-items-stretch">
+    <app-users-activity-stats class="flex-grow-1"></app-users-activity-stats>
+  </div>
+
+</div>
+
 </div>

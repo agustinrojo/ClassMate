@@ -6,6 +6,8 @@ import com.example.statistics_service.entity.UsersCreated;
 import com.example.statistics_service.repository.IUserCreatedStatsRepository;
 import com.example.statistics_service.repository.IUserLoggedStatsRepository;
 import com.example.statistics_service.service.IUserStatsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 public class UserStatsService implements IUserStatsService {
     private final IUserCreatedStatsRepository userCreatedRepository;
     private final IUserLoggedStatsRepository userLoggedRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsService.class);
 
     public UserStatsService(IUserCreatedStatsRepository userCreatedRepository, IUserLoggedStatsRepository userLoggedRepository) {
         this.userCreatedRepository = userCreatedRepository;
@@ -38,12 +41,22 @@ public class UserStatsService implements IUserStatsService {
 
     @Override
     public void handleUserLoggedEvent(LoggedUserEventDTO loggedUserEventDTO) {
-        LoggedUser loggedUser = new LoggedUser();
-        loggedUser.setUserId(loggedUserEventDTO.getUserID());
-        loggedUser.setLoggedDateTime(loggedUserEventDTO.getLoggedDateTime());
+        Long userId = loggedUserEventDTO.getUserID();
+        LocalDateTime loggedDateTime = loggedUserEventDTO.getLoggedDateTime();
 
-        // Save the logged user data
-        userLoggedRepository.save(loggedUser);
+        // Calculate one week before the logged event
+        LocalDateTime oneWeekAgo = loggedDateTime.minusWeeks(1);
+
+        // Check if user has already logged in during the last week
+        boolean alreadyLoggedThisWeek = userLoggedRepository.existsByUserIdAndLoggedDateTimeAfter(userId, oneWeekAgo);
+
+        if (!alreadyLoggedThisWeek) {
+            LoggedUser loggedUser = new LoggedUser();
+            loggedUser.setUserId(userId);
+            loggedUser.setLoggedDateTime(loggedDateTime);
+
+            userLoggedRepository.save(loggedUser);
+        }
     }
 
     @Override

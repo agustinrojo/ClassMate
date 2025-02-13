@@ -2,6 +2,7 @@ package com.example.statistics_service.controller;
 
 import com.example.statistics_service.dto.ActivityResponseDTO;
 import com.example.statistics_service.dto.ForumCreationMetricsDTO;
+import com.example.statistics_service.dto.TopForumDTO;
 import com.example.statistics_service.service.IForumActivityService;
 import com.example.statistics_service.service.IForumCreationStatsService;
 import com.example.statistics_service.service.IUserStatsService;
@@ -58,4 +59,11 @@ public class StatisticsController {
         Long activeUsers = userStatsService.getActiveUsers();
         return ResponseEntity.ok(activeUsers);
     }
+
+    @GetMapping("/top-active-forums")
+    public ResponseEntity<List<TopForumDTO>> getTop5MostActiveForums() {
+        List<TopForumDTO> topForums = forumActivityService.getTop5MostActiveForums();
+        return ResponseEntity.ok(topForums);
+    }
+
 }
