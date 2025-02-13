@@ -133,4 +133,8 @@ public class Post {
         deleteRequests.add(deleteRequest);
     }
 
+    public void clearDeleteRequests(){
+        deleteRequests.clear();
+    }
+
 }

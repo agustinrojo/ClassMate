@@ -80,4 +80,6 @@ public interface IPostService {
     List<PostDeleteRequestDTO> getReportedPosts(int page, int size);
 
     List<PostDeleteRequestDTO> findReportedPostsByKeyword(String keyword);
+
+    void absolvePost(Long postId);
 }

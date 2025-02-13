@@ -173,6 +173,12 @@
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } // Enviar: title, body, filesToAdd, filesIdToRemove
 
+        @PutMapping("/absolve/{id}")
+        public ResponseEntity<Void> absolvePost(@PathVariable("id") Long id){
+            postService.absolvePost(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
         /**
          * Delete a post by its ID.
          * @param id the ID of the post to delete

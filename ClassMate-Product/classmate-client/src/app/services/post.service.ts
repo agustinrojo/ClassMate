@@ -86,6 +86,10 @@ export class PostService {
     return this.http.post<void>(`${this.baseUrl}/report/${postId}`, deleteRequest)
   }
 
+  public absolvePost(postId: number): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/absolve/${postId}`, {});
+  }
+
   public mapRequestToFormData(req: PostRequestDTO): FormData {
     const formData = new FormData();
     formData.append("id", req.id.toString());

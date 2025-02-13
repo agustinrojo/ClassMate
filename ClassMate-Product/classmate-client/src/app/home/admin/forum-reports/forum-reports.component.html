@@ -32,6 +32,11 @@
           <br>
           <span class="forum-details" *ngIf="forum.hasBeenEdited"><em>Editado</em></span>
           <app-report-message [deleteRequests]="forum.deleteRequests"></app-report-message>
+          <div class="row d-flex flex-row-reverse mt-2">
+            <div class="col-4 d-flex flex-row-reverse">
+              <button (click)="absolveForum(forum.id)" class="btn btn-success">Absolver</button>
+            </div>
+          </div>
         </div>
 
       </div>

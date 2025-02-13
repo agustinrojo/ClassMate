@@ -79,4 +79,9 @@ export class PostReportsComponent implements OnInit{
     }
   }
 
+  public absolvePost(postID: number){
+    this.reportedPosts = [...this.reportedPosts.filter((post) => post.id != postID)];
+    this.reportedPostsDisplay = [...this.reportedPostsDisplay.filter((post) => post.id != postID)];
+  }
+
 }

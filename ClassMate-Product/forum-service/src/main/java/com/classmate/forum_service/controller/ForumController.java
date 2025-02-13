@@ -230,4 +230,10 @@ public class ForumController {
         forumService.reportForum(forumId, deleteRequest);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/absolve/{id}")
+    public ResponseEntity<Void> absolveForum(@PathVariable("id") Long forumId){
+        forumService.absolveForum(forumId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

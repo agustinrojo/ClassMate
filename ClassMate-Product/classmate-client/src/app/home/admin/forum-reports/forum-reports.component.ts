@@ -42,4 +42,14 @@ export class ForumReportsComponent implements OnInit{
       this.getReportedForums();
     }
   }
+
+  public absolveForum(forumId: number){
+    this._forumService.absolveForum(forumId).subscribe(() => {
+      console.log("absolve success");
+      this.reportedForums = [...this.reportedForums.filter((forum) => forum.id != forumId)];
+    },
+    (err) => {
+      console.log(err);
+    })
+  }
 }

@@ -54,10 +54,9 @@ public class CommentServiceImpl implements ICommentService {
     private final CommentPublisher commentPublisher;
     private final IUserRepository userRepository;
     private final ICommentValorationService valorationService;
-    private final IDeleteRequestRepository deleteRequestRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, DeleteRequestMapper deleteRequestMapper, AttachmentMapper attachmentMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService, IDeleteRequestRepository deleteRequestRepository) {
+    public CommentServiceImpl(ICommentRepository commentRepository, CommentMapper commentMapper, IUserMapper userMapper, DeleteRequestMapper deleteRequestMapper, AttachmentMapper attachmentMapper, FileServiceClient fileServiceClient, IPostClient postClient, CommentPublisher commentPublisher, IUserRepository userRepository, ICommentValorationService valorationService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
@@ -68,7 +67,6 @@ public class CommentServiceImpl implements ICommentService {
         this.commentPublisher = commentPublisher;
         this.userRepository = userRepository;
         this.valorationService = valorationService;
-        this.deleteRequestRepository = deleteRequestRepository;
     }
 
     @Override
