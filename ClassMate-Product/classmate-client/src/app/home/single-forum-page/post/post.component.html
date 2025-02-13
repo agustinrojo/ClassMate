@@ -64,4 +64,9 @@
 
   </div>
   <app-report-message *ngIf="deleteRequests" [deleteRequests]="deleteRequests!"></app-report-message>
+  <div class="row d-flex flex-row-reverse mt-2">
+    <div class="col-4 d-flex flex-row-reverse">
+      <button (click)="absolvePost()" class="btn btn-success">Absolver</button>
+    </div>
+  </div>
 </div>

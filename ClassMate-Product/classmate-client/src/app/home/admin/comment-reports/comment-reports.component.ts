@@ -12,6 +12,7 @@ export class CommentReportsComponent implements OnInit{
 
   public reportedComments!: CommentDeleteRequestDTO[];
   public reportedCommentsDisplay: CommentDTOResponse[] = [];
+  public query: string = "";
 
   constructor(private _commentService: CommentService){}
 
@@ -44,5 +45,40 @@ export class CommentReportsComponent implements OnInit{
     (err) => {
       console.log(err);
     })
+  }
+
+
+  public getReportedCommentsByKeyword(){
+    if(this.query != ""){
+      this._commentService.getReportedCommentsByKeyword(this.query).subscribe((reportedComments: CommentDeleteRequestDTO[]) => {
+        this.reportedComments = reportedComments;
+        this.reportedCommentsDisplay = [];
+        this.reportedComments.forEach((comment) => {
+          this.reportedCommentsDisplay.push({
+            id: comment.id,
+            postId: comment.postId,
+            forumId: comment.forumId,
+            author: comment.author,
+            body: comment.body,
+            creationDate: comment.creationDate,
+            files: comment.files,
+            hasBeenEdited: comment.hasBeenEdited,
+            valoration: comment.valoration,
+            dislikedByUser: false,
+            likedByUser: false,
+            reportedByUser: false
+          })
+        })
+      },
+      (err) => {
+        console.log(err);
+      })
+    } else {
+      this.getReportedComments();
+    }
+  }
+
+  public absolveComment(id: number){
+    this.reportedComments = [...this.reportedComments.filter((comment) => comment.id != id)];
   }
 }

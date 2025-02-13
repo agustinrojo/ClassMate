@@ -22,6 +22,7 @@ import com.classmate.forum_service.mapper.IForumMapper;
 import com.classmate.forum_service.publisher.ForumSubscriptionPublisher;
 import com.classmate.forum_service.repository.IForumRepository;
 import com.classmate.forum_service.service.IForumService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -383,6 +384,28 @@ public class ForumServiceImpl implements IForumService {
                 .stream()
                 .map((Forum forum) -> getForumDeleteRequestDTO(forum, authorizationHeader))
                 .toList();
+    }
+
+    @Override
+    public List<ForumDeleteRequestDTOResponse> findReportedForumsByKeyword(String keyword, String authorizationHeader) {
+        List<Forum> reportedForums = forumRepository.findByDeleteRequestsAndKeyword(keyword);
+        System.out.println(reportedForums);
+        if(reportedForums.isEmpty()){
+            return new ArrayList<>();
+        }
+        return reportedForums
+                .stream()
+                .map((Forum forum) -> getForumDeleteRequestDTO(forum, authorizationHeader))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void absolveForum(Long forumId) {
+        Forum forum = forumRepository.findById(forumId)
+                .orElseThrow(() -> new ForumNotFoundException(String.format("Forum with id: %d not found", forumId)));
+        forum.clearDeleteRequests();
+        forumRepository.save(forum);
     }
 
 

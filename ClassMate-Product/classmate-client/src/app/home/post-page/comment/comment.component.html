@@ -33,5 +33,12 @@
     <app-valoration [valoration]="commentValoration" (likeEvent)="upvoteComment()" (dislikeEvent)="downvoteComment()" (removeEvent)="removeCommentVote()"></app-valoration>
   </div>
   <app-report-message *ngIf="deleteRequests" [deleteRequests]="deleteRequests!"></app-report-message>
+  <div *ngIf="deleteRequests" class="row d-flex flex-row-reverse mt-2">
+    <div class="col-4 d-flex flex-row-reverse">
+      <div (click)="absolveComment()" class="btn btn-success">
+        Absolver
+      </div>
+    </div>
+  </div>
 </div>
 <app-edit-comment (cancelEditing)="cancelEdition()" (editComment)="editComment($event)"  [body]="comment.body" [files]="comment.files" *ngIf="editing"></app-edit-comment>

@@ -42,6 +42,10 @@ export class PostService {
     return this.http.get<PostDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported`);
   }
 
+  public getReportedPostsByKeyword(query: string): Observable<PostDeleteRequestDTOResponse[]> {
+    return this.http.get<PostDeleteRequestDTOResponse[]>(`${this.baseUrl}/reported/${query}`);
+  }
+
   public isPostAuthor(postId: number, userId: number): Observable<IsPostAuthor>{
     return this.http.get<IsPostAuthor>(`${this.baseUrl}/isAuthor/${postId}/${userId}`);
   }
@@ -80,6 +84,10 @@ export class PostService {
 
   public reportPost(postId: number, deleteRequest: DeleteRequestDTO): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/report/${postId}`, deleteRequest)
+  }
+
+  public absolvePost(postId: number): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/absolve/${postId}`, {});
   }
 
   public mapRequestToFormData(req: PostRequestDTO): FormData {

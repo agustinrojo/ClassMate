@@ -42,4 +42,11 @@ public interface IPostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE SIZE(p.deleteRequests) > 0")
     Page<Post> findAllWithDeleteRequests(Pageable pageable);
 
+    @Query("SELECT p FROM Post p " +
+            "JOIN p.author u " +
+            "WHERE SIZE(p.deleteRequests) > 0 " +
+            "AND (LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.body) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(u.nickname) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    List<Post> findByDeleteRequestsAndKeyword(@Param("keyword") String keyword);
 }

@@ -31,6 +31,7 @@ export class PostComponent implements OnInit{
   @Input() public post!: PostResponseDTO;
   @Input() public deleteRequests?: DeleteRequestDTOResponse[] | null = null;
   @Output() public deleteEvent: EventEmitter<number> = new EventEmitter<number>();
+  @Output() public absolvePostEvent: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _authService: AuthServiceService,
               private _fileService: FileService,
@@ -41,7 +42,6 @@ export class PostComponent implements OnInit{
 
   ngOnInit(): void {
     this.setPostValoration();
-    console.log("COMMENT COUNT", this.post);
   }
 
 private setPostValoration(): void {
@@ -193,6 +193,16 @@ private setPostValoration(): void {
   err => {
     console.log(err);
   })
+  }
+
+  public absolvePost(){
+    this._postService.absolvePost(this.post.id).subscribe(() => {
+      console.log("absolve success");
+      this.absolvePostEvent.emit(this.post.id);
+    },
+    (err) => {
+      console.log(err);
+    })
   }
 
   public navigateToUserProfile(){

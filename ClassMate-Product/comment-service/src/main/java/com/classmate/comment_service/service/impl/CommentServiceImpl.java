@@ -23,6 +23,7 @@ import com.classmate.comment_service.mapper.DeleteRequestMapper;
 import com.classmate.comment_service.publisher.CommentPublisher;
 import com.classmate.comment_service.repository.ICommentRepository;
 import com.classmate.comment_service.mapper.IUserMapper;
+import com.classmate.comment_service.repository.IDeleteRequestRepository;
 import com.classmate.comment_service.repository.IUserRepository;
 import com.classmate.comment_service.service.ICommentService;
 import com.classmate.comment_service.service.ICommentValorationService;
@@ -229,6 +230,27 @@ public class CommentServiceImpl implements ICommentService {
                 .stream()
                 .map(this::mapToCommentDeleteRequestDTO)
                 .toList();
+    }
+
+    @Override
+    public List<CommentDeleteRequestDTO> findReportedCommentsByKeyword(String keyword) {
+        List<Comment> reportedComments = commentRepository.findByDeleteRequestsAndKeyword(keyword);
+        if(reportedComments.isEmpty()){
+            return new ArrayList<>();
+        }
+        return reportedComments
+                .stream()
+                .map(this::mapToCommentDeleteRequestDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void absolveComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(String.format("Comment with id: %d not found", commentId)));
+        comment.clearDeleteRequests();
+        commentRepository.save(comment);
     }
 
 

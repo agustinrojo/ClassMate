@@ -13,6 +13,7 @@ export class PostReportsComponent implements OnInit{
 
   public reportedPosts!: PostDeleteRequestDTOResponse[];
   public reportedPostsDisplay: PostResponseDTO[] = [];
+  public query: string = "";
 
   constructor(private _postService: PostService){}
 
@@ -23,6 +24,7 @@ export class PostReportsComponent implements OnInit{
   private getReportedPosts() {
     this._postService.getReportedPosts().subscribe((posts: PostDeleteRequestDTOResponse[]) => {
       this.reportedPosts = posts;
+      this.reportedPostsDisplay = [];
       posts.forEach((post: PostDeleteRequestDTOResponse) => {
         this.reportedPostsDisplay.push({
           id: post.id,
@@ -41,11 +43,45 @@ export class PostReportsComponent implements OnInit{
           dislikedByUser: false
         })
       })
-
-
-
     })
   }
 
+  public getReportedPostsByKeyword() {
+    if(this.query != ""){
+      this.reportedPosts = []
+      this._postService.getReportedPostsByKeyword(this.query).subscribe((posts: PostDeleteRequestDTOResponse[]) => {
+        this.reportedPosts = posts;
+        this.reportedPostsDisplay = [];
+        posts.forEach((post: PostDeleteRequestDTOResponse) => {
+          this.reportedPostsDisplay.push({
+            id: post.id,
+            creationDate: post.creationDate,
+            commentCount: post.commentCount,
+            title: post.title,
+            body: post.body,
+            author: post.author,
+            valoration: post.valoration,
+            likedByUser: false,
+            reportedByUser: false,
+            forumId: post.forumId,
+            files: post.files,
+            lastMilestone: 1000,
+            hasBeenEdited: post.hasBeenEdited,
+            dislikedByUser: false
+          })
+        })
+      },
+      (err) => {
+        console.log(err)
+      })
+    } else {
+      this.getReportedPosts();
+    }
+  }
+
+  public absolvePost(postID: number){
+    this.reportedPosts = [...this.reportedPosts.filter((post) => post.id != postID)];
+    this.reportedPostsDisplay = [...this.reportedPostsDisplay.filter((post) => post.id != postID)];
+  }
 
 }

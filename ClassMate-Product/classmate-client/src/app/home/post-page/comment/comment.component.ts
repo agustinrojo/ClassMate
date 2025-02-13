@@ -31,6 +31,7 @@ export class CommentComponent implements OnInit{
   @Input() public comment!: CommentDTOResponse;
   @Input() public deleteRequests?: DeleteRequestDTOResponse[] | null = null;
   @Output() public deleteEvent = new EventEmitter<number>();
+  @Output() public commentAbsolved = new EventEmitter<number>();
 
 
   constructor(
@@ -163,6 +164,16 @@ export class CommentComponent implements OnInit{
       // Directly upvote if no downvote exists
       this.executeUpvote();
     }
+  }
+
+  public absolveComment(){
+    this._commentService.absolveComment(this.comment.id).subscribe(() => {
+      console.log("absolve success");
+      this.commentAbsolved.emit(this.comment.id)
+    },
+    (err) => {
+      console.log(err);
+    })
   }
 
   private executeUpvote() {

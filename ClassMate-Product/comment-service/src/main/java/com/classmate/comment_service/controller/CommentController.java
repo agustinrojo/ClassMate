@@ -127,6 +127,12 @@ public class CommentController {
         return new ResponseEntity<>(reportedComments, HttpStatus.OK);
     }
 
+    @GetMapping("/reported/{query}")
+    public ResponseEntity<List<CommentDeleteRequestDTO>> findReportedCommentsByKeyword(@PathVariable("query") String query){
+        List<CommentDeleteRequestDTO> reportedComments = commentService.findReportedCommentsByKeyword(query);
+        return new ResponseEntity<>(reportedComments, HttpStatus.OK);
+    }
+
     /**
      * Endpoint to update an existing comment by its ID.
      *
@@ -139,6 +145,12 @@ public class CommentController {
                                               @ModelAttribute CommentUpdateDTO commentUpdateDTO) {
         commentService.updateComment(id, commentUpdateDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/absolve/{id}")
+    public ResponseEntity<Void> absolveComment(@PathVariable("id") Long id){
+        commentService.absolveComment(id);
+        return ResponseEntity.noContent().build();
     }
 
     /**

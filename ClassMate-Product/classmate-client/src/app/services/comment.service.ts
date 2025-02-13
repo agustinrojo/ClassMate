@@ -64,6 +64,14 @@ export class CommentService {
     return this.http.get<CommentDeleteRequestDTO[]>(`${this.baseUrl}/reported`);
   }
 
+  public getReportedCommentsByKeyword(query: string): Observable<CommentDeleteRequestDTO[]>{
+    return this.http.get<CommentDeleteRequestDTO[]>(`${this.baseUrl}/reported/${query}`);
+  }
+
+  public absolveComment(commentId: number): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/absolve/${commentId}`, {});
+  }
+
   public mapRequestToFormData(req: CommentDTORequest): FormData {
     const formData = new FormData();
     formData.append("id", req.id.toString())

@@ -115,6 +115,12 @@
             return new ResponseEntity<>(postDeleteRequests, HttpStatus.OK);
         }
 
+        @GetMapping("/reported/{query}")
+        public ResponseEntity<List<PostDeleteRequestDTO>> findReportedPostsByKeyword(@PathVariable("query") String query){
+            List<PostDeleteRequestDTO> reportedPosts = postService.findReportedPostsByKeyword(query);
+            return new ResponseEntity<>(reportedPosts, HttpStatus.OK);
+        }
+
         /**
          * Create a new post.
          * @param postSaveDTO the post to create
@@ -166,6 +172,12 @@
             postService.updatePost(id, postUpdateDTO);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } // Enviar: title, body, filesToAdd, filesIdToRemove
+
+        @PutMapping("/absolve/{id}")
+        public ResponseEntity<Void> absolvePost(@PathVariable("id") Long id){
+            postService.absolvePost(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
 
         /**
          * Delete a post by its ID.

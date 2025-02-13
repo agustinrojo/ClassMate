@@ -108,6 +108,13 @@ public class ForumController {
         return new ResponseEntity<>(reportedForums, HttpStatus.OK);
     }
 
+    @GetMapping("/reported/{query}")
+    public ResponseEntity<List<ForumDeleteRequestDTOResponse>> findReportedForumsByKeyword(@RequestHeader("Authorization") String authorization,
+                                                                                           @PathVariable("query") String query){
+        List<ForumDeleteRequestDTOResponse> reportedForums = forumService.findReportedForumsByKeyword(query, authorization);
+        return new ResponseEntity<>(reportedForums, HttpStatus.OK);
+    }
+
     /**
      * Creates a new forum.
      *
@@ -221,6 +228,12 @@ public class ForumController {
     public ResponseEntity<Void> reportForum(@PathVariable("forumId") Long forumId,
                                             @RequestBody DeleteRequestDTO deleteRequest){
         forumService.reportForum(forumId, deleteRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/absolve/{id}")
+    public ResponseEntity<Void> absolveForum(@PathVariable("id") Long forumId){
+        forumService.absolveForum(forumId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

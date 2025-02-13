@@ -78,4 +78,8 @@ public interface IPostService {
 
     void reportPost(Long postId, DeleteRequestDTO deleteRequest);
     List<PostDeleteRequestDTO> getReportedPosts(int page, int size);
+
+    List<PostDeleteRequestDTO> findReportedPostsByKeyword(String keyword);
+
+    void absolvePost(Long postId);
 }

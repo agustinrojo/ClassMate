@@ -9,7 +9,9 @@ import { Router } from '@angular/router';
   styleUrl: './forum-reports.component.css'
 })
 export class ForumReportsComponent implements OnInit{
+
   public reportedForums!: ForumDeleteRequestDTOResponse[];
+  public query: string = "";
 
   ngOnInit(): void {
     this.getReportedForums();
@@ -25,6 +27,26 @@ export class ForumReportsComponent implements OnInit{
     this._forumService.getReportedForums().subscribe((forums: ForumDeleteRequestDTOResponse[]) => {
       console.log(forums)
       this.reportedForums = forums;
+    },
+    (err) => {
+      console.log(err);
+    })
+  }
+
+  public getReportedForumsByKeyword() {
+    if(this.query != ""){
+      this._forumService.getReportedForumsByKeyword(this.query).subscribe((forums: ForumDeleteRequestDTOResponse[]) => {
+        this.reportedForums = forums;
+      })
+    } else {
+      this.getReportedForums();
+    }
+  }
+
+  public absolveForum(forumId: number){
+    this._forumService.absolveForum(forumId).subscribe(() => {
+      console.log("absolve success");
+      this.reportedForums = [...this.reportedForums.filter((forum) => forum.id != forumId)];
     },
     (err) => {
       console.log(err);
