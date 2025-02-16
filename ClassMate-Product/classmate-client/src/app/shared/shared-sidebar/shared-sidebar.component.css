@@ -2,7 +2,7 @@
   background-color: #141414;
   padding: 20px;
   width: 270px; /* Ancho inicial en pantallas grandes */
-  position: fixed;
+  /*position: fixed;*/
   top: 60px;
   left: 0;
   bottom: 0;

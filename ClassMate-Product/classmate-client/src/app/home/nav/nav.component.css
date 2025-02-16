@@ -8,6 +8,9 @@
   padding: 5px 0;
   z-index: 1000;
   border-bottom: 1px solid #444;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
 }
 
 
@@ -25,11 +28,21 @@
   padding-top: 3px; /* Adjust this value to raise the icon higher */
 }
 
+.navbar-brand {
+  margin-bottom: 8px;
+  margin-left: 5px;
+}
+
+
 .nav__icon {
   height: 40px;
   width: auto;
   margin-left: 0;
   vertical-align: middle;
+  z-index: 250;
+  top: 5px;
+  right: 5px;
+  left: 5px;
 }
 
 .nav__user {
@@ -49,10 +62,12 @@
   color: #fff;
   font-size: 1em;
   cursor: pointer;
+  margin-left: 4px;
+
 }
 
 .dropdown {
-  position: relative;
+  position: left;
 }
 
 .dropdown__toggle {
@@ -87,3 +102,86 @@
 .dropdown:hover .dropdown__menu {
   display: block;
 }
+
+
+.collapse.navbar-collapse {
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.nav-item.profile_drop, .calendario, .chats, .notification, .buscadore {
+  display: inline-flex;
+  padding: 10px;
+  align-items: center;
+
+}
+
+
+.navbar
+{
+    background-color: #141414;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    padding: 5px 0;
+    z-index: 1000;
+    border-bottom: 1px solid #444;
+    padding-left: 0
+}
+
+
+
+.navbar-expand-lg
+{
+  background-color: #141414;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+}
+
+.navbar-toggler
+{
+  /* width: 100%; */
+  padding: 0 20px;
+  /* display: flex; */
+  justify-content: space-between;
+  padding: var(--bs-navbar-toggler-padding-y) var(--bs-navbar-toggler-padding-x);
+  font-size: var(--bs-navbar-toggler-font-size);
+  line-height: 1;
+  color: var(--bs-navbar-color);
+  background-color: transparent;
+  border: var(--bs-border-width) solid var(--bs-navbar-toggler-border-color);
+  border-radius: var(--bs-navbar-toggler-border-radius);
+  transition: var(--bs-navbar-toggler-transition);
+  background-color: #141414;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bg-body-tertiary {
+  --bs-bg-opacity: 1;
+  background-color: #141414 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.container_fluid
+{
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 200;
+}
+
+
+/*.navbar-toggler-icon {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  background-image: var(--bs-navbar-toggler-icon-bg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}*/
+
