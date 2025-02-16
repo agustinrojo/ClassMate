@@ -28,7 +28,7 @@ public class EmailService implements EmailSender{
             helper.setTo(to);
             helper.setSubject("Confirmación de cuenta UTN-ClassMate");
             helper.setFrom("no-reply@utn-classmate.org");
-            mailSender.send(mimeMessage);
+            //mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
             throw new IllegalStateException(String.format("failed to send email %s", email));

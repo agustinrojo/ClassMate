@@ -81,6 +81,7 @@ public class AuthService {
         String token = signUpUser(user);
         String link = "http://localhost:8080/api/auth/confirm?token=" + token;
         emailSender.send(req.getEmail(), buildConfirmationEmail(link, "UTN Classmate", user.getFirstName()));
+        System.out.println(link);
         return RegisterRespDTO.builder()
                 .success(true)
                 .build();
