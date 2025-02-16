@@ -49,9 +49,13 @@ export class ForumCreationChartComponent implements OnChanges, OnInit {
   private initializeChart() {
     const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     const forumCounts = months.map((month, index) => {
-      const monthData = this.forumData.find(d => new Date(d.yearMonth).getMonth() === index);
-      return monthData ? monthData.forumCount : 0;
+      const monthDataForThisMonth = this.forumData.filter(d => new Date(d.yearMonth).getMonth() === index);
+      const monthTotal = monthDataForThisMonth.reduce((sum, entry) => sum + entry.forumCount, 0);
+      return monthTotal;
     });
+
+    console.log("Forum counts", forumCounts);
+
 
     this.chartData = {
       labels: months,
