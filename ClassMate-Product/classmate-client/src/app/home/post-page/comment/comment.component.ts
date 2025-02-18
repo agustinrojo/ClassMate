@@ -51,6 +51,8 @@ export class CommentComponent implements OnInit{
       likedByUser: this.comment.likedByUser,
       dislikedByUser: this.comment.dislikedByUser
     }
+    console.log('Liked by user', this.comment.likedByUser);
+    console.log('Disliked by user', this.comment.dislikedByUser);
   }
 
   public deleteComment(){
@@ -149,11 +151,12 @@ export class CommentComponent implements OnInit{
 
   public upvoteComment() {
     if (this.comment.likedByUser) {
-      // Already upvoted, no action needed
-      return;
-    }
-
-    if (this.comment.dislikedByUser) {
+      this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
+        this.comment.likedByUser = false;
+      }, (err) => {
+        console.error("Error removing downvote", err);
+      });
+    } else if (this.comment.dislikedByUser) {
       // Remove downvote before upvoting
       this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
         this.executeUpvote();
@@ -164,6 +167,8 @@ export class CommentComponent implements OnInit{
       // Directly upvote if no downvote exists
       this.executeUpvote();
     }
+    console.log(this.comment.likedByUser);
+    console.log(this.comment.dislikedByUser);
   }
 
   public absolveComment(){
@@ -188,11 +193,12 @@ export class CommentComponent implements OnInit{
 
   public downvoteComment() {
     if (this.comment.dislikedByUser) {
-      // Already downvoted, no action needed
-      return;
-    }
-
-    if (this.comment.likedByUser) {
+      this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
+        this.comment.dislikedByUser = false;
+      }, (err) => {
+        console.error("Error removing upvote", err);
+      });
+    } else if (this.comment.likedByUser) {
       // Remove upvote before downvoting
       this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
         this.executeDownvote();
@@ -218,6 +224,8 @@ export class CommentComponent implements OnInit{
 
   public removeCommentVote() {
     this._commentService.removeCommentVote(this.comment.id).subscribe(() => {
+      this.comment.dislikedByUser = false;
+      this.comment.likedByUser = false
       console.log("Remove vote success");
     },
     err => {
