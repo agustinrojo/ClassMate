@@ -17,7 +17,8 @@
         [isAdmin]="isAdmin"
         [forumId]="forumId"
         (adminAddedEvent)="adminAddedEventAllUsers($event)"
-        (adminRemovedEvent)="adminRemovedEventAllUsers($event)">
+        (adminRemovedEvent)="adminRemovedEventAllUsers($event)"
+        (userBannedEvent)="removeUser($event)">
       </app-user-item>
     </div>
   </div>
@@ -33,7 +34,8 @@
         [isAdmin]="isAdmin"
         [forumId]="forumId"
         (adminAddedEvent)="adminAddedEventSearchResults($event)"
-        (adminRemovedEvent)="adminRemovedEventSearchResults($event)">
+        (adminRemovedEvent)="adminRemovedEventSearchResults($event)"
+        (userBannedEvent)="removeUser($event)">
       </app-user-item>
     </div>
   </div>
