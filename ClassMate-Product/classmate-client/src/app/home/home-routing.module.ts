@@ -115,8 +115,10 @@ export const routes: Routes = [
         canActivate: [CanActivateAdminGuard]
       },
       {
-        path: 'statistics',
+        path: 'admin/statistics',
         component: StatisticsComponent,
+        canMatch: [CanMatchAdminGuard],
+        canActivate: [CanActivateAdminGuard]
       },
     ]
   }
