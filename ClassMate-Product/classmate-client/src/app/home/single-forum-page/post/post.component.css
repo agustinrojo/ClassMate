@@ -16,9 +16,10 @@
 .post p {
   font-size: 1em;
   margin-bottom: 10px;
-  color: #ffffff; /* Color de texto claro */
-  white-space: pre-wrap; /* Mantiene los saltos de línea */
-
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word; /* Extra safety for legacy browsers */
+  white-space: pre-wrap;
 }
 
 .post-details {

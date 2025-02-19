@@ -19,6 +19,9 @@ import { CreateProfileModule } from './create-profile/create-profile.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { ForumActivityChartComponent } from './forum-activity-chart/forum-activity-chart.component';
+import { ForumCreationChartComponent } from './app/forum-creation-chart/forum-creation-chart.component';
+import { UsersActivityStatsComponent } from './users-activity-stats/users-activity-stats.component';
+import { TopActiveForumsStatsComponent } from './top-active-forums-stats/top-active-forums-stats.component';
 
 
 
@@ -26,7 +29,10 @@ import { ForumActivityChartComponent } from './forum-activity-chart/forum-activi
   declarations: [
     AppComponent,
     StatisticsComponent,
-    ForumActivityChartComponent
+    ForumActivityChartComponent,
+    ForumCreationChartComponent,
+    UsersActivityStatsComponent,
+    TopActiveForumsStatsComponent
   ],
   imports: [
     BrowserModule,

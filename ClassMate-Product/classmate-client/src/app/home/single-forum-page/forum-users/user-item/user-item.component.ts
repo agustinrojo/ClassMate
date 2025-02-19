@@ -20,6 +20,8 @@ export class UserItemComponent implements OnInit {
 
   @Output() public adminAddedEvent = new EventEmitter<number>();
   @Output() public adminRemovedEvent = new EventEmitter<number>();
+  @Output() public userBannedEvent = new EventEmitter<number>();
+
 
   public userProfilePhotoUrl!: string;
   public isDropdownOpen: boolean = false;
@@ -82,8 +84,23 @@ export class UserItemComponent implements OnInit {
   }
 
   shouldShowBanButton(): boolean {
-    // Show the ban button for Creator and Admins, but never for Subscribers
-    return this.isCreator || this.isAdmin;
+    // 1. Hide if I'm clicking myself
+    if (this.user.userId === this.currentUserId) {
+      return false;
+    }
+
+    // 2. Creator can ban anyone
+    if (this.isCreator) {
+      return true;
+    }
+
+    // 3. Moderator (Admin) can ban only Subscribers
+    if (this.isAdmin && this.user.userType === 'Subscriber') {
+      return true;
+    }
+
+    // 4. Moderator should not see the button for Creator or other Moderators
+    return false;
   }
 
   // Method to ban a user
@@ -92,7 +109,7 @@ export class UserItemComponent implements OnInit {
       this._forumService.banUser(this.forumId, this.currentUserId, this.user.userId).subscribe({
         next: () => {
           console.log(`User ${this.user.userId} banned successfully.`);
-          // Optional: Update the UI to reflect the change
+          this.userBannedEvent.emit(this.user.userId); // Emit event to parent
         },
         error: (err) => {
           console.error('Failed to ban user:', err);

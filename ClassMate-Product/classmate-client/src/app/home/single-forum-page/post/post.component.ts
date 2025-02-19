@@ -54,6 +54,8 @@ private setPostValoration(): void {
     likedByUser: this.post.likedByUser,
     dislikedByUser: this.post.dislikedByUser
   }
+  console.log("Post valoration", this.postValoration);
+
 }
   public navigateToPost(postId: number){
     this._router.navigate([`forum/${this.post.forumId}/post/${postId}`]);
@@ -103,10 +105,14 @@ private setPostValoration(): void {
 
   public upvotePost() {
     if(this.post.likedByUser){
-      return;
-    }
-
-    if (this.post.dislikedByUser) {
+      console.log("Entramo al like por alguna razon");
+      this._postService.removePostVote(this.post.id).subscribe(() => {
+        this.post.likedByUser = false;
+        console.log("Upvote removed");
+      }, (err) => {
+        console.error("Error removing upvote", err);
+      });
+    } else if (this.post.dislikedByUser) {
       // If there's an active downvote, remove it first
       this._postService.removePostVote(this.post.id).subscribe(() => {
         this.executeUpvote();
@@ -117,29 +123,25 @@ private setPostValoration(): void {
       // Directly upvote if no downvote exists
       this.executeUpvote();
     }
-    this._postService.upvotePost(this.post.id).subscribe(() => {
-      console.log("Upvote success")
-    },
-  err => {
-    console.log(err);
-  })
   }
 
   public downvotePost() {
     if (this.post.dislikedByUser) {
-      // Already downvoted, no action needed
-      return;
-    }
-
-    if (this.post.likedByUser) {
+      // Already downvoted
+      this._postService.removePostVote(this.post.id).subscribe(() => {
+        console.log("Downvote removed");
+        this.post.dislikedByUser = false;
+      }, (err) => {
+        console.error("Error removing upvote", err);
+      });
+    } else if (this.post.likedByUser) {
       // If there's an active upvote, remove it first
       this._postService.removePostVote(this.post.id).subscribe(() => {
         console.log("Upvote removed, proceeding to downvote");
         this.executeDownvote();
       }, (err) => {
         console.error("Error removing upvote", err);
-      });
-    } else {
+      }) } else {
       // Directly downvote if no upvote exists
       this.executeDownvote();
     }
@@ -189,6 +191,8 @@ private setPostValoration(): void {
   public removePostVote() {
 
     this._postService.removePostVote(this.post.id).subscribe(() => {
+      this.post.dislikedByUser = false;
+      this.post.likedByUser = false
       console.log("Remove success")
     },
   err => {

@@ -19,21 +19,33 @@ export class ForumListComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if(this.forumsSubcribedIds){
-      this._forumService.getMultipleForums(this.forumsSubcribedIds).subscribe((forums: ForumDTO[]) => {
-        console.log(forums);
-        this.forums = forums;
-      },
-      (err) => {
-        console.log(err);
-        this.showErr = true;
-      })
+    if (this.forumsSubcribedIds && this.forumsSubcribedIds.length > 0) {
+      this._forumService.getMultipleForums(this.forumsSubcribedIds).subscribe(
+        (forums: ForumDTO[]) => {
+          this.forums = forums;
+          this.loading = false;
+        },
+        (err) => {
+          console.log(err);
+          this.showErr = true;
+          this.loading = false;
+        }
+      );
+    } else {
+      // Si el array es vacío o undefined, mostrar directamente que no hay foros
+      this.loading = false;
     }
-    this.loading = false;
   }
+
+
 
   public navigateToForum(forumId: number){
     this._router.navigate([`forum/${forumId}`]);
   }
+
+  get isEmpty(): boolean {
+    return !this.loading && !this.showErr && this.forums.length === 0;
+  }
+
 
 }

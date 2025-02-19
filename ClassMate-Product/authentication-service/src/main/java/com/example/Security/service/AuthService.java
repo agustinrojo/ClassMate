@@ -5,6 +5,7 @@ import com.example.Security.dto.auth.AuthReq;
 import com.example.Security.dto.auth.AuthenticationResp;
 import com.example.Security.dto.register.RegisterReq;
 import com.example.Security.dto.register.RegisterRespDTO;
+import com.example.Security.dto.statistics.LoggedUserEventDTO;
 import com.example.Security.dto.token.TokenValidationRequest;
 import com.example.Security.dto.token.TokenValidationResponse;
 import com.example.Security.dto.user.UserDTO;
@@ -14,6 +15,7 @@ import com.example.Security.exception.EmailAlreadyTakenException;
 import com.example.Security.exception.EmailNotValidException;
 import com.example.Security.exception.InvalidTokenException;
 import com.example.Security.exception.ResourceWithNumericValueDoesNotExistException;
+import com.example.Security.publisher.UserStatisticsPublisher;
 import com.example.Security.repositories.JWTTokenrepository;
 import com.example.Security.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +47,7 @@ public class AuthService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
     private final JWTTokenrepository jwtTokenRepository;
+    private final UserStatisticsPublisher userStatisticsPublisher;
 
 
 
@@ -55,8 +58,8 @@ public class AuthService {
                        EmailValidator emailValidator,
                        ConfirmationTokenService confirmationTokenService,
                        EmailSender emailSender,
-                       JWTTokenrepository jwtTokenrepository
-                       ) {
+                       JWTTokenrepository jwtTokenrepository, UserStatisticsPublisher userStatisticsPublisher
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -65,7 +68,7 @@ public class AuthService {
         this.confirmationTokenService = confirmationTokenService;
         this.emailSender = emailSender;
         this.jwtTokenRepository = jwtTokenrepository;
-
+        this.userStatisticsPublisher = userStatisticsPublisher;
     }
 
     public RegisterRespDTO register(RegisterReq req, boolean isAdmin){
@@ -86,6 +89,8 @@ public class AuthService {
             String link = "http://localhost:8080/api/auth/confirm?token=" + token;
             emailSender.sendConfirmationEmail(req.getEmail(), buildConfirmationEmail(link, "UTN Classmate", user.getFirstName()));
         }
+
+        userStatisticsPublisher.publishUserCreatedEvent();
 
         return RegisterRespDTO.builder()
                 .success(true)
@@ -119,6 +124,9 @@ public class AuthService {
                 .user(user)
                 .build();
         jwtTokenRepository.save(token);
+
+        LoggedUserEventDTO loggedUserEventDTO = new LoggedUserEventDTO(user.getId(), LocalDateTime.now());
+        userStatisticsPublisher.publishUserLoggedEvent(loggedUserEventDTO);
 
         return mapToAuthenticationResponse(accessToken, refreshToken, userDTO);
     }

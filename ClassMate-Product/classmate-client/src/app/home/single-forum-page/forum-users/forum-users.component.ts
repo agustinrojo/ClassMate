@@ -112,4 +112,10 @@ export class ForumUsersComponent implements OnChanges, OnInit {
       console.log(err);
     })
   }
+
+  public removeUser(userId: number) {
+    this.allUsers = this.allUsers.filter(user => user.userId !== userId);
+    this.searchResultUsers = this.searchResultUsers.filter(user => user.userId !== userId);
+  }
+
 }

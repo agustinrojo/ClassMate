@@ -1,6 +1,7 @@
 package com.example.statistics_service.service.impl;
 
 import com.example.statistics_service.dto.ActivityResponseDTO;
+import com.example.statistics_service.dto.TopForumDTO;
 import com.example.statistics_service.entity.ForumActivity;
 import com.example.statistics_service.repository.IForumActivityRepository;
 import com.example.statistics_service.service.IForumActivityService;
@@ -37,5 +38,17 @@ public class ForumActivityService implements IForumActivityService {
                 .sorted(Comparator.comparing(ActivityResponseDTO::getTimeBucket))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<TopForumDTO> getTop5MostActiveForums() {
+        List<Object[]> results = repository.findTop5MostActiveForums();
+        return results.stream()
+                .map(result -> new TopForumDTO(
+                        (Long) result[0],         // forumId
+                        ((Number) result[1]).intValue() // totalActivity
+                ))
+                .collect(Collectors.toList());
+    }
+
 
 }

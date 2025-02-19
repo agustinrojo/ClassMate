@@ -140,12 +140,14 @@ export class ProfilePageComponent implements OnInit {
 
   public getLikesPercentage(): number {
     const total = this.userProfile.likesAmmount + this.userProfile.dislikesAmmount;
-    return total > 0 ? (this.userProfile.likesAmmount / total) * 100 : 50;
+    const percentage = total > 0 ? (this.userProfile.likesAmmount / total) * 100 : 50;
+    return percentage > 100 ? 100 : percentage;
   }
 
   public getDislikesPercentage(): number {
     const total = this.userProfile.likesAmmount + this.userProfile.dislikesAmmount;
-    return total > 0 ? (this.userProfile.dislikesAmmount / total) * 100 : 50;
+    const percentage = total > 0 ? (this.userProfile.dislikesAmmount / total) * 100 : 50;
+    return percentage > 100 ? 100 : percentage;
   }
 
 

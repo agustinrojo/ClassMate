@@ -30,6 +30,23 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.comment.created.statistic.routing-key}")
     private String commentCreatedStatisticRoutingKey;
 
+    // FORUMS CREATION
+    @Value("${rabbitmq.queue.forum.created.statistic}")
+    private String forumCreatedStatisticQueue;
+    @Value("${rabbitmq.forum.created.statistic.routing-key}")
+    private String forumCreatedStatisticRoutingKey;
+
+    // USER STATISTICS
+    @Value("${rabbitmq.queue.user.created.statistic}")
+    private String userCreatedStatisticQueue;
+    @Value("${rabbitmq.user.created.statistic.routing-key}")
+    private String userCreatedStatisticRoutingKey;
+    @Value("${rabbitmq.queue.user.logged.statistic}")
+    private String userLoggedStatisticQueue;
+    @Value("${rabbitmq.user.logged.statistic.routing-key}")
+    private String userLoggedStatisticRoutingKey;
+
+
     @Bean
     public TopicExchange statisticsExchange() {
         return new TopicExchange(statisticsExchange);
@@ -43,6 +60,21 @@ public class RabbitMQConfig {
     @Bean
     public Queue commentStatisticsQueue() {
         return new Queue(commentCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public Queue forumStatisticsQueue() {
+        return new Queue(forumCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public Queue userCreatedStatisticsQueue() {
+        return new Queue(userCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public Queue userLoggedStatisticsQueue() {
+        return new Queue(userLoggedStatisticQueue, true);
     }
 
 
@@ -62,6 +94,32 @@ public class RabbitMQConfig {
                 .bind(commentStatisticsQueue())
                 .to(statisticsExchange())
                 .with(commentCreatedStatisticRoutingKey);
+    }
+
+    // FORUMS CREATION
+    @Bean
+    public Binding forumStatisticsBinding() {
+        return BindingBuilder
+                .bind(forumStatisticsQueue())
+                .to(statisticsExchange())
+                .with(forumCreatedStatisticRoutingKey);
+    }
+
+    // USER STATISTICS
+    @Bean
+    public Binding userCreatedStatisticsBinding() {
+        return BindingBuilder
+                .bind(userCreatedStatisticsQueue())
+                .to(statisticsExchange())
+                .with(userCreatedStatisticRoutingKey);
+    }
+
+    @Bean
+    public Binding userLoggedStatisticsBinding() {
+        return BindingBuilder
+                .bind(userLoggedStatisticsQueue())
+                .to(statisticsExchange())
+                .with(userLoggedStatisticRoutingKey);
     }
 
     @Bean
