@@ -16,7 +16,7 @@
   <section class="posts">
     <div *ngFor="let post of reportedPostsDisplay; let i = index" class="row">
       <div class="col-8">
-        <app-post (deleteEvent)="deletePost($event)" (absolvePostEvent)="absolvePost($event)" [post]="post" [deleteRequests]="reportedPosts[i].deleteRequests"></app-post>
+        <app-post (deleteEvent)="deletePost($event)" (absolvePostEvent)="absolvePost($event)" [canAbsolve]="true" [post]="post" [deleteRequests]="reportedPosts[i].deleteRequests"></app-post>
       </div>
     </div>
   </section>

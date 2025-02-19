@@ -10,7 +10,6 @@ import { User } from './dto/user-dto.interface';
 import { ValidationResponse } from './dto/validation-response.interface';
 import { ValidationRequest } from './dto/validation-request.interface';
 import { UserData } from './interfaces/user-data.interface';
-import { JsonPipe } from '@angular/common';
 import { ResetPasswordDTO } from './dto/reset-password-dto.interface';
 
 @Injectable({
@@ -20,7 +19,7 @@ export class AuthServiceService {
 
   private baseUrl: string = "http://localhost:8080";
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient  ) { }
 
   public register(userData: RegisterRequest): Observable<RegisterResponse>{
     let url: string = `${this.baseUrl}/api/auth/register`

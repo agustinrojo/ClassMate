@@ -447,6 +447,7 @@ public class ForumServiceImpl implements IForumService {
                 .id(forum.getId())
                 .creationDate(forum.getCreationDate())
                 .title(forum.getTitle())
+                .creatorId(forum.getCreatorId())
                 .description(forum.getDescription())
                 .hasBeenEdited(forum.getHasBeenEdited())
                 .deleteRequests(deleteRequests)

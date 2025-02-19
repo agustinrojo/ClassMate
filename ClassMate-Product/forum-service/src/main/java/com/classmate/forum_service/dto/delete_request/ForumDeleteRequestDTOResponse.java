@@ -26,6 +26,9 @@ public class ForumDeleteRequestDTOResponse {
     /**
      * The description of the forum.
      */
+
+    private Long creatorId;
+
     private String description;
 
     private LocalDateTime creationDate;

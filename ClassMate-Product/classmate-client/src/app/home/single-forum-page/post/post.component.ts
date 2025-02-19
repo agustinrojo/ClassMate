@@ -30,6 +30,7 @@ export class PostComponent implements OnInit{
   public postValoration!: Valoration;
   @Input() public post!: PostResponseDTO;
   @Input() public deleteRequests?: DeleteRequestDTOResponse[] | null = null;
+  @Input() public canAbsolve: boolean = false;
   @Output() public deleteEvent: EventEmitter<number> = new EventEmitter<number>();
   @Output() public absolvePostEvent: EventEmitter<number> = new EventEmitter<number>();
 
