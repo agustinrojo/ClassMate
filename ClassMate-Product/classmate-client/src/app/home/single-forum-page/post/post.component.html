@@ -20,7 +20,11 @@
 
   </div>
 
-<p [innerHTML]="post?.body | linkify"></p>
+  <div class="row">
+    <div class="col-8 d-flex flex-row-start">
+      <p [innerHTML]="post?.body | linkify"></p>
+    </div>
+  </div>
 
 
   <app-file-badge *ngFor="let file of post?.files" [file]="file" [canModify]="false" (downloadFileEvent)="downloadPostFile($event)"></app-file-badge>

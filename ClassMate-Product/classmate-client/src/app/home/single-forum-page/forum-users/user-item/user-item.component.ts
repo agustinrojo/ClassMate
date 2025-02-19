@@ -38,7 +38,8 @@ export class UserItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.user)
+    console.log('User:', this.user);
+    console.log('isCreator:', this.isCreator);
     if (this.user.profilePhoto) {
       this.loadUserProfilePhoto(this.user.profilePhoto.photoId);
     }
