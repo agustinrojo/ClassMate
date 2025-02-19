@@ -16,7 +16,7 @@
   <section *ngIf="reportedComments.length > 0" class="posts">
     <div *ngFor="let comment of reportedCommentsDisplay; let i = index" class="row">
       <div class="col-8">
-        <app-comment (commentAbsolved)="absolveComment($event)" [comment]="comment" [deleteRequests]="reportedComments[i].deleteRequests"></app-comment>
+        <app-comment (commentAbsolved)="absolveComment($event)" [canAbsolve]="true" [comment]="comment" [deleteRequests]="reportedComments[i].deleteRequests"></app-comment>
       </div>
     </div>
   </section>

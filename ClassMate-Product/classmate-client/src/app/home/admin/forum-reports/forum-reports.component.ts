@@ -52,4 +52,13 @@ export class ForumReportsComponent implements OnInit{
       console.log(err);
     })
   }
+
+  public deleteForum(forumId: number){
+    this._forumService.deleteForum(forumId).subscribe(() => {
+      this.reportedForums = this.reportedForums.filter((forum) => forum.id != forumId);
+    },
+    (err) => {
+      console.log(err);
+    })
+  }
 }

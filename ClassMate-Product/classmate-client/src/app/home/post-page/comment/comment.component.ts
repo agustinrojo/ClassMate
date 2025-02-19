@@ -30,6 +30,7 @@ export class CommentComponent implements OnInit{
   public commentValoration!: Valoration;
   @Input() public comment!: CommentDTOResponse;
   @Input() public deleteRequests?: DeleteRequestDTOResponse[] | null = null;
+  @Input() public canAbsolve: boolean = false;
   @Output() public deleteEvent = new EventEmitter<number>();
   @Output() public commentAbsolved = new EventEmitter<number>();
 

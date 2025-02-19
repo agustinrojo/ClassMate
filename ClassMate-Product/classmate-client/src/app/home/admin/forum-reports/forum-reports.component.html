@@ -24,6 +24,12 @@
               <h2 (click)="navigateToForum(forum.id)">{{ forum.title }}</h2>
             </div>
             <div class="col-6 d-flex flex-row-reverse">
+              <div class="dropdown ">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu">
+                  <li><button class="dropdown-item"  (click)="deleteForum(forum.id)">Borrar</button></li>
+                </ul>
+              </div>
             </div>
           </div>
 
