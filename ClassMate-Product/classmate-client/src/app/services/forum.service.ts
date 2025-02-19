@@ -11,6 +11,7 @@ import { ForumStateService } from './dto/state-services/forum-state.service';
 import { DeleteRequestDTO } from './dto/delete-request/delete-request.dto';
 import { ForumDeleteRequestDTOResponse } from './dto/forum/forum-delete-request-dto-response.interface';
 import { Injectable } from '@angular/core';
+import { ForumSidebarDataDTO } from './dto/forum/forum-sidebar-data-dto.interface';
 
 @Injectable({providedIn: 'root'})
 export class ForumService {
@@ -123,6 +124,12 @@ export class ForumService {
   public absolveForum(forumId: number): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/absolve/${forumId}`, {});
   }
+
+  getForumNamesByIds(ids: number[]): Observable<ForumSidebarDataDTO[]> {
+    const params = new HttpParams().set('ids', ids.join(','));
+    return this.http.get<ForumSidebarDataDTO[]>(`${this.baseUrl}/names-by-ids`, { params });
+  }
+
 
   private updateLocalStorage(forumId: number, isDeletion: boolean): void {
     let user = JSON.parse(localStorage.getItem("user")!);

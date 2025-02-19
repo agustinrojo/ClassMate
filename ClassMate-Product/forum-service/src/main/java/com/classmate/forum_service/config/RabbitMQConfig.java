@@ -66,6 +66,14 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.exchange.ban-user-delete-member-routing-key}")
     private String banUserDeleteMemberRoutingKey;
 
+    // FORUMS CREATION STATISTICS
+    @Value("${rabbitmq.queue.forum.created.statistic}")
+    private String forumCreatedStatisticQueue;
+    @Value("${rabbitmq.forum.created.statistic.routing-key}")
+    private String forumCreatedStatisticRoutingKey;
+    @Value("${rabbitmq.exchange.statistics}")
+    private String statisticsExchange;
+
 
     @Bean
     public Queue subscriptionQueue() {
@@ -104,6 +112,17 @@ public class RabbitMQConfig {
     @Bean
     public Queue banUserDeleteMemberQueue() {
         return new Queue(banUserDeleteMemberQueue, true);
+    }
+
+    // FORUMS CREATION STATISTICS
+    @Bean
+    public Queue forumStatisticsQueue() {
+        return new Queue(forumCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public TopicExchange statisticsExchange() {
+        return new TopicExchange(statisticsExchange);
     }
 
 
@@ -177,6 +196,14 @@ public class RabbitMQConfig {
                 .with(banUserDeleteMemberRoutingKey);
     }
 
+    // FORUMS CREATION STATISTICS
+    @Bean
+    public Binding forumStatisticsBinding() {
+        return BindingBuilder
+                .bind(forumStatisticsQueue())
+                .to(statisticsExchange())
+                .with(forumCreatedStatisticRoutingKey);
+    }
 
     @Bean
     public MessageConverter converter() {

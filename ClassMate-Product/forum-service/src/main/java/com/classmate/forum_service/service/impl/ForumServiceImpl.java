@@ -178,6 +178,8 @@ public class ForumServiceImpl implements IForumService {
                 .build();
         subscriptionPublisher.publishCreatorUpdate(creatorDTO);
 
+        subscriptionPublisher.publishForumCreatedEvent();
+        
         return forumMapper.convertToForumResponseDTO(savedForum);
     }
 
@@ -451,4 +453,13 @@ public class ForumServiceImpl implements IForumService {
                 .deleteRequests(deleteRequests)
                 .build();
     }
+
+    @Override
+    public List<ForumSidebarDataDTO> getForumNamesByIds(List<Long> ids) {
+        List<Forum> forums = forumRepository.findAllById(ids);
+        return forums.stream()
+                .map(forum -> new ForumSidebarDataDTO(forum.getId(), forum.getTitle()))
+                .collect(Collectors.toList());
+    }
+
 }

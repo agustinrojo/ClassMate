@@ -43,6 +43,12 @@ public class ForumSubscriptionPublisher {
     @Value("${rabbitmq.exchange.ban-user-delete-member-routing-key}")
     private String banUserDeleteMemberRoutingKey;
 
+    // FORUMS CREATION STATISTICS
+    @Value("${rabbitmq.forum.created.statistic.routing-key}")
+    private String forumCreatedStatisticRoutingKey;
+    @Value("${rabbitmq.exchange.statistics}")
+    private String statisticsExchange;
+
 
     public ForumSubscriptionPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
@@ -88,6 +94,11 @@ public class ForumSubscriptionPublisher {
                 banUserDeleteMemberEventDTO.getUserIdToBan(),
                 banUserDeleteMemberEventDTO.getForumId()));
         rabbitTemplate.convertAndSend(exchange, banUserDeleteMemberRoutingKey, banUserDeleteMemberEventDTO);
+    }
+
+    // FORUMS CREATION STATISTICS
+    public void publishForumCreatedEvent() {
+        rabbitTemplate.convertAndSend(statisticsExchange, forumCreatedStatisticRoutingKey, "New Forum Created Event");
     }
 
 }

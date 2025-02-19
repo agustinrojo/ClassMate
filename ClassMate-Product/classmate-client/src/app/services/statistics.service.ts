@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivityResponseDTO } from './dto/statistics/activity-response-dto.interface';
+import { ForumCreationMetricsDTO } from './dto/statistics/forum-creation-metrics-dto.interface';
+import { TopForumDTO } from './dto/statistics/top-forum-dto.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +21,29 @@ export class StatisticsService {
     return this.http.get<ActivityResponseDTO[]>(
       `${this.baseUrl}/aggregatedForumsActivity?startDate=${startDate}&endDate=${endDate}`
     );
+  }
+
+  public getMonthlyForumCreation(year: number): Observable<ForumCreationMetricsDTO[]> {
+    return this.http.get<ForumCreationMetricsDTO[]>(
+      `${this.baseUrl}/monthlyCreation?year=${year}`
+    );
+  }
+
+  public getTotalForumsCreated(): Observable<number> {
+    return this.http.get<number>(
+      `${this.baseUrl}/totalForums`
+    );
+  }
+
+  public getTotalUsersCreated(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/totalUsers`);
+  }
+
+  public getActiveUsers(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/activeUsers`);
+  }
+
+  getTopActiveForums(): Observable<TopForumDTO[]> {
+    return this.http.get<TopForumDTO[]>(`${this.baseUrl}/top-active-forums`);
   }
 }

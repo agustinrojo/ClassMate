@@ -41,6 +41,10 @@ body {
 .post p {
   font-size: 1em;
   margin-bottom: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word; /* Extra safety for legacy browsers */
+  white-space: pre-wrap;
 }
 
 .post-time {

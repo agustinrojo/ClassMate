@@ -46,6 +46,16 @@ export class PostReportsComponent implements OnInit{
     })
   }
 
+  public deletePost(postId: number){
+    this._postService.deletePost(postId).subscribe(() => {
+      this.reportedPosts = this.reportedPosts.filter((post) => post.id != postId);
+      this.reportedPostsDisplay = this.reportedPostsDisplay.filter((post) => post.id != postId);
+    },
+    (err) => {
+      console.log(err);
+    })
+  }
+
   public getReportedPostsByKeyword() {
     if(this.query != ""){
       this.reportedPosts = []

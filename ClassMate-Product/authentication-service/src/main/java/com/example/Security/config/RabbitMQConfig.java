@@ -103,6 +103,18 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.user-reputation-routing-key}")
     private String userReputationRoutingKey;
 
+    // USER STATISTICS
+    @Value("${rabbitmq.exchange.statistics}")
+    private String statisticsExchange;
+    @Value("${rabbitmq.queue.user.created.statistic}")
+    private String userCreatedStatisticQueue;
+    @Value("${rabbitmq.user.created.statistic.routing-key}")
+    private String userCreatedStatisticRoutingKey;
+    @Value("${rabbitmq.queue.user.logged.statistic}")
+    private String userLoggedStatisticQueue;
+    @Value("${rabbitmq.user.logged.statistic.routing-key}")
+    private String userLoggedStatisticRoutingKey;
+
     @Bean
     public Queue subscriptionQueue() {
         return new Queue(subscriptionQueue, true);
@@ -192,6 +204,22 @@ public class RabbitMQConfig {
     @Bean
     public Queue userReputationQueue() {
         return new Queue(userReputationQueue, true);
+    }
+
+    // USERS STATISTICS
+    @Bean
+    public TopicExchange statisticsExchange() {
+        return new TopicExchange(statisticsExchange);
+    }
+
+    @Bean
+    public Queue userCreatedStatisticsQueue() {
+        return new Queue(userCreatedStatisticQueue, true);
+    }
+
+    @Bean
+    public Queue userLoggedStatisticsQueue() {
+        return new Queue(userLoggedStatisticQueue, true);
     }
 
 
@@ -298,6 +326,23 @@ public class RabbitMQConfig {
                 .bind(userReputationQueue())
                 .to(userReputationExchange())
                 .with(userReputationRoutingKey);
+    }
+
+    // USER STATISTICS
+    @Bean
+    public Binding userCreatedStatisticsBinding() {
+        return BindingBuilder
+                .bind(userCreatedStatisticsQueue())
+                .to(statisticsExchange())
+                .with(userCreatedStatisticRoutingKey);
+    }
+
+    @Bean
+    public Binding userLoggedStatisticsBinding() {
+        return BindingBuilder
+                .bind(userLoggedStatisticsQueue())
+                .to(statisticsExchange())
+                .with(userLoggedStatisticRoutingKey);
     }
 
 
